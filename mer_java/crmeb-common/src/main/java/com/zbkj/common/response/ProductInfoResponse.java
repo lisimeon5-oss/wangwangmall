@@ -40,14 +40,26 @@ public class ProductInfoResponse implements Serializable {
     @ApiModelProperty(value = "商品图片")
     private String image;
 
+    @ApiModelProperty(value = "多语言商品封面图(JSON)")
+    private String imageJson;
+
     @ApiModelProperty(value = "轮播图")
     private String sliderImage;
+
+    @ApiModelProperty(value = "多语言商品轮播图(JSON)")
+    private String sliderImageJson;
 
     @ApiModelProperty(value = "商品名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言商品名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "商品简介")
     private String intro;
+
+    @ApiModelProperty(value = "多语言商品简介(JSON)")
+    private String introJson;
 
     @ApiModelProperty(value = "关键字")
     private String keyword;
@@ -67,6 +79,9 @@ public class ProductInfoResponse implements Serializable {
     @ApiModelProperty(value = "单位名")
     private String unitName;
 
+    @ApiModelProperty(value = "多语言商品单位(JSON)")
+    private String unitNameJson;
+
     @ApiModelProperty(value = "排序")
     private Integer sort;
 
@@ -84,6 +99,9 @@ public class ProductInfoResponse implements Serializable {
 
     @ApiModelProperty(value = "商品描述")
     private String content;
+
+    @ApiModelProperty(value = "多语言商品详情(JSON)")
+    private String contentJson;
 
     @ApiModelProperty(value = "优惠券Ids（商户端）")
     private List<Integer> couponIds;

@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -37,15 +39,21 @@ public class IntegralProductAddRequest implements Serializable {
     @ApiModelProperty(value = "商品id|添加时不填，修改时必填")
     private Integer id;
 
-    @ApiModelProperty(value = "商品名称", required = true)
-    @NotBlank(message = "商品名称不能为空")
+    @ApiModelProperty(value = "商品名称")
     @Length(max = 50, message = "商品名称长度不能超过50个字符")
     private String name;
 
-    @ApiModelProperty(value = "单位名", required = true)
-    @NotBlank(message = "单位名称不能为空")
+    @ApiModelProperty(value = "多语言商品名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言商品名称不能为空")
+    private String nameJson;
+
+    @ApiModelProperty(value = "单位名")
     @Length(max = 32, message = "单位名长度不能超过32个字符")
     private String unitName;
+
+    @ApiModelProperty(value = "多语言商品单位(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言商品单位不能为空")
+    private String unitNameJson;
 
     @ApiModelProperty(value = "商品图片", required = true)
     @NotBlank(message = "商品图片不能为空")
@@ -62,10 +70,13 @@ public class IntegralProductAddRequest implements Serializable {
 //    @NotBlank(message = "关键字不能为空")
     private String keyword;
 
-    @ApiModelProperty(value = "商品简介", required = true)
-    @NotBlank(message = "商品简介不能为空")
+    @ApiModelProperty(value = "商品简介")
     @Length(max = 100, message = "商品简介长度不能超过100个字符")
     private String intro;
+
+    @ApiModelProperty(value = "多语言商品简介(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言商品简介不能为空")
+    private String introJson;
 
     @ApiModelProperty(value = "状态（0：未上架，1：上架）", required = true)
     @NotNull(message = "请选择上架状态")

@@ -14,7 +14,7 @@ module.exports = {
   // 接口请求地址
   apiBaseURL: VUE_APP_API_URL,
 
-  title: 'CRMEBMer',
+  title: 'Mer',
 
   /**
    * @type {boolean} true | false

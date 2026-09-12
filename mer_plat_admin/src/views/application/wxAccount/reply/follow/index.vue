@@ -3,7 +3,7 @@
     <pages-header
       v-if="$route.path.indexOf('keyword') !== -1"
       ref="pageHeader"
-      :title="this.$route.params.id ? '关键字编辑' : '关键字添加'"
+      :title="this.$route.params.id ? $t('application.keywordEdit') : $t('application.keywordAdd')"
       backUrl="/operation/application/publicAccount/wxReply/keyword"
     ></pages-header>
     <el-card class="box-card mt14" :bordered="false" shadow="never" :body-style="{ padding: '40px 50px' }">
@@ -55,7 +55,7 @@
               class="mt20"
               @submit.native.prevent
             >
-              <el-form-item v-if="$route.path.indexOf('keyword') !== -1" label="关键字：" prop="val">
+              <el-form-item v-if="$route.path.indexOf('keyword') !== -1" :label="$t('distribution.keywordLabel')" prop="val">
                 <keyword @getLabelarr="getLabelarr" :labelarr="labelarr" class="from-ipt-width"></keyword>
                 <!--                <div class="arrbox">-->
                 <!--                  <el-tag-->
@@ -72,51 +72,51 @@
                 <!--                    v-model.trim="val"-->
                 <!--                    size="mini"-->
                 <!--                    class="arrbox_ip"-->
-                <!--                    placeholder="输入后回车"-->
+                <!--                    :placeholder="$t('common.inputThenEnter')"-->
                 <!--                    style="width: 90%"-->
                 <!--                    @change="addlabel"-->
                 <!--                  />-->
                 <!--                </div>-->
               </el-form-item>
-              <el-form-item label="规则状态：">
+              <el-form-item :label="$t('application.ruleStatusLabel')">
                 <el-radio-group
                   v-model="formValidate.status"
                   v-hasPermi="['platform:wechat:public:keywords:reply:status']"
                 >
-                  <el-radio :label="true">启用</el-radio>
-                  <el-radio :label="false">禁用</el-radio>
+                  <el-radio :label="true">{{ $t('common.enable') }}</el-radio>
+                  <el-radio :label="false">{{ $t('common.disable') }}</el-radio>
                 </el-radio-group>
               </el-form-item>
-              <el-form-item label="消息类型：" prop="type">
+              <el-form-item :label="$t('application.messageTypeLabel')" prop="type">
                 <el-select
                   v-model="formValidate.type"
-                  placeholder="请选择规则状态"
+                  :placeholder="$t('application.pleaseSelectRuleStatus')"
                   class="from-ipt-width"
                   @change="RuleFactor(formValidate.type)"
                 >
-                  <el-option label="文字消息" value="text">文字消息</el-option>
-                  <el-option label="图片消息" value="image">图片消息</el-option>
-                  <el-option label="图文消息" value="news">图文消息</el-option>
-                  <el-option label="声音消息" value="voice">声音消息</el-option>
+                  <el-option :label="$t('common.textMessage')" value="text">{{ $t('common.textMessage') }}</el-option>
+                  <el-option :label="$t('common.imageMessage')" value="image">{{ $t('common.imageMessage') }}</el-option>
+                  <el-option :label="$t('common.newsMessage')" value="news">{{ $t('common.newsMessage') }}</el-option>
+                  <el-option :label="$t('common.voiceMessage')" value="voice">{{ $t('common.voiceMessage') }}</el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item v-if="formValidate.type === 'text'" label="规则内容：" prop="content">
+              <el-form-item v-if="formValidate.type === 'text'" :label="$t('application.ruleContentLabel')" prop="content">
                 <el-input
                   v-model.trim="formValidate.contents.content"
-                  placeholder="请填写规则内容"
+                  :placeholder="$t('application.pleaseFillRuleContent')"
                   class="from-ipt-width"
                   @input="change($event)"
                 />
               </el-form-item>
               <el-form-item
                 v-if="formValidate.type === 'news' && checkPermi(['platform:wechat:public:keywords:reply:list'])"
-                label="选取图文："
+                :label="$t('application.selectImageTextLabel')"
               >
-                <el-button size="mini" type="primary" @click="changePic">选择图文消息</el-button>
+                <el-button size="mini" type="primary" @click="changePic">{{ $t('application.selectImageTextMessage') }}</el-button>
               </el-form-item>
               <el-form-item
                 v-if="formValidate.type === 'image' || formValidate.type === 'voice'"
-                :label="formValidate.type === 'image' ? '图片地址：' : '语音地址：'"
+                :label="formValidate.type === 'image' ? $t('application.imageAddressLabel') : $t('application.voiceAddressLabel')"
                 prop="mediaId"
               >
                 <div class="acea-row row-middle">
@@ -136,12 +136,12 @@
                     :show-file-list="false"
                     multiple
                   >
-                    <el-button size="mini" type="primary">点击上传</el-button>
+                    <el-button size="mini" type="primary">{{ $t('application.clickToUpload') }}</el-button>
                   </el-upload>
                 </div>
-                <span v-show="formValidate.type === 'image'">文件最大5Mb，支持bmp/png/jpeg/jpg/gif格式</span>
+                <span v-show="formValidate.type === 'image'">{{ $t('application.imageFormatTip') }}</span>
                 <span v-show="formValidate.type === 'voice'"
-                  >文件最大5Mb，支持mp3/wma/wav/amr格式,播放长度不超过60s</span
+                  >{{ $t('application.audioFormatTip') }}</span
                 >
               </el-form-item>
             </el-form>
@@ -156,7 +156,7 @@
                   'platform:wechat:public:keywords:reply:save',
                   'platform:wechat:public:keywords:reply:update',
                 ]"
-                >保存并发布
+                >{{ $t('application.saveAndPublish') }}
               </el-button>
             </div>
           </el-col>
@@ -188,7 +188,7 @@ export default {
     const validateContent = (rule, value, callback) => {
       if (this.formValidate.type === 'text') {
         if (this.formValidate.contents.content === '') {
-          callback(new Error('请填写规则内容'));
+          callback(new Error(this.$t('application.pleaseFillRuleContent')));
         } else {
           callback();
         }
@@ -196,14 +196,14 @@ export default {
     };
     const validateSrc = (rule, value, callback) => {
       if (this.formValidate.type === 'image' && this.formValidate.contents.mediaId === '') {
-        callback(new Error('请上传'));
+        callback(new Error(this.$t('application.pleaseUpload')));
       } else {
         callback();
       }
     };
     const validateVal = (rule, value, callback) => {
       if (this.labelarr.length === 0) {
-        callback(new Error('请输入后回车'));
+        callback(new Error(this.$t('merchant.pleaseEnterThenPressEnter')));
       } else {
         callback();
       }
@@ -244,7 +244,7 @@ export default {
       },
       ruleValidate: {
         val: [{ required: true, validator: validateVal, trigger: 'blur' }],
-        type: [{ required: true, message: '请选择消息类型', trigger: 'change' }],
+        type: [{ required: true, message: this.$t('application.pleaseSelectMessageType'), trigger: 'change' }],
         content: [{ required: true, validator: validateContent, trigger: 'blur' }],
         mediaId: [{ required: true, validator: validateSrc, trigger: 'change' }],
       },
@@ -296,7 +296,7 @@ export default {
       formData.append('media', param.file);
       let loading = this.$loading({
         lock: true,
-        text: '上传中，请稍候...',
+        text: this.$t('finance.uploading'),
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)',
       });
@@ -305,7 +305,7 @@ export default {
           loading.close();
           this.formValidate.contents.mediaId = res.mediaId;
           this.formValidate.contents.srcUrl = res.url;
-          this.$message.success('上传成功');
+          this.$message.success(this.$t('finance.uploadSuccess'));
         })
         .catch(() => {
           loading.close();
@@ -372,7 +372,7 @@ export default {
         })
         .catch(() => {
           this.loading = false;
-          // if (res.message === '数据不存在') return
+          // if (res.message === this.$t('application.dataNotFound')) return
           // this.$message.error(res.message)
         });
     },
@@ -437,7 +437,7 @@ export default {
               : (this.formValidate.keywords = 'default');
             this.formValidate.id !== null
               ? wechatReplyUpdateApi(this.formValidate).then(async (res) => {
-                  this.$message.success('操作成功');
+                  this.$message.success(this.$t('product.operateSuccess'));
                 })
               : wechatReplySaveApi(this.formValidate)
                   .then(async (res) => {
@@ -454,7 +454,7 @@ export default {
     }),
     // 保存成功操作
     operation() {
-      this.$modalSure('继续添加')
+      this.$modalSure(this.$t('application.continueAdd'))
         .then(() => {
           setTimeout(() => {
             this.labelarr = [];

@@ -10,6 +10,7 @@ import com.zbkj.common.model.admin.SystemAdmin;
 import com.zbkj.common.model.record.SensitiveMethodLog;
 import com.zbkj.common.page.CommonPage;
 import com.zbkj.common.request.PageParamRequest;
+import com.zbkj.common.utils.I18nMessageUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.service.dao.SensitiveMethodLogDao;
 import com.zbkj.service.service.SensitiveMethodLogService;
@@ -56,6 +57,13 @@ public class SensitiveMethodLogServiceImpl extends ServiceImpl<SensitiveMethodLo
         lqw.eq(SensitiveMethodLog::getMerId, merId);
         lqw.orderByDesc(SensitiveMethodLog::getId);
         List<SensitiveMethodLog> list = dao.selectList(lqw);
+        if (list != null) {
+            for (SensitiveMethodLog item : list) {
+                item.setDescription(I18nMessageUtil.translateLogText(item.getDescription()));
+                item.setMethodType(I18nMessageUtil.translateLogText(item.getMethodType()));
+                item.setErrorMsg(I18nMessageUtil.translateLogText(item.getErrorMsg()));
+            }
+        }
         return CommonPage.copyPageInfo(logPage, list);
     }
 

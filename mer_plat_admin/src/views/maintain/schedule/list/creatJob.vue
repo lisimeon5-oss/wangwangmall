@@ -1,25 +1,25 @@
 <template>
-  <el-dialog title="定时任务" :visible.sync="dialogVisible" :before-close="handleClose" :closeOnClickModal="false">
+  <el-dialog :title="$t('maintain.scheduledTask')" :visible.sync="dialogVisible" :before-close="handleClose" :closeOnClickModal="false">
     <el-form ref="dataForm" :model="dataForm" label-width="95px" :rules="rules" v-loading="loadingFrom">
-      <el-form-item required label="定时任务类名:" prop="beanName">
-        <el-input v-model.trim="dataForm.beanName" placeholder="请输入定时任务名称" />
+      <el-form-item required :label="$t('maintain.scheduledTaskClassNameColon')" prop="beanName">
+        <el-input v-model.trim="dataForm.beanName" :placeholder="$t('maintain.pleaseEnterTaskName')" />
       </el-form-item>
-      <el-form-item required label="cron表达式:" prop="cronExpression">
-        <el-input v-model.trim="dataForm.cronExpression" placeholder="请输入cron表达式" />
+      <el-form-item required :label="$t('maintain.cronExpressionColon')" prop="cronExpression">
+        <el-input v-model.trim="dataForm.cronExpression" :placeholder="$t('maintain.pleaseEnterCron')" />
       </el-form-item>
-      <el-form-item required label="方法名:" prop="methodName">
-        <el-input v-model.trim="dataForm.methodName" placeholder="请输入定时任务方法名" />
+      <el-form-item required :label="$t('maintain.methodNameColon')" prop="methodName">
+        <el-input v-model.trim="dataForm.methodName" :placeholder="$t('maintain.pleaseEnterTaskMethodName')" />
       </el-form-item>
-      <el-form-item label="参数:" prop="params">
-        <el-input v-model.trim="dataForm.params" placeholder="请输入定时任务方法名" />
+      <el-form-item :label="$t('maintain.parameterColon')" prop="params">
+        <el-input v-model.trim="dataForm.params" :placeholder="$t('maintain.pleaseEnterTaskMethodName')" />
       </el-form-item>
-      <el-form-item label="备注:" prop="remark">
-        <el-input v-model.trim="dataForm.remark" placeholder="请输入备注" />
+      <el-form-item :label="$t('maintain.remarkColon')" prop="remark">
+        <el-input v-model.trim="dataForm.remark" :placeholder="$t('merchant.pleaseEnterRemark')" />
       </el-form-item>
     </el-form>
     <span slot="footer">
-      <el-button @click="handleClose('dataForm')">取消</el-button>
-      <el-button type="primary" :loading="loading" @click="onsubmit('dataForm')">确定</el-button>
+      <el-button @click="handleClose('dataForm')">{{ $t('el.messagebox.cancel') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="onsubmit('dataForm')">{{ $t('el.messagebox.confirm') }}</el-button>
     </span>
   </el-dialog>
 </template>
@@ -90,7 +90,7 @@ export default {
             ? schedule
                 .scheduleJobAdd(this.dataForm)
                 .then((res) => {
-                  this.$message.success('操作成功');
+                  this.$message.success(this.$t('product.operateSuccess'));
                   this.onClose();
                 })
                 .catch(() => {
@@ -99,7 +99,7 @@ export default {
             : schedule
                 .scheduleJobUpdate(this.dataForm)
                 .then((res) => {
-                  this.$message.success('操作成功');
+                  this.$message.success(this.$t('product.operateSuccess'));
                   this.onClose();
                 })
                 .catch(() => {

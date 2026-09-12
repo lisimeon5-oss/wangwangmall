@@ -1,5 +1,6 @@
 package com.zbkj.common.request;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -7,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -34,9 +34,11 @@ public class UserTagRequest implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "标签名称")
-    @NotBlank(message = "请填写标签名称")
     @Length(max = 50, message = "标签名称不能超过50个字符")
     private String name;
 
+    @ApiModelProperty(value = "多语言标签名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言标签名称不能为空")
+    private String nameJson;
 
 }

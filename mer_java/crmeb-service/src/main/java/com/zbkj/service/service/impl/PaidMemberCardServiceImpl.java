@@ -15,6 +15,7 @@ import com.zbkj.common.response.PaidMemberCardResponse;
 import com.zbkj.common.response.SvipCardResponse;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.MemberResultCode;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.service.dao.PaidMemberCardDao;
 import com.zbkj.service.service.PaidMemberCardService;
 import org.springframework.beans.BeanUtils;
@@ -47,9 +48,11 @@ public class PaidMemberCardServiceImpl extends ServiceImpl<PaidMemberCardDao, Pa
         }
         PaidMemberCard card = new PaidMemberCard();
         card.setName(request.getName());
+        card.setNameJson(StrUtil.isNotBlank(request.getNameJson()) ? request.getNameJson() : "");
         if (StrUtil.isNotBlank(request.getLabel())) {
             card.setLabel(request.getLabel());
         }
+        card.setLabelJson(StrUtil.isNotBlank(request.getLabelJson()) ? request.getLabelJson() : "");
         card.setType(request.getType());
         card.setDeadlineDay(request.getType() > 1 ? 0 : request.getDeadlineDay());
         card.setOriginalPrice(request.getOriginalPrice());
@@ -76,7 +79,9 @@ public class PaidMemberCardServiceImpl extends ServiceImpl<PaidMemberCardDao, Pa
             }
         }
         card.setName(request.getName());
+        card.setNameJson(StrUtil.isNotBlank(request.getNameJson()) ? request.getNameJson() : "");
         card.setLabel(StrUtil.isNotBlank(request.getLabel()) ? request.getLabel() : "");
+        card.setLabelJson(StrUtil.isNotBlank(request.getLabelJson()) ? request.getLabelJson() : "");
         card.setDeadlineDay(card.getType() > 1 ? 0 : request.getDeadlineDay());
         card.setOriginalPrice(request.getOriginalPrice());
         card.setPrice(request.getPrice());
@@ -132,7 +137,7 @@ public class PaidMemberCardServiceImpl extends ServiceImpl<PaidMemberCardDao, Pa
         LambdaQueryWrapper<PaidMemberCard> lqw = Wrappers.lambdaQuery();
         lqw.eq(PaidMemberCard::getIsDelete, 0);
         if (StrUtil.isNotBlank(name)) {
-            lqw.like(PaidMemberCard::getName, name);
+            lqw.and(i -> i.like(PaidMemberCard::getName, name).or().like(PaidMemberCard::getNameJson, name));
         }
         if (ObjectUtil.isNotNull(type)) {
             lqw.eq(PaidMemberCard::getType, type);
@@ -170,6 +175,8 @@ public class PaidMemberCardServiceImpl extends ServiceImpl<PaidMemberCardDao, Pa
         for (PaidMemberCard card : list) {
             SvipCardResponse response = new SvipCardResponse();
             BeanUtils.copyProperties(card, response);
+            response.setName(I18nJsonUtil.resolveByRequest(card.getName(), card.getNameJson()));
+            response.setLabel(I18nJsonUtil.resolveByRequest(card.getLabel(), card.getLabelJson()));
             responseList.add(response);
         }
         return responseList;

@@ -15,7 +15,7 @@
     <div class="prompt-text">
       <div class="prompt-item num">{{ areaInit.name }}</div>
       <div class="prompt-item" :style="{ color: isSet ? '#2d8cf0' : '#f00' }">
-        {{ isSet ? '(已设置)' : '(未设置)' }}
+        {{ isSet ? $t('pagediy.hotspotSet') : $t('pagediy.hotspotUnset') }}
       </div>
     </div>
     <!--删除-->
@@ -28,7 +28,7 @@
 
     <!-- 修改框 -->
     <el-dialog
-      title="设置热区"
+      :title="$t('pagediy.setHotZone')"
       :visible.sync="editBoxShow"
       width="30%"
       :append-to-body="true"
@@ -43,8 +43,8 @@
         </div>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="editBoxShow = false">取 消</el-button>
-        <el-button type="primary" @click="editInfo">确 定</el-button>
+        <el-button @click="editBoxShow = false">{{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="editInfo">{{ $t('common.confirm') }}</el-button>
       </span>
     </el-dialog>
     <linkaddress :isHotSpot="true" ref="linkaddres" @linkUrl="linkUrl"></linkaddress>

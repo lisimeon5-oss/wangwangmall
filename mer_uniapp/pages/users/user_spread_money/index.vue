@@ -5,8 +5,8 @@
 				<view class='headerCon acea-row row-between-wrapper'>
 					<view>
 						<view class='name'>{{name}}</view>
-						<view class='money' v-if="recordType == 4">￥<text class='num'>{{extractCount}}</text></view>
-						<view class='money' v-else>￥<text class='num'>{{commissionCount}}</text></view>
+						<view class='money' v-if="recordType == 4">฿<text class='num'>{{extractCount}}</text></view>
+						<view class='money' v-else>฿<text class='num'>{{commissionCount}}</text></view>
 					</view>
 					<view class='iconfont icon-jinbi1'></view>
 				</view>
@@ -23,7 +23,7 @@
 											<view v-if="child.auditStatus!==1" class='name line1'>
 												{{child.auditStatus | statusFilter}}
 											</view>
-											<view class='name line1' v-else>审核成功 / {{child.accountStatus==0?'待结算':'已结算'}}
+											<view class='name line1' v-else>{{$t('审核成功')}} / {{child.accountStatus==0? $t('待结算') : $t('已结算')}}
 											</view>
 											<view v-show="child.auditStatus==2 && child.refusalReason" class="font-color-red mb8">{{child.refusalReason}}</view>
 											<view>{{child.createTime}}</view>
@@ -36,7 +36,7 @@
 					</view>
 				</block>
 				<view v-if="recordList.length == 0">
-					<emptyPage title='暂无结算记录~' :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
+					<emptyPage :title="$t('暂无结算记录~')" :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
 				</view>
 			</view>
 			<view class='sign-record' v-else>
@@ -61,7 +61,7 @@
 					</view>
 				</block>
 				<view v-if="recordList.length == 0">
-					<emptyPage title='暂无佣金记录~' :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
+					<emptyPage :title="$t('暂无佣金记录~')" :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
 				</view>
 			</view>
 		</view>
@@ -157,7 +157,7 @@
 				this.getRecordList();
 			} else {
 				uni.showToast({
-					title: '参数错误',
+					title: this.$t('参数错误'),
 					icon: 'none',
 					duration: 1000,
 					mask: true,

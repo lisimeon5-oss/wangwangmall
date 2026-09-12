@@ -9,29 +9,29 @@
     >
       <div class="padding-add">
         <el-form size="small" inline label-position="right" @submit.native.prevent>
-          <el-form-item label="订单编号：" label-width="66px">
+          <el-form-item :label="$t('order.orderNoLabel')" label-width="66px">
             <el-input
               v-model.trim="tableFrom.orderNo"
-              placeholder="请输入订单编号"
+              :placeholder="$t('order.pleaseEnterOrderNo')"
               class="selWidth"
               size="small"
               clearable
               @keyup.enter.native="handleSearchList"
             />
           </el-form-item>
-          <el-form-item label="订单类型：">
+          <el-form-item :label="$t('order.orderType')">
             <el-select
               v-model="tableFrom.type"
               clearable
               size="small"
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="selWidth"
               @change="handleSearchList"
             >
               <el-option v-for="(item, i) in fromType" :key="i" :label="item.text" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('order.timeSelect')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -39,39 +39,39 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('order.customTime')"
               @change="onchangeTime"
               class="selWidth"
             />
           </el-form-item>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('order.userSearch')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
-          <el-form-item label="商户名称：">
+          <el-form-item :label="$t('order.merchantNameLabel')">
             <merchant-name @getMerId="getMerId" :merIdChecked="tableFrom.merId"></merchant-name>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="handleSearchList">查询</el-button>
-            <el-button size="small" @click="handleReset">重置</el-button>
+            <el-button type="primary" size="small" @click="handleSearchList">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="handleReset">{{ $t('common.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '0 20px 20px' }" shadow="never" :bordered="false">
       <el-tabs class="list-tabs" v-model="tableFrom.status" @tab-click="handleSearchList">
-        <el-tab-pane name="all" :label="`全部(${orderChartType.all || 0})`"></el-tab-pane>
-        <el-tab-pane name="unPaid" :label="`未支付(${orderChartType.unPaid || 0})`"></el-tab-pane>
-        <el-tab-pane name="notShipped" :label="`未发货(${orderChartType.notShipped || 0})`"></el-tab-pane>
-        <el-tab-pane name="spike" :label="`待收货(${orderChartType.spike || 0})`"></el-tab-pane>
-        <el-tab-pane name="awaitVerification" :label="`待核销(${orderChartType.verification || 0})`"></el-tab-pane>
-        <el-tab-pane name="receiving" :label="`已收货(${orderChartType.receiving || 0})`"></el-tab-pane>
-        <el-tab-pane name="complete" :label="`已完成(${orderChartType.complete || 0})`"></el-tab-pane>
-        <el-tab-pane name="refunded" :label="`已退款(${orderChartType.refunded || 0})`"></el-tab-pane>
-        <el-tab-pane name="cancel" :label="`已取消(${orderChartType.cancel || 0})`"></el-tab-pane>
-        <el-tab-pane name="deleted" :label="`已删除(${orderChartType.deleted || 0})`"></el-tab-pane>
+        <el-tab-pane name="all" :label="`${$t('common.all')}(${orderChartType.all || 0})`"></el-tab-pane>
+        <el-tab-pane name="unPaid" :label="`${$t('order.unPaid')}(${orderChartType.unPaid || 0})`"></el-tab-pane>
+        <el-tab-pane name="notShipped" :label="`${$t('order.notShipped')}(${orderChartType.notShipped || 0})`"></el-tab-pane>
+        <el-tab-pane name="spike" :label="`${$t('order.waitingReceipt')}(${orderChartType.spike || 0})`"></el-tab-pane>
+        <el-tab-pane name="awaitVerification" :label="`${$t('order.awaitingVerification')}(${orderChartType.verification || 0})`"></el-tab-pane>
+        <el-tab-pane name="receiving" :label="`${$t('order.received')}(${orderChartType.receiving || 0})`"></el-tab-pane>
+        <el-tab-pane name="complete" :label="`${$t('order.completed')}(${orderChartType.complete || 0})`"></el-tab-pane>
+        <el-tab-pane name="refunded" :label="`${$t('order.refunded')}(${orderChartType.refunded || 0})`"></el-tab-pane>
+        <el-tab-pane name="cancel" :label="`${$t('common.cancelled')}(${orderChartType.cancel || 0})`"></el-tab-pane>
+        <el-tab-pane name="deleted" :label="`${$t('order.deleted')}(${orderChartType.deleted || 0})`"></el-tab-pane>
       </el-tabs>
       <div class="mt5">
-        <el-button size="small" @click="exports" v-hasPermi="['platform:export:order:excel']">导出</el-button>
+        <el-button size="small" @click="exports" v-hasPermi="['platform:export:order:excel']">{{ $t('common.export') }}</el-button>
       </div>
       <el-table
         v-loading="listLoading"
@@ -85,11 +85,11 @@
         "
         class="mt20"
       >
-        <el-table-column label="订单编号" min-width="220" v-if="checkedCities.includes('订单编号')">
+        <el-table-column :label="$t('order.orderNo')" min-width="220" v-if="isColumnChecked('orderNo')">
           <template slot-scope="scope">
             <div class="acea-row">
-              <font v-show="scope.row.type === 1" class="mr5">[秒杀]</font>
-              <font v-show="scope.row.type === 2" class="mr5">[拼团]</font>
+              <font v-show="scope.row.type === 1" class="mr5">[{{ $t('order.spike') }}]</font>
+              <font v-show="scope.row.type === 2" class="mr5">[{{ $t('order.groupBuy') }}]</font>
               <span
                 style="display: block"
                 v-text="scope.row.orderNo"
@@ -99,29 +99,29 @@
               <span class="colorPrompt" v-show="parseInt(scope.row.refundStatus) > 0" style="display: block">{{
                   scope.row.refundStatus | orderRefundStatusFilter
                 }}</span>
-             <span v-show="scope.row.refundStatus==2" class="colorPrompt">{{ `（已退款 ${scope.row.refundNum} / 购买 ${scope.row.totalNum}）`}}</span>
+             <span v-show="scope.row.refundStatus==2" class="colorPrompt">{{ $t('order.refundedDetail', { refundNum: scope.row.refundNum, totalNum: scope.row.totalNum }) }}</span>
            </div>
-            <span v-show="scope.row.isUserDel" class="colorPrompt" style="display: block">用户已删除</span>
+            <span v-show="scope.row.isUserDel" class="colorPrompt" style="display: block">{{ $t('order.userDeleted') }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="merName" label="商户名称" min-width="150" v-if="checkedCities.includes('商户名称')" />
-        <el-table-column prop="nickName" label="用户昵称" min-width="150" v-if="checkedCities.includes('用户昵称')">
+        <el-table-column prop="merName" :label="$t('order.merchantName')" min-width="150" v-if="isColumnChecked('merName')" />
+        <el-table-column prop="nickName" :label="$t('order.nickName')" min-width="150" v-if="isColumnChecked('nickName')">
           <template slot-scope="scope">
             <span :class="scope.row.isLogoff == true ? 'colorPrompt' : ''">{{ scope.row.nickName }}</span>
             <span :class="scope.row.isLogoff == true ? 'colorPrompt' : ''" v-if="scope.row.isLogoff == true">|</span>
-            <span v-if="scope.row.isLogoff == true" class="colorPrompt">(已注销)</span>
+            <span v-if="scope.row.isLogoff == true" class="colorPrompt">{{ $t('order.loggedOff') }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="payPrice" label="实际支付" min-width="80" v-if="checkedCities.includes('实际支付')" />
-        <el-table-column label="支付方式" min-width="80" v-if="checkedCities.includes('支付方式')">
+        <el-table-column prop="payPrice" :label="$t('order.payPrice')" min-width="80" v-if="isColumnChecked('payPrice')" />
+        <el-table-column :label="$t('order.payType')" min-width="80" v-if="isColumnChecked('payType')">
           <template slot-scope="scope">
             <span>{{ scope.row.payType | payTypeFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="订单状态" min-width="100" v-if="checkedCities.includes('订单状态')">
+        <el-table-column :label="$t('order.orderStatus')" min-width="100" v-if="isColumnChecked('orderStatus')">
           <template slot-scope="scope">
             <span class="textE93323 tag-background notStartTag tag-padding" v-if="scope.row.refundStatus === 3"
-              >已退款</span
+              >{{ $t('order.refunded') }}</span
             >
             <span
               :class="scope.row.status < 5 ? 'doingTag' : 'endTag'"
@@ -132,20 +132,20 @@
               >{{ scope.row.status | orderStatusFilter }}</span
             >
             <span class="textE93323 tag-background notStartTag tag-padding" v-else>{{
-              scope.row.groupBuyRecordStatus == 0 ? '拼团中' : '拼团失败'
+              scope.row.groupBuyRecordStatus == 0 ? $t('order.groupBuying') : $t('order.groupBuyFailed')
             }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="下单时间" min-width="140" v-if="checkedCities.includes('下单时间')" />
+        <el-table-column prop="createTime" :label="$t('order.orderTime')" min-width="140" v-if="isColumnChecked('orderTime')" />
         <el-table-column v-if="checkPermi(['platform:order:info'])" width="70" fixed="right">
           <template slot="header">
             <p>
-              <span style="padding-right: 5px">操作</span>
+              <span style="padding-right: 5px">{{ $t('common.operate') }}</span>
               <i class="el-icon-setting" @click="handleAddItem"></i>
             </p>
           </template>
           <template slot-scope="scope">
-            <a v-if="scope.row.groupBuyRecordStatus != 0" @click="onOrderDetails(scope.row.orderNo)"> 详情</a>
+            <a v-if="scope.row.groupBuyRecordStatus != 0" @click="onOrderDetails(scope.row.orderNo)"> {{ $t('common.detail') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -166,12 +166,12 @@
       <template>
         <div class="cell_ht">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-            >全选</el-checkbox
+            >{{ $t('common.selectAll') }}</el-checkbox
           >
-          <el-button type="text" @click="checkSave()">保存</el-button>
+          <el-button type="text" @click="checkSave()">{{ $t('common.save') }}</el-button>
         </div>
         <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-          <el-checkbox v-for="item in columnData" :label="item" :key="item" class="check_cell">{{ item }}</el-checkbox>
+          <el-checkbox v-for="item in columnKeys" :label="item" :key="item" class="check_cell">{{ columnLabel(item) }}</el-checkbox>
         </el-checkbox-group>
       </template>
     </div>
@@ -207,15 +207,15 @@ export default {
       options: [
         {
           value: 0,
-          label: '全部',
+          label: this.$t('el.table.clearFilter'),
         },
         {
           value: 2,
-          label: '商城订单',
+          label: this.$t('order.mallOrder'),
         },
         {
           value: 1,
-          label: '视频号订单',
+          label: this.$t('order.videoOrder'),
         },
       ],
       RefuseVisible: false,
@@ -256,12 +256,6 @@ export default {
       orderChartType: {},
       timeVal: [],
       fromList: this.$constants.fromList,
-      fromType: [
-        { value: '', text: '全部' },
-        { value: '0', text: '普通' },
-        { value: '1', text: '秒杀' },
-        { value: '2', text: '拼团' },
-      ],
       selectionList: [],
       ids: '',
       orderids: '',
@@ -271,17 +265,85 @@ export default {
       active: false,
       card_select_show: false,
       checkAll: false,
-      checkedCities: ['订单编号', '商户名称', '用户昵称', '实际支付', '支付方式', '订单状态', '下单时间'],
-      columnData: ['订单编号', '商户名称', '用户昵称', '实际支付', '支付方式', '订单状态', '下单时间'],
+      columnKeys: ['orderNo', 'merName', 'nickName', 'payPrice', 'payType', 'orderStatus', 'orderTime'],
+      checkedCities: ['orderNo', 'merName', 'nickName', 'payPrice', 'payType', 'orderStatus', 'orderTime'],
       isIndeterminate: true,
     };
   },
+  computed: {
+    fromType() {
+      return [
+        { value: '', text: this.$t('common.all') },
+        { value: '0', text: this.$t('order.normal') },
+        { value: '1', text: this.$t('order.spike') },
+        { value: '2', text: this.$t('order.groupBuy') },
+      ];
+    },
+  },
   mounted() {
+    this.checkedCities = this.normalizeCheckedColumns(
+      this.$cache.local.has('order_stroge') ? this.$cache.local.getJSON('order_stroge') : this.checkedCities,
+    );
     if (checkPermi(['platform:order:page:list'])) this.getList();
     if (checkPermi(['platform:order:status:num'])) this.getOrderStatusNum();
   },
   methods: {
     checkPermi,
+    isColumnChecked(key) {
+      return this.checkedCities.includes(key);
+    },
+    columnLabel(key) {
+      const map = {
+        orderNo: this.$t('order.orderNo'),
+        merName: this.$t('order.merchantName'),
+        nickName: this.$t('order.nickName'),
+        payPrice: this.$t('order.payPrice'),
+        payType: this.$t('order.payType'),
+        orderStatus: this.$t('order.orderStatus'),
+        orderTime: this.$t('order.orderTime'),
+      };
+      return map[key] || key;
+    },
+    normalizeCheckedColumns(saved) {
+      const keys = this.columnKeys;
+      if (!Array.isArray(saved) || !saved.length) return keys.slice();
+      const aliasMap = {
+        订单号: 'orderNo',
+        订单编号: 'orderNo',
+        商户名称: 'merName',
+        用户昵称: 'nickName',
+        昵称: 'nickName',
+        实际支付: 'payPrice',
+        支付方式: 'payType',
+        订单状态: 'orderStatus',
+        下单时间: 'orderTime',
+        OrderNo: 'orderNo',
+        'Order No': 'orderNo',
+        'Order No.': 'orderNo',
+        'Merchant Name': 'merName',
+        Nickname: 'nickName',
+        'User Nickname': 'nickName',
+        'Pay Price': 'payPrice',
+        'Actual Payment': 'payPrice',
+        'Pay Type': 'payType',
+        'Payment Method': 'payType',
+        'Order Status': 'orderStatus',
+        'Order Time': 'orderTime',
+      };
+      const mapped = [];
+      let hasUnknown = false;
+      saved.forEach((item) => {
+        if (keys.includes(item)) {
+          mapped.push(item);
+        } else if (aliasMap[item]) {
+          mapped.push(aliasMap[item]);
+        } else {
+          hasUnknown = true;
+        }
+      });
+      if (hasUnknown) return keys.slice();
+      return Array.from(new Set(mapped));
+    },
     getMerId(id) {
       this.tableFrom.merId = id;
       this.handleSearchList();
@@ -341,9 +403,9 @@ export default {
           this.tableData.data = res.list || [];
           this.tableData.total = res.total;
           this.listLoading = false;
-          this.checkedCities = this.$cache.local.has('order_stroge')
-            ? this.$cache.local.getJSON('order_stroge')
-            : this.checkedCities;
+          this.checkedCities = this.normalizeCheckedColumns(
+            this.$cache.local.has('order_stroge') ? this.$cache.local.getJSON('order_stroge') : this.checkedCities,
+          );
         })
         .catch(() => {
           this.listLoading = false;
@@ -387,17 +449,17 @@ export default {
       }
     },
     handleCheckAllChange(val) {
-      this.checkedCities = val ? this.columnData : [];
+      this.checkedCities = val ? this.columnKeys.slice() : [];
       this.isIndeterminate = false;
     },
     handleCheckedCitiesChange(value) {
       let checkedCount = value.length;
-      this.checkAll = checkedCount === this.columnData.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.columnData.length;
+      this.checkAll = checkedCount === this.columnKeys.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.columnKeys.length;
     },
     checkSave() {
       this.card_select_show = false;
-      this.$modal.loading('正在保存到本地，请稍候...');
+      this.$modal.loading(this.$t('order.savingToLocal'));
       this.$cache.local.setJSON('order_stroge', this.checkedCities);
       setTimeout(this.$modal.closeLoading(), 1000);
     },

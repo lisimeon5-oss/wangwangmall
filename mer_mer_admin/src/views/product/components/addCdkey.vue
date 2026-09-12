@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :visible.sync="cdkeyShow"
-    title="添加卡密"
+    :title="$t('product.addCdkey')"
     width="950px"
     :close-on-click-modal="false"
     :before-close="handleClose"
@@ -12,44 +12,44 @@
         <el-form label-width="80px" :model="carMyValidateForm" ref="carMyValidateForm" :inline="true">
           <div v-for="(domain, index) in carMyValidateForm.carMyList" :key="domain.key" class="sheet-item">
             <el-form-item
-              :label="'卡号' + (index + 1)"
+              :label="$t('product.cardNumber') + (index + 1)"
               :prop="'carMyList.' + index + '.cardNumber'"
               :rules="{
                 required: true,
-                message: '卡号不能为空',
+                message: $t('product.cardNumberRequired'),
                 trigger: 'blur',
               }"
             >
               <el-input
                 v-model.trim="domain.cardNumber"
                 class="mr15 selWidth"
-                placeholder="请输入卡号"
+                :placeholder="$t('product.cardNumberPlaceholder')"
                 maxlength="50"
               ></el-input>
             </el-form-item>
             <el-form-item
-              :label="'卡密' + (index + 1)"
+              :label="$t('product.cdkey') + (index + 1)"
               :prop="'carMyList.' + index + '.secretNum'"
               :rules="{
                 required: true,
-                message: '卡密不能为空',
+                message: $t('product.cdkeyRequired'),
                 trigger: 'blur',
               }"
             >
               <el-input
                 v-model.trim="domain.secretNum"
                 class="mr15 selWidth"
-                placeholder="请输入卡密"
+                :placeholder="$t('product.cdkeyPlaceholder')"
                 maxlength="50"
               ></el-input>
             </el-form-item>
-            <el-button @click.prevent="removeCard(domain)">删除</el-button>
+            <el-button @click.prevent="removeCard(domain)">{{ $t('product.delete') }}</el-button>
           </div>
-          <el-form-item label=" "><el-button @click="handleAddCard">添加行</el-button></el-form-item>
+          <el-form-item label=" "><el-button @click="handleAddCard">{{ $t('product.addRow') }}</el-button></el-form-item>
         </el-form>
       </div>
       <div class="dialog-footer-inner btnTop">
-        <el-button class="btns" size="small" @click="handleClose">取消</el-button>
+        <el-button class="btns" size="small" @click="handleClose">{{ $t('product.cancel') }}</el-button>
         <el-button
           :loading="btnloading"
           type="primary"
@@ -57,7 +57,7 @@
           size="small"
           :disabled="carMyValidateForm.carMyList.length === 0"
           @click="submitForm('carMyValidateForm')"
-          >保存</el-button
+          >{{ $t('product.save') }}</el-button
         >
       </div>
     </div>
@@ -152,7 +152,7 @@ export default {
           this.btnloading = true;
           cardSecretSaveApi({ csList: this.carMyValidateForm.carMyList, libraryId: this.libraryId })
             .then((res) => {
-              this.$message.success('新增成功');
+              this.$message.success(this.$t('product.addSuccess'));
               this.btnloading = false;
               this.$emit('handlerSubSuccess', this.carMyValidateForm.carMyList);
               this.handleClose();

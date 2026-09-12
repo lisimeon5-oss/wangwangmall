@@ -3,7 +3,7 @@
     <el-input
       ref="search"
       v-model.trim="iconVal"
-      placeholder="输入关键词搜索,注意全是英文"
+      :placeholder="translateText('输入关键词搜索,注意全是英文')"
       clearable
       style="width: 300px"
       @input="upIcon(iconVal)"

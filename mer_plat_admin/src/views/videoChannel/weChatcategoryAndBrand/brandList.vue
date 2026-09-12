@@ -3,7 +3,7 @@
     <el-card class="box-card" :bordered="false" shadow="never">
       <el-form inline>
         <el-form-item>
-          <el-button type="primary" @click.native="submitBrandAudit.visible = true">添加品牌</el-button>
+          <el-button type="primary" @click.native="submitBrandAudit.visible = true">{{ $t('product.addBrand') }}</el-button>
         </el-form-item>
       </el-form>
       <el-table
@@ -16,60 +16,60 @@
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       >
         <el-table-column prop="id" label="ID"></el-table-column>
-        <el-table-column prop="brandId" min-width="70px" label="品牌ID"></el-table-column>
-        <el-table-column prop="auditId" min-width="200px" label="审核单ID"></el-table-column>
-        <el-table-column prop="license" min-width="150px" label="营业执照或组织机构代码证">
+        <el-table-column prop="brandId" min-width="70px" :label="$t('videoChannel.brandId')"></el-table-column>
+        <el-table-column prop="auditId" min-width="200px" :label="$t('videoChannel.auditOrderId')"></el-table-column>
+        <el-table-column prop="license" min-width="150px" :label="$t('videoChannel.businessLicense')">
           <template slot-scope="scope">
             <img v-for="(imgSrc, key) in scope.row.license.split(',')" :key="key" :src="imgSrc" height="80px" />
           </template>
         </el-table-column>
-        <el-table-column prop="brandAuditType" min-width="150px" label="认证审核类型"></el-table-column>
-        <el-table-column prop="trademarkType" min-width="150px" label="商标分类"></el-table-column>
-        <el-table-column prop="brandManagementType" min-width="150px" label="品牌经营类型"></el-table-column>
-        <el-table-column prop="commodityOriginType" min-width="150px" label="商品产地是否进口"></el-table-column>
-        <el-table-column prop="brandWording" min-width="150px" label="商标/品牌词"></el-table-column>
-        <el-table-column prop="saleAuthorization" min-width="150px" label="销售授权书"></el-table-column>
+        <el-table-column prop="brandAuditType" min-width="150px" :label="$t('videoChannel.certAuditType')"></el-table-column>
+        <el-table-column prop="trademarkType" min-width="150px" :label="$t('videoChannel.trademarkCategory')"></el-table-column>
+        <el-table-column prop="brandManagementType" min-width="150px" :label="$t('videoChannel.brandOperationType')"></el-table-column>
+        <el-table-column prop="commodityOriginType" min-width="150px" :label="$t('videoChannel.productImportedOrigin')"></el-table-column>
+        <el-table-column prop="brandWording" min-width="150px" :label="$t('videoChannel.trademarkBrandWord')"></el-table-column>
+        <el-table-column prop="saleAuthorization" min-width="150px" :label="$t('videoChannel.salesAuthorization')"></el-table-column>
         <el-table-column
           prop="trademarkRegistrationCertificate"
           min-width="150px"
-          label="商标注册证书"
+          :label="$t('videoChannel.trademarkRegistrationCertificate')"
         ></el-table-column>
-        <el-table-column prop="trademarkChangeCertificate" min-width="150px" label="商标变更证明"></el-table-column>
-        <el-table-column prop="trademarkRegistrant" min-width="150px" label="商标注册人姓名"></el-table-column>
-        <el-table-column prop="trademarkRegistrantNu" min-width="150px" label="商标注册号/申请号"></el-table-column>
-        <el-table-column prop="trademarkAuthorizationPeriod" min-width="150px" label="商标有效期"></el-table-column>
+        <el-table-column prop="trademarkChangeCertificate" min-width="150px" :label="$t('videoChannel.trademarkChangeCertificate')"></el-table-column>
+        <el-table-column prop="trademarkRegistrant" min-width="150px" :label="$t('videoChannel.trademarkRegistrantName')"></el-table-column>
+        <el-table-column prop="trademarkRegistrantNu" min-width="150px" :label="$t('videoChannel.trademarkRegNo')"></el-table-column>
+        <el-table-column prop="trademarkAuthorizationPeriod" min-width="150px" :label="$t('videoChannel.trademarkValidity')"></el-table-column>
         <el-table-column
           prop="trademarkRegistrationApplication"
           min-width="150px"
-          label="商标注册申请受理通知书"
+          :label="$t('videoChannel.trademarkApplicationNotice')"
         ></el-table-column>
-        <el-table-column prop="trademarkApplicant" min-width="150px" label="商标申请人姓名"></el-table-column>
-        <el-table-column prop="trademarkApplicationTime" min-width="150px" label="商标申请时间"></el-table-column>
+        <el-table-column prop="trademarkApplicant" min-width="150px" :label="$t('videoChannel.trademarkApplicantName')"></el-table-column>
+        <el-table-column prop="trademarkApplicationTime" min-width="150px" :label="$t('videoChannel.trademarkApplicationTime')"></el-table-column>
         <!--        中华人民共和国海关进口货物报关单-->
-        <el-table-column prop="importedGoodsForm" label="报关单"></el-table-column>
+        <el-table-column prop="importedGoodsForm" :label="$t('videoChannel.customsDeclaration')"></el-table-column>
         <!--        审核状态, 0：审核中，1：审核成功，9：审核拒绝-->
-        <el-table-column prop="status" fixed="right" label="审核状态">
+        <el-table-column prop="status" fixed="right" :label="$t('product.auditStatus')">
           <template slot-scope="scope">
-            <el-tag class="doingTag tag-background" v-if="scope.row.status === 0" type="warning">审核中</el-tag>
-            <el-tag class="endTag tag-background" v-if="scope.row.status === 1" type="success">审核成功</el-tag>
+            <el-tag class="doingTag tag-background" v-if="scope.row.status === 0" type="warning">{{ $t('common.auditing') }}</el-tag>
+            <el-tag class="endTag tag-background" v-if="scope.row.status === 1" type="success">{{ $t('common.auditSuccess') }}</el-tag>
             <el-popover
               placement="top-start"
-              title="拒绝原因"
+              :title="$t('product.rejectReason')"
               width="200"
               trigger="hover"
               :content="scope.row.rejectReason"
             >
               <el-tag class="notStartTag tag-background" v-if="scope.row.status === 9" slot="reference" type="danger"
-                >审核拒绝</el-tag
+                >{{ $t('product.auditRejected') }}</el-tag
               >
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" fixed="right" label="创建时间"></el-table-column>
-        <el-table-column label="操作" fixed="right" width="150">
+        <el-table-column prop="createTime" fixed="right" :label="$t('product.createTime')"></el-table-column>
+        <el-table-column :label="$t('common.operate')" fixed="right" width="150">
           <template slot-scope="scope">
             <el-button type="text" v-if="scope.row.status === 0" @click.native="getCatAndBrandResult(scope.row.auditId)"
-              >手动更新</el-button
+              >{{ $t('videoChannel.manualUpdate') }}</el-button
             >
             <span v-else> - </span>
           </template>
@@ -103,65 +103,65 @@
         label-width="200px"
         size="mini"
       >
-        <el-form-item label="商标分类" prop="pramData.auditReq.brandInfo.trademarkType">
+        <el-form-item :label="$t('videoChannel.trademarkCategory')" prop="pramData.auditReq.brandInfo.trademarkType">
           <el-select v-model="submitBrandAudit.pramData.auditReq.brandInfo.trademarkType">
-            <el-option v-for="item in 45" :key="item" :value="item" :label="'第 ' + item + ' 类'"
-              >第 "{{ item }}" 类</el-option
+            <el-option v-for="item in 45" :key="item" :value="item" :label="$t('videoChannel.stepPrefix') + item + ' ' + $t('videoChannel.categoryUnit')"
+              >{{ $t('videoChannel.stepPrefix') }} "{{ item }}" {{ $t('videoChannel.categoryUnit') }}</el-option
             >
           </el-select>
         </el-form-item>
-        <el-form-item label="选择品牌经营类型">
+        <el-form-item :label="$t('videoChannel.selectBrandOperationType')">
           <el-select v-model="submitBrandAudit.pramData.auditReq.brandInfo.brandManagementType">
-            <el-option value="1" label="自有品牌">自有品牌</el-option>
-            <el-option value="2" label="代理品牌">代理品牌</el-option>
-            <el-option value="3" label="无品牌">无品牌</el-option>
+            <el-option value="1" :label="$t('videoChannel.ownBrand')">{{ $t('videoChannel.ownBrand') }}</el-option>
+            <el-option value="2" :label="$t('videoChannel.agencyBrand')">{{ $t('videoChannel.agencyBrand') }}</el-option>
+            <el-option value="3" :label="$t('videoChannel.noBrand')">{{ $t('videoChannel.noBrand') }}</el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="商品产地是否进口">
+        <el-form-item :label="$t('videoChannel.productImportedOrigin')">
           <el-select v-model="submitBrandAudit.pramData.auditReq.brandInfo.commodityOriginType">
-            <el-option value="1" label="是">是</el-option>
-            <el-option value="2" label="否">否</el-option>
+            <el-option value="1" :label="$t('common.yes')">{{ $t('common.yes') }}</el-option>
+            <el-option value="2" :label="$t('common.no')">{{ $t('common.no') }}</el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="商标有效期">
+        <el-form-item :label="$t('videoChannel.trademarkValidity')">
           <el-date-picker
             v-model="submitBrandAudit.pramData.auditReq.brandInfo.trademarkAuthorizationPeriod"
             type="datetime"
             value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="选择 商标有效期"
+            :placeholder="$t('videoChannel.selectTrademarkValidity')"
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="商标/品牌词">
+        <el-form-item :label="$t('videoChannel.trademarkBrandWord')">
           <el-input v-model.trim="submitBrandAudit.pramData.auditReq.brandInfo.brandWording"></el-input>
         </el-form-item>
-        <el-form-item label="商标申请时间">
+        <el-form-item :label="$t('videoChannel.trademarkApplicationTime')">
           <el-date-picker
             v-model="submitBrandAudit.pramData.auditReq.brandInfo.trademarkApplicationTime"
             type="datetime"
             value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="选择 商标申请时间"
+            :placeholder="$t('videoChannel.selectTrademarkApplicationTime')"
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="商标注册人姓名">
+        <el-form-item :label="$t('videoChannel.trademarkRegistrantName')">
           <el-input v-model.trim="submitBrandAudit.pramData.auditReq.brandInfo.trademarkRegistrant"></el-input>
         </el-form-item>
-        <el-form-item label="商标注册号/申请号">
+        <el-form-item :label="$t('videoChannel.trademarkRegNo')">
           <el-input v-model.trim="submitBrandAudit.pramData.auditReq.brandInfo.trademarkRegistrantNu"></el-input>
         </el-form-item>
-        <el-form-item label="认证审核类型">
+        <el-form-item :label="$t('videoChannel.certAuditType')">
           <el-select v-model="submitBrandAudit.pramData.auditReq.brandInfo.brandAuditType">
-            <el-option value="1" label="国内品牌申请 -R 标"></el-option>
-            <el-option value="2" label="国内品牌申请 -TM 标"></el-option>
-            <el-option value="3" label="海外品牌申请 -R 标"></el-option>
-            <el-option value="4" label="海外品牌申请 -TM 标"></el-option>
+            <el-option value="1" :label="$t('videoChannel.domesticBrandR')"></el-option>
+            <el-option value="2" :label="$t('videoChannel.domesticBrandTM')"></el-option>
+            <el-option value="3" :label="$t('videoChannel.overseasBrandR')"></el-option>
+            <el-option value="4" :label="$t('videoChannel.overseasBrandTM')"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="商标申请人姓名">
+        <el-form-item :label="$t('videoChannel.trademarkApplicantName')">
           <el-input v-model.trim="submitBrandAudit.pramData.auditReq.brandInfo.trademarkApplicant"></el-input>
         </el-form-item>
-        <el-form-item label="营业执照或组织机构代码证" prop="pramData.auditReq.license">
+        <el-form-item :label="$t('videoChannel.businessLicense')" prop="pramData.auditReq.license">
           <div class="upLoadPicBox" @click="modalPicTap(false, '1')">
             <div v-if="submitBrandAudit.pramData.auditReq.license" class="pictrue">
               <img :src="submitBrandAudit.pramData.auditReq.license" />
@@ -171,7 +171,7 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="销售授权书（如商持人为自然人，还需提供有其签名的身份证正反面扫描件)">
+        <el-form-item :label="$t('videoChannel.salesAuthorizationTip')">
           <span class="upLoadPicBox" @click="modalPicTap(true, '2')">
             <div v-if="submitBrandAudit.pramData.auditReq.brandInfo.saleAuthorizationArr.length > 0" class="pictrue">
               <img
@@ -185,7 +185,7 @@
             </div>
           </span>
         </el-form-item>
-        <el-form-item label="商标注册证书">
+        <el-form-item :label="$t('videoChannel.trademarkRegistrationCertificate')">
           <div class="upLoadPicBox" @click="modalPicTap(true, '3')">
             <div
               v-if="submitBrandAudit.pramData.auditReq.brandInfo.trademarkRegistrationCertificateArr.length > 0"
@@ -202,7 +202,7 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="商标变更证明">
+        <el-form-item :label="$t('videoChannel.trademarkChangeCertificate')">
           <div class="upLoadPicBox" @click="modalPicTap(true, '4')">
             <div
               v-if="submitBrandAudit.pramData.auditReq.brandInfo.trademarkChangeCertificateArr.length > 0"
@@ -219,7 +219,7 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="商标注册申请受理通知书">
+        <el-form-item :label="$t('videoChannel.trademarkApplicationNotice')">
           <div class="upLoadPicBox" @click="modalPicTap(true, '5')">
             <div
               v-if="submitBrandAudit.pramData.auditReq.brandInfo.trademarkRegistrationApplicationArr.length > 0"
@@ -236,7 +236,7 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="中华人民共和国海关进口货物报关单">
+        <el-form-item :label="$t('videoChannel.customsImportDeclaration')">
           <div class="upLoadPicBox" @click="modalPicTap(true, '6')">
             <div v-if="submitBrandAudit.pramData.auditReq.brandInfo.importedGoodsFormArr.length > 0" class="pictrue">
               <img
@@ -255,9 +255,9 @@
             v-hasPermi="['platform:pay:component:shop:brand:audit']"
             type="primary"
             @click.native="handleSubmitBrandAudit('brandSubmitFromRules')"
-            >提交</el-button
+            >{{ $t('common.submit') }}</el-button
           >
-          <el-button @click.native="submitBrandAudit.visible = false">取消</el-button>
+          <el-button @click.native="submitBrandAudit.visible = false">{{ $t('el.messagebox.cancel') }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -292,7 +292,7 @@ export default {
         brandWording: null, // 类目名称
       },
       submitBrandAudit: {
-        title: '自定义交易组件 - 品牌申请',
+        title: this.$t('videoChannel.customTradingBrandApplication'),
         visible: false,
         pramData: {
           auditReq: {
@@ -323,9 +323,9 @@ export default {
         },
       },
       brandSubmitFromRules: {
-        'pramData.auditReq.brandInfo.trademarkType': [{ required: true, message: '请选择 商标分类', trigger: 'blur' }],
+        'pramData.auditReq.brandInfo.trademarkType': [{ required: true, message: this.$t('videoChannel.pleaseSelectTrademarkCategory'), trigger: 'blur' }],
         'pramData.auditReq.license': [
-          { required: true, message: '营业执照或组织机构代码证 不能为空', trigger: 'blur' },
+          { required: true, message: this.$t('videoChannel.businessLicenseRequired'), trigger: 'blur' },
         ],
       },
     };
@@ -393,10 +393,10 @@ export default {
           this.getList(this.tableFrom);
         })
         .catch((err) => {
-          this.$message.error('手动同步审核结果失败:' + err);
+          this.$message.error(this.$t('videoChannel.manualSyncAuditFailed') + err);
         })
         .finally(() => {
-          this.$message.info('手动同步审核结果完成');
+          this.$message.info(this.$t('videoChannel.manualSyncAuditDone'));
         });
     },
     getList(pram) {

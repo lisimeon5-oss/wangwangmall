@@ -50,7 +50,7 @@ export default {
     handlerSubmit: Debounce(function (data) {
       integralSetConfigApi(data).then((res) => {
         this.getFormInfo();
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('product.operateSuccess'));
       });
     }),
     // 获取表单详情

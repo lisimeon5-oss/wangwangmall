@@ -31,8 +31,12 @@ import com.zbkj.common.request.*;
 import com.zbkj.common.response.*;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.CouponResultCode;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.zbkj.common.utils.CrmebDateUtil;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.common.vo.CouponSimpleVo;
 import com.zbkj.common.vo.SimpleProductVo;
@@ -45,6 +49,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -273,6 +278,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponDao, Coupon> implements
         for (Coupon coupon : couponList) {
             CouponFrontResponse response = new CouponFrontResponse();
             BeanUtils.copyProperties(coupon, response);
+            response.setName(resolveLocalizedName(coupon.getName(), coupon.getNameJson()));
             if (userId > 0) {
                 CouponUser couponUser = couponUserService.getLastByCouponIdAndUid(coupon.getId(), userId);
                 if (ObjectUtil.isNotNull(couponUser)) {
@@ -330,7 +336,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponDao, Coupon> implements
         }
         if (StrUtil.isNotBlank(request.getName())) {
             String name = URLUtil.decode(request.getName());
-            lqw.like(Coupon::getName, name);
+            lqw.and(i -> i.like(Coupon::getName, name).or().like(Coupon::getNameJson, name));
         }
         lqw.orderByDesc(Coupon::getSort).orderByDesc(Coupon::getId);
         List<Coupon> couponList = dao.selectList(lqw);
@@ -402,14 +408,14 @@ public class CouponServiceImpl extends ServiceImpl<CouponDao, Coupon> implements
     @Override
     public List<CouponSimpleVo> findSimpleListByIdList(List<Integer> idList) {
         LambdaQueryWrapper<Coupon> lqw = Wrappers.lambdaQuery();
-        lqw.select(Coupon::getId, Coupon::getName);
+        lqw.select(Coupon::getId, Coupon::getName, Coupon::getNameJson);
         lqw.in(Coupon::getId, idList);
         lqw.eq(Coupon::getIsDel, false);
         List<Coupon> couponList = dao.selectList(lqw);
         return couponList.stream().map(coupon -> {
             CouponSimpleVo simpleVo = new CouponSimpleVo();
             simpleVo.setId(coupon.getId());
-            simpleVo.setName(coupon.getName());
+            simpleVo.setName(resolveLocalizedName(coupon.getName(), coupon.getNameJson()));
             return simpleVo;
         }).collect(Collectors.toList());
     }
@@ -566,7 +572,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponDao, Coupon> implements
         }
         if (StrUtil.isNotBlank(request.getName())) {
             String name = URLUtil.decode(request.getName());
-            lqw.like(Coupon::getName, name);
+            lqw.and(i -> i.like(Coupon::getName, name).or().like(Coupon::getNameJson, name));
         }
         lqw.orderByDesc(Coupon::getCreateTime);
         List<Coupon> couponList = dao.selectList(lqw);
@@ -687,7 +693,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponDao, Coupon> implements
         lqw.eq(Coupon::getReceiveType, CouponConstants.COUPON_RECEIVE_TYPE_PLAT_SEND);
         if (StrUtil.isNotBlank(request.getKeywords())) {
             String keywords = URLUtil.decode(request.getKeywords());
-            lqw.like(Coupon::getName, keywords);
+            lqw.and(i -> i.like(Coupon::getName, keywords).or().like(Coupon::getNameJson, keywords));
         }
         lqw.and(i -> i.eq(Coupon::getIsLimited, 0).or(o -> o.gt(Coupon::getLastTotal, 0)));
         lqw.and(i -> i.eq(Coupon::getIsTimeReceive, 0).or(o -> o.le(Coupon::getReceiveStartTime, now).ge(Coupon::getReceiveEndTime, now)));
@@ -800,6 +806,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponDao, Coupon> implements
         couponList.forEach(coupon -> {
             CouponCenterPageResponse response = new CouponCenterPageResponse();
             BeanUtils.copyProperties(coupon, response);
+            response.setName(resolveLocalizedName(coupon.getName(), coupon.getNameJson()));
             List<SimpleProductVo> productVoList = new ArrayList<>();
             switch (coupon.getCategory()) {
                 case 2:// 商品
@@ -957,6 +964,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponDao, Coupon> implements
 
         UpdateWrapper<Coupon> update = Wrappers.update();
         update.set("name", request.getName());
+        update.set("name_json", request.getNameJson());
         update.set("is_limited", request.getIsLimited() ? 1 : 0);
         if (request.getIsLimited() && coupon.getIsLimited()) {
             update.setSql(StrUtil.format("total = total + {}", request.getNum()));
@@ -1175,6 +1183,19 @@ public class CouponServiceImpl extends ServiceImpl<CouponDao, Coupon> implements
             return null;
         }
         return canSendCouponList;
+    }
+
+    private String getRequestLanguage() {
+        HttpServletRequest request = RequestUtil.getRequest();
+        String language = null;
+        if (request != null) {
+            language = request.getHeader("lang");
+        }
+        return StrUtil.isBlank(language) ? "zh-cn" : language;
+    }
+
+    private String resolveLocalizedName(String name, String nameJson) {
+        return I18nJsonUtil.resolveByRequest(name, nameJson);
     }
 
 }

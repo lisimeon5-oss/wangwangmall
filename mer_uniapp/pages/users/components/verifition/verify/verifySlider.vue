@@ -23,7 +23,7 @@
 			<view class="verify-left-bar"
 				:style="{width: leftBarWidth?leftBarWidth:'40px', height: '40px', 'border-color': leftBarBorderColor, transaction: transitionWidth}">
 				<text class="verify-msg" v-text="finishText"></text>
-				<view class="verify-move-block" @touchstart="start" @touchend="end" @touchmove="move"
+				<view class="verify-move-block" @touchstart.stop.prevent="start" @mousedown.stop.prevent="start"
 					:style="{width:'40px', height: '40px', 'background-color': moveBlockBackgroundColor, left: moveBlockLeft, transition: transitionLeft}">
 					<text :class="['verify-icon iconfont', iconClass]" :style="{color: iconColor}"></text>
 					<view v-if="type === '2'" class="verify-sub-block" :style="{'width':Math.floor(parseInt(imgSize.width)*47/310)+ 'px' ,
@@ -138,7 +138,9 @@
 				isEnd: false, //是够验证完成
 				showRefresh: true,
 				transitionLeft: '',
-				transitionWidth: ''
+				transitionWidth: '',
+				barAreaLeft: 0,
+				barAreaWidth: 330
 			}
 		},
 		methods: {
@@ -152,54 +154,68 @@
 
 			//鼠标按下
 			start: function(e) {
-				this.startMoveTime = new Date().getTime(); //开始滑动的时间
+				this.startMoveTime = new Date().getTime();
 				if (this.isEnd == false) {
 					this.text = ''
 					this.moveBlockBackgroundColor = '#337ab7'
 					this.leftBarBorderColor = '#337AB7'
 					this.iconColor = '#fff'
-					e.stopPropagation();
 					this.status = true;
+					this.cacheBarRect();
+					if (e && e.preventDefault) e.preventDefault();
+					if (e && e.stopPropagation) e.stopPropagation();
 				}
+			},
+			cacheBarRect() {
+				const fallback = parseInt(this.imgSize && this.imgSize.width, 10) || 330;
+				this.barAreaWidth = fallback;
+				// #ifdef H5
+				try {
+					const el = this.$el && this.$el.querySelector && this.$el.querySelector('.verify-bar-area');
+					if (el && el.getBoundingClientRect) {
+						const rect = el.getBoundingClientRect();
+						this.barAreaLeft = Math.ceil(rect.left);
+						this.barAreaWidth = Math.ceil(rect.width) || fallback;
+						return;
+					}
+				} catch (err) {}
+				// #endif
+				const query = uni.createSelectorQuery().in(this);
+				query.select('.verify-bar-area').boundingClientRect((data) => {
+					if (data) {
+						this.barAreaLeft = Math.ceil(data.left);
+						this.barAreaWidth = Math.ceil(data.width) || fallback;
+					}
+				}).exec();
+			},
+			eventClientX(e) {
+				const evt = e || (typeof window !== 'undefined' && window.event) || {};
+				if (evt.touches && evt.touches.length) {
+					return Math.ceil(evt.touches[0].clientX);
+				}
+				if (evt.changedTouches && evt.changedTouches.length) {
+					return Math.ceil(evt.changedTouches[0].clientX);
+				}
+				return Math.ceil(evt.clientX || 0);
 			},
 			//鼠标移动
 			move: function(e) {
-				var query = uni.createSelectorQuery().in(this);
-				this.barArea = query.select('.verify-bar-area')
-				var bar_area_left, barArea_offsetWidth;
-				this.barArea.boundingClientRect(data => {
-					bar_area_left = Math.ceil(data.left)
-					barArea_offsetWidth = Math.ceil(data.width)
-
-					if (this.status && this.isEnd == false) {
-						if (!e.touches) { //兼容移动端
-							var x = Math.ceil(e.clientX);
-						} else { //兼容PC端
-							var x = Math.ceil(e.touches[0].pageX);
-						}
-						// var bar_area_left = this.getLeft(this.barArea);
-
-						var move_block_left = x - bar_area_left //小方块相对于父元素的left值
-						if (this.type !== '1') { //图片滑动
-							if (move_block_left >= barArea_offsetWidth - parseInt(parseInt(this.blockSize
-									.width) / 2) - 2) {
-								move_block_left = barArea_offsetWidth - parseInt(parseInt(this.blockSize
-									.width) / 2) - 2;
-							}
-						}
-
-						if (move_block_left <= 0) {
-							move_block_left = parseInt(parseInt(this.blockSize.width) / 2);
-						}
-
-						//拖动后小方块的left值
-						this.moveBlockLeft = (move_block_left - parseInt(parseInt(this.blockSize.width) / 2)) +
-							"px"
-						this.leftBarWidth = (move_block_left - parseInt(parseInt(this.blockSize.width) / 2)) +
-							"px"
-
+				if (!(this.status && this.isEnd == false)) return;
+				if (e && e.preventDefault) e.preventDefault();
+				const x = this.eventClientX(e);
+				const bar_area_left = this.barAreaLeft || 0;
+				const barArea_offsetWidth = this.barAreaWidth || parseInt(this.imgSize.width, 10) || 330;
+				let move_block_left = x - bar_area_left;
+				if (this.type !== '1') {
+					if (move_block_left >= barArea_offsetWidth - parseInt(parseInt(this.blockSize.width) / 2) - 2) {
+						move_block_left = barArea_offsetWidth - parseInt(parseInt(this.blockSize.width) / 2) - 2;
 					}
-				}).exec();
+				}
+				if (move_block_left <= 0) {
+					move_block_left = parseInt(parseInt(this.blockSize.width) / 2);
+				}
+				this.moveBlockLeft = (move_block_left - parseInt(parseInt(this.blockSize.width) / 2)) + "px"
+				this.leftBarWidth = (move_block_left - parseInt(parseInt(this.blockSize.width) / 2)) + "px"
 			},
 
 			//鼠标松开
@@ -249,7 +265,7 @@
 								}, 1500)
 								this.passFalg = true
 								this.tipWords =
-									`${((this.endMovetime-this.startMoveTime)/1000).toFixed(2)}s验证成功`
+									`${((this.endMovetime-this.startMoveTime)/1000).toFixed(2)}s ${this.$t('验证成功')}`
 								setTimeout(() => {
 									this.tipWords = ""
 									this.$emit('success', {
@@ -266,7 +282,7 @@
 									this.refresh();
 								}, 1000);
 								this.$parent.$emit('error', this)
-								this.tipWords = "验证失败"
+								this.tipWords = this.$t('验证失败')
 								setTimeout(() => {
 									this.tipWords = ""
 								}, 1000)
@@ -348,7 +364,28 @@
 				}
 			}
 		},
-		mounted() {},
+		mounted() {
+			this._onMove = (e) => this.move(e);
+			this._onEnd = () => this.end();
+			// #ifdef H5
+			if (typeof window !== 'undefined') {
+				window.addEventListener('mousemove', this._onMove, { passive: false });
+				window.addEventListener('mouseup', this._onEnd);
+				window.addEventListener('touchmove', this._onMove, { passive: false });
+				window.addEventListener('touchend', this._onEnd);
+			}
+			// #endif
+		},
+		beforeDestroy() {
+			// #ifdef H5
+			if (typeof window !== 'undefined' && this._onMove) {
+				window.removeEventListener('mousemove', this._onMove);
+				window.removeEventListener('mouseup', this._onEnd);
+				window.removeEventListener('touchmove', this._onMove);
+				window.removeEventListener('touchend', this._onEnd);
+			}
+			// #endif
+		},
 	}
 </script>
 <style scoped>
@@ -503,7 +540,9 @@
 		top: 0px;
 		left: 0;
 		background: #fff;
-		cursor: pointer;
+		cursor: grab;
+		user-select: none;
+		-webkit-user-select: none;
 		-webkit-box-sizing: content-box;
 		-moz-box-sizing: content-box;
 		box-sizing: content-box;

@@ -2,15 +2,15 @@
   <div class="divBox">
     <el-card class="box-card" shadow="never" :bordered="false">
       <el-button type="primary" size="small" @click="handleAddJob" v-hasPermi="['platform:schedule:job:add']"
-        >添加定时任务</el-button
+        >{{ $t('maintain.addScheduledTask') }}</el-button
       >
       <el-table v-loading="listLoading" :data="tableData" size="small" class="table mt20 operation">
-        <el-table-column prop="jobId" label="任务id" min-width="60" />
-        <el-table-column prop="beanName" label="定时任务类名" min-width="200" />
-        <el-table-column prop="methodName" label="方法名" min-width="150" />
-        <el-table-column prop="cronExpression" min-width="120" label="cron表达式" />
-        <el-table-column prop="params" label="参数" min-width="100" />
-        <el-table-column label="状态" min-width="80">
+        <el-table-column prop="jobId" :label="$t('maintain.taskId')" min-width="60" />
+        <el-table-column prop="beanName" :label="$t('maintain.scheduledTaskClassName')" min-width="200" />
+        <el-table-column prop="methodName" :label="$t('maintain.methodName')" min-width="150" />
+        <el-table-column prop="cronExpression" min-width="120" :label="$t('maintain.cronExpression')" />
+        <el-table-column prop="params" :label="$t('maintain.parameter')" min-width="100" />
+        <el-table-column :label="$t('common.status')" min-width="80">
           <template
             slot-scope="scope"
             v-if="checkPermi(['platform:schedule:job:start', 'platform:schedule:job:suspend'])"
@@ -19,15 +19,15 @@
               v-model="scope.row.status"
               :active-value="0"
               :inactive-value="1"
-              active-text="正常"
-              inactive-text="暂停"
+              :active-text="$t('maintain.normal')"
+              :inactive-text="$t('product.paused')"
               @change="onchangeIsShow(scope.row)"
             />
           </template>
         </el-table-column>
-        <el-table-column prop="remark" label="备注" min-width="150" :show-overflow-tooltip="true" />
-        <el-table-column prop="createTime" label="创建时间" min-width="150" />
-        <el-table-column fixed="right" width="150" label="操作">
+        <el-table-column prop="remark" :label="$t('common.remark')" min-width="150" :show-overflow-tooltip="true" />
+        <el-table-column prop="createTime" :label="$t('product.createTime')" min-width="150" />
+        <el-table-column fixed="right" width="150" :label="$t('common.operate')">
           <template slot-scope="scope">
             <el-button
               :disabled="scope.row.status == 0"
@@ -35,10 +35,10 @@
               size="small"
               @click="onEdit(scope.row)"
               v-hasPermi="['platform:schedule:job:update']"
-              >编辑</el-button
+              >{{ $t('common.edit') }}</el-button
             >
             <el-divider direction="vertical"></el-divider>
-            <a @click="onTrig(scope.row)" v-hasPermi="['platform:schedule:job:trig']">执行</a>
+            <a @click="onTrig(scope.row)" v-hasPermi="['platform:schedule:job:trig']">{{ $t('maintain.execute') }}</a>
             <el-divider direction="vertical"></el-divider>
             <el-button
               :disabled="scope.row.status == 0"
@@ -46,7 +46,7 @@
               size="small"
               @click="handleDelete(scope.row.jobId, scope.$index)"
               v-hasPermi="['platform:schedule:job:delete']"
-              >删除</el-button
+              >{{ $t('common.delete') }}</el-button
             >
           </template>
         </el-table-column>
@@ -120,7 +120,7 @@ export default {
         schedule
           .scheduleJobSuspend(row.jobId)
           .then(() => {
-            this.$message.success('修改成功');
+            this.$message.success(this.$t('category.updateSuccess'));
             this.getjobList();
           })
           .catch(() => {
@@ -130,7 +130,7 @@ export default {
         schedule
           .scheduleJobStart(row.jobId)
           .then(() => {
-            this.$message.success('修改成功');
+            this.$message.success(this.$t('category.updateSuccess'));
             this.getjobList();
           })
           .catch(() => {
@@ -150,7 +150,7 @@ export default {
     },
     onTrig(row) {
       schedule.scheduleJobTrig(row.jobId).then((res) => {
-        this.$message.success('触发成功');
+        this.$message.success(this.$t('maintain.triggerSuccess'));
         this.getjobList();
       });
     },
@@ -161,7 +161,7 @@ export default {
     handleDelete(id, idx) {
       this.$modalSure().then(() => {
         schedule.scheduleJobDelete(id).then((res) => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           this.getjobList();
         });
       });

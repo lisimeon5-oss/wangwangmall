@@ -11,7 +11,7 @@
 							<view class='name line1 line-heightOne mb20'>{{orderInfo.productName}}</view>
 							<view class='sku text-999 f-s-20 line-heightOne mb20'>{{orderInfo.sku}}</view>
 							<view class='acea-row f-s-26 text-right row-middle'>
-								<view class="mr10 text-2828">￥{{orderInfo.price}} </view>
+								<view class="mr10 text-2828">฿{{orderInfo.price}} </view>
 								<view class='num text-999'> x {{orderInfo.payNum}}</view>
 							</view>
 						</view>
@@ -19,25 +19,25 @@
 				</view>
 				<view class='list borRadius14'>
 					<view class='item acea-row row-between-wrapper'>
-						<view>售后类型</view>
-						<view class='num'>{{afterSalesType===1?'仅退款(无需退货)':'退货退款(已收到货)'}}</view>
+						<view>{{$t('售后类型')}}</view>
+						<view class='num'>{{afterSalesType===1? $t('仅退款(无需退货)') : $t('退货退款(已收到货)')}}</view>
 					</view>
 					<view v-if="afterSalesType===2" class='item acea-row row-between-wrapper'>
-						<view>退货方式</view>
+						<view>{{$t('退货方式')}}</view>
 						<view class="picker">
 							<picker @change="bindReturnGoodsTypeChange" :value="returnGoodsTypeIndex"
-								:range="returnGoodsType">
+								:range="returnGoodsTypeLabels" :cancel-text="$t('取消')" :confirm-text="$t('完成')">
 								<view class="picker-box">
-									{{returnGoodsType[returnGoodsTypeIndex]}}
+									{{returnGoodsTypeLabels[returnGoodsTypeIndex]}}
 									<text class="iconfont icon-jiantou"></text>
 								</view>
 							</picker>
 						</view>
 					</view>
 					<view class='item acea-row row-between-wrapper'>
-						<view>退货件数</view>
+						<view>{{$t('退货件数')}}</view>
 						<view class="picker">
-							<picker :disabled="orderInfo.groupBuyActivityId>0"  @change="bindNumChange" :value="numIndex" :range="numArray">
+							<picker :disabled="orderInfo.groupBuyActivityId>0"  @change="bindNumChange" :value="numIndex" :range="numArray" :cancel-text="$t('取消')" :confirm-text="$t('完成')">
 								<view class="picker-box">
 									{{numArray[numIndex]}}
 									<text v-if="orderInfo.groupBuyActivityId<=0" class="iconfont icon-jiantou"></text>
@@ -46,12 +46,12 @@
 						</view>
 					</view>
 					<view class='item acea-row row-between-wrapper'>
-						<view @click="handleRefundProcess">预计退款金额<span class="iconfont icon-shuoming2 font-color f-s-22 ml10"></span></view>
-						<view class='num' style="width: 360rpx;">￥{{refundPrice}}</view>
+						<view @click="handleRefundProcess">{{$t('预计退款金额')}}<span class="iconfont icon-shuoming2 font-color f-s-22 ml10"></span></view>
+						<view class='num' style="width: 360rpx;">฿{{refundPrice}}</view>
 					</view>
 					<view class='item acea-row row-between-wrapper no-border' @tap="toggleTab('region')">
-						<view>退款原因</view>
-						<picker class='num' @change="bindPickerChange" :value="index" :range="RefundArray">
+						<view>{{$t('退款原因')}}</view>
+						<picker class='num' @change="bindPickerChange" :value="index" :range="RefundArray" :cancel-text="$t('取消')" :confirm-text="$t('完成')">
 							<view class="picker acea-row row-between-wrapper">
 								<view class='reason'>{{RefundArray[index]}}</view>
 								<text class='iconfont icon-jiantou'></text>
@@ -61,15 +61,15 @@
 				</view>
 				<view class="list borRadius14">
 					<view class='textarea acea-row row-between'>
-						<view class="line-heightOne mb30 mt30">备注说明<span
-								class="text-999 f-s-24">（说明100字以内，凭证最多4张）</span></view>
-						<textarea style="width: 100%;" placeholder='填写备注信息，100字以内' class='text-2828 f-s-30'
+						<view class="line-heightOne mb30 mt30">{{$t('备注说明')}}<span
+								class="text-999 f-s-24">{{$t('（说明100字以内，凭证最多4张）')}}</span></view>
+						<textarea style="width: 100%;" :placeholder="$t('填写备注信息，100字以内')" class='text-2828 f-s-30'
 							name="refund_reason_wap_explain" placeholder-class='填写备注信息，100字以内'></textarea>
 					</view>
 					<view class='item acea-row row-between' style="border: none;">
 						<!-- <view class='title acea-row row-between-wrapper'>
-							<view>上传凭证</view>
-							<view class='tip'>( 最多可上传4张 )</view>
+							<view>{{$t('上传凭证')}}</view>
+							<view class='tip'>{{$t('( 最多可上传4张 )')}}</view>
 						</view> -->
 						<view class='upload acea-row row-middle'>
 							<view class='pictrue' v-for="(item,index) in refund_reason_wap_imgPath" :key="index">
@@ -79,24 +79,24 @@
 							<view class='pictrue acea-row row-center-wrapper row-column' @tap='uploadpic'
 								v-if="refund_reason_wap_imgPath.length < 4">
 								<text class='iconfont icon-icon25201'></text>
-								<view>上传凭证</view>
+								<view>{{$t('上传凭证')}}</view>
 							</view>
 						</view>
 					</view>
 				</view>
-				<button class='returnBnt bg_color' form-type="submit">申请退款</button>
+				<button class='returnBnt bg_color' form-type="submit">{{$t('申请退款')}}</button>
 			</view>
 		</form>
 
 		<!-- 评论 -->
 		<uni-popup type="center" ref="refundProcess">
 			<view class="popup-content">
-				<view class="text-center text-2828 f-s-32 f-w-500 mb30">退款规则说明</view>
-				<view class="f-s-26 text-2828 mt15 line-height-15">1. 在线支付，退款金额原路返还；</view>
-				<view class="f-s-26 text-2828 line-height-15">2. 符合退款规则的优惠券，直接退回您已领取优惠券；</view>
-				<view class="f-s-26 text-2828">3. 抵扣积分退回与赠送积分扣除，系统自动进行。</view>
+				<view class="text-center text-2828 f-s-32 f-w-500 mb30">{{$t('退款规则说明')}}</view>
+				<view class="f-s-26 text-2828 mt15 line-height-15">{{$t('1. 在线支付，退款金额原路返还；')}}</view>
+				<view class="f-s-26 text-2828 line-height-15">{{$t('2. 符合退款规则的优惠券，直接退回您已领取优惠券；')}}</view>
+				<view class="f-s-26 text-2828">{{$t('3. 抵扣积分退回与赠送积分扣除，系统自动进行。')}}</view>
 				<view @click="$refs.refundProcess.close()" class="acea-row row-center" style="width: 100%;">
-					<view class="btnSuccess">我知道了</view>
+					<view class="btnSuccess">{{$t('我知道了')}}</view>
 				</view>
 			</view>
 		</uni-popup>
@@ -144,7 +144,12 @@
 				returnGoodsTypeIndex: 0, //退货类型：0-不退货 1-快递退回，2-到店退货
 			};
 		},
-		computed: mapGetters(['isLogin']),
+		computed: {
+			...mapGetters(['isLogin']),
+			returnGoodsTypeLabels() {
+				return [this.$t('快递退回'), this.$t('到店退货')]
+			}
+		},
 		watch: {
 			isLogin: {
 				handler: function(newV, oldV) {
@@ -164,7 +169,7 @@
 			let price = this.$util.$h.Div(this.orderInfo.payPrice, this.orderInfo.payNum);
 			this.refundPrice = this.$util.$h.Mul(price, this.numArray[0]).toFixed(2);
 			if (!options.orderNo) return this.$util.Tips({
-				title: '缺少订单id,无法退款'
+				title: this.$t('缺少订单id,无法退款')
 			}, {
 				tab: 3,
 				url: 1
@@ -176,6 +181,11 @@
 				this.getRefundReason();
 			} else {
 				toLogin();
+			}
+		},
+		onShow: function() {
+			if (this.isLogin) {
+				this.getRefundReason();
 			}
 		},
 		methods: {
@@ -199,7 +209,8 @@
 			getRefundReason: function() {
 				let that = this;
 				ordeRefundReason().then(res => {
-					that.$set(that, 'RefundArray', res.data);
+					const list = Array.isArray(res.data) ? res.data : [];
+					that.$set(that, 'RefundArray', list.map((item) => String(item == null ? '' : item)));
 				})
 			},
 
@@ -235,9 +246,9 @@
 				let that = this,
 					value = e.detail.value;
 				//收集form表单
-				// if (!value.refund_reason_wap_explain) return this.$util.Tips({title:'请输入退款原因'});
+				// if (!value.refund_reason_wap_explain) return this.$util.Tips({title:this.$t('请输入退款原因')});
 				uni.showLoading({
-					title: '保存中',
+					title: this.$t('保存中'),
 					mask: true
 				})
 				orderRefundVerify({
@@ -252,7 +263,7 @@
 				}).then(res => {
 					uni.hideLoading();
 					return this.$util.Tips({
-						title: '申请成功',
+						title: this.$t('申请成功'),
 						icon: 'success'
 					}, {
 						tab: 5,

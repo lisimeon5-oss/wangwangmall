@@ -14,6 +14,15 @@ import store from '@/store';
 import { getToken } from '@/utils/auth';
 import SettingMer from '@/utils/settingMer';
 import { isPhone } from '@/libs/wechat';
+import i18n from '@/i18n';
+import { backendMessageMap } from '@/i18n/backendMessageMap';
+
+function translateApiMessage(message) {
+  if (!message) return i18n.t('common.requestFailed');
+  const key = backendMessageMap[message];
+  return key ? i18n.t(key) : message;
+}
+
 const service = axios.create({
   baseURL: SettingMer.apiBaseURL,
   timeout: 60000, // 过期时间
@@ -27,9 +36,12 @@ service.interceptors.request.use(
     if (token) {
       config.headers['Authori-zation'] = token;
     }
+    // 传递当前语言，供后端多语言接口返回对应语言内容
+    config.headers['lang'] = i18n.locale;
     if (/get/i.test(config.method)) {
       config.params = config.params || {};
       config.params.temp = Date.parse(new Date()) / 1000;
+      config.params.lang = i18n.locale;
     }
     return config;
   },
@@ -44,11 +56,10 @@ service.interceptors.response.use(
     const res = response.data;
     // if the custom code is not 20000, it is judged as an error.
     if (res.code === 401) {
-      // to re-login
-      Message.error('无效的会话，或者登录已过期，请重新登录。');
+      Message.error(i18n.t('common.sessionInvalid'));
       if (window.location.pathname !== '/login') location.href = '/login';
     } else if (res.code === 403) {
-      Message.error('没有权限访问。');
+      Message.error(i18n.t('common.noAccess'));
     }
     if (res.code !== 200 && res.code !== 401) {
       if (isPhone()) {
@@ -56,7 +67,7 @@ service.interceptors.response.use(
         return Promise.reject(res || 'Error');
       }
       Message({
-        message: res.message || 'Error',
+        message: translateApiMessage(res.message),
         type: 'error',
         duration: 5 * 1000,
       });
@@ -67,7 +78,7 @@ service.interceptors.response.use(
   },
   (error) => {
     Message({
-      message: error.message,
+      message: translateApiMessage(error.message),
       type: 'error',
       duration: 5 * 1000,
     });

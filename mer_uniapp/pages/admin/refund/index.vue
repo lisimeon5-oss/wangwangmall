@@ -2,17 +2,17 @@
 	<view class="refund">
 		<view class="money-section">
 			<view class="acea-row row-middle item">
-				<view class="">预计退款</view>
+				<view class="">{{$t('预计退款')}}</view>
 				<input disabled="" v-model="refundMoney" class="input" type="text" />
 			</view>
 			<view class="acea-row row-middle item" >
-				<view class="">退款类型</view>
+				<view class="">{{$t('退款类型')}}</view>
 				<view class="acea-row row-right radio-group">
 					<view class="acea-row row-middle radio-item" :class="{ on: !isSplit}" @click="refundTypeChange(0)">
-						<text class="iconfont" :class="isSplit?'icon-weixuanzhong':'icon-a-ic_CompleteSelect'"></text>整单退款
+						<text class="iconfont" :class="isSplit?'icon-weixuanzhong':'icon-a-ic_CompleteSelect'"></text>{{$t('整单退款')}}
 					</view>
 					<view v-if="type!=2" class="acea-row row-middle radio-item" :class="{ on: isSplit}" @click="refundTypeChange(1)">
-						<text class="iconfont" :class="isSplit?'icon-a-ic_CompleteSelect':'icon-weixuanzhong'"></text>分单退款
+						<text class="iconfont" :class="isSplit?'icon-a-ic_CompleteSelect':'icon-weixuanzhong'"></text>{{$t('分单退款')}}
 					</view>
 				</view>
 			</view>
@@ -22,11 +22,11 @@
 		<view class="footer acea-row row-middle">
 			<view class="all acea-row row-middle" v-if="isSplit" @click="allChange">
 				<text class="iconfont" :class="isAll?'icon-a-ic_CompleteSelect':'icon-ic_unselect'"></text>
-				全选
+				{{$t('全选')}}
 			</view>
 			<view class="btn-box">
 				<view class="btn" :style="{ width: isSplit?'auto':'100%'}" @click="openRefund">
-					确认
+					{{$t('确认')}}
 					<text v-if="isSplit">({{ numTotal }})</text>
 				</view>
 			</view>
@@ -172,7 +172,7 @@
 				employeeDirectRefund(refundObj).then(res => {
 					if (res.code == 200) {
 						this.$util.Tips({
-							title: '操作成功'
+							title: this.$t('操作成功')
 						})
 						setTimeout(()=>{
 							uni.navigateTo({
@@ -191,13 +191,13 @@
 </script>
 
 <style lang="scss" scoped>
-	/deep/checkbox .uni-checkbox-input.uni-checkbox-input-checked {
+	::v-deep checkbox .uni-checkbox-input.uni-checkbox-input-checked {
 		border: 1px solid #2A7EFB !important;
 		background-color: #2A7EFB !important;
 		color: #fff !important;
 	}
 	
-	/deep/checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+	::v-deep checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 		border: 1px solid #2A7EFB !important;
 		background-color: #2A7EFB !important;
 		color: #fff !important;

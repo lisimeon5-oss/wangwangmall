@@ -9,13 +9,14 @@
 // +----------------------------------------------------------------------
 
 //财务过滤器
+import i18n from '@/i18n';
 /**
  * 资金流水 交易类型
  */
 export function transactionTypeFilter(status) {
   const statusMap = {
-    pay_order: '订单支付',
-    refund_order: '订单退款',
+    pay_order: i18n.t('finance.orderPay'),
+    refund_order: i18n.t('finance.orderRefund'),
   };
   return statusMap[status];
 }
@@ -25,9 +26,9 @@ export function transactionTypeFilter(status) {
  */
 export function closingTypeFilter(status) {
   const statusMap = {
-    bank: '银行卡',
-    wechat: '微信',
-    alipay: '支付宝',
+    bank: i18n.t('finance.bankCard'),
+    wechat: i18n.t('order.wechat'),
+    alipay: i18n.t('order.alipay'),
   };
   return statusMap[status];
 }

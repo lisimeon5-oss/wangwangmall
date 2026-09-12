@@ -2,7 +2,7 @@
 	<view class='list acea-row row-between-wrapper' :data-theme="theme">
 		<view class='item' hover-class='none' @click="goDetail(item)">
 			<view class='pictrue'>
-				<view v-show="item.stock===0" class="sellOut">已售罄</view>
+				<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 				<easy-loadimage :image-src="item.image"></easy-loadimage>
 				<view v-if="item.activityStyle" :style="{ backgroundImage: `url(${item.activityStyle})` }"
 					class="border-picture"></view>
@@ -21,13 +21,13 @@
 							v-for="items in item.productTags.locationUnderTitle.length>3?item.productTags.locationUnderTitle.slice(0,3):item.productTags.locationUnderTitle"
 							:key="items.id" class="mr10 tagSolid">{{items.tagName}}</text>
 					</view>
-					<view class="sold mt-8">已售 {{ item.sales }} {{item.unitName}}
+					<view class="sold mt-8">{{$t('已售')}} {{ item.sales }} {{$t(item.unitName || '')}}
 					</view>
 				</view>
 				<view class="company mt-4" v-if="item.merName" @click.stop="goStore(item.merId)">
 					<text class='name line1'>{{item.merName}}</text>
 					<view class="flex">
-						进店
+						{{$t('进店')}}
 						<text class="iconfont icon-xiangyou"></text>
 					</view>
 				</view>
@@ -145,8 +145,8 @@
 
 			.pictrue {
 
-				/deep/image,
-				/deep/.easy-loadimage,
+				::v-deep image,
+				::v-deep .easy-loadimage,
 				uni-image {
 					width: 100%;
 					height: 100%;
@@ -236,7 +236,7 @@
 		border-radius: 16rpx 16rpx 0 0;
 		overflow: hidden;
 
-		/deep/.easy-loadimage,
+		::v-deep .easy-loadimage,
 		uni-image,
 		image {
 			height: 330rpx;

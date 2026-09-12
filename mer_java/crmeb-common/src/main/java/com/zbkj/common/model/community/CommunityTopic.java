@@ -37,6 +37,10 @@ public class CommunityTopic implements Serializable {
     @TableField("`name`")
     private String name;
 
+    @ApiModelProperty("多语言话题名称(JSON)")
+    @TableField("name_json")
+    private String nameJson;
+
     @ApiModelProperty("是否推荐：1-推荐，0-不推荐")
     @TableField("is_hot")
     private Integer isHot;

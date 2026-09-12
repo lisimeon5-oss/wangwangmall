@@ -4,15 +4,15 @@
 		<view class="rd-14rpx bg--w111-fff mt-20 p-24">
 			<view class="flex fs-24 notice pb-24 border-bottom mb-38">
 				<image class="laba" src="../../static/images/laba.png" mode=""></image>
-				<text class="text-red">已拼{{groupBuyActivityResponse.latestBuyCount||0}}件</text>
-				<text v-if="groupBuyActivityResponse.groupBuyUserActivityDoneList">丨</text>
+				<text class="text-red">{{$t('已拼')}}{{groupBuyActivityResponse.latestBuyCount||0}}{{$t('件')}}</text>
+				<text v-if="groupBuyActivityResponse.groupBuyUserActivityDoneList">{{$t('丨')}}</text>
 				<view class='swiper'>
 					<swiper :indicator-dots="false" autoplay interval="2500" duration="500" vertical="true"
 						circular="true">
 						<block v-for="(item,index) in groupBuyActivityResponse.groupBuyUserActivityDoneList"
 							:key='index'>
 							<swiper-item>
-								<view class='line1'>{{item.groupNickname}}拼团成功</view>
+								<view class='line1'>{{item.groupNickname}}{{$t('拼团成功')}}</view>
 							</swiper-item>
 						</block>
 					</swiper>
@@ -23,8 +23,8 @@
 				<view class="flex-1 flex-y-center">
 					<image :src='item.orderDoneUserImages[0].groupAvatar' class="w-64 h-64 rd-50-p111-"></image>
 					<view class="flex-y-center fs-26 pl-24">
-						<text>还差 <text class="text-red">{{item.needSomeTogetherCount}}</text>人,</text>
-						<text class="pl-8">还剩</text>
+						<text>{{$t('还差')}} <text class="text-red">{{item.needSomeTogetherCount}}</text>{{$t('人,')}}</text>
+						<text class="pl-8">{{$t('还剩')}}</text>
 						<view class="time-box">
 							<countDown  :is-day="true" :tip-text="' '" :day-text="' : '" :hour-text="' : '"
 							:minute-text="' : '" :second-text="' '" :isCol="false"  :datatime="item.recordEndTime|dataTime"
@@ -34,7 +34,7 @@
 					</view>
 				</view>
 				<view class="w-120 h-56 rd-30rpx bg-red flex-center text--w111-fff fs-24"
-					@click="$emit('toGroup',item.orderDoneUserImages[0].groupRecordId)">去拼团</view>
+					@click="$emit('toGroup',item.orderDoneUserImages[0].groupRecordId)">{{$t('去拼团')}}</view>
 			</view>
 		</view>
 	</view>
@@ -119,7 +119,7 @@
 		height: 40rpx;
 	}
 
-	/deep/.swiper-item {
+	::v-deep .swiper-item {
 		height: 100rpx !important;
 	}
 

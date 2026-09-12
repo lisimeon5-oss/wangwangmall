@@ -6,71 +6,71 @@
           <div class="full">
             <div class="order_icon"><span class="iconfont icon-dingdan"></span></div>
             <div class="text">
-              <div class="title">购买记录</div>
+              <div class="title">{{ $t('user.purchaseRecord') }}</div>
               <div>
-                <span class="mr20">订单号：{{ orderDatalist.orderNo }}</span>
+                <span class="mr20">{{ $t('order.orderNoColon') }}{{ orderDatalist.orderNo }}</span>
               </div>
             </div>
           </div>
           <ul class="list">
             <li class="item">
-              <div class="title">订单状态</div>
+              <div class="title">{{ $t('order.orderStatus') }}</div>
               <div>
-                <span>{{ orderDatalist.paid ? '已支付' : '未支付' }}</span>
+                <span>{{ orderDatalist.paid ? $t('order.paid') : $t('order.unpaid') }}</span>
               </div>
             </li>
             <li class="item">
-              <div class="title">实际支付</div>
-              <div class="color-warning">¥ {{ orderDatalist.price || '0.0' }}</div>
+              <div class="title">{{ $t('order.payPrice') }}</div>
+              <div class="color-warning">฿ {{ orderDatalist.price || '0.0' }}</div>
             </li>
             <li class="item">
-              <div class="title">支付方式</div>
+              <div class="title">{{ $t('order.payType') }}</div>
               <div>{{ orderDatalist.payType | filterCardPayType }}</div>
             </li>
             <li class="item">
-              <div class="title">支付时间</div>
+              <div class="title">{{ $t('user.payTimeCol') }}</div>
               <div>{{ orderDatalist.payTime | filterEmpty }}</div>
             </li>
           </ul>
         </div>
         <div class="detailSection">
-          <div class="title">用户信息</div>
+          <div class="title">{{ $t('order.userInfo') }}</div>
           <ul class="list">
             <li class="item">
-              <div class="lang">用户昵称：</div>
+              <div class="lang">{{ $t('order.userNickname') }}</div>
               <div class="value">{{ orderDatalist.userNickname }} | {{ orderDatalist.uid }}</div>
             </li>
             <li class="item">
-              <div class="lang">手机号：</div>
+              <div class="lang">{{ $t('user.phoneLabel') }}</div>
               <div class="value">{{ orderDatalist.userPhone }}</div>
             </li>
           </ul>
         </div>
         <div class="detailSection">
-          <div class="title">会员卡信息</div>
+          <div class="title">{{ $t('user.cardInfoTitle') }}</div>
           <ul class="list">
             <li class="item">
-              <div class="lang">会员卡名称：</div>
+              <div class="lang">{{ $t('user.cardNameLabel') }}</div>
               <div class="value">{{ orderDatalist.cardName }}</div>
             </li>
             <li class="item">
-              <div class="lang">会员卡类型：</div>
+              <div class="lang">{{ $t('user.cardTypeLabel') }}</div>
               <div class="value">{{ orderDatalist.type | filterCardType }}</div>
             </li>
             <li class="item">
-              <div class="lang">会员卡期限：</div>
-              <div class="value">{{ orderDatalist.type === 2 ? '永久' : orderDatalist.deadlineDay + '天' }}</div>
+              <div class="lang">{{ $t('user.cardTermLabel') }}</div>
+              <div class="value">{{ orderDatalist.type === 2 ? $t('user.permanent') : orderDatalist.deadlineDay + $t('user.day') }}</div>
             </li>
             <li class="item">
-              <div class="lang">到期时间：</div>
+              <div class="lang">{{ $t('user.expireTimeLabel') }}</div>
               <div class="value">{{ orderDatalist.cardExpirationTime }}</div>
             </li>
             <li class="item">
-              <div class="lang">赠送余额：</div>
+              <div class="lang">{{ $t('user.giftBalanceLabel') }}</div>
               <div class="value">{{ orderDatalist.giftBalance || '0.0' }}</div>
             </li>
             <li class="item">
-              <div class="lang">创建时间：</div>
+              <div class="lang">{{ $t('order.createTimeColon') }}</div>
               <div class="value">{{ orderDatalist.createTime }}</div>
             </li>
           </ul>

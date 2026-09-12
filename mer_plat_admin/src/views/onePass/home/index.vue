@@ -1,35 +1,12 @@
 <template>
-  <div>
-    <iframe
-      ref="iframes"
-      src="https://api.crmeb.com/"
-      width="100%"
-      :height="iframeHeight"
-      style="border: none"
-    ></iframe>
-  </div>
+  <sms-config />
 </template>
 
 <script>
+import smsConfig from '../smsConfig/index.vue';
+
 export default {
-  name: 'SmsConfig',
-  data() {
-    return {
-      iframeHeight: 0,
-    };
-  },
-  created() {
-    window.addEventListener('resize', this.handleResize, { passive: true });
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.iframeHeight = this.$selfUtil.getTableHeight(0);
-    });
-  },
-  methods: {
-    handleResize(event) {
-      this.iframeHeight = this.$selfUtil.getTableHeight(0);
-    },
-  },
+  name: 'OnePassHome',
+  components: { smsConfig },
 };
 </script>

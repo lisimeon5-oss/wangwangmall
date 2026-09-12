@@ -28,6 +28,8 @@ public class UserLevelConstants {
     public static final String SYSTEM_USER_LEVEL_COMMUNITY_NOTES_NUM = "userLevelCommunityNotesNum";
     /** 系统用户等级规则 */
     public static final String SYSTEM_USER_LEVEL_RULE = "userLevelRule";
+    /** 系统用户等级规则多语言(JSON) */
+    public static final String SYSTEM_USER_LEVEL_RULE_JSON = "userLevelRuleJson";
 
 
 }

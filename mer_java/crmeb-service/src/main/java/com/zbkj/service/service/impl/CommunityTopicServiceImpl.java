@@ -22,6 +22,7 @@ import com.zbkj.common.request.CommunityTopicSearchRequest;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.CommunityResultCode;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.service.dao.community.CommunityTopicDao;
 import com.zbkj.service.service.CommunityNotesService;
 import com.zbkj.service.service.CommunityTopicService;
@@ -66,7 +67,8 @@ public class CommunityTopicServiceImpl extends ServiceImpl<CommunityTopicDao, Co
     public PageInfo<CommunityTopic> findPageList(CommunityTopicSearchRequest request) {
         Page<CommunityTopic> page = PageHelper.startPage(request.getPage(), request.getLimit());
         LambdaQueryWrapper<CommunityTopic> lqw = Wrappers.lambdaQuery();
-        lqw.select(CommunityTopic::getId, CommunityTopic::getName, CommunityTopic::getIsHot, CommunityTopic::getCreateTime, CommunityTopic::getCountUse);
+        lqw.select(CommunityTopic::getId, CommunityTopic::getName, CommunityTopic::getNameJson,
+                CommunityTopic::getIsHot, CommunityTopic::getCreateTime, CommunityTopic::getCountUse);
         if (StrUtil.isNotBlank(request.getName())) {
             lqw.like(CommunityTopic::getName, URLUtil.decode(request.getName()));
         }
@@ -89,11 +91,13 @@ public class CommunityTopicServiceImpl extends ServiceImpl<CommunityTopicDao, Co
      */
     @Override
     public void add(CommunityTopicSaveRequest request) {
-        if (isExistName(request.getName(), 0)) {
+        if (StrUtil.isNotBlank(request.getName()) && isExistName(request.getName(), 0)) {
             throw new CrmebException(CommunityResultCode.COMMUNITY_TOPIC_NAME_EXIST);
         }
         CommunityTopic topic = new CommunityTopic();
         BeanUtils.copyProperties(request, topic, "id");
+        topic.setName(I18nJsonUtil.emptyToBlank(request.getName()));
+        topic.setNameJson(StrUtil.isNotBlank(request.getNameJson()) ? request.getNameJson() : "");
         topic.setIsHot(0);
         boolean save = save(topic);
         if (!save) {
@@ -110,10 +114,16 @@ public class CommunityTopicServiceImpl extends ServiceImpl<CommunityTopicDao, Co
             throw new CrmebException(CommunityResultCode.COMMUNITY_TOPIC_ID_NULL);
         }
         CommunityTopic communityTopic = getByIdException(request.getId());
-        if (!communityTopic.getName().equals(request.getName()) && isExistName(request.getName(), request.getId())) {
+        if (StrUtil.isNotBlank(request.getName())
+                && !StrUtil.nullToEmpty(communityTopic.getName()).equals(request.getName())
+                && isExistName(request.getName(), request.getId())) {
             throw new CrmebException(CommunityResultCode.COMMUNITY_TOPIC_NAME_EXIST);
         }
         BeanUtils.copyProperties(request, communityTopic);
+        communityTopic.setName(I18nJsonUtil.emptyToBlank(request.getName()));
+        if (ObjectUtil.isNotNull(request.getNameJson())) {
+            communityTopic.setNameJson(request.getNameJson());
+        }
         boolean update = updateById(communityTopic);
         if (!update) {
             throw new CrmebException(CommonResultCode.ERROR.setMessage("编辑社区话题失败"));
@@ -192,10 +202,12 @@ public class CommunityTopicServiceImpl extends ServiceImpl<CommunityTopicDao, Co
     @Override
     public List<CommunityTopic> findAllByIdList(List<Integer> topicIdList) {
         LambdaQueryWrapper<CommunityTopic> lqw = Wrappers.lambdaQuery();
-        lqw.select(CommunityTopic::getId, CommunityTopic::getName);
+        lqw.select(CommunityTopic::getId, CommunityTopic::getName, CommunityTopic::getNameJson);
         lqw.eq(CommunityTopic::getIsDel, 0);
         lqw.in(CommunityTopic::getId, topicIdList);
-        return dao.selectList(lqw);
+        List<CommunityTopic> list = dao.selectList(lqw);
+        list.forEach(e -> e.setName(I18nJsonUtil.resolveByRequest(e.getName(), e.getNameJson())));
+        return list;
     }
 
     /**
@@ -220,11 +232,13 @@ public class CommunityTopicServiceImpl extends ServiceImpl<CommunityTopicDao, Co
     @Override
     public List<CommunityTopic> findRecommendTopicList() {
         LambdaQueryWrapper<CommunityTopic> lqw = Wrappers.lambdaQuery();
-        lqw.select(CommunityTopic::getId, CommunityTopic::getName);
+        lqw.select(CommunityTopic::getId, CommunityTopic::getName, CommunityTopic::getNameJson);
         lqw.eq(CommunityTopic::getIsHot, Constants.COMMON_IS_FILED_ONE);
         lqw.eq(CommunityTopic::getIsDel, Constants.COMMON_IS_FILED_ZERO);
         lqw.orderByDesc(CommunityTopic::getIsHot, CommunityTopic::getId);
-        return dao.selectList(lqw);
+        List<CommunityTopic> list = dao.selectList(lqw);
+        list.forEach(e -> e.setName(I18nJsonUtil.resolveByRequest(e.getName(), e.getNameJson())));
+        return list;
     }
 
     /**
@@ -234,13 +248,14 @@ public class CommunityTopicServiceImpl extends ServiceImpl<CommunityTopicDao, Co
     public PageInfo<CommunityTopic> findSearchTopicList(CommonSearchRequest request) {
         Page<CommonSearchRequest> page = PageHelper.startPage(request.getPage(), request.getLimit());
         LambdaQueryWrapper<CommunityTopic> lqw = Wrappers.lambdaQuery();
-        lqw.select(CommunityTopic::getId, CommunityTopic::getName);
+        lqw.select(CommunityTopic::getId, CommunityTopic::getName, CommunityTopic::getNameJson);
         if (StrUtil.isNotBlank(request.getKeywords())) {
             lqw.likeRight(CommunityTopic::getName, URLUtil.decode(request.getKeywords()));
         }
         lqw.eq(CommunityTopic::getIsDel, Constants.COMMON_IS_FILED_ZERO);
         lqw.orderByDesc(CommunityTopic::getId);
         List<CommunityTopic> list = dao.selectList(lqw);
+        list.forEach(e -> e.setName(I18nJsonUtil.resolveByRequest(e.getName(), e.getNameJson())));
         return CommonPage.copyPageInfo(page, list);
     }
 

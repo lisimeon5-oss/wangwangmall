@@ -2,12 +2,12 @@
 	<!-- 组合组件 -->
 	<view class="page_count tui-skeleton" :data-theme="theme">
 		<!--logo-->
-		<view class="bg-img" :style="{'background-image': bgColor}">
-			<img :src="bgColor" alt="">
+		<view class="bg-img" :style="bgImgStyle">
+			<image class="bg-img-pic" :src="bgColor" mode="aspectFill"></image>
 			<view class="maskBg" :style="[maskBgStyle]"></view>
 		</view>
 		<!--头部-->
-		<view :class="{scrolled:isScrolled, 'my-main': true}" :style="{ height: myMainHeight+'px' }">
+		<view :class="{scrolled:isScrolled, 'my-main': true}" :style="mainHeightStyle">
 			<!--搜索-->
 			<!-- #ifdef H5 -->
 			<view class="header">
@@ -26,7 +26,7 @@
 										<view class=''>
 											<view class='text'>
 												<view class='newsTitle line1'><text
-														class="iconfont icon-sousuo" :style="[iconColorStyle]" ></text><text>{{item.val}}</text>
+														class="iconfont icon-sousuo" :style="[iconColorStyle]" ></text><text>{{hotWordText(item)}}</text>
 												</view>
 											</view>
 										</view>
@@ -67,7 +67,7 @@
 											<view class='acea-row row-between-wrapper text-box'>
 												<view class='text'>
 													<view class='newsTitle line1'><text
-															class="iconfont icon-sousuo"></text><text>{{item.val}}</text>
+															class="iconfont icon-sousuo"></text><text>{{hotWordText(item)}}</text>
 													</view>
 												</view>
 											</view>
@@ -95,7 +95,7 @@
 							:id="'id'+index" @click="longClick(index,item)"
 							:class="tabClick === index? 'navChecked':''">
 							<view class="acea-row row-middle">
-								<view class="name tui-skeleton-rect">{{item.title}}</view>
+								<view class="name tui-skeleton-rect">{{tabTitleText(item)}}</view>
 								<view class="underlineBox" v-if="index===tabClick">
 									<!-- <view class="underline"></view> -->
 								</view>
@@ -114,7 +114,7 @@
 					<block v-for="(item,index) in tabList" :key="index">
 						<view class="titleBox">
 							<text :class="tabClick === index ? 'checkColor' : 'textColor' " class="title line1"
-								:id="'id'+index" @click="longClick(index,item)">{{item.title}}</text>
+								:id="'id'+index" @click="longClick(index,item)">{{tabTitleText(item)}}</text>
 						</view>
 					</block>
 				</view>
@@ -134,7 +134,7 @@
 							<view @click="menusTap(item.info[1].value)"
 								class='slide-navigator acea-row row-between-wrapper tui-skeleton-rect'
 								:class="swiperType==0?'row-between-wrapper-1':'row-between-wrapper-2'">
-								<image mode="aspectFill" :style="[contentStyleBanner]" :src="item.img"
+								<image mode="aspectFill" :style="[contentStyleBanner]" :src="slideImg(item)"
 									class="slide-image aa"></image>
 							</view>
 						</swiper-item>
@@ -143,14 +143,14 @@
 				<view v-if="docType === 0" class="dots" :style="[dotStyle]">
 					<block v-for="(item,index) in banner" :key="index">
 						<view class="dot-item"
-							:style="{'background-color': swiperCur === index ? (dataConfig.themeStyleConfig.tabVal?dataConfig.docColor.color[0].item:themeColor) : ''}">
+							:style="{'background-color': swiperCur === index ? (dataConfig.themeStyleConfig && dataConfig.themeStyleConfig.tabVal?dataConfig.docColor.color[0].item:themeColor) : ''}">
 						</view>
 					</block>
 				</view>
 				<view v-if="docType === 1" class="dots" :style="[dotStyle]">
 					<block v-for="(item,index) in banner" :key="index">
 						<view class="dot"
-							:style="{'background-color': swiperCur === index ? (dataConfig.themeStyleConfig.tabVal?dataConfig.docColor.color[0].item:themeColor)  : ''}">
+							:style="{'background-color': swiperCur === index ? (dataConfig.themeStyleConfig && dataConfig.themeStyleConfig.tabVal?dataConfig.docColor.color[0].item:themeColor)  : ''}">
 						</view>
 					</block>
 				</view>
@@ -175,6 +175,7 @@
 		goPage
 	} from '@/libs/iframe.js'
 	import animationType from '@/utils/animationType.js'
+	import { getLocalizedDiyVal, getLocalizedDiyTitle, getLocalizedDiyImg } from '@/utils/localizedName'
 	export default {
 		name: 'homeComb',
 		props: {
@@ -238,7 +239,7 @@
 		watch: {
 			banner: {
 				handler(val) {
-					this.bgColor = val[0].img;
+					this.bgColor = val && val[0] ? getLocalizedDiyImg(val[0]) : '';
 				},
 				immediate: true
 			},
@@ -246,11 +247,11 @@
 		computed: {
 			//分类是否展示，0展示，1不展示
 			tabShowConfig() {
-				return this.dataConfig.tabShowConfig.tabVal == 0;
+				return this.dataConfig.tabShowConfig && this.dataConfig.tabShowConfig.tabVal == 0;
 			},
 			//搜索提示语
 			placeWords() {
-				return this.dataConfig.placeWords.val;
+				return getLocalizedDiyVal(this.dataConfig.placeWords, this.i18nLocale);
 			},
 			//轮播切换时间
 			interval() {
@@ -281,6 +282,14 @@
 						`linear-gradient(180deg, rgba(245, 245, 245, 0) 0%, #f5f5f5 100%)`,
 				}
 			},
+			mainHeightStyle() {
+				if (this.myMainHeight === 'auto' || this.myMainHeight === '' || this.myMainHeight == null) return {};
+				return { height: this.myMainHeight + 'px' };
+			},
+			bgImgStyle() {
+				const url = this.bgColor || '';
+				return url ? { backgroundImage: 'url(' + url + ')' } : {};
+			},
 			//判断logo图是否展示
 			logoConfig() {
 				return this.dataConfig.logoConfig.url && this.dataConfig.searConfig.tabVal === 1
@@ -299,14 +308,13 @@
 			},
 			//分类列表
 			tabList() {
-				//type=0微页面，1分类，2首页
-				let tabList = this.dataConfig.listConfig.list;
-				tabList.unshift({
+				//type=0微页面，1分类，2首页；「首页」由前端固定插入，不在装修列表里
+				const list = (this.dataConfig.listConfig && this.dataConfig.listConfig.list) || [];
+				return [{
 					title: '首页',
 					type: 2,
 					val: 0
-				})
-				return tabList
+				}].concat(list);
 			},
 			//轮播列表
 			banner() {
@@ -384,7 +392,6 @@
 			// #ifdef H5
 			this.isTop = 0
 			this.myMainHeight = 'auto';
-
 			// #endif
 
 			this.isWidth = (this.mainWidth - 65) / 4;
@@ -413,7 +420,7 @@
 				} else {
 					//展示分类
 					query.select('.navTabBox').boundingClientRect(data => {
-						this.navHeight = data.height //元素navHeight的高度
+						if (data) this.navHeight = data.height //元素navHeight的高度
 						// #ifdef H5
 						this.swiperTop = this.navHeight + this.marTop + this.statusBarHeight +
 							4; //轮播图的top值
@@ -431,6 +438,15 @@
 			}, 200)
 		},
 		methods: {
+			hotWordText(item) {
+				return getLocalizedDiyVal(item, this.i18nLocale);
+			},
+			slideImg(item) {
+				return getLocalizedDiyImg(item, this.i18nLocale);
+			},
+			tabTitleText(item) {
+				return getLocalizedDiyTitle(item, this.i18nLocale);
+			},
 			//轮播图跳转
 			menusTap(url) {
 				this.$util.navigateTo(url);
@@ -442,7 +458,7 @@
 				} = e.detail;
 				if (source === 'autoplay' || source === 'touch') {
 					this.swiperCur = e.detail.current;
-					this.bgColor = this.banner[e.detail.current]['img']
+					this.bgColor = getLocalizedDiyImg(this.banner[e.detail.current])
 				}
 			},
 			textChange(e) {
@@ -451,7 +467,7 @@
 					source
 				} = e.detail;
 				if (source === 'autoplay' || source === 'touch') {
-					this.searchVal = this.hotWords[e.detail.current]['val']
+					this.searchVal = this.hotWordText(this.hotWords[e.detail.current])
 				}
 			},
 			// 导航栏点击
@@ -682,7 +698,7 @@
 				height: 310rpx;
 
 				&.scalex {
-					/deep/.uni-swiper-slide-frame {
+					::v-deep .uni-swiper-slide-frame {
 						transform: translate(0, 0) !important;
 					}
 				}
@@ -693,7 +709,7 @@
 				transition: all 0.6s ease;
 			}
 
-			/deep/ swiper-item.active {
+			::v-deep  swiper-item.active {
 				image {
 					transform: scale(1);
 				}
@@ -790,6 +806,13 @@
 			overflow: hidden;
 
 			img {
+				width: 100%;
+				height: 100%;
+				filter: blur(30rpx);
+				transform: scale(1.5);
+			}
+
+			.bg-img-pic {
 				width: 100%;
 				height: 100%;
 				filter: blur(30rpx);

@@ -8,10 +8,10 @@
           <div v-else class="titleFont" :style="headerTitleConfig">{{ titleConfig }}</div>
           <div class="interval" :style="lineColor"></div>
           <img src="@/assets/imgs/pinkHead.png" alt="" class="pinkHead" :style="contentStyle" />
-          <div class="num" :style="titleColor">134人拼团成功</div>
+          <div class="num" :style="titleColor">{{ $t('pagediy.peopleGroupSuccess', { count: 134 }) }}</div>
         </div>
         <div class="group-top-right" :style="headerBtnColor">
-          更多
+          {{ $t('pagediy.more') }}
           <i class="el-icon-arrow-right"></i>
         </div>
       </div>
@@ -27,29 +27,28 @@
             <div class="group-bottom-right acea-row row-column row-between">
               <div class="right-top">
                 <div class="title line2" v-if="typeShow.includes(0)" :style="nameColor">
-                  THE ROW 休闲针织衫女2024春秋深藏青条纹毛衣女羊绒真丝套头上衣 THE ROW
-                  休闲针织衫女2024春秋深藏青条纹毛衣女羊绒真丝套头上衣
+                  {{ $t('pagediy.previewProductName') }}
                 </div>
                 <div class="pink acea-row" v-if="typeShow.includes(1)">
                   <div class="people-box acea-row" :style="groupTitleColor">
-                    <div class="people" :style="groupTitleColor">2人团</div>
-                    <div class="groupNum" :style="groupTitleFontColor">已拼3份</div>
+                    <div class="people" :style="groupTitleColor">{{ $t('marketing.peopleGroup', { count: 2 }) }}</div>
+                    <div class="groupNum" :style="groupTitleFontColor">{{ $t('pagediy.joinedCopies', { count: 3 }) }}</div>
                   </div>
                 </div>
               </div>
               <div class="right-bottom acea-row row-between">
                 <div class="price">
                   <div class="pinkNum" v-if="typeShow.includes(2)" :style="priceColor">
-                    <span class="pinkNum-title">拼团价</span><span class="pinkNum-icon">￥</span
+                    <span class="pinkNum-title">{{ $t('pagediy.previewGroupPrice') }}</span><span class="pinkNum-icon">฿</span
                     ><span class="pinkNum-num semiBold">3200.00</span>
                   </div>
                   <div class="num" v-if="typeShow.includes(3)" :style="originalColor">
-                    <span class="num-title">单买价</span><span class="num-icon">￥</span
+                    <span class="num-title">{{ $t('pagediy.previewSinglePrice') }}</span><span class="num-icon">฿</span
                     ><span class="icon-num semiBold">4233.00</span>
                   </div>
                 </div>
                 <div class="btnBox" v-if="groupBtnShow">
-                  <div class="btn" :style="btnColor">去拼团</div>
+                  <div class="btn" :style="btnColor">{{ $t('pagediy.goGroupBuy') }}</div>
                 </div>
               </div>
             </div>
@@ -67,28 +66,27 @@
           <div class="two-item">
             <div class="title acea-row">
               <div :style="groupTitleColor" class="numPink-box">
-                <div class="numPink" v-if="typeShow.includes(1)" :style="groupTitleFontColor">5人团</div>
+                <div class="numPink" v-if="typeShow.includes(1)" :style="groupTitleFontColor">{{ $t('marketing.peopleGroup', { count: 5 }) }}</div>
               </div>
               <span
                 :class="typeShow.includes(1) ? 'line1-show' : 'line1-hidden'"
                 class="line1"
                 v-if="typeShow.includes(0)"
                 :style="nameColor"
-                >THE ROW 休闲针织衫女2024春秋深藏青条纹毛衣女羊绒真丝套头上衣 THE ROW
-                休闲针织衫女2024春秋深藏青条纹毛衣女羊绒真丝套头上衣
+                >{{ $t('pagediy.previewProductName') }}
               </span>
             </div>
             <div class="two-item-bottom acea-row row-between">
               <div class="price">
                 <div class="pinkNum" v-if="typeShow.includes(2)" :style="priceColor">
-                  <span>￥</span><span class="num semiBold">3200.00</span>
+                  <span>฿</span><span class="num semiBold">3200.00</span>
                 </div>
                 <div class="otNum" v-if="typeShow.includes(3)" :style="originalColor">
-                  <span>￥</span><span class="semiBold">3699.00</span>
+                  <span>฿</span><span class="semiBold">3699.00</span>
                 </div>
               </div>
               <div class="btnBox" v-if="groupBtnShow">
-                <div class="btn" :style="btnColor">去拼团</div>
+                <div class="btn" :style="btnColor">{{ $t('pagediy.goGroupBuy') }}</div>
               </div>
             </div>
           </div>
@@ -105,20 +103,19 @@
           <div class="two-item">
             <div class="title acea-row">
               <div :style="groupTitleColor" class="numPink-box numPink-box-special">
-                <div class="numPink" v-if="typeShow.includes(1)" :style="groupTitleFontColor">5人团</div>
+                <div class="numPink" v-if="typeShow.includes(1)" :style="groupTitleFontColor">{{ $t('marketing.peopleGroup', { count: 5 }) }}</div>
               </div>
               <span class="line1" v-if="typeShow.includes(0)" :style="nameColor"
-                >THE ROW 休闲针织衫女2024春秋深藏青条纹毛衣女羊绒真丝套头上衣 THE ROW
-                休闲针织衫女2024春秋深藏青条纹毛衣女羊绒真丝套头上衣
+                >{{ $t('pagediy.previewProductName') }}
               </span>
             </div>
             <div class="two-item-bottom">
               <div class="price">
                 <div class="pinkNum" v-if="typeShow.includes(2)" :style="priceColor">
-                  <span>￥</span><span class="num semiBold">3200.00</span>
+                  <span>฿</span><span class="num semiBold">3200.00</span>
                 </div>
                 <div class="otNum" v-if="typeShow.includes(3)" :style="originalColor">
-                  <span>￥</span><span class="semiBold">3699.00</span>
+                  <span>฿</span><span class="semiBold">3699.00</span>
                 </div>
               </div>
             </div>
@@ -136,20 +133,19 @@
           <div class="two-item">
             <div class="title acea-row" :style="nameColor">
               <div :style="groupTitleColor" class="numPink-box numPink-box-special">
-                <div class="numPink" v-if="typeShow.includes(1)" :style="groupTitleFontColor">5人团</div>
+                <div class="numPink" v-if="typeShow.includes(1)" :style="groupTitleFontColor">{{ $t('marketing.peopleGroup', { count: 5 }) }}</div>
               </div>
               <span class="line1" v-if="typeShow.includes(0)"
-                >THE ROW 休闲针织衫女2024春秋深藏青条纹毛衣女羊绒真丝套头上衣 THE ROW
-                休闲针织衫女2024春秋深藏青条纹毛衣女羊绒真丝套头上衣
+                >{{ $t('pagediy.previewProductName') }}
               </span>
             </div>
             <div class="two-item-bottom">
               <div class="price">
                 <div class="pinkNum" v-if="typeShow.includes(2)" :style="priceColor">
-                  <span>￥</span><span class="num semiBold">3200.00</span>
+                  <span>฿</span><span class="num semiBold">3200.00</span>
                 </div>
                 <div class="otNum" v-if="typeShow.includes(3)" :style="originalColor">
-                  <span>￥</span><span class="semiBold">3699.00</span>
+                  <span>฿</span><span class="semiBold">3699.00</span>
                 </div>
               </div>
             </div>
@@ -172,9 +168,11 @@
 // +----------------------------------------------------------------------
 // import { backgroundColor } from 'echarts/lib/theme/dark';
 import { mapState, mapGetters } from 'vuex';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
+import { getFormLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'home_group',
-  cname: '拼团',
+  ...diyCname('order.groupBuy'),
   icon: 't-icon-zujian-pintuan',
   configName: 'c_home_group',
   type: 1, // 0 基础组件 1 营销组件 2工具组件
@@ -190,6 +188,24 @@ export default {
   computed: {
     ...mapState('mobildConfig', ['defaultArray']),
     ...mapGetters(['mobileTheme']),
+    previewLang() {
+      return (this.configObj && this.configObj.diyMediaLang) || getUiLocale(this);
+    },
+    logoUrl() {
+      if (!this.configObj || !this.configObj.logoConfig) return '';
+      const picked = getFormLocalizedText(
+        this.configObj.logoConfig.url,
+        this.configObj.logoConfig.urlJson,
+        this.previewLang,
+      );
+      if (picked) return picked;
+      if (this.previewLang === 'zh-cn') return this.configObj.logoConfig.url || '';
+      return '';
+    },
+    titleConfig() {
+      if (!this.configObj || !this.configObj.titleConfig) return '';
+      return getFormLocalizedText(this.configObj.titleConfig.val, this.configObj.titleConfig.valJson, this.previewLang);
+    },
     //容器样式
     //最外层盒子的样式
     boxStyle() {
@@ -399,119 +415,121 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '拼团',
+          cname: this.$t('order.groupBuy'),
         },
         tabConfig: {
-          title: '展示样式',
-          tabTitle: '布局设置',
+          title: this.$t('pagediy.displayStyle'),
+          tabTitle: this.$t('pagediy.layoutSettings'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '样式一',
+              val: this.$t('pagediy.styleOne'),
               icon: 'icon-yangshier',
             },
             {
-              val: '样式二',
+              val: this.$t('pagediy.styleTwo'),
               icon: 'icon-yangshisan',
             },
             {
-              val: '样式三',
+              val: this.$t('pagediy.styleThree'),
               icon: 'icon-dianpujie-yangshiyi',
             },
             {
-              val: '样式四',
+              val: this.$t('pagediy.styleFour'),
               icon: 'icon-ic_layout4',
             },
           ],
         },
         selectStyle: {
           cname: 'selectStyle',
-          title: '标题类型',
+          title: this.$t('pagediy.titleType'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '图片',
+              val: this.$t('pagediy.asImage'),
             },
             {
-              val: '文字',
+              val: this.$t('pagediy.asText'),
             },
           ],
         },
         logoConfig: {
           isShow: 1,
-          tabTitle: '头部设置',
-          title: '标题图片',
-          tips: '建议：154px*32px',
+          tabTitle: this.$t('pagediy.headerSettings'),
+          title: this.$t('pagediy.titleImage'),
+          tips: this.$t('pagediy.suggestSize', { size: '154px*32px' }),
           url: localStorage.getItem('mediaDomain') + '/crmebimage/presets/groupTitle.png',
+          urlJson: '',
         },
         selectBgImg: {
           cname: 'selectBgImg',
-          title: '选择风格',
+          title: this.$t('pagediy.selectStyle'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '背景图片',
+              val: this.$t('pagediy.backgroundImg'),
             },
             {
-              val: '背景色',
+              val: this.$t('pagediy.backgroundColor'),
             },
           ],
         },
         bgImg: {
           isShow: 1,
-          title: '背景图片',
-          tips: '建议：710px*96px',
+          title: this.$t('pagediy.backgroundImg'),
+          tips: this.$t('pagediy.suggestSize', { size: '710px*96px' }),
           url: localStorage.getItem('mediaDomain') + '/crmebimage/presets/groupBg.png',
         },
         titleConfig: {
-          title: '标题文字',
-          val: '超值拼团',
-          place: '请输入标题',
+          title: this.$t('pagediy.titleText'),
+          val: this.$t('pagediy.superValueGroup'),
+          valJson: '',
+          place: this.$t('pagediy.pleaseEnterTitle'),
           isShow: 1,
           max: 6,
         },
         //显示内容
         typeConfig: {
-          tabTitle: '显示内容',
+          tabTitle: this.$t('pagediy.displayContent'),
           name: 'rowsNum',
-          title: '展示信息',
+          title: this.$t('pagediy.displayInfo'),
           activeValue: [0, 1, 2, 3],
           list: [
             {
-              val: '商品名称',
+              val: this.$t('pagediy.productName'),
             },
             {
-              val: '活动标签',
+              val: this.$t('pagediy.activityTag'),
             },
             {
-              val: '商品价格',
+              val: this.$t('pagediy.productPriceLabel'),
             },
             {
-              val: '商品原价',
+              val: this.$t('pagediy.productOriginalPrice'),
             },
           ],
         },
         groupBtnConfig: {
           cname: 'groupBtnConfig',
-          title: '拼团按钮',
+          title: this.$t('pagediy.groupButton'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '显示',
+              val: this.$t('pagediy.show'),
             },
             {
-              val: '隐藏',
+              val: this.$t('pagediy.hide'),
             },
           ],
         },
         // 背景颜色
         bgColor: {
-          tabTitle: '头部设置',
-          title: '背景颜色',
+          tabTitle: this.$t('pagediy.headerSettings'),
+          title: this.$t('pagediy.backgroundColor'),
           isShow: 1,
           color: [
             {
@@ -532,8 +550,8 @@ export default {
         },
         // 内容背景颜色
         contentBgColor: {
-          tabTitle: '颜色设置',
-          title: '内容背景',
+          tabTitle: this.$t('pagediy.colorSettings'),
+          title: this.$t('pagediy.contentBackground'),
           isShow: 1,
           color: [
             {
@@ -554,23 +572,23 @@ export default {
         },
         headerTitleStyle: {
           cname: 'headerTitleStyle',
-          title: '标题文字',
+          title: this.$t('pagediy.titleText'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '加粗',
+              val: this.$t('pagediy.bold'),
             },
             {
-              val: '正常',
+              val: this.$t('pagediy.normal'),
             },
             {
-              val: '倾斜',
+              val: this.$t('pagediy.italic'),
             },
           ],
         },
         headerTitleColor: {
-          title: '标题颜色',
+          title: this.$t('pagediy.titleColor'),
           isShow: 1,
           color: [
             {
@@ -584,7 +602,7 @@ export default {
           ],
         },
         lineColor: {
-          title: '分割线颜色',
+          title: this.$t('pagediy.dividerColor'),
           color: [
             {
               item: '#FFFFFF',
@@ -597,7 +615,7 @@ export default {
           ],
         },
         titleColor: {
-          title: '提示文字颜色',
+          title: this.$t('pagediy.hintTextColor'),
           color: [
             {
               item: '#FFFFFF',
@@ -610,7 +628,7 @@ export default {
           ],
         },
         headerBtnColor: {
-          title: '头部按钮颜色',
+          title: this.$t('pagediy.headerButtonColor'),
           color: [
             {
               item: '#FFFFFF',
@@ -623,8 +641,8 @@ export default {
           ],
         },
         nameColor: {
-          tabTitle: '商品设置',
-          title: '商品名称颜色',
+          tabTitle: this.$t('pagediy.productSettings'),
+          title: this.$t('pagediy.productNameColor'),
           color: [
             {
               item: '#000000',
@@ -637,7 +655,7 @@ export default {
           ],
         },
         originalColor: {
-          title: '商品原价颜色',
+          title: this.$t('pagediy.originalPriceColor'),
           color: [
             {
               item: '#999999',
@@ -651,20 +669,20 @@ export default {
         },
         //色调
         themeStyleConfig: {
-          title: '色调',
+          title: this.$t('pagediy.colorTone'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '跟随主题风格',
+              val: this.$t('pagediy.followTheme'),
             },
             {
-              val: '自定义',
+              val: this.$t('pagediy.customStyle'),
             },
           ],
         },
         priceColor: {
-          title: '拼团价格颜色',
+          title: this.$t('pagediy.groupPriceColor'),
           isShow: 0,
           color: [
             {
@@ -678,7 +696,7 @@ export default {
           ],
         },
         groupTitleColor: {
-          title: '标签颜色',
+          title: this.$t('pagediy.tagColor'),
           isShow: 0,
           color: [
             {
@@ -692,7 +710,7 @@ export default {
           ],
         },
         btnColor: {
-          title: '按钮颜色',
+          title: this.$t('pagediy.buttonColor'),
           isShow: 0,
           color: [
             {
@@ -712,7 +730,7 @@ export default {
           ],
         },
         btnFontColor: {
-          title: '按钮文字颜色',
+          title: this.$t('pagediy.buttonTextColor'),
           isShow: 1,
           color: [
             {
@@ -726,15 +744,15 @@ export default {
           ],
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 7,
           min: 0,
           max: 30,
         },
         contentStyle: {
-          title: '图片圆角',
+          title: this.$t('pagediy.imageRadius'),
           name: 'contentStyle',
           val: 5,
           min: 0,
@@ -742,32 +760,32 @@ export default {
         },
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          title: '下边距',
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 15,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 0,
           min: 0,
         },
         contentConfig: {
-          title: '内容间距',
+          title: this.$t('pagediy.contentSpacing'),
           val: 5,
           min: 0,
           max: 20,
@@ -775,11 +793,9 @@ export default {
       },
       listStyle: 0,
       configObj: null,
-      logoUrl: null,
       typeShow: [0, 1, 2, 3],
       groupBtnShow: true,
       selectStyle: '',
-      titleConfig: '',
       selectBgImg: '',
       bgImgUrl: '',
       headerTitleStyle: 0,
@@ -799,13 +815,11 @@ export default {
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
         this.listStyle = this.configObj.tabConfig.tabVal;
-        this.logoUrl = this.configObj.logoConfig.url;
         this.typeShow = this.configObj.typeConfig.activeValue;
         this.groupBtnShow = this.configObj.groupBtnConfig.tabVal == 0 ? true : false;
         this.selectStyle = this.configObj.selectStyle.tabVal;
-        this.titleConfig = this.configObj.titleConfig.val;
         this.selectBgImg = this.configObj.selectBgImg.tabVal;
         this.bgImgUrl = this.configObj.bgImg.url;
         this.headerTitleStyle = this.configObj.headerTitleStyle.tabVal;

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -34,9 +33,11 @@ public class PcQuickEntryVo implements Serializable {
     @ApiModelProperty(value = "ID")
     private Integer id;
 
-    @ApiModelProperty(value = "入口名称", required = true)
-    @NotBlank(message = "请填写入口名称")
+    @ApiModelProperty(value = "入口名称")
     private String name;
+
+    @ApiModelProperty(value = "多语言入口名称(JSON)")
+    private String nameJson;
 
     @ApiModelProperty(value = "排序", required = true)
     @NotNull(message = "排序不能为空")

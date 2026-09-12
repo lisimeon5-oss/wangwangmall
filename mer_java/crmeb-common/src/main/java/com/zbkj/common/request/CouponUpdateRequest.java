@@ -1,5 +1,6 @@
 package com.zbkj.common.request;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -38,10 +39,13 @@ public class CouponUpdateRequest implements Serializable {
     @NotNull(message = "请选择优惠券")
     private Integer id;
 
-    @ApiModelProperty(value = "优惠券名称", required = true)
-    @NotBlank(message = "请填写优惠券名称")
+    @ApiModelProperty(value = "优惠券名称")
     @Length(max = 20, message = "优惠券名称长度不能超过20个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言优惠券名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言优惠券名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "是否限量, 默认0 否， 1是", required = true)
     @NotNull(message = "请设置是否限量")

@@ -32,6 +32,9 @@ public class ProductAttrOptionAddRequest implements Serializable {
     @NotBlank(message = "属性名不能为空")
     private String optionName;
 
+    @ApiModelProperty(value = "多语言规格值(JSON)")
+    private String optionNameJson;
+
     @ApiModelProperty(value = "图片")
     private String image;
 

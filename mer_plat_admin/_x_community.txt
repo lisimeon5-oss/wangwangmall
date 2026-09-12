@@ -1,0 +1,163 @@
+REUSE common.edit | 编辑
+REUSE product.editSuccess | 编辑成功
+REUSE merchant.editCategory | 编辑分类
+REUSE common.operate | 操作
+REUSE product.operateSuccess | 操作成功
+REUSE common.query | 查询
+REUSE dashboard.awaitAudit | 待审核
+REUSE category.categoryNamePlaceholder | 分类名称
+REUSE category.categoryNameLabel | 分类名称：
+REUSE common.no | 否
+REUSE user.more | 更多
+REUSE common.close | 关闭
+REUSE merchant.closeSuccess | 关闭成功
+REUSE product.rejectReason | 拒绝原因
+REUSE order.rejectReason | 拒绝原因：
+REUSE common.open | 开启
+REUSE user.goNow | 立即前往
+REUSE product.sort | 排序
+REUSE common.platformClosed | 平台关闭
+REUSE product.forceOff | 强制下架
+REUSE category.pleaseEnterCategoryName | 请输入分类名称
+REUSE product.pleaseEnterRejectReason | 请填写拒绝原因
+REUSE el.select.placeholder | 请选择
+REUSE product.pleaseSelectAuditStatus | 请选择审核状态
+REUSE el.messagebox.cancel | 取消
+REUSE el.table.clearFilter | 全部
+REUSE finance.confirmSpaced | 确 定
+REUSE common.delete | 删除
+REUSE product.deleteSuccess | 删除成功
+REUSE merchant.deleteCategorySuccess | 删除分类成功
+REUSE product.productInfo | 商品信息
+REUSE finance.audit | 审核
+REUSE common.auditSuccess | 审核成功
+REUSE product.auditRejected | 审核拒绝
+REUSE common.auditFailed | 审核失败
+REUSE finance.auditTimeLabel | 审核时间：
+REUSE finance.auditPassed | 审核通过
+REUSE product.auditStatus | 审核状态
+REUSE finance.auditStatusLabel | 审核状态：
+REUSE product.timeSelectLabel | 时间选择：
+REUSE common.yes | 是
+REUSE user.salePricePlaceholder | 售价
+REUSE finance.submitting | 提交中 ...
+REUSE merchant.addTime | 添加时间
+REUSE merchant.recommend | 推荐
+REUSE finance.none | 无
+REUSE user.offShelfSuccess | 下架成功
+REUSE common.show | 显示
+REUSE menu.showStatus | 显示状态：
+REUSE common.detail | 详情
+REUSE merchant.newCategory | 新建分类
+REUSE common.rejected | 已拒绝
+REUSE common.approved | 已通过
+REUSE menu.hide | 隐藏
+REUSE order.userNickname | 用户昵称：
+REUSE product.userSearchLabel | 用户搜索：
+REUSE user.noPermission | 暂无操作权限
+REUSE el.table.resetFilter | 重置
+REUSE product.customTime | 自定义时间
+NEW  | // +---------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +---------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +---------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +---------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | // +----------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +----------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | > 更多<i class=
+NEW  | 编辑话题
+NEW  | 编辑星级
+NEW  | 不推荐
+NEW  | 点赞数
+NEW  | 点赞数：
+NEW  | 短视频
+NEW  | 短视频：
+NEW  | 发布时间
+NEW  | 发布时间：
+NEW  | 分类
+NEW  | 封面
+NEW  | 封面图：
+NEW  | 关闭评论
+NEW  | 关闭评论吗？关闭之后该内容将无法评论
+NEW  | 关闭时间：
+NEW  | 关闭原因：
+NEW  | 关联商品
+NEW  | 话题
+NEW  | 话题名称
+NEW  | 话题名称：
+NEW  | 回复
+NEW  | 基础信息
+NEW  | 内容：
+NEW  | 内容标题
+NEW  | 内容标题：
+NEW  | 内容类型
+NEW  | 内容审核
+NEW  | 内容详情
+NEW  | 内容作者
+NEW  | 您的浏览器不支持 video 标签。
+NEW  | 批量移动
+NEW  | 评论
+NEW  | 评论类型：
+NEW  | 评论列表
+NEW  | 评论内容
+NEW  | 评论内容：
+NEW  | 评论审核
+NEW  | 评论时间
+NEW  | 评论数
+NEW  | 评论数：
+NEW  | 评论详情
+NEW  | 强制下架原因
+NEW  | 请输入话题名称
+NEW  | 请输入内容标题
+NEW  | 请输入评论内容
+NEW  | 请输入文章标题
+NEW  | 请选择分类名称
+NEW  | 请选择话题
+NEW  | 请选择图文类型
+NEW  | 请选择推荐状态
+NEW  | 请选择显示状态
+NEW  | 请选择要移动到的分类
+NEW  | 请至少选择一个内容
+NEW  | 取消关闭评论
+NEW  | 取消强制关闭评论吗？取消后评论将变成用户关闭状态
+NEW  | 删除当前分类吗？删除之后，移动端页面分类筛选不展示此分类，移动端再次发表图文时，也不能够选择此分类。
+NEW  | 删除当前话题吗？删除话题之后，与此相关的文章将取消关联话题！
+NEW  | 删除该内容吗
+NEW  | 删除该评论
+NEW  | 删除该评论吗？
+NEW  | 删除话题成功
+NEW  | 社区状态在页面设计中进行开启/关闭；
+NEW  | 审核失败原因：
+NEW  | 审核通过该内容吗？
+NEW  | 视频
+NEW  | 是否开启
+NEW  | 是否推荐
+NEW  | 添加社区分类
+NEW  | 添加社区话题
+NEW  | 图片：
+NEW  | 图文
+NEW  | 图文类型：
+NEW  | 推荐级别
+NEW  | 推荐状态：
+NEW  | 文章标题
+NEW  | 文章标题：
+NEW  | 文章内容：
+NEW  | 文章数
+NEW  | 新建话题
+NEW  | 移动成功
+NEW  | 用户名/Id
+NEW  | 用户名/ID
+NEW  | 用户ID：
+NEW  | 作者：
+NEW  | 作者ID：
+
+TOTAL unique: 147, NEW: 88

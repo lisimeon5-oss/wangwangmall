@@ -24,6 +24,7 @@ import {
   localSave,
   localRead,
 } from '@/utils/util';
+import { findMenuTitleByPath } from '@/utils/i18nText';
 import router from '@/router';
 
 // import { includeArray } from '@/utils/system.js';
@@ -247,6 +248,16 @@ export default {
       }
       state.tagNavList = tagList;
       setTagNavListInLocalstorage([...tagList]);
+    },
+    syncTagTitlesFromMenus(state, userState) {
+      const menuList = (userState && userState.menuList) || [];
+      const oneLvRoutes = (userState && userState.oneLvRoutes) || [];
+      state.tagNavList = state.tagNavList.map((tag) => {
+        const title = findMenuTitleByPath(tag.path, menuList, oneLvRoutes);
+        if (!title) return tag;
+        return { ...tag, title, meta: { ...(tag.meta || {}), title } };
+      });
+      setTagNavListInLocalstorage([...state.tagNavList]);
     },
     closeTag(state, route) {
       let tag = state.tagNavList.filter((item) => routeEqual(item, route));

@@ -10,7 +10,7 @@
 		<view class="acea-row row-middle" v-if="parseFloat(pointsPrice.price) || parseFloat(pointsPrice.payFee)">
 			<text class="icon-color semiBold ml-4"
 				:style="[priceStyle, priceColor]">{{ pointsPrice.price || pointsPrice.payFee }}</text>
-			<text :style="[unitStyle]" class="ml-4">元</text>
+			<text :style="[unitStyle]" class="ml-4">{{$t('元')}}</text>
 		</view>
 	</view>
 </template>

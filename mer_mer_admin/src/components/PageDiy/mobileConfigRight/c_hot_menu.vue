@@ -4,6 +4,13 @@
     <div class="title" v-if="configData.title">
       {{ configData.title }}
     </div>
+    <div class="lang-name-switch">
+      <el-radio-group v-model="activeLang" size="mini">
+        <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+          {{ lang.label }}
+        </el-radio-button>
+      </el-radio-group>
+    </div>
     <div class="list-box mt20">
       <draggable class="dragArea list-group" :list="configData.list" group="peoples" handle=".move-icon">
         <div class="item" v-for="(item, index) in configData.list" :key="index">
@@ -11,7 +18,7 @@
             <span class="iconfont icon-tuozhuaidian"></span>
           </div>
           <div class="img-box" @click="modalPicTap(item, index)">
-            <img :src="item.img" alt="" v-if="item.img" />
+            <img :src="getItemImg(item)" alt="" v-if="getItemImg(item)" />
             <div class="upload-box" v-else><i class="el-icon-camera-solid" style="font-size: 30px" /></div>
           </div>
           <div class="info" v-if="configObj['checkoutConfig']['checkoutVal'] == '1'">
@@ -37,14 +44,14 @@
               v-if="defaults.name !== 'pictureCube' && defaults.name !== 'swiperBg' && defaults.name !== 'homeComb'"
               class="info-item"
             >
-              <span>状态</span>
+              <span>{{ translateText("状态") }}</span>
               <div class="input-box">
                 <el-switch
                   v-model="item.status"
                   :active-value="true"
                   :inactive-value="false"
-                  active-text="显示"
-                  inactive-text="隐藏"
+                  :active-text="translateText('显示')"
+                  :inactive-text="translateText('隐藏')"
                   @change="onchangeIsShow(item.status)"
                 />
               </div>
@@ -54,20 +61,20 @@
             </div>
           </div>
           <div v-else class="info">
-            <div class="setHot-btn" @click="setHot">设置热区</div>
+            <div class="setHot-btn" @click="setHot">{{ $t('pagediy.setHotZone') }}</div>
           </div>
         </div>
       </draggable>
     </div>
     <template v-if="configData.list">
       <div class="add-btn" v-if="configData.list.length < configData.maxList">
-        <el-button class="button" icon="el-icon-plus" plain @click="addBox">添加版块</el-button>
+        <el-button class="button" icon="el-icon-plus" plain @click="addBox">{{ $t('pagediy.addSection') }}</el-button>
       </div>
     </template>
     <linkaddress ref="linkaddres" @linkUrl="linkUrl"></linkaddress>
     <!-- 设置热区弹出框 -->
     <el-dialog
-      title="热区设置"
+      :title="$t('pagediy.hotZoneSettings')"
       class="dialog-bottom"
       :visible.sync="setHotVisible"
       :before-close="handleClose"
@@ -78,7 +85,7 @@
       <OperationFloorModal
         v-if="changeCreated"
         ref="hotpot"
-        :imgs="configData.list"
+        :imgs="hotspotPreviewImgs"
         :img-area-data="imgAreaData"
         :imgAreaData="configObj.checkoutConfig.hotspot"
         @dialogChange="dialogChange"
@@ -102,6 +109,9 @@ import vuedraggable from 'vuedraggable';
 import linkaddress from '@/components/linkaddress';
 import OperationFloorModal from '@/components/HotpotModal';
 import modalSure from '@/libs/modal-sure';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { parseLangJsonMap, resolveFormActiveLang } from '@/utils/localizedName';
 export default {
   name: 'c_hot_menu',
   props: {
@@ -149,9 +159,21 @@ export default {
       linkList: [],
       imgAreaData: [], //热区数据
       changeCreated: true,
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
     };
   },
+  computed: {
+    hotspotPreviewImgs() {
+      return ((this.configData && this.configData.list) || []).map((item) => ({
+        ...item,
+        img: this.getItemImg(item),
+      }));
+    },
+  },
   mounted() {
+    this.getLanguageList();
     this.$nextTick(() => {
       this.defaults = this.configObj;
       this.configData = this.configObj[this.configNme];
@@ -165,8 +187,47 @@ export default {
       },
       deep: true,
     },
+    '$i18n.locale'() {
+      this.activeLang = resolveFormActiveLang(this);
+    },
   },
   methods: {
+    getItemImg(item) {
+      if (!item) return '';
+      if (this.activeLang === this.defaultLangCode) return item.img || '';
+      return parseLangJsonMap(item.imgJson)[this.activeLang] || '';
+    },
+    setItemImg(item, url) {
+      if (this.activeLang === this.defaultLangCode) {
+        this.$set(item, 'img', url);
+        return;
+      }
+      const map = parseLangJsonMap(item.imgJson);
+      if (url) map[this.activeLang] = url;
+      else delete map[this.activeLang];
+      this.$set(item, 'imgJson', Object.keys(map).length ? JSON.stringify(map) : '');
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     //取消或确认
     dialogChange(type, areaData) {
       if (type) {
@@ -186,7 +247,7 @@ export default {
 
     //模态框关闭
     handleClose(done) {
-      this.$modalSure('确认关闭？')
+      this.$modalSure(this.$t('pagediy.confirmClose'))
         .then((_) => {
           this.$refs.hotpot.areaData = [...this.$refs.hotpot.imgAreaData];
           done();
@@ -195,11 +256,11 @@ export default {
     },
     //设置热区
     setHot() {
-      if (this.configData.list[0].img !== '') {
+      if (this.getItemImg(this.configData.list[0])) {
         this.setHotVisible = true;
       } else {
         this.$message({
-          message: '请先选择图片',
+          message: this.$t('pagediy.pleaseSelectImageFirst'),
           type: 'warning',
         });
       }
@@ -225,12 +286,14 @@ export default {
     addBox() {
       if (this.configData.list.length == 0) {
         this.lastObj.img = '';
+        this.lastObj.imgJson = '';
         this.lastObj.info[0].value = '';
         this.lastObj.info[1].value = '';
         this.configData.list.push(this.lastObj);
       } else {
         let obj = JSON.parse(JSON.stringify(this.configData.list[this.configData.list.length - 1]));
         obj.img = '';
+        obj.imgJson = '';
         obj.info[0].value = '';
         obj.info[1].value = '';
         this.configData.list.push(obj);
@@ -239,9 +302,10 @@ export default {
     // 点击图文封面
     modalPicTap(item, index) {
       let _this = this;
+      _this.activeIndex = index;
       _this.$modalUpload(function (img) {
         if (!img) return;
-        item.img = img[0].sattDir;
+        _this.setItemImg(item, img[0].sattDir);
         if (_this.isRub) _this.getPic(img[0].sattDir);
       });
     },
@@ -256,13 +320,24 @@ export default {
         this.changeCreated = true;
       }
       this.$nextTick(() => {
-        this.configData.list[this.activeIndex].img = pc;
+        const row = this.configData.list[this.activeIndex];
+        if (row) this.setItemImg(row, pc);
         let data = this.defaults.menuConfig;
         if (data && data.isCube) {
-          this.defaults.picStyle.picList.splice(this.defaults.picStyle.tabVal, 1, {
-            image: pc,
+          const idx = this.defaults.picStyle.tabVal;
+          const prev = this.defaults.picStyle.picList[idx] || {};
+          const cur = Object.assign({}, prev, {
             link: data.list[0].info[0].value,
           });
+          if (this.activeLang === this.defaultLangCode) {
+            cur.image = pc;
+          } else {
+            const map = parseLangJsonMap(cur.imageJson);
+            if (pc) map[this.activeLang] = pc;
+            else delete map[this.activeLang];
+            cur.imageJson = Object.keys(map).length ? JSON.stringify(map) : '';
+          }
+          this.$set(this.defaults.picStyle.picList, idx, cur);
         }
       });
     },
@@ -284,6 +359,13 @@ export default {
 <style scoped lang="scss">
 ::v-deep .el-dialog__body {
   padding: 30px 20px !important;
+}
+.lang-name-switch {
+  margin-top: 12px;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 .hot_imgs {
   margin-bottom: 20px;

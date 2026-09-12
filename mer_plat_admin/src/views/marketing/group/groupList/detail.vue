@@ -18,15 +18,15 @@
                 class="titleStatus"
                 :class="data.recordStatus == 0 ? 'info' : data.recordStatus == 10 ? 'success' : 'warning'"
               >
-                {{ data.recordStatus == 0 ? '拼团中' : data.recordStatus == 10 ? '已成功' : '已失败' }}
+                {{ data.recordStatus == 0 ? $t('order.groupBuying') : data.recordStatus == 10 ? $t('common.succeeded') : $t('marketing.failedDone') }}
               </div>
             </li>
             <li class="item">
-              <div class="title">成团人数</div>
+              <div class="title">{{ $t('marketing.formedCount') }}</div>
               <div>{{ data.buyingCountNum }}</div>
             </li>
             <li class="item">
-              <div class="title">已参团人数</div>
+              <div class="title">{{ $t('marketing.joinedGroupCount') }}</div>
               <div>{{ data.yetBuyingNum }}</div>
             </li>
             <li class="item">
@@ -42,29 +42,29 @@
         <div class="table-line"></div>
         <div class="table-box detailHead">
           <el-table :data="data.memberDataList" class="mt20 orderDetailList" size="small">
-            <el-table-column label="用户头像">
+            <el-table-column :label="$t('marketing.userAvatar')">
               <template slot-scope="scope">
                 <div class="demo-image__preview">
                   <el-image :src="scope.row.memberAvatar" fit="cover" style="width: 50px; height: 50px" />
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="用户信息" min-width="140">
+            <el-table-column :label="$t('order.userInfo')" min-width="140">
               <template slot-scope="scope">
                 <div class="acea-row">
                   <div>{{ scope.row.memberNickname }}</div>
                   <span class="fenge">|</span>
                   <div>{{ scope.row.memberId }}</div>
-                  <div class="leader" v-if="scope.row.isLeader == 1">团长</div>
+                  <div class="leader" v-if="scope.row.isLeader == 1">{{ $t('marketing.groupLeader') }}</div>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="订单编号" prop="orderNo" min-width="190"></el-table-column>
-            <el-table-column label="商品规格" prop="orderDetailSku"></el-table-column>
-            <el-table-column label="拼团时间" prop="createTime" min-width="180"></el-table-column>
-            <el-table-column label="购买数量" prop="payNum"></el-table-column>
-            <el-table-column label="实付金额" prop="payPrice"></el-table-column>
-            <el-table-column label="已退款数量" prop="refundNum" min-width="100"></el-table-column>
+            <el-table-column :label="$t('order.orderNo')" prop="orderNo" min-width="190"></el-table-column>
+            <el-table-column :label="$t('marketing.productSpec')" prop="orderDetailSku"></el-table-column>
+            <el-table-column :label="$t('marketing.groupBuyTime')" prop="createTime" min-width="180"></el-table-column>
+            <el-table-column :label="$t('marketing.purchaseCount')" prop="payNum"></el-table-column>
+            <el-table-column :label="$t('order.payAmount')" prop="payPrice"></el-table-column>
+            <el-table-column :label="$t('marketing.refundedCount')" prop="refundNum" min-width="100"></el-table-column>
           </el-table>
         </div>
       </div>

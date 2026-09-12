@@ -15,7 +15,7 @@
       v-model.trim="val"
       size="small"
       class="keywordbox_ip"
-      placeholder="输入后回车"
+      :placeholder="$t('common.inputThenEnter')"
       maxlength="32"
       show-word-limit
       @change="addlabel"

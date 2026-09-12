@@ -1,5 +1,6 @@
 <script>
 import render from '@/components/FormGenerator/components/render/render.js';
+import { translateFormConfig } from '@/utils/i18nText';
 
 const ruleTrigger = {
   'el-input': 'blur',
@@ -39,7 +40,7 @@ function formBtns(h) {
     <el-col>
       <el-form-item>
         <el-button type="primary" v-debounceClick={this.submitForm}>
-          提交
+          {this.$t('common.submit')}
         </el-button>
       </el-form-item>
     </el-col>
@@ -176,7 +177,7 @@ export default {
       });
     }
     const data = {
-      formConfCopy: JSON.parse(JSON.stringify(this.formConf)),
+      formConfCopy: JSON.parse(JSON.stringify(translateFormConfig(JSON.parse(JSON.stringify(this.formConf))))),
       [this.formConf.formModel]: {},
       [this.formConf.formRules]: {},
     };
@@ -184,7 +185,16 @@ export default {
     this.buildRules(data.formConfCopy.fields, data[this.formConf.formRules]);
     return data;
   },
+  watch: {
+    '$i18n.locale'() {
+      this.rebuildTranslatedForm();
+    },
+  },
   methods: {
+    rebuildTranslatedForm() {
+      this.formConfCopy = JSON.parse(JSON.stringify(translateFormConfig(JSON.parse(JSON.stringify(this.formConf)))));
+      this.buildRules(this.formConfCopy.fields, this[this.formConf.formRules]);
+    },
     initFormData(componentList, formData) {
       componentList.forEach((cur) => {
         const config = cur.__config__;
@@ -216,7 +226,7 @@ export default {
     },
     resetForm() {
       this.$emit('resetForm', this.formConf);
-      this.formConfCopy = JSON.parse(JSON.stringify(this.formConf));
+      this.formConfCopy = JSON.parse(JSON.stringify(translateFormConfig(JSON.parse(JSON.stringify(this.formConf)))));
       this.$refs[this.formConf.formRef].resetFields();
     },
     submitForm() {

@@ -1,6 +1,7 @@
 package com.zbkj.common.vo;
 
 import com.zbkj.common.annotation.StringContains;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,7 +12,6 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -37,10 +37,13 @@ public class PcHomeRecommendedVo implements Serializable {
     @ApiModelProperty(value = "ID")
     private Integer id;
 
-    @ApiModelProperty(value = "板块名称", required = true)
-    @NotBlank(message = "请填写板块名称")
-    @Length(min = 1, max = 6, message = "模块名称长度不能超过6个字符")
+    @ApiModelProperty(value = "板块名称")
+    @Length(max = 6, message = "模块名称长度不能超过6个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言板块名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "请填写板块名称")
+    private String nameJson;
 
     @ApiModelProperty(value = "广告图", required = true)
     @NotBlank(message = "请选择广告图")

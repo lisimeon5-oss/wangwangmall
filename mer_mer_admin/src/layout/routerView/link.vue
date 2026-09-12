@@ -9,10 +9,10 @@
     <div class="layout-view-bg-white flex layout-view-link">
       <div class="layout-link-warp">
         <i class="layout-link-icon iconfont icon-xingqiu"></i>
-        <div class="layout-link-msg">页面 "{{ meta.title }}" 已在新窗口中打开</div>
+        <div class="layout-link-msg">{{ translateText(`页面 "${meta.title}" 已在新窗口中打开`) }}</div>
         <el-button class="mt30" round size="small" @click="onGotoFullPage">
           <i class="iconfont icon-lianjie"></i>
-          <span>立即前往</span>
+          <span>{{ translateText("立即前往") }}</span>
         </el-button>
       </div>
     </div>

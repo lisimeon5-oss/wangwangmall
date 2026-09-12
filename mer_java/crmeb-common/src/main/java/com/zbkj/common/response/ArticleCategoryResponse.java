@@ -34,6 +34,9 @@ public class ArticleCategoryResponse implements Serializable {
     @ApiModelProperty(value = "分类名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言分类名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "分类图标")
     private String icon;
 

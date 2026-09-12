@@ -18,6 +18,7 @@ import com.zbkj.common.request.CommunityCategorySaveRequest;
 import com.zbkj.common.request.CommunityCategorySearchRequest;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.CommunityResultCode;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.service.dao.community.CommunityCategoryDao;
 import com.zbkj.service.service.CommunityCategoryService;
 import com.zbkj.service.service.CommunityNotesService;
@@ -60,8 +61,8 @@ public class CommunityCategoryServiceImpl extends ServiceImpl<CommunityCategoryD
     public PageInfo<CommunityCategory> findPageList(CommunityCategorySearchRequest request) {
         Page<CommunityCategory> page = PageHelper.startPage(request.getPage(), request.getLimit());
         LambdaQueryWrapper<CommunityCategory> lqw = Wrappers.lambdaQuery();
-        lqw.select(CommunityCategory::getId, CommunityCategory::getName, CommunityCategory::getSort,
-                CommunityCategory::getIsShow, CommunityCategory::getCreateTime);
+        lqw.select(CommunityCategory::getId, CommunityCategory::getName, CommunityCategory::getNameJson,
+                CommunityCategory::getSort, CommunityCategory::getIsShow, CommunityCategory::getCreateTime);
         if (StrUtil.isNotBlank(request.getName())) {
             lqw.like(CommunityCategory::getName, URLUtil.decode(request.getName()));
         }
@@ -81,11 +82,13 @@ public class CommunityCategoryServiceImpl extends ServiceImpl<CommunityCategoryD
      */
     @Override
     public void add(CommunityCategorySaveRequest request) {
-        if (isExistName(request.getName(), 0)) {
+        if (StrUtil.isNotBlank(request.getName()) && isExistName(request.getName(), 0)) {
             throw new CrmebException(CommunityResultCode.COMMUNITY_CATEGORY_EXIST);
         }
         CommunityCategory category = new CommunityCategory();
         BeanUtils.copyProperties(request, category, "id");
+        category.setName(I18nJsonUtil.emptyToBlank(request.getName()));
+        category.setNameJson(StrUtil.isNotBlank(request.getNameJson()) ? request.getNameJson() : "");
         boolean save = save(category);
         if (!save) {
             throw new CrmebException("添加社区分类失败");
@@ -104,10 +107,16 @@ public class CommunityCategoryServiceImpl extends ServiceImpl<CommunityCategoryD
         }
         CommunityCategory category = getByIdExpetion(request.getId());
 
-        if (!category.getName().equals(request.getName()) && isExistName(request.getName(), request.getId())) {
+        if (StrUtil.isNotBlank(request.getName())
+                && !StrUtil.nullToEmpty(category.getName()).equals(request.getName())
+                && isExistName(request.getName(), request.getId())) {
             throw new CrmebException(CommunityResultCode.COMMUNITY_CATEGORY_EXIST);
         }
         BeanUtils.copyProperties(request, category);
+        category.setName(I18nJsonUtil.emptyToBlank(request.getName()));
+        if (ObjectUtil.isNotNull(request.getNameJson())) {
+            category.setNameJson(request.getNameJson());
+        }
         boolean update = updateById(category);
         if (!update) {
             throw new CrmebException(CommonResultCode.ERROR.setMessage("编辑社区分类失败"));
@@ -140,13 +149,13 @@ public class CommunityCategoryServiceImpl extends ServiceImpl<CommunityCategoryD
     @Override
     public Map<Integer, String> getMapInIdList(List<Integer> cateIdList) {
         LambdaQueryWrapper<CommunityCategory> lqw = Wrappers.lambdaQuery();
-        lqw.select(CommunityCategory::getId, CommunityCategory::getName);
+        lqw.select(CommunityCategory::getId, CommunityCategory::getName, CommunityCategory::getNameJson);
         lqw.in(CommunityCategory::getId, cateIdList);
         lqw.eq(CommunityCategory::getIsDel, Constants.COMMON_IS_FILED_ZERO);
         List<CommunityCategory> list = dao.selectList(lqw);
         Map<Integer, String> map = CollUtil.newHashMap();
         list.forEach(e -> {
-            map.put(e.getId(), e.getName());
+            map.put(e.getId(), I18nJsonUtil.resolveByRequest(e.getName(), e.getNameJson()));
         });
         return map;
     }
@@ -171,13 +180,15 @@ public class CommunityCategoryServiceImpl extends ServiceImpl<CommunityCategoryD
     @Override
     public List<CommunityCategory> findListByShow(Integer isShow) {
         LambdaQueryWrapper<CommunityCategory> lqw = Wrappers.lambdaQuery();
-        lqw.select(CommunityCategory::getId, CommunityCategory::getName);
+        lqw.select(CommunityCategory::getId, CommunityCategory::getName, CommunityCategory::getNameJson);
         if (ObjectUtil.isNotNull(isShow)) {
             lqw.eq(CommunityCategory::getIsShow, isShow);
         }
         lqw.eq(CommunityCategory::getIsDel, Constants.COMMON_IS_FILED_ZERO);
         lqw.orderByDesc(CommunityCategory::getSort, CommunityCategory::getId);
-        return dao.selectList(lqw);
+        List<CommunityCategory> list = dao.selectList(lqw);
+        list.forEach(e -> e.setName(I18nJsonUtil.resolveByRequest(e.getName(), e.getNameJson())));
+        return list;
     }
 
     private boolean isExistName(String name, Integer id) {

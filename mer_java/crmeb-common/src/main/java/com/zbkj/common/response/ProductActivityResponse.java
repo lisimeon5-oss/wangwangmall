@@ -37,6 +37,9 @@ public class ProductActivityResponse {
     @ApiModelProperty(value = "商品名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言商品名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "商品价格")
     private BigDecimal price;
 
@@ -63,6 +66,9 @@ public class ProductActivityResponse {
 
     @ApiModelProperty(value = "商品分类名称")
     private String categoryName;
+
+    @ApiModelProperty(value = "多语言商品分类名称(JSON)")
+    private String categoryNameJson;
 
     @ApiModelProperty(value = "品牌id")
     private Integer brandId;

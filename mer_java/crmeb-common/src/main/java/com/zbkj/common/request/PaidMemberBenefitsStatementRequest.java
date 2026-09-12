@@ -36,4 +36,6 @@ public class PaidMemberBenefitsStatementRequest implements Serializable {
     @ApiModelProperty(value = "权益说明")
     private String expand;
 
+    @ApiModelProperty(value = "多语言权益说明(JSON)")
+    private String expandJson;
 }

@@ -13,44 +13,44 @@
 										<text class="iconfont icon-24gf-play"></text>
 									</view>
 								</view>
-								<text class="video-text">点击可预览视频</text>
+								<text class="video-text">{{$t('点击可预览视频')}}</text>
 								<view class="close_btn" @click="formData.video = ''"><text
 										class="iconfont icon-guanbi4"></text></view>
 							</view>
 							<view class="pictrue" v-for="(item, index) in image" :key="index">
 								<easy-loadimage mode="widthFix" :image-src="item.url"></easy-loadimage>
-								<text class="cover_text" v-if="item.isCover">封面</text>
+								<text class="cover_text" v-if="item.isCover">{{$t('封面')}}</text>
 								<view class="close_btn" @click="DelPic(index)"><text
 										class="iconfont icon-guanbi4"></text></view>
-								<view class="cover_change" v-if="!item.isCover" @click="onChangeCover(item, index)">更换封面
+								<view class="cover_change" v-if="!item.isCover" @click="onChangeCover(item, index)">{{$t('更换封面')}}
 								</view>
 							</view>
 							<view v-if="image.length < 9 && !formData.video"
 								class="pictrue acea-row row-center-wrapper row-column add" @click="upload('image')">
 								<view><text class='iconfont icon-paizhao'></text></view>
-								<view class="text">添加图片</view>
+								<view class="text">{{$t('添加图片')}}</view>
 							</view>
 
 							<view v-if="image.length === 0 && !formData.video"
 								class="pictrue acea-row row-center-wrapper row-column add" @click="upload('video',1)">
 								<view><text class='iconfont icon-tianjiashipin'></text></view>
-								<view class="text">添加视频</view>
+								<view class="text">{{$t('添加视频')}}</view>
 							</view>
 							<view v-if="formData.video && image.length=== 0"
 								class="pictrue acea-row row-center-wrapper row-column add" @click="upload('video',2)">
 
 								<view><text class='iconfont icon-paizhao'></text></view>
-								<view class="text">添加封面</view>
+								<view class="text">{{$t('添加封面')}}</view>
 							</view>
 						</view>
 					</view>
 					<view class="title mb30">
-						<input placeholder='填写标题会有更多赞噢~' name="title" placeholder-class='placeholder'
+						<input :placeholder="$t('填写标题会有更多赞噢~')" name="title" placeholder-class='placeholder'
 							v-model="formData.title" maxlength="20" />
 					</view>
 					<view class="textarea">
 						<textarea
-							:placeholder="formData.type == 1?'分享使用体验和心得，获得更多点赞和关注哦~(600字以内)':'分享使用体验和心得，获得更多点赞和关注哦~(200字以内)'"
+							:placeholder="formData.type == 1? $t('分享使用体验和心得，获得更多点赞和关注哦~(600字以内)') : $t('分享使用体验和心得，获得更多点赞和关注哦~(200字以内)')"
 							auto-height name="comment" placeholder-class='placeholder' v-model="formData.content"
 							:maxlength="formData.type == 1?'600':'200'"></textarea>
 						<view class="discoverlist acea-row mt-10">
@@ -62,7 +62,7 @@
 					</view>
 					<view @click="addTopic" class="flex flex-wrap mt-120">
 						<view class="h-52 px-16 rd-30rpx border-eee flex-center fs-24">
-							<span class="line-heightOne">#话题</span>
+							<span class="line-heightOne">#{{$t('话题')}}</span>
 						</view>
 					</view>
 				</view>
@@ -71,11 +71,11 @@
 				<view class="release_item" style="padding: 0 24rpx;">
 					<view class='item acea-row row-between-wrapper' @click.stop="addProduct">
 						<view class='name color28'><text
-								class="iconfont icon-tianjiabaobei"></text>添加宝贝({{productList.length}})
+								class="iconfont icon-tianjiabaobei"></text>{{$t('添加宝贝')}}({{productList.length}})
 						</view>
 						<view class="select">
 							<view class="select_count">
-								<text v-if="productList.length == 0" class="text">请选择</text>
+								<text v-if="productList.length == 0" class="text">{{$t('请选择')}}</text>
 								<view v-else class="text">
 									<image class="image" v-for="(item,index) in productList" :key="index"
 										:src="item.image || item.productImage"></image>
@@ -85,13 +85,14 @@
 						</view>
 					</view>
 					<view class='item acea-row row-between-wrapper'>
-						<view class='name color28'><text class="iconfont icon-neirongfenlei"></text>内容分类
+						<view class='name color28'><text class="iconfont icon-neirongfenlei"></text>{{$t('内容分类')}}
 						</view>
 						<view class="select">
 							<view class="select_count">
-								<picker class="pickerIpt" @change="bindSexChange" :value="sexindex"
-									:range="categoryList" range-key="name">
-									<text v-if="!categoryName" class="text">请选择</text>
+									<picker class="pickerIpt" @change="bindSexChange" :value="sexindex"
+										:range="categoryList" range-key="name"
+										:cancel-text="$t('取消')" :confirm-text="$t('完成')">
+									<text v-if="!categoryName" class="text">{{$t('请选择')}}</text>
 									<view class="uni-input color28 text">{{categoryName}}</view>
 								</picker>
 								<text @change="bindSexChange" class="iconfont icon-xiangyou"></text>
@@ -99,10 +100,10 @@
 						</view>
 					</view>
 					<view v-if="!replyPlatformSwitch" class='item acea-row row-between-wrapper'>
-						<view class='name color28'>总平台禁止评论</view>
+						<view class='name color28'>{{$t('总平台禁止评论')}}</view>
 					</view>
 					<view v-else class='item acea-row row-between-wrapper'>
-						<view class='name color28'><text class="iconfont icon-pinglun3"></text>是否禁止评论</view>
+						<view class='name color28'><text class="iconfont icon-pinglun3"></text>{{$t('是否禁止评论')}}</view>
 						<view class="select">
 							<switch @change="switch1Change" :checked="replyStatus" :color="indicatorBg"
 								style="transform:scale(0.7)" />
@@ -110,7 +111,7 @@
 					</view>
 				</view>
 			</view>
-			<button class="release_btn button" form-type="submit">发布</button>
+			<button class="release_btn button" form-type="submit">{{$t('发布')}}</button>
 		</form>
 		<!-- 商品列表 -->
 		<tui-bottom-popup class="topic" :zIndex="1002" :maskZIndex="1001" :show="popupShow" @close="popup">
@@ -162,6 +163,7 @@
 	import {
 		HTTP_REQUEST_URL
 	} from '@/config/app.js';
+	import { getLocalizedName } from '@/utils/localizedName';
 	import tuiBottomPopup from "../components/tui-bottom-popup.vue"
 	import associatedProduct from "../components/associatedProduct.vue"
 	import easyLoadimage from '@/components/base/easy-loadimage.vue';
@@ -243,7 +245,7 @@
 			/*更换封面*/
 			onChangeCover(item) {
 				uni.showLoading({
-					title: '加载中',
+					title: this.$t('加载中'),
 					mask: true
 				})
 				setTimeout(() => {
@@ -276,7 +278,10 @@
 			//分类列表
 			getCommunityCategoryList() {
 				communityCategoryListApi().then(res => {
-					this.categoryList = res.data;
+					this.categoryList = (res.data || []).map(c => ({
+						...c,
+						name: getLocalizedName(c)
+					}));
 				})
 			},
 			//选择分类
@@ -405,15 +410,15 @@
 			formSubmit: Debounce(function(e) {
 				let that = this;
 				// if (that.image.length == 0) return that.$util.Tips({
-				// 	title: '请添加内容图片'
+				// 	title: this.$t('请添加内容图片')
 				// });
 				if (that.formData.type == 2 && !that.formData.video) {
 					return that.$util.Tips({
-						title: '请添加内容视频'
+						title: this.$t('请添加内容视频')
 					});
 				}
 				if (!that.formData.categoryId) return that.$util.Tips({
-					title: '请选择内容分类'
+					title: this.$t('请选择内容分类')
 				});
 				if (this.formData.type == 1) {
 					let images = [];
@@ -443,18 +448,18 @@
 
 
 				if (!that.formData.cover) return that.$util.Tips({
-					title: '请上传封面图'
+					title: this.$t('请上传封面图')
 				});
 
 
 				uni.showLoading({
-					title: '保存中',
+					title: this.$t('保存中'),
 					mask: true
 				})
 				that.noteId ? noteUpdateApi(that.formData).then(res => {
 					uni.hideLoading()
 					that.$util.Tips({
-						title: '提交成功',
+						title: this.$t('提交成功'),
 						icon: 'success'
 					});
 					setTimeout(function() {
@@ -469,7 +474,7 @@
 					});
 				}) : noteAddApi(that.formData).then(res => {
 					that.$util.Tips({
-						title: '提交成功',
+						title: this.$t('提交成功'),
 						icon: 'success'
 					});
 					uni.hideLoading()
@@ -509,7 +514,7 @@
 	}
 
 	.topic {
-		/deep/.tui-popup-class {
+		::v-deep .tui-popup-class {
 			height: 95% !important;
 		}
 	}
@@ -532,7 +537,7 @@
 	.crop_btn {
 		line-height: 90rpx;
 		height: 90rpx;
-		height: calc(90rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(90rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(90rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 	}
 
@@ -596,9 +601,9 @@
 		.photo_count {}
 	}
 
-	/deep/.input_photo .easy-loadimage,
-	/deep/.input_photo uni-image,
-	/deep/.input_photo image {
+	::v-deep .input_photo .easy-loadimage,
+	::v-deep .input_photo uni-image,
+	::v-deep .input_photo image {
 		width: 200rpx;
 		height: 200rpx;
 		border-radius: 12rpx !important;
@@ -667,7 +672,7 @@
 		}
 	}
 
-	/deep/.loading-img {
+	::v-deep .loading-img {
 		width: 200rpx;
 		height: 200rpx;
 		border-radius: 12rpx;

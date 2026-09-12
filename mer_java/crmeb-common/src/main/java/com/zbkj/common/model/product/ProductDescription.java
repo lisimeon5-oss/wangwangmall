@@ -37,6 +37,9 @@ public class ProductDescription implements Serializable {
     @ApiModelProperty(value = "商品详情")
     private String description;
 
+    @ApiModelProperty(value = "多语言商品详情(JSON)")
+    private String descriptionJson;
+
     @ApiModelProperty(value = "基础类型：0=普通商品,1-积分商品,2-虚拟商品,4=视频号,5-云盘商品,6-卡密商品")
     private Integer type;
 

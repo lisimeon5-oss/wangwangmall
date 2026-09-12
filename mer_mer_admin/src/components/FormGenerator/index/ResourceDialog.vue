@@ -2,7 +2,7 @@
   <div>
     <el-dialog
       v-bind="$attrs"
-      title="外部资源引用"
+      :title="translateText('外部资源引用')"
       width="600px"
       :close-on-click-modal="false"
       v-on="$listeners"
@@ -14,7 +14,7 @@
         :key="index"
         v-model="resources[index]"
         class="url-item"
-        placeholder="请输入 css 或 js 资源路径"
+        :placeholder="translateText('请输入 css 或 js 资源路径')"
         prefix-icon="el-icon-link"
         clearable
       >
@@ -23,11 +23,11 @@
       <el-button-group class="add-item">
         <el-button plain @click="addOne('https://cdn.bootcss.com/jquery/1.8.3/jquery.min.js')"> jQuery1.8.3 </el-button>
         <el-button plain @click="addOne('https://unpkg.com/http-vue-loader')"> http-vue-loader </el-button>
-        <el-button icon="el-icon-circle-plus-outline" plain @click="addOne('')"> 添加其他 </el-button>
+        <el-button icon="el-icon-circle-plus-outline" plain @click="addOne('')"> {{ translateText('添加其他') }} </el-button>
       </el-button-group>
       <div slot="footer">
-        <el-button @click="close"> 取消 </el-button>
-        <el-button type="primary" @click="handelConfirm"> 确定 </el-button>
+        <el-button @click="close"> {{ translateText('取消') }} </el-button>
+        <el-button type="primary" @click="handelConfirm"> {{ translateText('确定') }} </el-button>
       </div>
     </el-dialog>
   </div>
@@ -77,7 +77,7 @@ export default {
     },
     addOne(url) {
       if (this.resources.indexOf(url) > -1) {
-        this.$message('资源已存在');
+        this.$message(this.translateText('资源已存在'));
       } else {
         this.resources.push(url);
       }

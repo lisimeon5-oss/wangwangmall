@@ -17,25 +17,25 @@
  * @returns {Promise<any>}
  */
 export default function modalPrompt(inputType, title, val, label) {
+  const locale = String((this.$i18n && this.$i18n.locale) || 'zh-cn').toLowerCase();
+  const join = locale.startsWith('zh') ? '' : ' ';
+  const pleaseEnter = `${this.$t('formGenerator.pleaseEnter')}${join}${title}`.trim();
   return new Promise((resolve, reject) => {
     this.$prompt('', `${title}`, {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      inputErrorMessage: `请输入${title}`,
+      confirmButtonText: this.$t('el.messagebox.confirm'),
+      cancelButtonText: this.$t('el.messagebox.cancel'),
+      inputErrorMessage: pleaseEnter,
       inputType: inputType,
       inputValue: val ? val : '',
       showClose: true,
       closeOnClickModal: false,
       customClass: 'prompt-form',
-      inputPlaceholder: `请输入${title}`,
+      inputPlaceholder: pleaseEnter,
       inputValidator: (value) => {
         if (value === null) {
           return true;
-          //return '输入不能为空';
         }
-        // if (value.indexOf(' ') !== -1 && !value) return '输入不能为空';
-        //  if (value.indexOf(' ') !== -1 && value === ' ') return '输入不能为空';
-        if (value.length > 50) return '输入限制50字以内';
+        if (value.length > 50) return this.$t('common.inputMax50');
       },
       beforeClose: (action, instance, done) => {
         done();
@@ -45,7 +45,7 @@ export default function modalPrompt(inputType, title, val, label) {
         resolve(value);
       })
       .catch(() => {
-        this.$message.info('取消输入');
+        this.$message.info(this.$t('common.cancelInput'));
       });
   });
 }

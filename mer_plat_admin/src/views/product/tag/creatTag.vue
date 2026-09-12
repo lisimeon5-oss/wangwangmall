@@ -3,13 +3,13 @@
     <div class="container_box">
       <pages-header
         ref="pageHeader"
-        :title="$route.params.id ? '商品标签编辑' : '商品标签新增'"
+        :title="$route.params.id ? $t('product.tagEdit') : $t('product.tagAdd')"
         backUrl="/product/tag"
       ></pages-header>
       <el-card class="box-card box-body mt14" :bordered="false" shadow="never">
         <el-tabs v-model="activeName" class="list-tabs">
-          <el-tab-pane label="基础设置" name="first"></el-tab-pane>
-          <el-tab-pane label="使用范围" name="second"></el-tab-pane>
+          <el-tab-pane :label="$t('product.basicSetting')" name="first"></el-tab-pane>
+          <el-tab-pane :label="$t('product.usageScope')" name="second"></el-tab-pane>
         </el-tabs>
         <el-form
           ref="dataForm"
@@ -20,26 +20,42 @@
           v-loading="loadingFrom"
         >
           <template v-if="activeName === 'first'">
-            <el-form-item label="标签名称：" prop="tagName">
-              <el-input
-                v-model.trim="dataForm.tagName"
-                type="text"
-                placeholder="请输入标签名称"
-                maxLength="5"
-                class="from-ipt-width"
-                :disabled="dataForm.owner === 0"
-              />
+            <el-form-item :label="$t('product.tagName')" prop="tagName">
+              <div class="lang-name-switch">
+                <el-radio-group v-model="activeLang" size="small">
+                  <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                    {{ lang.label }}
+                  </el-radio-button>
+                </el-radio-group>
+                <el-input
+                  v-if="activeLang === defaultLangCode"
+                  v-model.trim="dataForm.tagName"
+                  type="text"
+                  :placeholder="$t('product.pleaseEnterTagName')"
+                  maxLength="5"
+                  class="from-ipt-width lang-name-input"
+                  :disabled="dataForm.owner === 0"
+                />
+                <el-input
+                  v-else
+                  v-model.trim="nameJsonForm[activeLang]"
+                  type="text"
+                  :placeholder="$t('product.inputNameInLang', { lang: activeLangLabel })"
+                  maxLength="20"
+                  class="from-ipt-width lang-name-input"
+                />
+              </div>
             </el-form-item>
-            <el-form-item label="标签说明：" prop="tagNote">
+            <el-form-item :label="$t('product.tagNote')" prop="tagNote">
               <el-input
                 class="from-ipt-width"
                 v-model.trim="dataForm.tagNote"
                 type="textarea"
-                placeholder="请输入标签说明"
+                :placeholder="$t('product.pleaseEnterTagNote')"
                 :disabled="dataForm.owner === 0"
               />
             </el-form-item>
-            <el-form-item label="排序：" prop="sort">
+            <el-form-item :label="$t('product.sort')" prop="sort">
               <el-input-number
                 class="from-ipt-width"
                 v-model.trim="dataForm.sort"
@@ -48,7 +64,7 @@
                 :step="1"
               ></el-input-number>
             </el-form-item>
-            <el-form-item label="生效时间：" prop="timerange">
+            <el-form-item :label="$t('product.effectiveTime')" prop="timerange">
               <el-date-picker
                 v-model="dataForm.timerange"
                 size="small"
@@ -56,88 +72,88 @@
                 type="daterange"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 :default-time="['00:00:00', '23:59:59']"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                :start-placeholder="$t('product.startDate')"
+                :end-placeholder="$t('product.endDate')"
                 align="right"
                 @change="onchangeTime"
                 :picker-options="pickerOptionsForEditCoupon"
               />
             </el-form-item>
-            <el-form-item label="状态：" prop="status">
+            <el-form-item :label="$t('common.status')" prop="status">
               <el-switch
                 v-model="dataForm.status"
                 :active-value="1"
                 :inactive-value="0"
-                active-text="显示"
-                inactive-text="隐藏"
+                :active-text="$t('product.show')"
+                :inactive-text="$t('product.hide')"
                 @change="handleStatusChange"
               >
               </el-switch>
             </el-form-item>
-            <el-form-item label="商城中的位置：" prop="position">
-              <el-radio v-model="dataForm.position" :label="0">标题下</el-radio>
-              <el-radio v-model="dataForm.position" :label="1">标题前</el-radio>
-              <div class="from-tips">标题前最多展示1个标签，标题下最多展示3个标签；系统根据标签顺序进行展示</div>
+            <el-form-item :label="$t('product.mallPosition')" prop="position">
+              <el-radio v-model="dataForm.position" :label="0">{{ $t('product.belowTitle') }}</el-radio>
+              <el-radio v-model="dataForm.position" :label="1">{{ $t('product.beforeTitle') }}</el-radio>
+              <div class="from-tips">{{ $t('product.positionTip') }}</div>
             </el-form-item>
             <el-form-item>
               <el-button v-show="activeName == 'first'" size="small" type="primary" @click="activeName = 'second'"
-                >下一步</el-button
+                >{{ $t('product.nextStep') }}</el-button
               >
             </el-form-item>
           </template>
           <template v-if="activeName === 'second'">
             <!--      系统标签规则-->
             <div v-if="dataForm.owner === 0">
-              <el-form-item label="展示规则:" prop="playProducts">
+              <el-form-item :label="$t('product.displayRulesLabel')" prop="playProducts">
                 <div v-if="dataForm.tagName === '新品'">
-                  商品创建后
+                  {{ $t('product.afterProductCreated') }}
                   <el-input-number :min="1" :max="30" :step="1" v-model.trim="dataForm.playProducts"></el-input-number>
-                  天内，展示此标签。
+                  {{ $t('product.daysShowTag') }}
                 </div>
                 <div v-if="dataForm.tagName === '爆品'">
-                  最近30天销量大于
+                  {{ $t('product.recent30DaysSalesGreater') }}
                   <el-input-number
                     :min="1"
                     :max="9999"
                     :step="1"
                     v-model.trim="dataForm.playProducts"
                   ></el-input-number>
-                  件，展示此标签。
+                  {{ $t('product.itemsShowTag') }}
                 </div>
-                <div v-if="dataForm.tagName === '自营'">商家有自营标签时，展示此标签。</div>
+                <div v-if="dataForm.tagName === '自营'">{{ $t('product.selfOperatedTagTip') }}</div>
                 <div v-if="dataForm.tagName === '热卖'">
-                  最近30天用户评论数大于
+                  {{ $t('product.recent30DaysCommentsGreater') }}
                   <el-input-number
                     :min="1"
                     :max="9999"
                     :step="1"
                     v-model.trim="dataForm.playProducts"
                   ></el-input-number>
-                  条，展示此标签。
+                  {{ $t('product.commentsShowTag') }}
                 </div>
                 <div v-if="dataForm.tagName === '优选'">
-                  最近30天用户5星好评大于
+                  {{ $t('product.recent30DaysFiveStarGreater') }}
                   <el-input-number
                     :min="1"
                     :max="9999"
                     :step="1"
                     v-model.trim="dataForm.playProducts"
                   ></el-input-number>
-                  条，展示此标签。
+                  {{ $t('product.commentsShowTag') }}
                 </div>
-                <div v-if="dataForm.tagName === '包邮'">全国包邮商品，展示此标签。</div>
+                <div v-if="dataForm.tagName === '包邮'">{{ $t('product.freeShippingTip') }}</div>
               </el-form-item>
             </div>
             <!--      自建标签规则可只用的条件-->
             <div v-if="dataForm.owner > 0 || !dataForm.id">
               <div>
                 <!--商品参与类型 0=指定商品，1=指定品牌，2=指定商户，3=指定商品分类-->
-                <el-form-item label="商品参与类型：" prop="playType">
+                <el-form-item :label="$t('product.productParticipationTypeLabel')" prop="playType">
                   <el-radio-group v-model="dataForm.playType" @input="handlePlayTypeChange">
-                    <el-radio label="product">指定商品参与</el-radio>
-                    <el-radio label="brand">指定品牌参与</el-radio>
-                    <el-radio label="category">指定分类参与</el-radio>
-                    <el-radio label="merchant">指定商户参与</el-radio>
+                    <el-radio label="product">{{ $t('product.specifiedProductParticipation') }}</el-radio>
+                    <el-radio label="brand">{{ $t('product.specifiedBrandParticipation') }}</el-radio>
+                    <el-radio label="category">{{ $t('product.specifiedCategoryParticipation') }}</el-radio>
+                    <el-radio label="merchant">{{ $t('product.specifiedMerchantParticipation') }}</el-radio>
                   </el-radio-group>
                   <!-- 选择商品加载方式-->
                   <product-association-form
@@ -158,14 +174,14 @@
                 size="small"
                 class="priamry_border"
                 @click="activeName = 'first'"
-                >上一步</el-button
+                >{{ $t('product.previousStep') }}</el-button
               >
               <el-button
                 type="primary"
                 v-hasPermi="['platform:product:tag:save', 'platform:product:tag:update']"
                 :loading="loading"
                 @click="onsubmit('dataForm')"
-                >保存
+                >{{ $t('common.save') }}
               </el-button>
             </el-form-item>
           </template>
@@ -180,18 +196,26 @@ import merchantName from '@/components/merUseCategory/index.vue';
 import { mapGetters } from 'vuex';
 import * as storeApi from '@/api/product';
 import { productTagInfoApi } from '@/api/product';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
 
+
+import { resolveFormActiveLang, hasI18nNameContent, buildI18nNameJson, pickFormName } from '@/utils/localizedName';
 export default {
   name: 'editProductCateTag',
   components: { productAssociationForm, merchantName },
   computed: {
     ...mapGetters(['merPlatProductClassify']),
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
   },
   data() {
     // 自定义组件校验规则
     let validatePlayTypeAndPlayProducts = (rule, value, callback) => {
       if (value === '' || this.dataForm.playProducts.length === 0) {
-        callback(new Error('请选择参与类型和对应规则'));
+        callback(new Error(this.$t('product.pleaseSelectParticipationType')));
       } else {
         callback();
       }
@@ -212,13 +236,19 @@ export default {
       loadingFrom: false,
       rules: {
         // 表单验证参数
-        tagName: [{ required: true, message: '请输入标签名称', trigger: 'blur' }],
-        timerange: [{ required: true, message: '请选择生效时间区间', trigger: 'change' }],
-        sort: [{ required: true, message: '请输入排序', trigger: 'blur' }],
+        tagName: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(pickFormName(this), this.nameJsonForm)) callback();
+            else callback(new Error(this.$t('product.pleaseEnterTagName')));
+          },
+          trigger: 'blur',
+        }],
+        timerange: [{ required: true, message: this.$t('product.pleaseSelectEffectiveTime'), trigger: 'change' }],
+        sort: [{ required: true, message: this.$t('user.pleaseEnterSort'), trigger: 'blur' }],
         playType: [
           {
             required: true,
-            message: '请选择参与类型和对应规则',
+            message: this.$t('product.pleaseSelectParticipationType'),
             trigger: 'blur',
             validator: validatePlayTypeAndPlayProducts,
           },
@@ -227,6 +257,7 @@ export default {
       // 初始化表单数据
       dataForm: {
         tagName: '',
+        tagNameJson: '',
         timerange: [],
         sort: 0,
         playType: 'product',
@@ -234,6 +265,13 @@ export default {
         position: 0,
         proBrandList: [],
       },
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
       pickerOptionsForEditCoupon: {
         // 时间有效校验
         disabledDate(time) {
@@ -250,16 +288,65 @@ export default {
     };
   },
   created() {
+    this.getLanguageList();
     if (this.$route.params.id) {
       this.initEditData();
     }
   },
   methods: {
+    emptyNameJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseNameJson(this.dataForm && this.dataForm.tagNameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseNameJson(this.dataForm && this.dataForm.tagNameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
+    parseNameJson(nameJson) {
+      const form = this.emptyNameJsonForm();
+      if (!nameJson) return form;
+      try {
+        const obj = typeof nameJson === 'string' ? JSON.parse(nameJson) : nameJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // 解析失败时保持为空
+      }
+      return form;
+    },
+    buildNameJson() {
+      return buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, pickFormName(this));
+    },
     initEditData() {
       this.loading = true;
       productTagInfoApi(this.$route.params.id)
         .then((res) => {
           this.dataForm = { ...res, timerange: [] };
+          this.nameJsonForm = this.parseNameJson(res.tagNameJson);
+          this.activeLang = resolveFormActiveLang(this);
           if (res.startTime && res.endTime) {
             this.dataForm.timerange = [new Date(res.startTime), new Date(res.endTime)];
           }
@@ -310,11 +397,12 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true;
+          this.dataForm.tagNameJson = this.buildNameJson();
           if (this.dataForm.id) {
             storeApi
               .productTagUpdateApi(this.dataForm)
               .then(() => {
-                this.$message.success('编辑成功');
+                this.$message.success(this.$t('product.editSuccess'));
                 this.$router.push({ path: `/product/tag` });
               })
               .catch((err) => {})
@@ -325,7 +413,7 @@ export default {
             storeApi
               .productTagAddApi(this.dataForm)
               .then(() => {
-                this.$message.success('新增成功');
+                this.$message.success(this.$t('product.addSuccess'));
                 this.$router.push({ path: `/product/tag` });
               })
               .catch((err) => {})
@@ -380,5 +468,15 @@ export default {
   ::v-deep.el-card__body {
     padding-top: 0px;
   }
+}
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.lang-name-input {
+  margin-top: 10px;
 }
 </style>

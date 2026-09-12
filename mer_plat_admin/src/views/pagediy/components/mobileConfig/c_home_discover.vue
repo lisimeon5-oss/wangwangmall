@@ -29,10 +29,11 @@
 import toolCom from '../mobileConfigRight/index.js';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import rightBtn from '../rightBtn/index.vue';
+import { diyCname } from '@/utils/diyCname';
 export default {
   name: 'c_home_discover',
   componentsName: 'home_discover',
-  cname: '种草社区',
+  ...diyCname('pagediy.plantingCommunity'),
   props: {
     activeIndex: {
       type: null,

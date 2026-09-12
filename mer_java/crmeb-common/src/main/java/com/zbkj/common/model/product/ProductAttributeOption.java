@@ -41,6 +41,9 @@ public class ProductAttributeOption implements Serializable {
     @ApiModelProperty(value = "属性名")
     private String optionName;
 
+    @ApiModelProperty(value = "多语言规格值(JSON)")
+    private String optionNameJson;
+
     @ApiModelProperty(value = "图片")
     private String image;
 

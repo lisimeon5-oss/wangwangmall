@@ -102,7 +102,10 @@ public class UserTagServiceImpl extends ServiceImpl<UserTagDao, UserTag> impleme
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "ID不能为空");
         }
         UserTag userTag = getById(userTagRequest.getId());
-        userTag.setName(userTagRequest.getName());
+        userTag.setName(userTagRequest.getName() == null ? "" : userTagRequest.getName());
+        if (ObjectUtil.isNotNull(userTagRequest.getNameJson())) {
+            userTag.setNameJson(userTagRequest.getNameJson());
+        }
         return updateById(userTag);
     }
 

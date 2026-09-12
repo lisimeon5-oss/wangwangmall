@@ -6,8 +6,8 @@
           <div class="order_icon"><span class="iconfont icon-shanghuliebiao"></span></div>
           <div class="text">
             <div class="acea-row">
-              <div class="title mr10">{{ dataForm.name ? dataForm.name : '新增商户' }}</div>
-              <div v-show="dataForm.isSelf" class="isSelf bg-prompt-color">自营</div>
+              <div class="title mr10">{{ displayMerchantName }}</div>
+              <div v-show="dataForm.isSelf" class="isSelf bg-prompt-color">{{ $t('product.selfOperated') }}</div>
               <div v-show="dataForm.typeId" class="ml8 bg-warning-color isSelf">
                 {{ dataForm.typeId | merchantTypeFilter }}
               </div>
@@ -18,14 +18,14 @@
           </div>
         </div>
         <div class="dialog-footer" v-if="!isDisabled">
-          <el-button size="small" @click="handleClose">取消</el-button>
+          <el-button size="small" @click="handleClose">{{ $t('el.messagebox.cancel') }}</el-button>
           <el-button
             type="primary"
             size="small"
             v-hasPermi="['platform:merchant:add', 'platform:merchant:update']"
             :loading="loading"
             @click="onsubmit('dataForm')"
-            >保存</el-button
+            >{{ $t('common.save') }}</el-button
           >
         </div>
         <div v-show="isDisabled" class="right-align">
@@ -35,61 +35,77 @@
             v-hasPermi="['platform:merchant:update']"
             :loading="loading"
             @click="handleChangeEdit"
-            >编辑</el-button
+            >{{ $t('common.edit') }}</el-button
           >
         </div>
       </div>
     </div>
     <div class="prompt">
-      <el-alert title="商户登录账号为手机号，初始密码为000000，可从个人中心修改密码" type="warning" effect="light">
+      <el-alert :title="$t('merchant.merchantLoginTip')" type="warning" effect="light">
       </el-alert>
     </div>
     <el-form v-loading="loadingFrom" ref="dataForm" :model="dataForm" label-width="100px" :rules="rules">
-      <el-form-item label="商户名称：" prop="name">
-        <el-input
-          class="from-ipt-width"
-          v-model.trim="dataForm.name"
-          :maxlength="isCn ? '16' : '16'"
-          :disabled="isDisabled"
-          placeholder="请输入商户名称"
-        />
+      <el-form-item :label="$t('product.merchantNameLabel')" prop="name">
+        <div class="lang-name-switch from-ipt-width">
+          <el-radio-group v-model="activeLang" size="small" :disabled="isDisabled">
+            <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+              {{ lang.label }}
+            </el-radio-button>
+          </el-radio-group>
+          <el-input
+            v-if="activeLang === defaultLangCode"
+            v-model.trim="dataForm.name"
+            maxlength="50"
+            :disabled="isDisabled"
+            :placeholder="$t('merchant.pleaseEnterMerchantName')"
+            class="lang-name-input"
+          />
+          <el-input
+            v-else
+            v-model.trim="nameJsonForm[activeLang]"
+            maxlength="50"
+            :disabled="isDisabled"
+            :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+            class="lang-name-input"
+          />
+        </div>
       </el-form-item>
-      <el-form-item v-if="merId > 0 || isDisabled" label="商户账号：" required>
+      <el-form-item v-if="merId > 0 || isDisabled" :label="$t('merchant.merchantAccountLabel')" required>
         <el-input
           v-model.trim="dataForm.account"
           :disabled="isDisabled || merId > 0"
-          placeholder="请输入商户账号"
+          :placeholder="$t('merchant.pleaseEnterMerchantAccount')"
           class="from-ipt-width"
         />
       </el-form-item>
-      <el-form-item label="商户手机号：" prop="phone">
+      <el-form-item :label="$t('merchant.merchantPhoneLabel')" prop="phone">
         <el-input
           v-model.trim="dataForm.phone"
           :disabled="isDisabled || merId > 0"
-          placeholder="请输入商户手机号"
+          :placeholder="$t('merchant.pleaseEnterMerchantPhone')"
           class="from-ipt-width"
         />
       </el-form-item>
-      <el-form-item label="商户姓名：" prop="realName">
+      <el-form-item :label="$t('merchant.merchantRealNameLabel')" prop="realName">
         <el-input
           v-model.trim="dataForm.realName"
           :disabled="isDisabled"
-          placeholder="请输入商户姓名"
+          :placeholder="$t('merchant.pleaseEnterMerchantRealName')"
           class="from-ipt-width"
         />
       </el-form-item>
-      <el-form-item label="商户分类：" prop="categoryId">
+      <el-form-item :label="$t('merchant.merchantCategoryLabel')" prop="categoryId">
         <el-select
           class="from-ipt-width"
           v-model="dataForm.categoryId"
-          placeholder="请选择商户分类"
+          :placeholder="$t('merchant.pleaseSelectMerchantCategory')"
           :disabled="isDisabled"
           @change="onChange(dataForm.categoryId)"
         >
           <el-option v-for="item in merchantClassify" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="手续费(%)：" prop="handlingFee">
+      <el-form-item :label="$t('merchant.handlingFeePercentLabel')" prop="handlingFee">
         <el-input-number
           :disabled="isDisabled"
           v-model.trim="dataForm.handlingFee"
@@ -97,15 +113,15 @@
           :precision="2"
         ></el-input-number>
       </el-form-item>
-      <el-form-item label="店铺类型：" prop="typeId">
-        <el-select v-model="dataForm.typeId" placeholder="请选择店铺类型" :disabled="isDisabled" class="from-ipt-width">
+      <el-form-item :label="$t('merchant.storeTypeLabel')" prop="typeId">
+        <el-select v-model="dataForm.typeId" :placeholder="$t('merchant.pleaseSelectStoreType')" :disabled="isDisabled" class="from-ipt-width">
           <el-option v-for="(item, index) in merchantType" :key="index" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="商户关键字：" prop="labelarr">
+      <el-form-item :label="$t('merchant.merchantKeywordLabel')" prop="labelarr">
         <Keyword @getLabelarr="getLabelarr" :isDisabled="isDisabled" :labelarr="labelarr"></Keyword>
       </el-form-item>
-      <el-form-item label="资质图片：" prop="sliderImages">
+      <el-form-item :label="$t('merchant.qualificationLabel')" prop="sliderImages">
         <div class="acea-row">
           <div
             v-for="(item, index) in dataForm.sliderImages"
@@ -127,16 +143,16 @@
           </div>
         </div>
       </el-form-item>
-      <el-form-item label="备注：" prop="remark">
+      <el-form-item :label="$t('user.remarkLabel')" prop="remark">
         <el-input
           v-model.trim="dataForm.remark"
           :disabled="isDisabled"
           type="textarea"
-          placeholder="请输入备注"
+          :placeholder="$t('merchant.pleaseEnterRemark')"
           class="from-ipt-width"
         />
       </el-form-item>
-      <el-form-item label="排序：" prop="sort">
+      <el-form-item :label="$t('product.sortLabel')" prop="sort">
         <el-input-number
           v-model.trim="dataForm.sort"
           :disabled="isDisabled"
@@ -144,47 +160,47 @@
           :max="$constants.NUM_Range.max"
         ></el-input-number>
       </el-form-item>
-      <el-form-item label="星级评分：" v-if="merId > 0" class="inline">
+      <el-form-item :label="$t('merchant.starRatingLabel')" v-if="merId > 0" class="inline">
         <el-rate :disabled="merId > 0 && isDisabled" v-model="dataForm.starLevel" style="margin-top: 8px"></el-rate>
       </el-form-item>
-      <el-form-item label="是否开启：" v-if="dataForm.isSwitch" class="inline">
+      <el-form-item :label="$t('merchant.enableLabel')" v-if="dataForm.isSwitch" class="inline">
         <el-switch
           v-model="dataForm.isSwitch"
           :disabled="isDisabled"
           :active-value="true"
           :inactive-value="false"
-          active-text="显示"
-          inactive-text="隐藏"
+          :active-text="$t('common.show')"
+          :inactive-text="$t('menu.hide')"
         ></el-switch>
       </el-form-item>
-      <el-form-item label="是否推荐：" class="inline">
+      <el-form-item :label="$t('merchant.recommendLabel')" class="inline">
         <el-switch
           v-model="dataForm.isRecommend"
           :disabled="isDisabled"
           :active-value="true"
           :inactive-value="false"
-          active-text="是"
-          inactive-text="否"
+          :active-text="$t('common.yes')"
+          :inactive-text="$t('common.no')"
         ></el-switch>
       </el-form-item>
-      <el-form-item label="是否自营：" class="inline">
+      <el-form-item :label="$t('merchant.selfOperatedLabel')" class="inline">
         <el-switch
           v-model="dataForm.isSelf"
           :disabled="isDisabled"
           :active-value="true"
           :inactive-value="false"
-          active-text="是"
-          inactive-text="否"
+          :active-text="$t('common.yes')"
+          :inactive-text="$t('common.no')"
         ></el-switch>
       </el-form-item>
-      <el-form-item label="商品审核：" class="inline">
+      <el-form-item :label="$t('merchant.productAuditLabel')" class="inline">
         <el-switch
           v-model="dataForm.productSwitch"
           :disabled="isDisabled"
           :active-value="true"
           :inactive-value="false"
-          active-text="开启"
-          inactive-text="关闭"
+          :active-text="$t('common.open')"
+          :inactive-text="$t('common.close')"
         ></el-switch>
       </el-form-item>
     </el-form>
@@ -205,12 +221,36 @@ import * as merchant from '@/api/merchant';
 import { mapGetters } from 'vuex';
 import Keyword from '../../../components/base/keyword';
 import { validatePhone } from '@/utils/toolsValidate';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
 
+
+import { resolveFormActiveLang, hasI18nNameContent, buildI18nNameJson, pickFormName } from '@/utils/localizedName';
 export default {
   name: 'creatClassify',
   components: { Keyword },
   computed: {
     ...mapGetters(['merchantClassify', 'merchantType']),
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    currentLocale() {
+      return (
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn'
+      );
+    },
+    displayMerchantName() {
+      if (this.currentLocale !== this.defaultLangCode) {
+        const typed = (this.nameJsonForm[this.currentLocale] || '').trim();
+        if (typed) return typed;
+      }
+      return this.dataForm.name || this.$t('merchant.newMerchant');
+    },
   },
   props: {
     merId: {
@@ -235,7 +275,7 @@ export default {
   data() {
     const validateVal = (rule, value, callback) => {
       if (this.labelarr.length === 0) {
-        callback(new Error('请输入后回车'));
+        callback(new Error(this.$t('merchant.pleaseEnterThenPressEnter')));
       } else {
         callback();
       }
@@ -245,14 +285,20 @@ export default {
       loading: false,
       loadingFrom: false,
       rules: {
-        name: [{ required: true, message: '请输入商户名称', trigger: 'blur' }],
-        categoryId: [{ required: true, message: '请选择商户分类', trigger: 'change' }],
-        typeId: [{ required: true, message: '请选择店铺类型', trigger: 'change' }],
-        realName: [{ required: true, message: '请输入商户姓名', trigger: 'blur' }],
+        name: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(pickFormName(this), this.nameJsonForm)) callback();
+            else callback(new Error(this.$t('merchant.pleaseEnterMerchantName')));
+          },
+          trigger: 'blur',
+        }],
+        categoryId: [{ required: true, message: this.$t('merchant.pleaseSelectMerchantCategory'), trigger: 'change' }],
+        typeId: [{ required: true, message: this.$t('merchant.pleaseSelectStoreType'), trigger: 'change' }],
+        realName: [{ required: true, message: this.$t('merchant.pleaseEnterMerchantRealName'), trigger: 'blur' }],
         labelarr: [{ required: true, validator: validateVal, trigger: 'blur' }],
         phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-        handlingFee: [{ required: true, message: '请输入手续费', trigger: 'blur' }],
-        sliderImages: [{ required: true, message: '请上传资质图片', type: 'array', trigger: 'change' }],
+        handlingFee: [{ required: true, message: this.$t('merchant.pleaseEnterHandlingFee'), trigger: 'blur' }],
+        sliderImages: [{ required: true, message: this.$t('merchant.pleaseUploadQualification'), type: 'array', trigger: 'change' }],
       },
       dataForm: {
         categoryId: null,
@@ -271,8 +317,15 @@ export default {
         typeId: null,
         sliderImages: [],
         id: 0,
+        nameJson: '',
       },
-      isCn: true,
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
       labelarr: [],
       merImg: require('@/assets/imgs/dianpu.png'),
     };
@@ -284,22 +337,60 @@ export default {
       },
       deep: true,
     },
-    'dataForm.name': function (val) {
-      let pattern = new RegExp('[\u4E00-\u9FA5]+');
-      let pattern2 = new RegExp('[A-Za-z]+');
-      if (pattern.test(val)) {
-        this.isCn = true;
-      } else if (pattern2.test(val)) {
-        this.isCn = false;
-      }
-    },
   },
   mounted() {
+    this.getLanguageList();
     if (!this.merchantClassify.length) this.$store.dispatch('merchant/getMerchantClassify');
     if (!this.merchantType.length) this.$store.dispatch('merchant/getMerchantType');
     if (this.merId > 0) this.onInfo();
   },
   methods: {
+    emptyNameJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseNameJson(this.dataForm && this.dataForm.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseNameJson(this.dataForm && this.dataForm.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
+    parseNameJson(nameJson) {
+      const form = this.emptyNameJsonForm();
+      if (!nameJson) return form;
+      try {
+        const obj = typeof nameJson === 'string' ? JSON.parse(nameJson) : nameJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // 解析失败时保持为空
+      }
+      return form;
+    },
+    buildNameJson() {
+      return buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, pickFormName(this));
+    },
     //详情中点击编辑按钮
     handleChangeEdit() {
       this.$emit('onChangeEdit');
@@ -319,6 +410,8 @@ export default {
       merchant.merchantDetailApi(this.merId).then((res) => {
         this.$set(res, 'sliderImages', res.qualificationPicture ? JSON.parse(res.qualificationPicture) : []);
         this.dataForm = res;
+        this.nameJsonForm = this.parseNameJson(res.nameJson);
+        this.activeLang = resolveFormActiveLang(this);
         this.labelarr = res.keywords.split(',') || [];
         this.loadingFrom = false;
       });
@@ -329,8 +422,8 @@ export default {
       this.$modalUpload(
         function (img) {
           if (!img) return;
-          if (img.length > 10) return this.$message.warning('最多选择10张图片！');
-          if (img.length + _this.dataForm.sliderImages.length > 10) return this.$message.warning('最多选择10张图片！');
+          if (img.length > 10) return this.$message.warning(this.$t('merchant.maxTenImages'));
+          if (img.length + _this.dataForm.sliderImages.length > 10) return this.$message.warning(this.$t('merchant.maxTenImages'));
           img.map((item) => {
             _this.dataForm.sliderImages.push(item.sattDir);
           });
@@ -370,11 +463,12 @@ export default {
           this.loading = true;
           this.dataForm.qualificationPicture = JSON.stringify(this.dataForm.sliderImages);
           this.dataForm.keywords = this.labelarr.join(',');
+          this.dataForm.nameJson = this.buildNameJson();
           this.dataForm.id === 0
             ? merchant
                 .merchantAddApi(this.dataForm)
                 .then((res) => {
-                  this.$message.success(`添加商户成功`);
+                  this.$message.success(this.$t('merchant.addMerchantSuccess'));
                   this.onClose();
                 })
                 .catch(() => {
@@ -383,7 +477,7 @@ export default {
             : merchant
                 .merchantUpdateApi(this.dataForm)
                 .then((res) => {
-                  this.$message.success('操作成功');
+                  this.$message.success(this.$t('product.operateSuccess'));
                   if (this.handleType === 'edit') {
                     this.onClose();
                   } else {
@@ -425,6 +519,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.lang-name-switch {
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.lang-name-input {
+  margin-top: 10px;
+}
 .isSelf {
   padding: 2px 4px;
   height: 16px;

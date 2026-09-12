@@ -3,7 +3,7 @@
     <el-row :gutter="14">
       <el-col :xs="24" :sm="24" :md="24" :lg="12" v-if="checkPermi(['platform:statistics:home:operating:data'])">
         <el-card class="box-card" shadow="never" :bordered="false">
-          <div class="header_title">经营数据</div>
+          <div class="header_title">{{ $t('dashboard.businessData') }}</div>
           <div class="nav_grid m-t-20">
             <div
               class="nav_grid_item"
@@ -24,7 +24,7 @@
       </el-col>
       <el-col :xs="24" :sm="24" :md="24" :lg="12" v-if="checkPermi(['platform:statistics:home:user:channel'])">
         <el-card class="box-card" shadow="never" :bordered="false">
-          <div class="header_title">用户渠道比例</div>
+          <div class="header_title">{{ $t('dashboard.userChannelRatio') }}</div>
           <echarts-new
             :option-data="optionData"
             :styles="style"
@@ -51,55 +51,57 @@ export default {
       list: [],
       fromList: this.$constants.timeList,
       userView: {},
-      pickerOptions: this.$timeOptions, //快捷时间选项
-      statisticData: [
-        {
-          icon: 'icon-zaishoushangpin',
-          title: '在售',
-          num: 0,
-          path: '/product/list',
-          color: '#1890FF',
-          bgColor: 'rgba(24, 144, 255, 0.08)',
-        },
-        {
-          icon: 'icon-daishenheshangpin',
-          title: '待审核',
-          num: 0,
-          path: '/product/list',
-          color: '#A277FF',
-          bgColor: 'rgba(162, 119, 255, 0.08)',
-        },
-        {
-          icon: 'icon-daifahuo2',
-          title: '待发货',
-          num: 0,
-          path: '/order/list',
-          color: '#1890FF',
-          bgColor: 'rgba(24, 144, 255, 0.08',
-        },
-        {
-          icon: 'icon-daihexiao',
-          title: '待核销',
-          num: 0,
-          path: '/order/list',
-          color: '#1BBE6B',
-          bgColor: 'rgba(27, 190, 107, 0.08)',
-        },
-        {
-          icon: 'icon-daituikuan',
-          title: '待退款',
-          num: 0,
-          path: '/order/refund',
-          color: '#EF9C20',
-          bgColor: 'rgba(239, 156, 32, 0.08)',
-        },
-      ],
+      statisticNums: [{ num: 0 }, { num: 0 }, { num: 0 }, { num: 0 }, { num: 0 }],
     };
   },
   components: {
     echartsNew,
   },
   computed: {
+    statisticData() {
+      return [
+        {
+          icon: 'icon-zaishoushangpin',
+          title: this.$t('dashboard.onSale'),
+          num: this.statisticNums[0].num,
+          path: '/product/list',
+          color: '#1890FF',
+          bgColor: 'rgba(24, 144, 255, 0.08)',
+        },
+        {
+          icon: 'icon-daishenheshangpin',
+          title: this.$t('dashboard.awaitAudit'),
+          num: this.statisticNums[1].num,
+          path: '/product/list',
+          color: '#A277FF',
+          bgColor: 'rgba(162, 119, 255, 0.08)',
+        },
+        {
+          icon: 'icon-daifahuo2',
+          title: this.$t('dashboard.awaitShipping'),
+          num: this.statisticNums[2].num,
+          path: '/order/list',
+          color: '#1890FF',
+          bgColor: 'rgba(24, 144, 255, 0.08',
+        },
+        {
+          icon: 'icon-daihexiao',
+          title: this.$t('dashboard.awaitVerification'),
+          num: this.statisticNums[3].num,
+          path: '/order/list',
+          color: '#1BBE6B',
+          bgColor: 'rgba(27, 190, 107, 0.08)',
+        },
+        {
+          icon: 'icon-daituikuan',
+          title: this.$t('dashboard.awaitRefund'),
+          num: this.statisticNums[4].num,
+          path: '/order/refund',
+          color: '#EF9C20',
+          bgColor: 'rgba(239, 156, 32, 0.08)',
+        },
+      ];
+    },
     //鉴权处理
     permList: function () {
       let arr = [];
@@ -135,11 +137,11 @@ export default {
     },
     getbusinessData() {
       businessData().then((res) => {
-        this.statisticData[0].num = res.onSaleProductNum; //在售商品数量
-        this.statisticData[1].num = res.awaitAuditProductNum; //待审核商品数量
-        this.statisticData[2].num = res.notShippingOrderNum; //待发货订单数量
-        this.statisticData[3].num = res.awaitVerificationOrderNum; //待核销订单数量
-        this.statisticData[4].num = res.refundingOrderNum; //待退款订单数量
+        this.statisticNums[0].num = res.onSaleProductNum; //在售商品数量
+        this.statisticNums[1].num = res.awaitAuditProductNum; //待审核商品数量
+        this.statisticNums[2].num = res.notShippingOrderNum; //待发货订单数量
+        this.statisticNums[3].num = res.awaitVerificationOrderNum; //待核销订单数量
+        this.statisticNums[4].num = res.refundingOrderNum; //待退款订单数量
       });
     },
     onchangeTime(e) {
@@ -153,11 +155,11 @@ export default {
         let channelData = res.data;
         channelData = [
           { name: 'H5', value: 0, channel: 'h5' },
-          { name: '小程序', value: 0, channel: 'routine' },
-          { name: '公众号', value: 0, channel: 'wechat' },
+          { name: this.$t('dashboard.miniProgram'), value: 0, channel: 'routine' },
+          { name: this.$t('dashboard.officialAccount'), value: 0, channel: 'wechat' },
           { name: 'ios', value: 0, channel: 'ios' },
-          { name: '微信ios', value: 0, channel: 'iosWx' },
-          { name: '微信安卓', value: 0, channel: 'androidWx' },
+          { name: this.$t('dashboard.wechatIos'), value: 0, channel: 'iosWx' },
+          { name: this.$t('dashboard.wechatAndroid'), value: 0, channel: 'androidWx' },
         ];
         let channelArr = [];
         channelData.forEach((item) => {
@@ -183,7 +185,7 @@ export default {
             trigger: 'item',
             enterable: true,
             formatter: (option) => {
-              return `${option.seriesName} <br/> ${option.name}: ${option.value}人
+              return `${option.seriesName} <br/> ${option.name}: ${option.value}${this.$t('dashboard.people')}
             ${option.percent}%`;
             },
           },
@@ -227,14 +229,14 @@ export default {
               }
               percent = this.$selfUtil.Division(num, total); //除法算出环比
               let arr = [
-                name + '{a|' + num + '人' + '}' + '{b|' + percent ? (percent * 100).toFixed(2) : 0 + '%' + '}',
+                name + '{a|' + num + this.$t('dashboard.people') + '}' + '{b|' + percent ? (percent * 100).toFixed(2) : 0 + '%' + '}',
               ];
               return arr.join('\n');
             },
           },
           series: [
             {
-              name: '访问来源',
+              name: this.$t('dashboard.visitSource'),
               type: 'pie',
               radius: ['30%', '50%'],
               center: ['75%', '50%'], //饼图的位置,第一个参数：是指左右，第二个参数：是指上下位置；

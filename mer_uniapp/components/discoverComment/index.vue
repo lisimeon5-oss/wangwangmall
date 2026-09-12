@@ -1,6 +1,6 @@
 <template>
 	<view v-if="noteDetail" class="main_content" :data-theme="theme" :class="!noteDetail.platReplySwitch?'bodyNo':''">
-		<popup-header  v-if="!isShowCommentView && noteDetail.platReplySwitch && fromTo==='popupView'" title="评论" :num="noteDetail.replyNum" @close="close"></popup-header>
+		<popup-header  v-if="!isShowCommentView && noteDetail.platReplySwitch && fromTo==='popupView'" :title="$t('评论')" :num="noteDetail.replyNum" @close="close"></popup-header>
 		<!-- 评论列表 -->
 		<scroll-view class="bottom" id="myElements" scroll-y="true" @scrolltolower="onTouchmove" @scroll="followScroll"
 			v-if="noteDetail.platReplySwitch">
@@ -17,16 +17,16 @@
 									<view v-if="item.nickname" class="name">{{item.nickname}}</view>
 									<view class="desc acea-row">
 										<view v-if="item.auditStatus==0" class="auditStatus">
-											<text class="line-heightOne">审核中</text>
+											<text class="line-heightOne">{{$t('审核中')}}</text>
 										</view>
 										<view style="width: 84%;">{{item.content}}</view>
 									</view>
 									<view class="acea-row row-middle" style="margin-top: 4rpx;">
 										<view class="time">{{item.createTime?$util.getDateDiff(item.createTime):''}}
 										</view>
-										<view @click.stop="toReply(item,index)" class="del mr-20">回复</view>
+										<view @click.stop="toReply(item,index)" class="del mr-20">{{$t('回复')}}</view>
 										<text @click.stop="onDel(item, index)" v-if="item.uid == uid"
-											class="del">删除</text>
+											class="del">{{$t('删除')}}</text>
 									</view>
 								</view>
 								<view v-if="item.auditStatus!==0" class="like acea-row row-middle" @click.stop="starComment(item)">
@@ -46,19 +46,19 @@
 											</view>
 											<view class="desc acea-row">
 												<view v-if="itemn.auditStatus==0" class="auditStatus mt10">
-													<text class="line-heightOne">审核中</text>
+													<text class="line-heightOne">{{$t('审核中')}}</text>
 												</view>
 												<view class="desc_two">
-													<text class="reply_user acea-row" v-if="Number(itemn.reviewUid) >0">回复<text class=ml-4>@{{itemn.reviewUserNickname}}</text> </text>{{itemn.content}}
+													<text class="reply_user acea-row" v-if="Number(itemn.reviewUid) >0">{{$t('回复')}}<text class=ml-4>@{{itemn.reviewUserNickname}}</text> </text>{{itemn.content}}
 												</view>
 											</view>
 											<view class="acea-row row-middle" style="margin-top: 4rpx;">
 												<view class="time_two">
 													{{itemn.createTime?$util.getDateDiff(itemn.createTime):''}}
 												</view>
-												<view @click.stop="toReply(itemn,index)" class="del mr20">回复</view>
+												<view @click.stop="toReply(itemn,index)" class="del mr20">{{$t('回复')}}</view>
 												<text @click.stop="onDel(itemn, indexn, index)" v-if="itemn.uid == uid"
-													class="del">删除</text>
+													class="del">{{$t('删除')}}</text>
 											</view>
 
 										</view>
@@ -74,14 +74,14 @@
 						</view>
 
 					</view>
-					<view class="end"><text>到底了</text></view>
+					<view class="end"><text>{{$t('到底了')}}</text></view>
 				</view>
 				<view :hidden="!loading" class="acea-row row-center-wrapper loadingicon">
 					<text class="iconfont icon-jiazai loading"></text>
 				</view>
 				<view v-if="list.length == 0 && !loading" class="empty-box">
 					<image :src="urlDomain+'crmebimage/presets/noEvaluate.png'"></image>
-					<text>暂无评论，快去抢沙发吧~</text>
+					<text>{{$t('暂无评论，快去抢沙发吧~')}}</text>
 				</view>
 			</view>
 		</scroll-view>
@@ -105,7 +105,7 @@
 					:show-confirm-bar="false" class="input_count" 
 					:focus="autoFocus" :adjust-position="adjustPosition" auto-height />
 
-				<button class="send ml-20" @click.stop="submitComment">发送</button>
+				<button class="send ml-20" @click.stop="submitComment">{{$t('发送')}}</button>
 			</view>
 		</view>
 		<view class='mask' @touchmove.prevent catchtouchmove="true"
@@ -133,6 +133,7 @@
 		Debounce
 	} from '@/utils/validate.js'
 	import popupHeader from '@/components/popupHeader.vue'
+	import { t } from '@/i18n'
 	let app = getApp();
 	export default {
 		computed: mapGetters(['isLogin', 'userInfo', 'uid']),
@@ -202,7 +203,7 @@
 				theme: app.globalData.theme,
 				content: '',
 				isShowComment: false, //真实评论弹窗显示隐藏
-				placeholder: "快来说点儿什么吧...",
+				placeholder: t('快来说点儿什么吧...'),
 				loadTitle: '加载更多',
 				where: {
 					page: 1,
@@ -235,8 +236,8 @@
 			//删除自己的评论
 			onDel(item, i, idx) {
 				uni.showModal({
-					title: '提示',
-					content: '确认删除评论吗?',
+					title: this.$t('提示'),
+					content: this.$t('确认删除评论吗?'),
 					success: res => {
 						if (res.confirm) {
 							this.onSub(item, i, idx);
@@ -248,7 +249,7 @@
 			},
 			onSub(item, i, idx) {
 				uni.showLoading({
-					title: '删除中...'
+					title: this.$t('删除中...')
 				});
 				replyDeleteApi(item.id).then(res => {
 					if (item.type === 1) {
@@ -257,7 +258,7 @@
 						this.list[idx].replyList.splice(i, 1)
 					}
 					uni.showToast({
-						title: '删除成功',
+						title: this.$t('删除成功'),
 						icon: 'none'
 					})
 					this.noteDetail.replyNum = res.data;
@@ -322,9 +323,9 @@
 			//回复
 			toReply(item, index) {
 				if (item.auditStatus === 0) return this.$util.Tips({
-					title: '审核中的评论不能进行回复'
+					title: this.$t('审核中的评论不能进行回复')
 				});
-				this.placeholder = '回复：' + item.nickname
+				this.placeholder = this.$t('回复：') + item.nickname
 				this.replyId = item.id
 				this.isChild = true
 				this.index = index
@@ -347,7 +348,7 @@
 			//真实评论弹窗 关闭
 			closeComment() {
 				this.autoFocus = false;
-				this.placeholder = "快来说点儿什么吧...";
+				this.placeholder = this.$t('快来说点儿什么吧...');
 				this.content = ""
 				this.isChild = false
 				this.focus = false
@@ -359,7 +360,7 @@
 			oninput() {
 				if (Number(this.noteDetail.replyStatus) > 1) {
 					return this.$util.Tips({
-						title: '该内容禁止评论'
+						title: this.$t('该内容禁止评论')
 					});
 				} else {
 					this.isShowComment = true
@@ -371,7 +372,7 @@
 				} else {
 					if (Number(this.noteDetail.replyStatus) > 1) {
 						return this.$util.Tips({
-							title: '该内容禁止评论'
+							title: this.$t('该内容禁止评论')
 						});
 					} else {
 						this.autoFocus = false;
@@ -506,7 +507,7 @@
 	}
 
 	.fixed {
-		// bottom: calc(40rpx+ constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
+		// bottom: calc(40rpx + constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
 		// bottom: calc(40rpx + env(safe-area-inset-bottom));
 		position: fixed !important;
 		//bottom: 0;
@@ -537,7 +538,7 @@
 	}
 
 	.release_bar_detail {
-		height: calc(90rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(90rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(90rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 		padding-bottom: constant(safe-area-inset-bottom); ///兼容 IOS<11.2/
 		padding-bottom: env(safe-area-inset-bottom); ///兼容 IOS>11.2/

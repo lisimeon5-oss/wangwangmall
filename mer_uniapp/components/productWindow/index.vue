@@ -19,8 +19,8 @@
 							:svipPriceStyle="svipPriceStyle"></svip-price>
 						<view class="mt-12">
 							<text class="stock" v-if='isShow'>
-								库存:{{ attr.productSelect.groupPrice&&attr.productSelect.stock>0?attr.productSelect.groupStock:attr.productSelect.stock }}</text>
-							<text class='stock' v-if="limitNum">限量: {{attr.productSelect.quota}}</text>
+								{{$t('库存')}}:{{ attr.productSelect.groupPrice&&attr.productSelect.stock>0?attr.productSelect.groupStock:attr.productSelect.stock }}</text>
+							<text class='stock' v-if="limitNum">{{$t('限量')}}: {{attr.productSelect.quota}}</text>
 						</view>
 					</view>
 				</view>
@@ -42,10 +42,10 @@
 					</view>
 				</view>
 				<view class="cart acea-row row-between-wrapper">
-					<view class="title">数量</view>
+					<view class="title">{{$t('数量')}}</view>
 					<view class="limit-buy"
 						v-if="marketingType === ProductMarketingTypeEnum.Groupbuying&&!isProductType&&buyLimitNum>0">
-						{{`最多可购买(${buyLimitNum})件`}}
+						{{`${$t('最多可购买')}(${buyLimitNum})${$t('件')}`}}
 					</view>
 					<view class="carnum acea-row row-left">
 						<view v-if="!isProductType" class="item reduce"
@@ -76,12 +76,12 @@
 				</view>
 			</view>
 			<view class="joinBnt bg_color" v-if="iSbnt && attr.productSelect.stock>0 &&attr.productSelect.quota>0"
-				@click="goCat">我要参团</view>
+				@click="goCat">{{$t('我要参团')}}</view>
 			<view class="joinBnt on"
-				v-else-if="(iSbnt && attr.productSelect.quota<=0)||(iSbnt &&attr.productSelect.stock<=0)">已售罄</view>
-			<view class="joinBnt bg_color" v-if="iScart && attr.productSelect.stock" @click="goCat">确定</view>
-			<!-- <view class="joinBnt bg-color" v-if="iSbnt && attr.productSelect.stock && attr.productSelect.quota" @click="goCat">确定</view> -->
-			<view class="joinBnt on" v-else-if="(iScart && !attr.productSelect.stock)">已售罄</view>
+				v-else-if="(iSbnt && attr.productSelect.quota<=0)||(iSbnt &&attr.productSelect.stock<=0)">{{$t('已售罄')}}</view>
+			<view class="joinBnt bg_color" v-if="iScart && attr.productSelect.stock" @click="goCat">{{$t('确定')}}</view>
+			<!-- <view class="joinBnt bg-color" v-if="iSbnt && attr.productSelect.stock && attr.productSelect.quota" @click="goCat">{{$t('确定')}}</view> -->
+			<view class="joinBnt on" v-else-if="(iScart && !attr.productSelect.stock)">{{$t('已售罄')}}</view>
 		</view>
 		<view class="mask" @touchmove.prevent :hidden="attr.cartAttr === false" @click="closeAttr"></view>
 	</view>

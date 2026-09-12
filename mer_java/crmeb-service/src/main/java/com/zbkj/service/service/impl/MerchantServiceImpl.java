@@ -32,6 +32,10 @@ import com.zbkj.common.request.merchant.*;
 import com.zbkj.common.response.*;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.MerchantResultCode;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.common.utils.CrmebDateUtil;
 import com.zbkj.common.utils.CrmebUtil;
 import com.zbkj.common.utils.RedisUtil;
@@ -48,6 +52,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import javax.servlet.http.HttpServletRequest;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -166,7 +172,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         if (StrUtil.isNotBlank(searchRequest.getKeywords())) {
             String keywords = URLUtil.decode(searchRequest.getKeywords());
             lqw.and(i -> i.like(Merchant::getName, keywords)
-//                    .or().apply(StrUtil.format(" find_in_set('{}', keywords)", keywords)));
+                    .or().like(Merchant::getNameJson, keywords)
                     .or().apply(" find_in_set({0}, keywords)", keywords));
         }
         if (StrUtil.isNotBlank(searchRequest.getDateLimit())) {
@@ -365,7 +371,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
     @Override
     public Boolean edit(MerchantUpdateRequest request) {
         Merchant merchant = getByIdException(request.getId());
-        if (!request.getName().equals(merchant.getName())) {
+        if (!StrUtil.equals(StrUtil.nullToEmpty(request.getName()), StrUtil.nullToEmpty(merchant.getName()))) {
             if (checkMerchantName(request.getName(), request.getId())) {
                 throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "商户名称已存在");
             }
@@ -600,8 +606,14 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         MerchantCategory merchantCategory = merchantCategoryService.getById(merchant.getCategoryId());
         MerchantType merchantType = merchantTypeService.getById(merchant.getTypeId());
         BeanUtils.copyProperties(merchant, baseInfo);
-        baseInfo.setMerCategory(merchantCategory.getName());
-        baseInfo.setMerType(merchantType.getName());
+        if (ObjectUtil.isNotNull(merchantCategory)) {
+            baseInfo.setMerCategory(merchantCategory.getName());
+            baseInfo.setMerCategoryJson(merchantCategory.getNameJson());
+        }
+        if (ObjectUtil.isNotNull(merchantType)) {
+            baseInfo.setMerType(merchantType.getName());
+            baseInfo.setMerTypeJson(merchantType.getNameJson());
+        }
         baseInfo.setReceiptPrintingSwitch(merchant.getReceiptPrintingSwitch());
         return baseInfo;
     }
@@ -656,6 +668,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         MerchantInfo merchantInfo = new MerchantInfo();
         BeanUtils.copyProperties(request, merchant);
         BeanUtils.copyProperties(request, merchantInfo);
+        I18nJsonUtil.fillNameAndJson(merchant::setIntro, merchant::setIntroJson, merchant.getIntro(), merchant.getIntroJson());
         String cdnUrl = systemAttachmentService.getCdnUrl();
         merchant.setBackImage(systemAttachmentService.clearPrefix(request.getBackImage(), cdnUrl));
         merchant.setAvatar(systemAttachmentService.clearPrefix(request.getAvatar(), cdnUrl));
@@ -869,6 +882,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         if (StrUtil.isNotBlank(request.getKeywords())) {
             String keywords = URLUtil.decode(request.getKeywords());
             lqw.and(i -> i.like(Merchant::getName, keywords)
+                    .or().like(Merchant::getNameJson, keywords)
                     .or().apply(" find_in_set({0}, keywords)", keywords));
         }
         lqw.eq(Merchant::getIsSwitch, true);
@@ -882,6 +896,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         List<MerchantSearchResponse> responseList = merchantList.stream().map(merchant -> {
             MerchantSearchResponse response = new MerchantSearchResponse();
             BeanUtils.copyProperties(merchant, response);
+            response.setName(resolveLocalizedName(merchant.getName(), merchant.getNameJson()));
             // 获取商户推荐商品
             List<ProMerchantProductResponse> merchantProductResponseList = productService.getRecommendedProductsByMerId(merchant.getId(), 3);
             response.setProList(merchantProductResponseList);
@@ -916,6 +931,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         List<MerchantSearchResponse> responseList = merchantList.stream().map(merchant -> {
             MerchantSearchResponse response = new MerchantSearchResponse();
             BeanUtils.copyProperties(merchant, response);
+            response.setName(resolveLocalizedName(merchant.getName(), merchant.getNameJson()));
             // 获取商户推荐商品
             List<ProMerchantProductResponse> merchantProductResponseList = productService.getRecommendedProductsByMerId(merchant.getId(), 3);
             response.setProList(merchantProductResponseList);
@@ -946,6 +962,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         BeanUtils.copyProperties(merchant, response);
         MerchantInfo merchantInfo = merchantInfoService.getByMerId(merchant.getId());
         BeanUtils.copyProperties(merchantInfo, response);
+        response.setName(resolveLocalizedName(merchant.getName(), merchant.getNameJson()));
         response.setIsCollect(false);
         if (userId > 0) {
             response.setIsCollect(userMerchantCollectService.isCollect(userId, merchant.getId()));
@@ -972,6 +989,8 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         MerchantDetailResponse response = new MerchantDetailResponse();
         BeanUtils.copyProperties(merchant, response);
         BeanUtils.copyProperties(merchantInfo, response);
+        response.setName(resolveLocalizedName(merchant.getName(), merchant.getNameJson()));
+        response.setIntro(I18nJsonUtil.resolveByRequest(merchant.getIntro(), merchant.getIntroJson()));
         response.setFollowerNum(userMerchantCollectService.getCountByMerId(merchant.getId()));
         Integer userId = userService.getUserId();
         if (userId > 0) {
@@ -1101,6 +1120,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         return merchantList.stream().map(mer -> {
             IndexMerchantResponse response = new IndexMerchantResponse();
             BeanUtils.copyProperties(mer, response);
+            response.setName(resolveLocalizedName(mer.getName(), mer.getNameJson()));
             // 根据商户再获取三条商户对应的3条推荐商品 适用于DIY样式
             response.setProList(productService.getRecommendedProductsByMerId(mer.getId(), 3));
             // 店铺关注人数
@@ -1125,11 +1145,12 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
             return merchantMap;
         }
         LambdaQueryWrapper<Merchant> lqw = Wrappers.lambdaQuery();
-        lqw.select(Merchant::getId, Merchant::getName, Merchant::getIsSelf, Merchant::getTypeId,
+        lqw.select(Merchant::getId, Merchant::getName, Merchant::getNameJson, Merchant::getIsSelf, Merchant::getTypeId,
                 Merchant::getCategoryId, Merchant::getAvatar, Merchant::getProductSwitch);
         lqw.in(Merchant::getId, merIdList);
         List<Merchant> merchantList = dao.selectList(lqw);
         merchantList.forEach(merchant -> {
+            merchant.setName(resolveLocalizedName(merchant.getName(), merchant.getNameJson()));
             merchantMap.put(merchant.getId(), merchant);
         });
         return merchantMap;
@@ -1149,6 +1170,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         }
         MerchantTakeTheirResponse response = new MerchantTakeTheirResponse();
         BeanUtils.copyProperties(merchant, response);
+        response.setName(resolveLocalizedName(merchant.getName(), merchant.getNameJson()));
         return response;
     }
 
@@ -1193,7 +1215,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
     @Override
     public List<CategoryMerchantResponse> getUseCategoryList() {
         LambdaQueryWrapper<Merchant> lqw = Wrappers.lambdaQuery();
-        lqw.select(Merchant::getId, Merchant::getName, Merchant::getCategoryId);
+        lqw.select(Merchant::getId, Merchant::getName, Merchant::getNameJson, Merchant::getCategoryId);
         lqw.eq(Merchant::getIsSwitch, 1);
         lqw.eq(Merchant::getIsDel, 0);
         List<Merchant> merchantList = dao.selectList(lqw);
@@ -1214,6 +1236,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
                 MerchantCategory merchantCategory = categoryMap.get(m.getCategoryId());
                 response.setId(merchantCategory.getId());
                 response.setName(merchantCategory.getName());
+                response.setNameJson(merchantCategory.getNameJson());
                 response.getMerchantList().add(m);
                 responseList.add(response);
             }
@@ -1234,6 +1257,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         }
         MerchantPcIndexResponse response = new MerchantPcIndexResponse();
         BeanUtils.copyProperties(merchant, response);
+        response.setName(resolveLocalizedName(merchant.getName(), merchant.getNameJson()));
         MerchantInfo merchantInfo = merchantInfoService.getByMerId(merchant.getId());
         response.setServiceType(merchantInfo.getServiceType());
         response.setServiceLink(merchantInfo.getServiceLink());
@@ -1266,6 +1290,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         Merchant merchant = getByIdException(id);
         MerchantAddressInfoResponse response = new MerchantAddressInfoResponse();
         BeanUtils.copyProperties(merchant, response);
+        response.setName(resolveLocalizedName(merchant.getName(), merchant.getNameJson()));
         return response;
     }
 
@@ -1326,6 +1351,9 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
      * @param name 商户名称
      */
     private Boolean checkMerchantName(String name) {
+        if (StrUtil.isBlank(name)) {
+            return Boolean.FALSE;
+        }
         LambdaQueryWrapper<Merchant> lqw = Wrappers.lambdaQuery();
         lqw.select(Merchant::getId);
         lqw.eq(Merchant::getName, name);
@@ -1342,6 +1370,9 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
      * @param id   商户ID
      */
     private Boolean checkMerchantName(String name, Integer id) {
+        if (StrUtil.isBlank(name)) {
+            return Boolean.FALSE;
+        }
         LambdaQueryWrapper<Merchant> lqw = Wrappers.lambdaQuery();
         lqw.select(Merchant::getId);
         lqw.eq(Merchant::getName, name);
@@ -1350,6 +1381,32 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantDao, Merchant> impl
         lqw.last(" limit 1");
         Merchant merchant = dao.selectOne(lqw);
         return ObjectUtil.isNotNull(merchant);
+    }
+
+    private String getRequestLanguage() {
+        HttpServletRequest request = RequestUtil.getRequest();
+        String language = null;
+        if (request != null) {
+            language = request.getHeader("lang");
+        }
+        return StrUtil.isBlank(language) ? "zh-cn" : language;
+    }
+
+    private String resolveLocalizedName(String name, String nameJson) {
+        String language = getRequestLanguage();
+        if (StrUtil.isBlank(language) || "zh-cn".equals(language) || StrUtil.isBlank(nameJson)) {
+            return name;
+        }
+        try {
+            JSONObject jsonObject = JSON.parseObject(nameJson);
+            String localized = jsonObject.getString(language);
+            if (StrUtil.isNotBlank(localized)) {
+                return localized;
+            }
+        } catch (Exception ignored) {
+            // 解析失败时保留默认名称
+        }
+        return name;
     }
 
 }

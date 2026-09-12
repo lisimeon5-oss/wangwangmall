@@ -9,39 +9,39 @@
     >
       <div class="padding-add">
         <el-form size="small" inline label-position="right" @submit.native.prevent>
-          <el-form-item label="商品名称：">
-            <el-input v-model="proName" placeholder="请输入商品名称" class="selWidth" clearable></el-input>
+          <el-form-item :label="$t('product.productName')">
+            <el-input v-model="proName" :placeholder="$t('product.pleaseEnterProductName')" class="selWidth" clearable></el-input>
           </el-form-item>
-          <el-form-item label="活动名称：">
-            <el-input v-model="activityName" placeholder="请输入活动名称" class="selWidth" clearable></el-input>
+          <el-form-item :label="$t('marketing.activityNameLabel')">
+            <el-input v-model="activityName" :placeholder="$t('marketing.pleaseEnterActivityName')" class="selWidth" clearable></el-input>
           </el-form-item>
-          <el-form-item label="商品状态：" class="inline">
+          <el-form-item :label="$t('marketing.productStatusLabel')" class="inline">
             <el-select
               v-model="tableFrom.proStatus"
               clearable
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="selWidth"
               @change="getList(1)"
             >
-              <el-option label="上架" :value="1" />
-              <el-option label="下架" :value="0" />
+              <el-option :label="$t('product.onShelf')" :value="1" />
+              <el-option :label="$t('product.offShelf')" :value="0" />
             </el-select>
           </el-form-item>
-          <el-form-item label="活动状态：" class="inline">
+          <el-form-item :label="$t('marketing.activityStatusLabel')" class="inline">
             <el-select
               v-model="tableFrom.activityStatus"
               clearable
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="selWidth"
               @change="getList(1)"
             >
-              <el-option label="进行中" :value="1" />
-              <el-option label="已结束" :value="2" />
+              <el-option :label="$t('common.ongoing')" :value="1" />
+              <el-option :label="$t('common.ended')" :value="2" />
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="handleReset">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="handleReset">{{ $t('common.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -53,11 +53,13 @@
         @tab-click="getList(1)"
         v-hasPermi="['merchant:seckill:product:list']"
       >
-        <el-tab-pane :label="item.name" :name="item.type" v-for="(item, index) in headeNum" :key="index" />
+        <el-tab-pane :label="$t('common.auditSuccess')" name="2" />
+        <el-tab-pane :label="$t('product.listAwaitAudit')" name="1" />
+        <el-tab-pane :label="$t('common.auditFailed')" name="3" />
       </el-tabs>
       <div class="mt5 mb20">
         <el-button size="small" @click="onEdit(0)" type="primary" v-hasPermi="['merchant:seckill:product:add']"
-          >添加秒杀商品</el-button
+          >{{ $t('marketing.addSeckillProduct') }}</el-button
         >
         <el-button
           v-show="tableFrom.auditStatus === '3'"
@@ -65,7 +67,7 @@
           size="small"
           @click="batchDel"
           :disabled="!multipleSelection.length"
-          >批量删除</el-button
+          >{{ $t('product.batchDelete') }}</el-button
         >
         <el-button
           v-hasPermi="['merchant:seckill:product:down']"
@@ -73,7 +75,7 @@
           size="small"
           @click="batchDown"
           :disabled="!multipleSelection.length"
-          >批量下架</el-button
+          >{{ $t('marketing.batchOffShelf') }}</el-button
         >
       </div>
       <el-table
@@ -88,50 +90,56 @@
       >
         <el-table-column type="selection" :reserve-selection="true" width="45"></el-table-column>
         <el-table-column prop="id" label="ID" min-width="50" />
-        <el-table-column label="商品图" min-width="80">
+        <el-table-column :label="$t('product.productImage')" min-width="80">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="商品名称" prop="name" min-width="180" :show-overflow-tooltip="true"> </el-table-column>
-        <el-table-column prop="categoryName" label="商品分类" min-width="100" />
-        <el-table-column prop="activityName" label="活动名称" min-width="150" :show-overflow-tooltip="true" />
-        <el-table-column prop="price" label="商品售价" min-width="90" />
-        <el-table-column prop="seckillPrice" label="活动价" min-width="90" />
-        <el-table-column prop="sort" label="排序" min-width="60" />
-        <el-table-column label="商品状态" min-width="70">
+        <el-table-column :label="$t('product.listProductName')" min-width="180" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ localizedName(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('marketing.productCategory')" min-width="100" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ localizedText(scope.row.categoryName, scope.row.categoryNameJson) }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('marketing.activityName')" min-width="150" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ localizedText(scope.row.activityName, scope.row.activityNameJson) }}</template>
+        </el-table-column>
+        <el-table-column prop="price" :label="$t('product.productPrice')" min-width="90" />
+        <el-table-column prop="seckillPrice" :label="$t('marketing.activityPrice')" min-width="90" />
+        <el-table-column prop="sort" :label="$t('product.sort')" min-width="60" />
+        <el-table-column :label="$t('marketing.productStatus')" min-width="70">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.isShow">上架</el-tag>
-            <el-tag v-else>下架</el-tag>
+            <el-tag v-if="scope.row.isShow">{{ $t('product.onShelf') }}</el-tag>
+            <el-tag v-else>{{ $t('product.offShelf') }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="活动状态" fixed="right" min-width="90">
+        <el-table-column :label="$t('marketing.activityStatus')" fixed="right" min-width="90">
           <template slot-scope="scope">
-            <el-tag class="notStartTag tag-background" v-if="scope.row.activityStatus === 0">未开始</el-tag>
-            <el-tag class="doingTag tag-background" v-if="scope.row.activityStatus === 1">进行中</el-tag>
-            <el-tag class="endTag tag-background" type="info" v-if="scope.row.activityStatus === 2">已结束</el-tag>
+            <el-tag class="notStartTag tag-background" v-if="scope.row.activityStatus === 0">{{ $t('common.notStarted') }}</el-tag>
+            <el-tag class="doingTag tag-background" v-if="scope.row.activityStatus === 1">{{ $t('common.ongoing') }}</el-tag>
+            <el-tag class="endTag tag-background" type="info" v-if="scope.row.activityStatus === 2">{{ $t('common.ended') }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="审核状态" fixed="right" min-width="90">
+        <el-table-column :label="$t('product.auditStatus')" fixed="right" min-width="90">
           <template slot-scope="scope">
-            <el-tag class="doingTag tag-background" v-if="scope.row.auditStatus === 1">待审核</el-tag>
-            <el-tag class="endTag tag-background" v-if="scope.row.auditStatus === 2">审核成功</el-tag>
-            <el-tag class="notStartTag tag-background" type="info" v-if="scope.row.auditStatus === 3">审核失败</el-tag>
+            <el-tag class="doingTag tag-background" v-if="scope.row.auditStatus === 1">{{ $t('product.listAwaitAudit') }}</el-tag>
+            <el-tag class="endTag tag-background" v-if="scope.row.auditStatus === 2">{{ $t('common.auditSuccess') }}</el-tag>
+            <el-tag class="notStartTag tag-background" type="info" v-if="scope.row.auditStatus === 3">{{ $t('common.auditFailed') }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
           v-if="tableFrom.auditStatus === '3'"
           prop="reason"
-          label="失败原因"
+          :label="$t('marketing.failureReason')"
           fixed="right"
           min-width="120"
           :show-overflow-tooltip="true"
         />
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="180" fixed="right">
           <template slot-scope="scope">
-            <a @click="handleAudit(scope.row, 2)" v-hasPermi="['merchant:seckill:product:list']">详情</a>
+            <a @click="handleAudit(scope.row, 2)" v-hasPermi="['merchant:seckill:product:list']">{{ $t('common.detail') }}</a>
             <template
               v-if="
                 tableFrom.auditStatus === '2' &&
@@ -139,31 +147,31 @@
               "
             >
               <el-divider direction="vertical"></el-divider>
-              <a @click="handleAudit(scope.row, 3)">编辑</a>
+              <a @click="handleAudit(scope.row, 3)">{{ $t('common.edit') }}</a>
             </template>
             <template
               v-if="tableFrom.auditStatus === '2' && scope.row.isShow && checkPermi(['merchant:seckill:product:down'])"
             >
               <el-divider direction="vertical"></el-divider>
-              <a @click="handleDown(scope.row, '下架')">下架</a>
+              <a @click="handleDown(scope.row, $t('product.offShelf'))">{{ $t('product.offShelf') }}</a>
             </template>
             <template
               v-if="tableFrom.auditStatus === '2' && !scope.row.isShow && checkPermi(['merchant:seckill:product:up'])"
             >
               <el-divider direction="vertical"></el-divider>
-              <a @click="handleDown(scope.row, '上架')">上架</a>
+              <a @click="handleDown(scope.row, $t('product.onShelf'))">{{ $t('product.onShelf') }}</a>
             </template>
             <template v-if="tableFrom.auditStatus === '1' && checkPermi(['merchant:seckill:product:withdraw'])">
               <el-divider direction="vertical"></el-divider>
-              <a @click="handleWithdraw(scope.row)">撤回审核</a>
+              <a @click="handleWithdraw(scope.row)">{{ $t('marketing.withdrawAudit') }}</a>
             </template>
             <template v-if="tableFrom.auditStatus === '3' && checkPermi(['merchant:seckill:product:delete'])">
               <el-divider direction="vertical"></el-divider>
-              <a @click="handleDelete(scope.row)">删除</a>
+              <a @click="handleDelete(scope.row)">{{ $t('common.delete') }}</a>
             </template>
             <template v-if="tableFrom.auditStatus === '3' && checkPermi(['merchant:seckill:product:add'])">
               <el-divider direction="vertical"></el-divider>
-              <a @click="onEdit(1, scope.row)">重新提交</a>
+              <a @click="onEdit(1, scope.row)">{{ $t('marketing.resubmit') }}</a>
             </template>
           </template>
         </el-table-column>
@@ -189,42 +197,42 @@
             <div class="full">
               <img class="order_icon" :src="seckillInfo.image" alt="" />
               <div class="text">
-                <div class="title">{{ seckillInfo.name }}</div>
+                <div class="title">{{ localizedName(seckillInfo) }}</div>
                 <div>
-                  <span class="mr20">商品ID：{{ seckillInfo.id }}</span>
+                  <span class="mr20">{{ $t('marketing.productIdLabel') }}{{ seckillInfo.id }}</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="detailSection padBox">
-          <div class="title">活动信息</div>
+          <div class="title">{{ $t('marketing.activityInfo') }}</div>
           <ul class="list">
             <li class="item">
-              <div class="tips">活动名称：</div>
-              <div class="value">{{ seckillInfo.activityName }}</div>
+              <div class="tips">{{ $t('marketing.activityNameLabel') }}</div>
+              <div class="value">{{ localizedText(seckillInfo.activityName, seckillInfo.activityNameJson) }}</div>
             </li>
             <li class="item">
-              <div class="tips">活动状态：</div>
+              <div class="tips">{{ $t('marketing.activityStatusLabel') }}</div>
               <div class="value">{{ seckillInfo.activityStatus | activityStatusFilter }}</div>
             </li>
             <li class="item">
-              <div class="tips">审核状态：</div>
+              <div class="tips">{{ $t('finance.auditStatusLabel') }}</div>
               <div class="value">
-                {{ seckillInfo.auditStatus == 1 ? '待审核' : seckillInfo.auditStatus == 2 ? '审核通过' : '审核失败' }}
+                {{ seckillInfo.auditStatus == 1 ? $t('product.listAwaitAudit') : seckillInfo.auditStatus == 2 ? $t('finance.auditPassed') : $t('common.auditFailed') }}
               </div>
             </li>
             <li class="item">
-              <div class="tips">商品分类：</div>
-              <div class="value">{{ seckillInfo.categoryName }}</div>
+              <div class="tips">{{ $t('product.productCategoryLabel') }}</div>
+              <div class="value">{{ localizedText(seckillInfo.categoryName, seckillInfo.categoryNameJson) }}</div>
             </li>
           </ul>
         </div>
         <div class="detailSection padBox">
-          <div class="title">商品信息</div>
-          <div class="item mb20">
-            <div class="tips">商品名称：</div>
-            <div class="value">{{ seckillInfo.name }}</div>
+          <div class="title">{{ $t('product.productInfo') }}</div>
+          <div class="item item-block mb20">
+            <div class="tips">{{ $t('product.productName') }}</div>
+            <div class="value">{{ localizedName(seckillInfo) }}</div>
           </div>
           <div style="width: 100%">
             <el-table
@@ -238,20 +246,20 @@
               :tree-props="{ children: 'children' }"
               style="width: 100%"
             >
-              <el-table-column min-width="140" label="商品信息">
+              <el-table-column min-width="140" :label="$t('product.productInfo')">
                 <template slot-scope="scope">
                   <div class="acea-row">
                     <div class="demo-image__preview mr10 line-heightOne">
                       <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
                     </div>
-                    <div class="row_title line2">{{ scope.row.sku }}</div>
+                    <div class="row_title line2">{{ localizedSku(scope.row.sku) }}</div>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="otPrice" label="售价" width="120" />
-              <el-table-column prop="quotaShow" label="限量" width="80" />
-              <el-table-column prop="quota" label="限量剩余" width="120" />
-              <el-table-column prop="price" label="活动价格" min-width="120">
+              <el-table-column prop="otPrice" :label="$t('product.attrPrice')" width="120" />
+              <el-table-column prop="quotaShow" :label="$t('marketing.limited')" width="80" />
+              <el-table-column prop="quota" :label="$t('marketing.limitedRemaining')" width="120" />
+              <el-table-column prop="price" :label="$t('marketing.activityPriceFull')" min-width="120">
                 <template slot-scope="scope">
                   <el-input-number
                     :disabled="isShow < 3"
@@ -276,7 +284,7 @@
             type="primary"
             @click="setPrice(seckillInfo.id, seckillInfo.attrValue)"
             v-hasPermi="['merchant:seckill:product:price']"
-            >保存活动价</el-button
+            >{{ $t('marketing.saveActivityPrice') }}</el-button
           >
         </div>
       </div>
@@ -295,6 +303,7 @@ import {
 } from '@/api/marketing';
 import { checkPermi } from '@/utils/permission';
 import { handleDeleteTable } from '@/libs/public'; // 权限判断函数
+import { getLocalizedName, getLocalizedText, getUiLocale, localizeSpecSku } from '@/utils/localizedName';
 export default {
   name: 'SeckillList',
   data() {
@@ -315,20 +324,6 @@ export default {
         activityStatus: '',
         proStatus: '',
       },
-      headeNum: [
-        {
-          name: '审核成功',
-          type: '2',
-        },
-        {
-          name: '待审核',
-          type: '1',
-        },
-        {
-          name: '审核失败',
-          type: '3',
-        },
-      ],
       multipleSelection: [],
       dialogVisible: false,
       seckillInfo: {},
@@ -343,6 +338,15 @@ export default {
   },
   methods: {
     checkPermi,
+    localizedName(row) {
+      return getLocalizedName(row, getUiLocale(this));
+    },
+    localizedText(text, json) {
+      return getLocalizedText(text, json, getUiLocale(this));
+    },
+    localizedSku(sku) {
+      return localizeSpecSku(sku, this.$t.bind(this), this.seckillInfo.attrList, getUiLocale(this));
+    },
     //表格选中
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -371,7 +375,7 @@ export default {
     },
     //撤回审核
     handleWithdraw(row) {
-      this.$modalSure('撤回审核秒杀商品吗？').then(() => {
+      this.$modalSure(this.$t('marketing.withdrawSeckillConfirm')).then(() => {
         seckillProWithdrawApi(row.id).then((res) => {
           this.getList();
         });
@@ -404,18 +408,18 @@ export default {
     },
     batchDel() {
       let ids = this.multipleSelection.map((item) => item.id).toString();
-      this.$modalSure('批量删除秒杀商品吗？').then(() => {
+      this.$modalSure(this.$t('marketing.batchDeleteSeckillProductConfirm')).then(() => {
         seckillProDelApi({ ids: ids }).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           this.getList();
         });
       });
     },
     // 删除
     handleDelete(row) {
-      this.$modalSure('删除该秒杀商品吗？').then(() => {
+      this.$modalSure(this.$t('marketing.deleteSeckillProductConfirm')).then(() => {
         seckillProDelApi({ ids: row.id }).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableFrom);
           this.getList();
         });
@@ -423,22 +427,22 @@ export default {
     },
     batchDown() {
       let ids = this.multipleSelection.map((item) => item.id).toString();
-      this.$modalSure('批量下架秒杀商品吗？').then(() => {
+      this.$modalSure(this.$t('marketing.batchOffShelfSeckillConfirm')).then(() => {
         seckillProDownApi({ ids: ids }).then(() => {
-          this.$message.success('下架成功');
+          this.$message.success(this.$t('product.listOffShelfSuccess'));
           this.getList();
         });
       });
     },
     handleDown(row, title) {
-      this.$modalSure(`${title}该秒杀商品吗？`).then(() => {
+      this.$modalSure($t('marketing.seckillProductActionConfirm', { action: title })).then(() => {
         row.isShow
           ? seckillProDownApi({ ids: row.id }).then(() => {
-              this.$message.success(`${title}成功`);
+              this.$message.success($t('marketing.actionSuccess', { action: title }));
               this.getList();
             })
           : seckillProUpApi({ ids: row.id }).then(() => {
-              this.$message.success(`${title}成功`);
+              this.$message.success($t('marketing.actionSuccess', { action: title }));
               this.getList();
             });
       });
@@ -467,7 +471,7 @@ export default {
       };
       seckillProSetPriceApi(productList)
         .then((res) => {
-          this.$message.success('添加成功');
+          this.$message.success(this.$t('user.addSuccess'));
           this.getList();
           this.dialogVisible = false;
         })

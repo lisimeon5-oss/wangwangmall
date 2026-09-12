@@ -14,14 +14,14 @@
               :class="v.icon"
               class="ivu-icon layout-navbars-breadcrumb-iconfont"
               v-if="getThemeConfig.isBreadcrumbIcon"
-            />{{ v.title }}
+            />{{ getNavTitle(v) }}
           </span>
           <a v-else @click.prevent="onBreadcrumbClick(v)">
             <i
               :class="v.icon"
               class="ivu-icon layout-navbars-breadcrumb-iconfont"
               v-if="getThemeConfig.isBreadcrumbIcon"
-            />{{ v.title }}
+            />{{ getNavTitle(v) }}
           </a>
         </el-breadcrumb-item>
       </transition-group>
@@ -33,6 +33,7 @@
 import { Local } from '@/utils/storage.js';
 import { R } from '@/utils/util';
 import { getMenuopen } from '@/utils/util';
+import { resolveNavTitle } from '@/utils/i18nText';
 
 export default {
   name: 'layoutBreadcrumb',
@@ -104,6 +105,15 @@ export default {
     this.initRouteSplit(this.$route.path);
   },
   methods: {
+    getNavTitle(item) {
+      this.$i18n.locale;
+      return resolveNavTitle(
+        item && item.title,
+        item && item.path,
+        this.$store.state.user.menuList,
+        this.$store.state.user.oneLvRoutes,
+      );
+    },
     // breadcrumb 当前项点击时
     onBreadcrumbClick(v) {
       const { redirect, path } = v;

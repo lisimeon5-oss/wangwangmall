@@ -1,7 +1,7 @@
 <template>
 	<view class="pagebox">
 		<!-- #ifdef MP || APP-PLUS -->
-		<NavBar titleText="销售额统计" :iconColor="iconColor" :textColor="iconColor" :isScrolling="isScrolling" showBack></NavBar>
+		<NavBar :titleText="$t('销售额统计')" :iconColor="iconColor" :textColor="iconColor" :isScrolling="isScrolling" showBack></NavBar>
 		<!-- #endif -->
 		<view class="headerBg">
 			<view :style="{ height: `${getHeight.barTop}px` }"></view>
@@ -10,10 +10,10 @@
 		</view>
 		<view class="order-index" ref="container">
 			<view class="header">
-				<view class="">销售额(元)</view>
+				<view class="">{{$t('销售额(铢)')}}</view>
 				<view class="money">{{ after_price }}</view>
 				<view class="info">
-					环比增长：{{ increase_time_status == 1 ? '' : '-' }}{{ growth_rate }}%
+					{{$t('环比增长')}}：{{ increase_time_status == 1 ? '' : '-' }}{{ growth_rate }}%
 					<text :class="['iconfont', increase_time_status == 1 ? 'icon-xiangshang1' : 'icon-xiangxia2','info-icon']"></text>
 				</view>
 				<view class="picker">
@@ -26,33 +26,33 @@
 				<view class="list acea-row">
 					<view class="item">
 						<view class="num">{{ after_number }}</view>
-						<view>订单数量</view>
+						<view>{{$t('订单数量')}}</view>
 					</view>
 					<view class="item">
 						<view class="num">{{ refund_number }}</view>
-						<view>已退款</view>
+						<view>{{$t('已退款')}}</view>
 					</view>
 					<view class="item">
 						<view class="num">{{ visits_number }}</view>
-						<view>访客数量</view>
+						<view>{{$t('访客数量')}}</view>
 					</view>
 				</view>
 			</view>
 			<div class="chart">
 				<view class="title">
-					销量趋势
+					{{$t('销量趋势')}}
 				</view>
 				<uCharts></uCharts>
 			</div>
 			<view class="public-wrapper">
 				<view class="title">
-					详细数据
+					{{$t('详细数据')}}
 				</view>
 				<view class="nav acea-row row-between-wrapper">
-					<view class="data">日期</view>
-					<view class="browse">订单数</view>
-					<view class="turnover">销售额(元)</view>
-					<view class="visit">退款(元)</view>
+					<view class="data">{{$t('日期')}}</view>
+					<view class="browse">{{$t('订单数')}}</view>
+					<view class="turnover">{{$t('销售额(铢)')}}</view>
+					<view class="visit">{{$t('退款(铢)')}}</view>
 				</view>
 				<view class="conter">
 					<view class="item acea-row row-between-wrapper" v-for="(item, index) in 3" :key="index">

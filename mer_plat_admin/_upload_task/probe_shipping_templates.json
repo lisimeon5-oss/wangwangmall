@@ -1,0 +1,22 @@
+{
+  "code": 200,
+  "message": null,
+  "data": {
+    "page": 1,
+    "limit": 20,
+    "totalPage": 1,
+    "total": 1,
+    "list": [
+      {
+        "id": 3,
+        "merId": 5,
+        "name": "全国包邮",
+        "type": 0,
+        "appoint": 0,
+        "sort": 999,
+        "createTime": "2026-07-11 08:14:47",
+        "updateTime": "2026-07-11 08:14:47"
+      }
+    ]
+  }
+}

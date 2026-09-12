@@ -17,6 +17,9 @@ public class ProductTagTaskItem {
     @ApiModelProperty(value = "商品标签名称")
     private String tagName;
 
+    @ApiModelProperty(value = "多语言标签名称(JSON)")
+    private String tagNameJson;
+
     @ApiModelProperty(value = "排序")
     private int sort;
 

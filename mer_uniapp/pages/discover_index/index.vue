@@ -11,8 +11,8 @@
 					</image>
 					<view class="acea-row row-center-wrapper" :style="[textBoxStyle]">
 						<view :class="tabActive == 0 ? 'on' : ''" class="nav-item"
-							@click="tabActive=0;showCateDrawer = false">关注</view>
-						<view :class="tabActive == 1 ? 'on' : ''" class="nav-item" @click="tabActive=1;">发现</view>
+							@click="tabActive=0;showCateDrawer = false">{{$t('关注')}}</view>
+						<view :class="tabActive == 1 ? 'on' : ''" class="nav-item" @click="tabActive=1;">{{$t('发现')}}</view>
 						<view style="width: 32rpx;">
 							<navigator v-show="tabActive == 1" url="/pages/discover/discover_search_list/index"
 								hover-class="none" class="search">
@@ -32,7 +32,7 @@
 							<view class="longItem" :data-index="index" :class="index === tabClick ? 'click' : ''"
 								v-for="(item, index) in categoryList" :key="index" :id="'id' + index"
 								@click.stop="selectMenu(item, index, true)">
-								<text>{{ item.name }}</text>
+							{{ item.id === '' || item.id === 0 || item.id == null ? $t('推荐') : item.name }}
 							</view>
 						</scroll-view>
 						<view v-show="tabActive == 1" class="w-76 h-100 flex-center topic-box"
@@ -55,7 +55,7 @@
 						<view class="h-58 bg--w111-f5f5f5 rd-29rpx px-24 flex-center fs-24 mr-14 mb-28"
 							v-for="(item,index) in categoryList" :key="index"
 							:class="{'active-topic': index === tabClick}" @tap="selectMenu(item, index)">
-							{{item.name}}
+							{{ item.id === '' || item.id === 0 || item.id == null ? $t('推荐') : item.name }}
 						</view>
 					</view>
 				</view>
@@ -90,11 +90,11 @@
 												</view>
 												<view class='loadingicon acea-row row-center-wrapper'>
 													<text class='loading iconfont icon-jiazai'
-														:hidden='loading==false'></text>{{discoverList[item.id] &&discoverList[item.id].goods.length>0?loadTitle:''}}
+														:hidden='loading==false'></text>{{discoverList[item.id] &&discoverList[item.id].goods.length>0?$t(loadTitle):''}}
 												</view>
 												<view class="empty-boxs noContent"
 													v-if="discoverList[item.id] && discoverList[item.id].goods.length == 0 && !loading">
-													<emptyPage title="暂无内容~" mTop="13%"
+													<emptyPage :title="$t('暂无内容~')" mTop="13%"
 														:imgSrc="urlDomain+'crmebimage/presets/noguanzhu.png'">
 													</emptyPage>
 												</view>
@@ -125,12 +125,12 @@
 									<view :hidden='loadingfollow==false'
 										class='loadingicon acea-row row-center-wrapper'>
 										<text
-											class='loading iconfont icon-jiazai'></text>{{noteRecommendList.length>0?loadTitleFollow:''}}
+											class='loading iconfont icon-jiazai'></text>{{noteRecommendList.length>0?$t(loadTitleFollow):''}}
 									</view>
 									<view
 										v-if="isLogin&&tabActive == 0 && noteRecommendList.length===0 &&!loadingfollow"
 										class="empty-boxs noContent">
-										<emptyPage title="暂无更多内容~" mTop="0%"
+										<emptyPage :title="$t('暂无更多内容~')" mTop="0%"
 											:imgSrc="urlDomain+'crmebimage/presets/noguanzhu.png'"></emptyPage>
 									</view>
 								</view>
@@ -141,7 +141,7 @@
 
 								<!-- 为你推荐 -->
 								<view v-if="authorList.length>0 && !loadingfollow" class="author-list mt-24">
-									<title-box title="为你推荐"></title-box>
+									<title-box :title="$t('为你推荐')"></title-box>
 									<view v-for="(item, index) in authorList" :key="item.authorId" class="author-item"
 										@click="goAuthor(item)">
 										<view class="acea-row row-between row-middle mb30">
@@ -155,7 +155,7 @@
 														{{item.authorSignature}}
 													</view>
 													<view class="author-fans">
-														粉丝<text
+														{{$t('粉丝')}}<text
 															class="text-333 ml-8">{{ item.fansNum < 10000 ? item.fansNum : (item.fansNum / 10000).toFixed(2) }}</text>
 													</view>
 												</view>
@@ -164,7 +164,7 @@
 												:class="item.isConcerned ? 'focusBtn' : ''">
 												<text v-if="!item.isConcerned"
 													class="iconfont icon-shangpinshuliang-jia"></text>
-												{{!item.isConcerned ? '关注' : '已关注'}}
+												{{!item.isConcerned ? $t('关注') : $t('已关注')}}
 											</view>
 										</view>
 										<scroll-view scroll-x="true" class="white-nowrap vertical-middle w-full"
@@ -183,7 +183,7 @@
 									</view>
 									<view class='loadingicon acea-row row-center-wrapper'>
 										<text class='loading iconfont icon-jiazai'
-											:hidden='loading==false'></text>{{authorList.length>0?loadTitle:''}}
+											:hidden='loading==false'></text>{{authorList.length>0?$t(loadTitle):''}}
 									</view>
 								</view>
 								<view class="footerBottoms"></view>
@@ -191,9 +191,9 @@
 						</view>
 						<!-- 关注未登录 -->
 						<view class="empty-boxs" v-if="!isLogin&&tabActive == 0">
-							<emptyPage title="登录后可查看关注用户的内容哦~" mTop="30%"
+							<emptyPage :title="$t('登录后可查看关注用户的内容哦~')" mTop="30%"
 								:imgSrc="urlDomain+'crmebimage/presets/nodenglu.png'"></emptyPage>
-							<view class="btn" @click="openAuto">立即登录</view>
+							<view class="btn" @click="openAuto">{{$t('立即登录')}}</view>
 						</view>
 					</view>
 				</scroll-view>
@@ -246,6 +246,7 @@
 		silenceBindingSpread,
 		getUserSpread
 	} from '@/utils/index.js';
+	import { getLocalizedName } from '@/utils/localizedName';
 	import onShare from "@/mixins/onShare";
 	import discoverComment from '@/components/discoverComment/index.vue';
 	import animationType from '@/utils/animationType.js'
@@ -769,11 +770,15 @@
 			//分类列表
 			getCommunityCategoryList() {
 				let data = [{
-					name: "推荐",
+					name: '推荐',
 					id: ''
 				}];
 				communityCategoryListApi().then(res => {
-					this.categoryList = Array.from(new Set([...data, ...res.data]));
+					const list = (res.data || []).map(c => ({
+						...c,
+						name: getLocalizedName(c)
+					}));
+					this.categoryList = Array.from(new Set([...data, ...list]));
 				})
 			},
 
@@ -794,7 +799,7 @@
 </script>
 
 <style lang="scss" scoped>
-	/deep/.wf-page{
+	::v-deep .wf-page{
 		background-color: #fff !important;
 	}
 	.discover_video_icon {
@@ -813,7 +818,7 @@
 
 	.padbottom {
 		/* #ifndef H5 */
-		padding-bottom: calc(100rpx+ constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
+		padding-bottom: calc(100rpx + constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
 		padding-bottom: calc(100rpx + env(safe-area-inset-bottom)) !important;
 		/* #endif */
 	}
@@ -825,21 +830,21 @@
 	.footerBottoms {
 		width: 100%;
 		/* #ifndef H5 */
-		height: calc(200rpx+ constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
+		height: calc(200rpx + constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
 		height: calc(200rpx + env(safe-area-inset-bottom)) !important;
 		/* #endif */
 		/* #ifdef H5 */
-		height: calc(100rpx+ constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
+		height: calc(100rpx + constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
 		height: calc(100rpx + env(safe-area-inset-bottom)) !important;
 		/* #endif */
 	}
 
 	.discover_index {
-		/deep/.no-border {
+		::v-deep .no-border {
 			bottom: 40rpx;
 		}
 
-		/deep/.author-list {
+		::v-deep .author-list {
 			padding-left: 24rpx;
 			padding-right: 24rpx;
 		}
@@ -963,8 +968,8 @@
 			margin-right: 18rpx;
 
 
-			/deep/image,
-			/deep/.easy-loadimage,
+			::v-deep image,
+			::v-deep .easy-loadimage,
 			uni-image {
 				width: 100%;
 				height: 100%;
@@ -980,7 +985,7 @@
 	}
 
 	.noContent {
-		/deep/.empty-box {
+		::v-deep .empty-box {
 			padding-top: 80rpx !important;
 
 		}
@@ -1004,7 +1009,7 @@
 	}
 
 	.cart_nav {
-		/deep/.nav_title {
+		::v-deep .nav_title {
 			font-size: 36rpx;
 			color: #333333;
 		}

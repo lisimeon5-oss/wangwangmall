@@ -23,14 +23,14 @@
                       @click="gettem(j, index, indx)"
                     >
                       <el-tooltip class="item" effect="dark" :content="j.name" placement="top-start">
-                        <el-button>{{ j.name || '二级菜单' }}</el-button>
+                        <el-button>{{ j.name || $t('application.secondaryMenu') }}</el-button>
                       </el-tooltip>
                     </div>
                   </div>
                 </div>
                 <div class="text menuBox" @click="gettem(item, indx, null)">
                   <el-tooltip class="item" effect="dark" :content="item.name" placement="top-start">
-                    <el-button>{{ item.name || '一级菜单' }}</el-button>
+                    <el-button>{{ item.name || $t('application.primaryMenu') }}</el-button>
                   </el-tooltip>
                 </div>
               </div>
@@ -43,54 +43,54 @@
         <el-col :xl="11" :lg="12" :md="22" :sm="22" :xs="22">
           <div v-if="checkedMenuId !== null">
             <div class="dividerTitle acea-row row-between row-bottom">
-              <span class="title">菜单信息</span>
+              <span class="title">{{ $t('application.menuInfo') }}</span>
               <el-button
                 slot="extra"
                 size="small"
                 type="danger"
                 @click="deltMenus"
                 v-hasPermi="['platform:wechat:public:customize:menu:delete']"
-                >删除</el-button
+                >{{ $t('common.delete') }}</el-button
               >
               <el-divider />
             </div>
             <el-col :span="24" class="userAlert">
               <div class="box-card">
-                <el-alert class="mb15" title="已添加子菜单，仅可设置菜单名称" type="warning" effect="light" show-icon />
+                <el-alert class="mb15" :title="$t('application.subMenuOnlyName')" type="warning" effect="light" show-icon />
                 <el-form ref="formValidate" :model="formValidate" :rules="ruleValidate" label-width="80px" class="mt20">
-                  <el-form-item label="菜单名称" prop="name">
-                    <el-input v-model.trim="formValidate.name" placeholder="请填写菜单名称" class="from-ipt-width" />
+                  <el-form-item :label="$t('menu.name')" prop="name">
+                    <el-input v-model.trim="formValidate.name" :placeholder="$t('application.pleaseEnterMenuName')" class="from-ipt-width" />
                   </el-form-item>
-                  <el-form-item label="规则状态" prop="type">
-                    <el-select v-model="formValidate.type" placeholder="请选择规则状态" class="from-ipt-width">
-                      <el-option value="click" label="关键字">关键字</el-option>
-                      <el-option value="view" label="跳转网页">跳转网页</el-option>
-                      <el-option value="miniprogram" label="小程序">小程序</el-option>
+                  <el-form-item :label="$t('application.ruleStatus')" prop="type">
+                    <el-select v-model="formValidate.type" :placeholder="$t('application.pleaseSelectRuleStatus')" class="from-ipt-width">
+                      <el-option value="click" :label="$t('application.keyword')">{{ $t('application.keyword') }}</el-option>
+                      <el-option value="view" :label="$t('application.jumpWebpage')">{{ $t('application.jumpWebpage') }}</el-option>
+                      <el-option value="miniprogram" :label="$t('common.miniProgram')">{{ $t('common.miniProgram') }}</el-option>
                     </el-select>
                   </el-form-item>
                   <div v-if="formValidate.type === 'click'">
-                    <el-form-item label="关键字" prop="key">
-                      <el-input v-model.trim="formValidate.key" placeholder="请填写关键字" class="from-ipt-width" />
+                    <el-form-item :label="$t('application.keyword')" prop="key">
+                      <el-input v-model.trim="formValidate.key" :placeholder="$t('application.pleaseFillKeyword')" class="from-ipt-width" />
                     </el-form-item>
                   </div>
                   <div v-if="formValidate.type === 'miniprogram'">
                     <el-form-item label="appid" prop="appid">
-                      <el-input v-model.trim="formValidate.appid" placeholder="请填写appid" class="spwidth" />
+                      <el-input v-model.trim="formValidate.appid" :placeholder="$t('application.pleaseFillAppid')" class="spwidth" />
                     </el-form-item>
-                    <el-form-item label="备用网页" prop="url">
-                      <el-input v-model.trim="formValidate.url" placeholder="请填写备用网页" class="from-ipt-width" />
+                    <el-form-item :label="$t('application.backupWebpage')" prop="url">
+                      <el-input v-model.trim="formValidate.url" :placeholder="$t('application.pleaseEnterBackupWebpage')" class="from-ipt-width" />
                     </el-form-item>
-                    <el-form-item label="小程序路径" prop="pagepath">
+                    <el-form-item :label="$t('application.miniProgramPath')" prop="pagepath">
                       <el-input
                         v-model.trim="formValidate.pagepath"
-                        placeholder="请填写小程序路径"
+                        :placeholder="$t('application.pleaseFillMiniProgramPath')"
                         class="from-ipt-width"
                       />
                     </el-form-item>
                   </div>
                   <div v-if="formValidate.type === 'view'">
-                    <el-form-item label="跳转地址" prop="url">
-                      <el-input v-model.trim="formValidate.url" placeholder="请填写跳转地址" class="from-ipt-width" />
+                    <el-form-item :label="$t('application.jumpAddress')" prop="url">
+                      <el-input v-model.trim="formValidate.url" :placeholder="$t('application.pleaseFillJumpAddress')" class="from-ipt-width" />
                     </el-form-item>
                   </div>
                 </el-form>
@@ -104,7 +104,7 @@
               style="display: block; margin: 10px auto"
               @click="submenus('formValidate')"
               v-hasPermi="['platform:wechat:public:customize:menu:save']"
-              >保存并发布</el-button
+              >{{ $t('application.saveAndPublish') }}</el-button
             >
           </el-col>
         </el-col>
@@ -155,12 +155,12 @@ export default {
         id: 0,
       },
       ruleValidate: {
-        name: [{ required: true, message: '请填写菜单名称', trigger: 'blur' }],
-        key: [{ required: true, message: '请填写关键字', trigger: 'blur' }],
-        appid: [{ required: true, message: '请填写appid', trigger: 'blur' }],
-        pagepath: [{ required: true, message: '请填写小程序路径', trigger: 'blur' }],
-        url: [{ required: true, message: '请填写跳转地址', trigger: 'blur' }],
-        type: [{ required: true, message: '请选择规则状态', trigger: 'change' }],
+        name: [{ required: true, message: this.$t('application.pleaseEnterMenuName'), trigger: 'blur' }],
+        key: [{ required: true, message: this.$t('application.pleaseFillKeyword'), trigger: 'blur' }],
+        appid: [{ required: true, message: this.$t('application.pleaseFillAppid'), trigger: 'blur' }],
+        pagepath: [{ required: true, message: this.$t('application.pleaseFillMiniProgramPath'), trigger: 'blur' }],
+        url: [{ required: true, message: this.$t('application.pleaseFillJumpAddress'), trigger: 'blur' }],
+        type: [{ required: true, message: this.$t('application.pleaseSelectRuleStatus'), trigger: 'change' }],
       },
       parentMenuId: null,
       list: [],
@@ -220,7 +220,7 @@ export default {
         button: this.list,
       };
       wechatMenuAddApi(data).then(async (res) => {
-        this.$message.success('提交成功');
+        this.$message.success(this.$t('user.submitSuccess'));
         this.checkedMenuId = null;
         this.formValidate = {};
         this.isTrue = false;
@@ -263,22 +263,22 @@ export default {
       if (this.checkedMenuId === null) return true;
       if (!this.isTrue) return true;
       if (!this.formValidate.name) {
-        this.$message.warning('请输入按钮名称!');
+        this.$message.warning(this.$t('application.pleaseEnterButtonName'));
         return false;
       }
       if (this.formValidate.type === 'click' && !this.formValidate.key) {
-        this.$message.warning('请输入关键字!');
+        this.$message.warning(this.$t('application.pleaseEnterKeywordExcl'));
         return false;
       }
       if (this.formValidate.type === 'view' && !reg.test(this.formValidate.url)) {
-        this.$message.warning('请输入正确的跳转地址!');
+        this.$message.warning(this.$t('application.pleaseEnterValidJumpAddress'));
         return false;
       }
       if (
         this.formValidate.type === 'miniprogram' &&
         (!this.formValidate.appid || !this.formValidate.pagepath || !this.formValidate.url)
       ) {
-        this.$message.warning('请填写完整小程序配置!');
+        this.$message.warning(this.$t('application.pleaseFillMiniProgramConfig'));
         return false;
       }
       return true;
@@ -290,7 +290,7 @@ export default {
           this.del();
         });
       } else {
-        this.$message.warning('请选择菜单!');
+        this.$message.warning(this.$t('application.pleaseSelectMenu'));
       }
     },
     // 确认删除

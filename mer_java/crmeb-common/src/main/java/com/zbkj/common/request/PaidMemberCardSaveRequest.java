@@ -1,5 +1,6 @@
 package com.zbkj.common.request;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -35,14 +36,20 @@ public class PaidMemberCardSaveRequest implements Serializable {
     @ApiModelProperty(value = "id,编辑时必传")
     private Integer id;
 
-    @ApiModelProperty(value = "会员卡名称", required = true)
-    @NotBlank(message = "会员卡名称不能为空")
+    @ApiModelProperty(value = "会员卡名称")
     @Length(max = 10, message = "会员卡名称不能超过10个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言会员卡名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言会员卡名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "卡片标签")
     @Length(max = 10, message = "卡片标签不能超过6个字符")
     private String label;
+
+    @ApiModelProperty(value = "多语言卡片标签(JSON)")
+    private String labelJson;
 
     @ApiModelProperty(value = "0-试用，1-期限，2-永久", required = true)
     @NotNull(message = "会员卡类型不能为空")

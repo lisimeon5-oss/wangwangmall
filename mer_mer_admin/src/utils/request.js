@@ -9,26 +9,35 @@
 // +----------------------------------------------------------------------
 
 import axios from 'axios';
-import { MessageBox, Message } from 'element-ui';
+import { Message } from 'element-ui';
 import store from '@/store';
 import { getToken } from '@/utils/auth';
 import SettingMer from '@/utils/settingMer';
+import i18n from '@/i18n';
+import { backendMessageMap } from '@/i18n/backendMessageMap';
+
+function translateApiMessage(message) {
+  if (!message) return i18n.t('common.requestFailed');
+  const key = backendMessageMap[message];
+  return key ? i18n.t(key) : message;
+}
+
 const service = axios.create({
   baseURL: SettingMer.apiBaseURL,
-  timeout: 60000, // 过期时间
+  timeout: 60000,
 });
 
-// request interceptor
 service.interceptors.request.use(
   (config) => {
-    // 发送请求之前做的
     const token = !store.getters.token ? sessionStorage.getItem('token') : store.getters.token;
     if (token) {
       config.headers['Authori-zation'] = token;
     }
+    config.headers['lang'] = i18n.locale;
     if (/get/i.test(config.method)) {
       config.params = config.params || {};
       config.params.temp = Date.parse(new Date()) / 1000;
+      config.params.lang = i18n.locale;
     }
     return config;
   },
@@ -37,22 +46,19 @@ service.interceptors.request.use(
   },
 );
 
-// response interceptor
 service.interceptors.response.use(
   (response) => {
     const res = response.data;
-    // if the custom code is not 20000, it is judged as an error.
     if (res.code === 401) {
-      // to re-login
-      Message.error('无效的会话，或者登录已过期，请重新登录。');
+      Message.error(translateApiMessage(res.message) || i18n.t('common.sessionInvalid'));
       if (window.location.pathname !== '/login') location.href = '/login';
       window.localStorage.clear();
     } else if (res.code === 403) {
-      Message.error('没有权限访问。');
+      Message.error(translateApiMessage(res.message) || i18n.t('common.noAccess'));
     }
     if (res.code !== 200 && res.code !== 401) {
       Message({
-        message: res.message || 'Error',
+        message: translateApiMessage(res.message),
         type: 'error',
         duration: 5 * 1000,
       });
@@ -63,7 +69,7 @@ service.interceptors.response.use(
   },
   (error) => {
     Message({
-      message: error.message,
+      message: translateApiMessage(error.message),
       type: 'error',
       duration: 5 * 1000,
     });

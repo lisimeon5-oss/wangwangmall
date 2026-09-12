@@ -2,7 +2,7 @@
 	<view :data-theme="theme">
 		<!-- #ifdef MP -->
 		<view class="cart_nav" :style='"height:"+navH+"rpx;"'>
-			<nav-bar iconColor='#fff' ref="navBarRef"  navTitle="个人中心">
+			<nav-bar iconColor='#fff' ref="navBarRef"  :navTitle="$t('user.center')">
 			</nav-bar>
 		</view>
 		<!-- #endif -->
@@ -22,7 +22,7 @@
 									</image>
 									<view class="info">
 										<view class="name" v-if="!isLogin" @tap="openAuto">
-											请点击登录
+											{{$t('user.clickLogin')}}
 										</view>
 										<view class="name" v-if="userInfo && uid">
 											<view @click="goEdit()">
@@ -50,22 +50,22 @@
 								<view class="num-wrapper tui-skeleton-rect">
 									<view class="num-item" @click="goMenuPage('/pages/merchant/user_integral/index')">
 										<text class="num">{{userInfo.integral && uid ? userInfo.integral: 0}}</text>
-										<view class="txt">积分</view>
+										<view class="txt">{{$t('user.integral')}}</view>
 									</view>
 									<view class="num-item" @click="goMenuPage('/pages/users/user_coupon/index')">
 										<text
 											class="num">{{userInfo.couponCount && uid ? userInfo.couponCount : 0}}</text>
-										<view class="txt">优惠券</view>
+										<view class="txt">{{$t('user.coupon')}}</view>
 									</view>
 									<view class="num-item"
 										@click="goMenuPage('/pages/goods/user_goods_collection/index')">
 										<text
 											class="num">{{userInfo.collectCount && uid ? userInfo.collectCount : 0}}</text>
-										<view class="txt">收藏</view>
+										<view class="txt">{{$t('user.collect')}}</view>
 									</view>
 									<view class="num-item" @click="goMenuPage('/pages/goods/browsing_history/index')">
 										<text class="num">{{userInfo.browseNum && uid ? userInfo.browseNum:0}}</text>
-										<view class="txt">浏览记录</view>
+										<view class="txt">{{$t('user.browse')}}</view>
 									</view>
 								</view>
 							</view>
@@ -78,10 +78,10 @@
 									<view class="w-34 h-28 no-repeat vipicon"
 										:style="{'background-image': `url(${urlDomain}crmebimage/presets/huangguan.png)`}">
 									</view>
-									<view class="f-s-24 text ml-12">加入SVIP畅享精彩</view>
+									<view class="f-s-24 text ml-12">{{$t('user.joinSvip')}}</view>
 								</view>
 								<view class="acea-row row-middle">
-									<view class="f-s-24 text mr10">{{userInfo.isPaidMember?'去查看':'去开通'}}</view>
+									<view class="f-s-24 text mr10">{{userInfo.isPaidMember?$t('user.goView'):$t('user.goOpen')}}</view>
 									<text class="iconfont icon-gengduo3 text f-s-20"></text>
 								</view>
 							</view>
@@ -89,8 +89,8 @@
 						<view class="order-wrapper tui-skeleton-rect"
 							:class="userInfo.paidMemberPaidEntrance===1?'mt34rpx':''">
 							<view class="order-hd flex">
-								<view class="left">订单中心</view>
-								<view class="right flex" @click="menusTap('/pages/goods/order_list/index')">查看全部
+								<view class="left">{{$t('user.orderCenter')}}</view>
+								<view class="right flex" @click="menusTap('/pages/goods/order_list/index')">{{$t('user.viewAll')}}
 									<text class="iconfont icon-xiangyou"></text>
 								</view>
 							</view>
@@ -101,7 +101,7 @@
 											<text class="iconfont pic_status" :class="item.img"></text>
 											<text class="order-status-num" v-if="item.num > 0">{{ item.num }}</text>
 										</view>
-										<view class="txt tui-skeleton-rect">{{item.title}}</view>
+										<view class="txt tui-skeleton-rect">{{$t(item.titleKey)}}</view>
 									</view>
 								</block>
 							</view>
@@ -123,41 +123,41 @@
 						</view>
 						<!-- 会员菜单 -->
 						<view class="user-menus mt20" @click.native="bindEdit('userMenus')">
-							<view class="menu-title">我的服务</view>
+							<view class="menu-title">{{$t('我的服务')}}</view>
 							<view class="list-box">
 								<block v-for="(item,index) in centerMenu" :key="index">
 									<view class="item tui-skeleton-rect" @click="menusTap(item.url)"
 										v-if="!(item.url =='/pages/service/index' || (item.url =='/pages/users/user_spread_user/index' && !userInfo.isPromoter)||(!isEmployee&&item.url=='/pages/admin/work/index'))">
 										<image :src="item.pic"></image>
-										<text>{{item.name}}</text>
+										<text>{{menuName(item)}}</text>
 									</view>
 								</block>
 								<!-- #ifndef MP -->
 								<view class="item" @click="kefuClick">
 									<image :src="servicePic"></image>
-									<text>联系客服</text>
+									<text>{{$t('联系客服')}}</text>
 								</view>
 								<!-- #endif -->
 								<!-- #ifdef MP -->
 								<button class="item" hover-class='none' @click="kefuClick"
 									v-if="chatConfig.telephone_service_switch === 'true'">
 									<image :src="servicePic"></image>
-									<text>联系客服</text>
+									<text>{{$t('联系客服')}}</text>
 								</button>
 								<button class="item" open-type='contact' hover-class='none' v-else>
 									<image :src="servicePic"></image>
-									<text>联系客服</text>
+									<text>{{$t('联系客服')}}</text>
 								</button>
 								<!-- #endif -->
 							</view>
 						</view>
 						<!-- 商家管理 -->
 						<view class="user-menus mt20" v-if="isEmployee">
-							<view class="menu-title">店铺管理</view>
+							<view class="menu-title">{{$t('店铺管理')}}</view>
 							<view class="list-box">
 								<view class="item" @click="toggle('bottom')">
 									<image :src="urlDomain+'crmebimage/presets/adminImg/sjgl.png'"></image>
-									<text>商家管理</text>
+									<text>{{$t('商家管理')}}</text>
 								</view>
 							</view>
 						</view>
@@ -233,6 +233,7 @@
 	} from '@/utils/consumerType.js'
 	import tuiSkeleton from '@/components/base/tui-skeleton.vue';
 	import pageFooter from "@/components/pageFooter/index.vue";
+	import { getLocalizedName } from '@/utils/localizedName';
 	const app = getApp();
 	export default {
 		computed: mapGetters(['isLogin', 'chatUrl', 'uid', 'globalData', 'bottomNavigationIsCustom',
@@ -247,37 +248,37 @@
 				showSkeleton: true, //骨架屏显示隐藏
 				orderMenu: [{
 						img: 'icon-daifukuan',
-						title: '待付款',
+						titleKey: 'order.awaitPay',
 						url: '/pages/goods/order_list/index?status=0',
 						num: 0
 					},
 					{
 						img: 'icon-daifahuo',
-						title: '待发货',
+						titleKey: 'order.awaitShip',
 						url: '/pages/goods/order_list/index?status=1',
 						num: 0
 					},
 					{
 						img: 'icon-daihexiao',
-						title: '待核销',
+						titleKey: 'order.awaitVerify',
 						url: '/pages/goods/order_list/index?status=3',
 						num: 0
 					},
 					{
 						img: 'icon-daishouhuo',
-						title: '待收货',
+						titleKey: 'order.awaitReceive',
 						url: '/pages/goods/order_list/index?status=4',
 						num: 0
 					},
 					{
 						img: 'icon-daipingjia',
-						title: '待评价',
+						titleKey: 'order.awaitReview',
 						url: '/pages/goods/evaluation_list/index',
 						num: 0
 					},
 					{
 						img: 'icon-a-shouhoutuikuan',
-						title: '售后/退款',
+						titleKey: 'order.afterSale',
 						url: '/pages/goods/user_return_list/index',
 						num: 0
 					},
@@ -379,6 +380,9 @@
 			// #endif
 		},
 		methods: {
+			menuName(item) {
+				return getLocalizedName(item, this.i18nLocale);
+			},
 			/**
 			 *  发现列表滑动中用到的方法
 			 */
@@ -492,20 +496,20 @@
 				let that = this;
 				orderNum().then(res => {
 					that.orderMenu.forEach((item, index) => {
-						switch (item.title) {
-							case '待付款':
+						switch (item.titleKey) {
+							case 'order.awaitPay':
 								item.num = res.data.awaitPayCount
 								break
-							case '待发货':
+							case 'order.awaitShip':
 								item.num = res.data.awaitShippedCount
 								break
-							case '待收货':
+							case 'order.awaitReceive':
 								item.num = res.data.receiptCount
 								break
-							case '待核销':
+							case 'order.awaitVerify':
 								item.num = res.data.verificationCount
 								break
-							case '待评价':
+							case 'order.awaitReview':
 								item.num = res.data.awaitReplyCount
 								break
 							default:

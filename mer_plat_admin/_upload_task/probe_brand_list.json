@@ -1,0 +1,36 @@
+{
+  "code": 200,
+  "message": null,
+  "data": [
+    {
+      "id": 32,
+      "name": "亿梵莎",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2024/10/11/c2345db069d84b45b826041211075d6fe0jpyju0uf.png",
+      "isShow": true
+    },
+    {
+      "id": 33,
+      "name": "墨斗鱼",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2024/10/11/0007e32e67d44b7badbae859567c19a9mjbqgpijzb.png",
+      "isShow": true
+    },
+    {
+      "id": 34,
+      "name": "YINCHIE",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2024/10/11/8a0a7ae5aa18455490bc3a89f5309d795373b9rpqg.png",
+      "isShow": true
+    },
+    {
+      "id": 36,
+      "name": "UNIQLO",
+      "icon": "https://image.uniqlo.com/UQ/ST3/th/imagesgoods/422992/item/thgoods_00_422992_3x4.jpg",
+      "isShow": true
+    },
+    {
+      "id": 35,
+      "name": "Apple",
+      "icon": "",
+      "isShow": true
+    }
+  ]
+}

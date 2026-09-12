@@ -4,16 +4,16 @@
       <div class="auth acea-row row-between-wrapper">
         <div class="acea-row row-middle">
           <div v-if="status === 1" class="text">
-            <div>商业授权</div>
-            <div class="code">授权码：{{ authCode }}</div>
+            <div>{{ $t('maintain.commercialAuthorization') }}</div>
+            <div class="code">{{ $t('maintain.authCodeLabel') }}{{ authCode }}</div>
           </div>
-          <div v-if="status === -1" class="text">请申请授权</div>
+          <div v-if="status === -1" class="text">{{ $t('maintain.pleaseApplyAuthorization') }}</div>
         </div>
         <div>
-          <el-button v-if="status === 1" @click="toCrmeb()">进入官网</el-button>
-          <el-button v-else-if="status === -1" type="primary" @click="applyAuth('java_mer')">申请授权</el-button>
-          <el-button v-else-if="status === 2" type="primary" @click="applyAuth('java_mer')">重新申请</el-button>
-          <el-button v-else-if="status === 0" class="grey">审核中</el-button>
+          <el-button v-if="status === 1" @click="toCrmeb()">{{ $t('maintain.enterOfficialSite') }}</el-button>
+          <el-button v-else-if="status === -1" type="primary" @click="applyAuth('java_mer')">{{ $t('maintain.applyAuthorization') }}</el-button>
+          <el-button v-else-if="status === 2" type="primary" @click="applyAuth('java_mer')">{{ $t('maintain.reapply') }}</el-button>
+          <el-button v-else-if="status === 0" class="grey">{{ $t('common.auditing') }}</el-button>
         </div>
       </div>
     </el-card>
@@ -28,21 +28,21 @@
         <div class="acea-row row-middle">
           <i class="el-icon-s-help iconIos blue" />
           <div class="text">
-            <div>去版权服务</div>
-            <div class="code">购买之后可以设置</div>
+            <div>{{ $t('maintain.goCopyrightService') }}</div>
+            <div class="code">{{ $t('maintain.settableAfterPurchase') }}</div>
           </div>
         </div>
         <div>
-          <el-button type="primary" @click="applyAuth('copyright')">去版权</el-button>
+          <el-button type="primary" @click="applyAuth('copyright')">{{ $t('maintain.goCopyright') }}</el-button>
         </div>
       </div>
     </el-card>
     <el-card v-if="copyright" style="margin-top: 15px" shadow="never" :bordered="false">
       <el-form :model="copyForm" :rules="rules" ref="copyForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="修改版权信息：" prop="name">
+        <el-form-item :label="$t('maintain.modifyCopyrightInfoLabel')" prop="name">
           <el-input v-model.trim="copyForm.companyName" class="from-ipt-width"></el-input>
         </el-form-item>
-        <el-form-item label="上传版权图片：" prop="region">
+        <el-form-item :label="$t('maintain.uploadCopyrightImageLabel')" prop="region">
           <div class="authorized">
             <div class="uploadPictrue" v-if="copyForm.companyImage">
               <img v-lazy="copyForm.companyImage" />
@@ -52,10 +52,10 @@
               <div class="iconfont">+</div>
             </div>
           </div>
-          <div class="prompt">建议尺寸：宽290px*高100px</div>
+          <div class="prompt">{{ $t('maintain.sizeSuggestion') }}</div>
         </el-form-item>
         <el-form-item v-hasPermi="['platform:copyright:update:company:info']">
-          <el-button type="primary" @click="saveCopyRight('copyForm')">保存</el-button>
+          <el-button type="primary" @click="saveCopyRight('copyForm')">{{ $t('common.save') }}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -120,7 +120,7 @@ export default {
       label: '',
       productType: '',
       modalPic: false,
-      isChoice: '单选',
+      isChoice: this.$t('maintain.singleSelect'),
       gridPic: {
         xl: 6,
         lg: 8,
@@ -137,8 +137,8 @@ export default {
       },
       title: '',
       rules: {
-        companyName: [{ required: true, message: '请输入版权信息', trigger: 'blur' }],
-        companyImage: [{ required: true, message: '请上传版权图片', trigger: 'change' }],
+        companyName: [{ required: true, message: this.$t('maintain.pleaseEnterCopyrightInfo'), trigger: 'blur' }],
+        companyImage: [{ required: true, message: this.$t('maintain.pleaseUploadCopyrightImage'), trigger: 'change' }],
       },
       loading: false,
       domainUrl: '',
@@ -181,7 +181,7 @@ export default {
     // 申请授权
     applyAuth(product) {
       this.productType = product;
-      this.title = product === 'copyright' ? '去版权' : '商业授权';
+      this.title = product === 'copyright' ? this.$t('maintain.goCopyright') : this.$t('maintain.commercialAuthorization');
       let host = location.host;
       let hostData = host.split('.');
       if (hostData[0] === 'test' && hostData.length === 4) {
@@ -219,7 +219,7 @@ export default {
       this.$refs[form].validate((valid) => {
         if (!valid) return;
         saveCrmebCopyRight(this.copyForm).then((res) => {
-          this.$message.success('保存成功');
+          this.$message.success(this.$t('user.saveSuccess'));
           this.getAuth();
         });
       });

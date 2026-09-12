@@ -2,6 +2,9 @@ package com.zbkj.service.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,6 +15,7 @@ import com.zbkj.common.request.ProductGuaranteeRequest;
 import com.zbkj.common.response.ProductGuaranteeResponse;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.ProductResultCode;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.service.dao.ProductGuaranteeDao;
 import com.zbkj.service.service.MerchantProductGuaranteeGroupService;
 import com.zbkj.service.service.ProductGuaranteeService;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -133,6 +138,10 @@ public class ProductGuaranteeServiceImpl extends ServiceImpl<ProductGuaranteeDao
         }
         ProductGuarantee guarantee = new ProductGuarantee();
         BeanUtils.copyProperties(request, guarantee);
+        // 未传多语言名称字段(null)时保留原多语言名称，传空字符串则清空多语言名称
+        if (ObjectUtil.isNull(request.getNameJson())) {
+            guarantee.setNameJson(oldGuarantee.getNameJson());
+        }
         guarantee.setIcon(systemAttachmentService.clearPrefix(request.getIcon()));
         return updateById(guarantee);
     }
@@ -166,7 +175,11 @@ public class ProductGuaranteeServiceImpl extends ServiceImpl<ProductGuaranteeDao
             lqw.eq(ProductGuarantee::getIsShow, true);
         }
         lqw.orderByDesc(ProductGuarantee::getSort);
-        return dao.selectList(lqw);
+        List<ProductGuarantee> list = dao.selectList(lqw);
+        if (CollUtil.isNotEmpty(list)) {
+            list.forEach(this::applyLocalizedName);
+        }
+        return list;
     }
 
     /**
@@ -179,7 +192,11 @@ public class ProductGuaranteeServiceImpl extends ServiceImpl<ProductGuaranteeDao
         lqw.eq(ProductGuarantee::getIsDel, false);
         lqw.eq(ProductGuarantee::getIsShow, true);
         lqw.in(ProductGuarantee::getId, idList);
-        return dao.selectList(lqw);
+        List<ProductGuarantee> list = dao.selectList(lqw);
+        if (CollUtil.isNotEmpty(list)) {
+            list.forEach(this::applyLocalizedName);
+        }
+        return list;
     }
 
     private ProductGuarantee getByIdException(Integer id) {
@@ -190,11 +207,42 @@ public class ProductGuaranteeServiceImpl extends ServiceImpl<ProductGuaranteeDao
         return guarantee;
     }
 
+    private String getRequestLanguage() {
+        HttpServletRequest request = RequestUtil.getRequest();
+        String language = null;
+        if (request != null) {
+            language = request.getHeader("lang");
+        }
+        return StrUtil.isBlank(language) ? "zh-cn" : language;
+    }
+
+    /**
+     * 按请求语言覆盖保障条款名称，缺省回退默认 name
+     */
+    private void applyLocalizedName(ProductGuarantee guarantee) {
+        String language = getRequestLanguage();
+        if (StrUtil.isBlank(language) || "zh-cn".equals(language) || StrUtil.isBlank(guarantee.getNameJson())) {
+            return;
+        }
+        try {
+            JSONObject jsonObject = JSON.parseObject(guarantee.getNameJson());
+            String name = jsonObject.getString(language);
+            if (StrUtil.isNotBlank(name)) {
+                guarantee.setName(name);
+            }
+        } catch (Exception ignored) {
+            // 解析失败时保留默认名称
+        }
+    }
+
     /**
      * 检测名称是否重复
      * @param name 名称
      */
     private void validateName(String name) {
+        if (StrUtil.isBlank(name)) {
+            return;
+        }
         LambdaQueryWrapper<ProductGuarantee> lqw = Wrappers.lambdaQuery();
         lqw.select(ProductGuarantee::getId);
         lqw.eq(ProductGuarantee::getName, name);

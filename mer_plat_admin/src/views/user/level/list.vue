@@ -2,41 +2,45 @@
   <div class="divBox">
     <el-card class="box-card" shadow="never" :bordered="false">
       <el-button type="primary" @click="add" size="small" v-hasPermi="['platform:system:user:level:save']"
-        >添加用户等级</el-button
+        >{{ $t('user.addUserLevel') }}</el-button
       >
       <el-table v-loading="listLoading" :data="tableData.data" size="small" class="mt20">
-        <el-table-column prop="grade" label="等级级别" min-width="100" />
-        <el-table-column label="等级图标" min-width="80">
+        <el-table-column prop="grade" :label="$t('user.levelGradeCol')" min-width="100" />
+        <el-table-column :label="$t('user.levelIcon')" min-width="80">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.icon" :preview-src-list="[scope.row.icon]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="等级名称" min-width="100" />
-        <el-table-column prop="experience" label="所需成长值" min-width="100" />
-        <!-- <el-table-column prop="discount" label="享受折扣(%)" min-width="100" /> -->
-        <el-table-column label="状态" min-width="100" fixed="right">
+        <el-table-column :label="$t('user.levelNameCol')" min-width="100">
+          <template slot-scope="{ row }">
+            <span>{{ getLocalizedLevelName(row) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="experience" :label="$t('user.requiredGrowthCol')" min-width="100" />
+        <!-- <el-table-column prop="discount" :label="$t('user.discountEnjoyed')" min-width="100" /> -->
+        <el-table-column :label="$t('common.status')" min-width="100" fixed="right">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:system:user:level:use'])"
               v-model="scope.row.isShow"
               :active-value="true"
               :inactive-value="false"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('user.on')"
+              :inactive-text="$t('user.off')"
               disabled
               @click.native="onchangeIsShow(scope.row)"
             />
-            <div v-else>{{ scope.row.isShow ? '开启' : '关闭' }}</div>
+            <div v-else>{{ scope.row.isShow ? $t('user.on') : $t('user.off') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="120" fixed="right">
           <template slot-scope="scope">
-            <a @click="handleEdit(scope.row)" v-hasPermi="['platform:system:user:level:update']">编辑</a>
+            <a @click="handleEdit(scope.row)" v-hasPermi="['platform:system:user:level:update']">{{ $t('common.edit') }}</a>
             <el-divider direction="vertical"></el-divider>
             <a @click="handleDelete(scope.row.id, scope.$index)" v-hasPermi="['platform:system:user:level:delete']"
-              >删除</a
+              >{{ $t('common.delete') }}</a
             >
           </template>
         </el-table-column>
@@ -57,10 +61,13 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +---------------------------------------------------------------------
 import { userListApi, groupListApi, levelListApi, levelUseApi, levelDeleteApi } from '@/api/user';
+import i18n from '@/i18n';
 import creatLevel from './creatLevel';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { getLocalizedName } from '@/utils/localizedName';
 const obj = {
   name: '',
+  nameJson: '',
   grade: 1,
   icon: '',
   backImage: '',
@@ -73,9 +80,9 @@ export default {
   filters: {
     typeFilter(status) {
       const statusMap = {
-        wechat: '微信用户',
-        routine: '小程序你用户',
-        h5: 'H5用户',
+        wechat: i18n.t('user.wechatUser'),
+        routine: i18n.t('user.routineUser'),
+        h5: i18n.t('user.h5User'),
       };
       return statusMap[status];
     },
@@ -92,11 +99,25 @@ export default {
       levelNumData: [],
     };
   },
+  computed: {
+    currentLocale() {
+      return (
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn'
+      );
+    },
+  },
   mounted() {
     if (checkPermi(['platform:system:user:level:list'])) this.getList();
   },
   methods: {
     checkPermi,
+    getLocalizedLevelName(row) {
+      return getLocalizedName(row, this.currentLocale);
+    },
     seachList() {
       this.getList();
     },
@@ -127,9 +148,9 @@ export default {
     },
     // 删除
     handleDelete(id, idx) {
-      this.$modalSure('删除吗？删除会导致对应用户等级数据清空，请谨慎操作！').then(() => {
+      this.$modalSure(this.$t('user.deleteLevelConfirm')).then(() => {
         levelDeleteApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('user.deleteSuccess'));
           this.tableData.data.splice(idx, 1);
         });
       });
@@ -139,18 +160,18 @@ export default {
         row.isShow = !row.isShow;
         levelUseApi({ id: row.id, isShow: row.isShow })
           .then(() => {
-            this.$message.success('修改成功');
+            this.$message.success(this.$t('user.modifySuccess'));
             this.getList();
           })
           .catch(() => {
             row.isShow = !row.isShow;
           });
       } else {
-        this.$modalSure('修改吗？该操作会导致对应用户等级隐藏，请谨慎操作').then(() => {
+        this.$modalSure(this.$t('user.hideLevelConfirm')).then(() => {
           row.isShow = !row.isShow;
           levelUseApi({ id: row.id, isShow: row.isShow })
             .then(() => {
-              this.$message.success('修改成功');
+              this.$message.success(this.$t('user.modifySuccess'));
               this.getList();
             })
             .catch(() => {

@@ -5,11 +5,16 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zbkj.common.model.product.ProductAttribute;
+import com.zbkj.common.model.product.ProductAttributeOption;
 import com.zbkj.service.dao.ProductAttributeDao;
+import com.zbkj.service.service.ProductAttributeOptionService;
 import com.zbkj.service.service.ProductAttributeService;
+import cn.hutool.core.collection.CollUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,6 +27,8 @@ public class ProductAttributeServiceImpl extends ServiceImpl<ProductAttributeDao
 
     @Resource
     private ProductAttributeDao dao;
+    @Autowired
+    private ProductAttributeOptionService productAttributeOptionService;
 
     /**
      * 商品变更导致的删除
@@ -45,6 +52,22 @@ public class ProductAttributeServiceImpl extends ServiceImpl<ProductAttributeDao
         lqw.eq(ProductAttribute::getIsDel, 0);
         lqw.orderByAsc(ProductAttribute::getSort);
         return dao.selectList(lqw);
+    }
+
+    @Override
+    public List<ProductAttribute> findListWithOptionsByProductId(Integer proId) {
+        if (proId == null) {
+            return Collections.emptyList();
+        }
+        List<ProductAttribute> attrList = findListByProductId(proId);
+        if (CollUtil.isEmpty(attrList)) {
+            return attrList;
+        }
+        attrList.forEach(attr -> {
+            List<ProductAttributeOption> optionList = productAttributeOptionService.findListByAttrId(attr.getId());
+            attr.setOptionList(optionList);
+        });
+        return attrList;
     }
 }
 

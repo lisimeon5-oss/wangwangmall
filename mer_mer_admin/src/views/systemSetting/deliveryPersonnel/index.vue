@@ -9,26 +9,26 @@
     >
       <div class="padding-add">
         <el-form ref="form" inline :model="tableFrom" :rules="rules" @submit.native.prevent label-position="right">
-          <el-form-item label="配送人员：">
+          <el-form-item :label="$t('systemSetting.deliveryPersonnelLabel')">
             <el-input
               @keyup.enter.native="getList(1)"
               v-model.trim="personnelName"
-              placeholder="请输入配送人员姓名"
+              :placeholder="$t('systemSetting.pleaseEnterDeliveryPersonnelName')"
               class="selWidth"
               size="small"
               clearable
             >
             </el-input>
           </el-form-item>
-          <el-form-item label="手机号码：" prop="personnelPhone">
+          <el-form-item :label="$t('user.phoneLabel')" prop="personnelPhone">
             <el-input
               v-model.trim="tableFrom.personnelPhone"
               class="selWidth"
-              placeholder="请输入配送人员手机号码"
+              :placeholder="$t('systemSetting.pleaseEnterDeliveryPersonnelPhone')"
               clearable
             ></el-input>
           </el-form-item>
-          <el-form-item label="创建日期：">
+          <el-form-item :label="$t('systemSetting.createDateLabel')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -37,15 +37,15 @@
               type="daterange"
               placement="bottom-end"
               range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
+              :start-placeholder="$t('common.startDate')"
+              :end-placeholder="$t('common.endDate')"
               class="selWidth"
               @change="onchangeTime"
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" v-debounceClick="2000" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="handleReset">重置</el-button>
+            <el-button type="primary" size="small" v-debounceClick="2000" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="handleReset">{{ $t('common.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -56,19 +56,19 @@
         size="small"
         @click="handleCreatPersonnel()"
         v-hasPermi="['merchant:delivery:personnel:save']"
-        >新增</el-button
+        >{{ $t('common.add') }}</el-button
       >
       <el-table v-loading="loading" :data="tableData.data" class="mt20" size="small">
         <el-table-column prop="id" label="ID" min-width="60" />
-        <el-table-column label="配送人员" min-width="200" prop="personnelName" :show-overflow-tooltip="true" />
-        <el-table-column label="手机号码" min-width="150" prop="personnelPhone" />
-        <el-table-column label="排序" min-width="150" prop="sort" />
-        <el-table-column prop="createTime" label="创建时间" min-width="200" />
-        <el-table-column fixed="right" width="120" label="操作">
+        <el-table-column :label="$t('systemSetting.deliveryPersonnel')" min-width="200" prop="personnelName" :show-overflow-tooltip="true" />
+        <el-table-column :label="$t('user.phoneCol')" min-width="150" prop="personnelPhone" />
+        <el-table-column :label="$t('common.sort')" min-width="150" prop="sort" />
+        <el-table-column prop="createTime" :label="$t('product.createTime')" min-width="200" />
+        <el-table-column fixed="right" width="120" :label="$t('common.operate')">
           <template slot-scope="scope">
-            <a @click="handleCreatPersonnel(scope.row)" v-hasPermi="['merchant:delivery:personnel:edit']">编辑</a>
+            <a @click="handleCreatPersonnel(scope.row)" v-hasPermi="['merchant:delivery:personnel:edit']">{{ $t('common.edit') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a @click="handleDelete(scope.row)" v-hasPermi="['merchant:delivery:personnel:delete']">删除</a>
+            <a @click="handleDelete(scope.row)" v-hasPermi="['merchant:delivery:personnel:delete']">{{ $t('common.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -199,9 +199,9 @@ export default {
     },
     // 删除
     handleDelete(item) {
-      this.$modalSure('确定要删除此配送人员吗？').then(() => {
+      this.$modalSure(this.$t('systemSetting.deleteDeliveryPersonnelConfirm')).then(() => {
         personnelDeleteApi(item.id).then((res) => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('common.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableFrom);
           this.getList();
         });

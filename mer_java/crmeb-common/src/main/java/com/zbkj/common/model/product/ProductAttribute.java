@@ -40,6 +40,9 @@ public class ProductAttribute implements Serializable {
     @ApiModelProperty(value = "规格名")
     private String attributeName;
 
+    @ApiModelProperty(value = "多语言规格名称(JSON)")
+    private String attributeNameJson;
+
     @ApiModelProperty(value = "是否展示规格图片")
     private Boolean isShowImage;
 

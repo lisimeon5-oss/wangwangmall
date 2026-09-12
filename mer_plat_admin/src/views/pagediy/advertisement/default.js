@@ -7,6 +7,8 @@
 // +----------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
+import i18n from '@/i18n';
+
 export const advertisementDefault = () => {
   return {
     isShowAddBtn: true, //添加按钮
@@ -15,12 +17,14 @@ export const advertisementDefault = () => {
     isShowLinkUrl: true, //链接地址
     isShowLinkUrlChose: true, //选择地址选项
     isShowImageUrl: true, //图片地址
+    isImageI18n: true,
     isShowMoreLinkUrl: false, //多条链接
     maxList: 5,
-    title: '标题',
+    title: i18n.t('pagediy.titleName'),
     defaultList: {
       name: '',
       imageUrl: '',
+      imageUrlJson: '',
       linkUrl: '',
       id: 0,
       sort: 0,
@@ -30,6 +34,7 @@ export const advertisementDefault = () => {
       {
         name: '',
         imageUrl: '',
+        imageUrlJson: '',
         linkUrl: '',
         id: 0,
         sort: 0,

@@ -9,6 +9,7 @@ import com.zbkj.common.request.merchant.MerchantMoveSearchRequest;
 import com.zbkj.common.request.merchant.MerchantSettledApplyRequest;
 import com.zbkj.common.response.*;
 import com.zbkj.common.result.CommonResult;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.vo.ProCategoryCacheVo;
 import com.zbkj.service.service.MerchantCategoryService;
 import com.zbkj.service.service.MerchantProductCategoryService;
@@ -101,13 +102,24 @@ public class MerchantController {
     @ApiOperation(value = "获取全部商户类型列表")
     @RequestMapping(value = "/all/type/list", method = RequestMethod.GET)
     public CommonResult<List<MerchantType>> allTypeList() {
-        return CommonResult.success(merchantTypeService.allList());
+        List<MerchantType> list = merchantTypeService.allList();
+        if (list != null) {
+            list.forEach(t -> {
+                t.setName(merchantTypeService.resolveDisplayName(t));
+                t.setInfo(merchantTypeService.resolveDisplayInfo(t));
+            });
+        }
+        return CommonResult.success(list);
     }
 
     @ApiOperation(value = "获取全部商户分类列表")
     @RequestMapping(value = "/all/category/list", method = RequestMethod.GET)
     public CommonResult<List<MerchantCategory>> allCategoryList() {
-        return CommonResult.success(merchantCategoryService.allList());
+        List<MerchantCategory> list = merchantCategoryService.allList();
+        if (list != null) {
+            list.forEach(c -> c.setName(merchantCategoryService.resolveDisplayName(c)));
+        }
+        return CommonResult.success(list);
     }
 
     @ApiOperation(value = "获取商户客服信息")
@@ -119,7 +131,9 @@ public class MerchantController {
     @ApiOperation(value = "商户商品分类缓存树")
     @RequestMapping(value = "/product/category/cache/tree/{id}", method = RequestMethod.GET)
     public CommonResult<List<ProCategoryCacheVo>> getCacheTree(@PathVariable("id") Integer id) {
-        return CommonResult.success(productCategoryService.findListByMerId(id));
+        List<ProCategoryCacheVo> list = productCategoryService.findListByMerId(id);
+        I18nJsonUtil.applyCategoryTree(list);
+        return CommonResult.success(list);
     }
 
     @ApiOperation(value = "获取商户自提信息")

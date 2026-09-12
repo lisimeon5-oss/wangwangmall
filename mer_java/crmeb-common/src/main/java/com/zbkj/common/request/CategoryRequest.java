@@ -1,6 +1,10 @@
 package com.zbkj.common.request;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.zbkj.common.jackson.FlexibleJsonStringDeserializer;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,7 +14,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -41,9 +44,27 @@ public class CategoryRequest implements Serializable {
     private Integer pid;
 
     @ApiModelProperty(value = "分类名称")
-    @NotBlank(message = "分类名称必须填写")
     @Length(max = 50, message = "分类名称不能超过50个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言分类名称(JSON)")
+    @I18nJsonNotEmpty(message = "多语言分类名称不能为空")
+    @JsonDeserialize(using = FlexibleJsonStringDeserializer.class)
+    private String nameJson;
+
+    public void setName(String name) {
+        this.name = name;
+        syncI18nName();
+    }
+
+    public void setNameJson(String nameJson) {
+        this.nameJson = nameJson;
+        syncI18nName();
+    }
+
+    private void syncI18nName() {
+        I18nJsonUtil.fillNameAndJson(n -> this.name = n, j -> this.nameJson = j, this.name, this.nameJson);
+    }
 
     @ApiModelProperty(value = "类型，类型，1 产品分类，2 附件分类，3 文章分类， 4 设置分类， 5 菜单分类， 6 配置分类， 7 秒杀配置")
     @NotNull(message = "类型必须选择")

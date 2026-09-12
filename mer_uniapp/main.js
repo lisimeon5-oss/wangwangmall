@@ -16,7 +16,8 @@ import util from 'utils/util'
 import configs from './config/app.js'
 import apps from './libs/apps.js' //校验登录是否失效
 import * as filters from '@/filters'
-
+import { t, applyPageTitle, patchUniDialogs } from '@/i18n'
+patchUniDialogs()
 
 import BaseMoney from './components/BaseMoney.vue';
 Vue.component('BaseMoney', BaseMoney)
@@ -26,6 +27,28 @@ Vue.prototype.$config = configs;
 Vue.prototype.$Cache = Cache;
 Vue.prototype.$store = store;
 Vue.prototype.$eventHub = new Vue();
+Vue.mixin({
+  computed: {
+    i18nLocale() {
+      return (this.$store && this.$store.state.app && this.$store.state.app.locale) || 'zh-cn';
+    }
+  },
+  onShow() {
+    try {
+      const pages = getCurrentPages();
+      const cur = pages[pages.length - 1];
+      if (cur && cur.$vm === this) {
+        applyPageTitle();
+      }
+    } catch (e) {}
+  },
+  methods: {
+    $t(key, vars) {
+      void this.i18nLocale;
+      return t(key, vars);
+    }
+  }
+});
 Vue.config.productionTip = false
 Vue.prototype.$LoginAuth = apps;
 

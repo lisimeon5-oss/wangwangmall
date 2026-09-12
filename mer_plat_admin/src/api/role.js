@@ -18,6 +18,7 @@ export function addRole(pram) {
   const data = {
     level: pram.level,
     roleName: pram.roleName,
+    roleNameJson: pram.roleNameJson,
     status: pram.status,
     rules: pram.rules,
   };
@@ -81,6 +82,7 @@ export function updateRole(pram) {
   const data = {
     id: pram.id,
     roleName: pram.roleName,
+    roleNameJson: pram.roleNameJson,
     rules: pram.rules,
     status: pram.status,
   };

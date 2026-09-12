@@ -1,0 +1,190 @@
+REUSE common.save | 保存
+REUSE user.saveSuccess | 保存成功
+REUSE common.remark | 备注
+REUSE common.edit | 编辑
+REUSE merchant.editCategory | 编辑分类
+REUSE common.operate | 操作
+REUSE product.operateSuccess | 操作成功
+REUSE common.query | 查询
+REUSE product.createTime | 创建时间
+REUSE category.topLevelDirectory | 顶层目录
+REUSE category.categoryNamePlaceholder | 分类名称
+REUSE common.close | 关闭
+REUSE distribution.keywordLabel | 关键字：
+REUSE common.open | 开启
+REUSE category.name | 名称
+REUSE product.sort | 排序
+REUSE merchant.pleaseEnterRemark | 请输入备注
+REUSE category.pleaseEnterCategoryName | 请输入分类名称
+REUSE user.pleaseEnterSort | 请输入排序
+REUSE el.messagebox.cancel | 取消
+REUSE el.messagebox.confirm | 确定
+REUSE common.delete | 删除
+REUSE product.deleteSuccess | 删除成功
+REUSE content.deleteDataSuccess | 删除数据成功
+REUSE common.auditing | 审核中
+REUSE product.isShow | 是否显示
+REUSE common.search | 搜索
+REUSE common.submit | 提交
+REUSE user.submitSuccess | 提交成功
+REUSE category.addSubdirectory | 添加子目录
+REUSE common.show | 显示
+REUSE category.updateSuccess | 修改成功
+REUSE product.abnormal | 异常
+REUSE menu.hide | 隐藏
+REUSE product.paused | 暂停
+REUSE common.status | 状态
+REUSE user.statusLabel | 状态:
+NEW  | // +---------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +---------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +---------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +---------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | // +----------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +----------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | 备注:
+NEW  | 编号
+NEW  | 编辑表单
+NEW  | 编辑表单配置成功
+NEW  | 编辑数据
+NEW  | 编辑数据成功
+NEW  | 编辑数据组
+NEW  | 编辑物流公司
+NEW  | 编辑组合数据成功
+NEW  | 编码
+NEW  | 表单数据ID：
+NEW  | 参数
+NEW  | 参数:
+NEW  | 操作时间
+NEW  | 操作状态
+NEW  | 触发成功
+NEW  | 创建表单
+NEW  | 创建表单配置成功
+NEW  | 创建分类成功
+NEW  | 创建数据组
+NEW  | 错误消息
+NEW  | 单选
+NEW  | 定时任务
+NEW  | 定时任务类名
+NEW  | 定时任务类名:
+NEW  | 返回参数
+NEW  | 方法名
+NEW  | 方法名:
+NEW  | 方法名称
+NEW  | 分类名称:
+NEW  | 分类昵称
+NEW  | 父级:
+NEW  | 个人中心
+NEW  | 更新分类成功
+NEW  | 更新时间
+NEW  | 购买之后可以设置
+NEW  | 关联
+NEW  | 关联表单成功
+NEW  | 管理员姓名
+NEW  | 管理员姓名：
+NEW  | 管理员账号
+NEW  | 管理员账号：
+NEW  | 管理员id
+NEW  | 耗时(单位：毫秒)
+NEW  | 简介
+NEW  | 建议尺寸：宽290px*高100px
+NEW  | 接口描述
+NEW  | 进入官网
+NEW  | 两次输入密码不一致!
+NEW  | 描述
+NEW  | 排序:
+NEW  | 排序不能为空
+NEW  | 配置列表
+NEW  | 启用状态
+NEW  | 签到天数配置
+NEW  | 请求参数
+NEW  | 请求方式
+NEW  | 请求类型
+NEW  | 请求URL
+NEW  | 请上传版权图片
+NEW  | 请申请授权
+NEW  | 请输入版权信息
+NEW  | 请输入定时任务方法名
+NEW  | 请输入定时任务名称
+NEW  | 请输入关键字
+NEW  | 请输入网点名称
+NEW  | 请输入新密码
+NEW  | 请输入月结密码
+NEW  | 请输入月结账号
+NEW  | 请输入组合数据名称
+NEW  | 请输入cron表达式
+NEW  | 请输入id，名称，描述
+NEW  | 请填写管理员账号
+NEW  | 请填写原始密码
+NEW  | 请先关联表单
+NEW  | 请选择表单数据
+NEW  | 请再次输入密码
+NEW  | 去版权
+NEW  | 去版权服务
+NEW  | 确定选择
+NEW  | 确认新密码
+NEW  | 确认新密码：
+NEW  | 任务日志id
+NEW  | 任务id
+NEW  | 删除当前数据吗
+NEW  | 商业授权
+NEW  | 上传版权图片：
+NEW  | 申请授权
+NEW  | 失败信息
+NEW  | 是否启用
+NEW  | 数据简介
+NEW  | 数据简介：
+NEW  | 数据列表
+NEW  | 数据搜索：
+NEW  | 数据组名称
+NEW  | 数据组名称：
+NEW  | 添加定时任务
+NEW  | 添加分类
+NEW  | 添加数据
+NEW  | 添加数据成功
+NEW  | 添加数据组
+NEW  | 添加一级分类以后，务必添加二级分类并配置表单，否则会出现渲染错误
+NEW  | 添加组合数据成功
+NEW  | 填写数据简介
+NEW  | 填写数据组名称
+NEW  | 同步物流公司
+NEW  | 同步物流公司成功
+NEW  | 网点名称
+NEW  | 温馨提示
+NEW  | 物流公司名称
+NEW  | 新密码
+NEW  | 新密码：
+NEW  | 修改版权信息：
+NEW  | 修改密码
+NEW  | 选择表单模板
+NEW  | 选择模板数据
+NEW  | 选择已配置的表单
+NEW  | 已关联的表单
+NEW  | 英文名称
+NEW  | 英文名称:
+NEW  | 英文名称不能为空
+NEW  | 原始密码
+NEW  | 原始密码：
+NEW  | 月结密码
+NEW  | 月结账号
+NEW  | 长度6-20个字符
+NEW  | 正常
+NEW  | 正确操作状态
+NEW  | 执行
+NEW  | 重新申请
+NEW  | 主机地址
+NEW  | 注意：表单不能重复关联
+NEW  | 组合数据列表
+NEW  | cron表达式
+NEW  | cron表达式:
+
+TOTAL unique: 174, NEW: 137

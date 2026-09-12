@@ -37,9 +37,11 @@ public class PcHomeBannerVo implements Serializable {
     @NotBlank(message = "请选择图片")
     private String imageUrl;
 
-    @ApiModelProperty(value = "banner标题", required = true)
-    @NotBlank(message = "请填写标题")
+    @ApiModelProperty(value = "banner标题")
     private String name;
+
+    @ApiModelProperty(value = "多语言banner标题(JSON)")
+    private String nameJson;
 
     @ApiModelProperty(value = "banner链接")
     private String linkUrl;

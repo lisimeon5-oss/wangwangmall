@@ -13,7 +13,7 @@
           <div class="text">
             <div class="text acea-row row-column-between">
               <div class="name line2 tui-skeleton-rect" :style="titleColor">
-                文章标题展示，最多展示2行，仍过长展示不下时展示为…
+                {{ $t('pagediy.articleTitlePlaceholder') }}
               </div>
               <div class="tui-skeleton-rect" :style="timeColor">2022-05-05 11:40</div>
             </div>
@@ -56,9 +56,10 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState } from 'vuex';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
 export default {
   name: 'home_article', // 组件名称
-  cname: '文章列表', // 标题名称
+  ...diyCname('pagediy.articleList'),
   icon: 't-icon-zujian-wenzhangliebiao',
   defaultName: 'homeArticle', // 外面匹配名称
   configName: 'c_home_article', // 右侧配置名称
@@ -130,19 +131,19 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '文章列表',
+          cname: this.$t('pagediy.articleList'),
         },
         //数量
         numConfig: {
           val: 6,
           isShow: 1,
-          title: '文章数量',
+          title: this.$t('pagediy.articleCount'),
           max: 8,
         },
         //文章分类
         selectConfig: {
-          title: '文章分类',
-          tabTitle: '文章设置',
+          title: this.$t('category.typeArticle'),
+          tabTitle: this.$t('pagediy.articleSettings'),
           activeValue: [],
           isMultiple: false,
           list: [],
@@ -150,27 +151,27 @@ export default {
           isShow: 1,
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },
         contentStyle: {
-          title: '内容圆角',
+          title: this.$t('pagediy.contentRadius'),
           name: 'contentStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         titleColor: {
-          title: '标题颜色',
+          title: this.$t('pagediy.titleColor'),
           name: 'titleColor',
           default: [
             {
@@ -184,7 +185,7 @@ export default {
           ],
         },
         timeColor: {
-          title: '时间颜色',
+          title: this.$t('pagediy.timeColor'),
           name: 'timeColor',
           default: [
             {
@@ -199,36 +200,36 @@ export default {
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 0,
           min: 0,
           max: 15,
         },
         // 文章间距content
         contentConfig: {
-          title: '文章间距',
+          title: this.$t('pagediy.articleSpacing'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          title: '下边距',
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
         },
         // 背景颜色
         bgColor: {
-          title: '背景颜色',
-          tabTitle: '颜色设置',
+          title: this.$t('pagediy.backgroundColor'),
+          tabTitle: this.$t('pagediy.colorSettings'),
           default: [
             {
               item: '#FFFFFF',
@@ -249,17 +250,17 @@ export default {
         // 布局样式
         layoutConfig: {
           cname: 'layoutConfig',
-          title: '布局样式',
-          tabTitle: '布局设置',
+          title: this.$t('pagediy.layoutStyle'),
+          tabTitle: this.$t('pagediy.layoutSettings'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '居左',
+              val: this.$t('pagediy.alignLeft'),
               icon: 'icon-juzuo',
             },
             {
-              val: '居右',
+              val: this.$t('pagediy.alignRight'),
               icon: 'icon-juyou',
             },
           ],
@@ -283,7 +284,7 @@ export default {
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
         this.articleList = data.selectConfig.articleList;
         this.mTOP = data.upConfig.val;
       }

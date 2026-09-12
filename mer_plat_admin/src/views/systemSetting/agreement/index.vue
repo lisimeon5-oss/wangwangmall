@@ -16,16 +16,24 @@
             'platform:system:agreement:intelligent:info',
             'platform:system:agreement:platfromrule:info',
             'platform:system:agreement:coupon:agreement:info',
+            'platform:system:agreement:paid:member:info',
           ]"
         >
-          <el-tab-pane :label="item.title" v-for="(item, index) in tabList" :key="index" :name="item.info">
+          <el-tab-pane :label="item.title" v-for="(item, index) in tabList" :key="item.info" :name="item.info">
             <div class="content">
               <div class="phoneBox">
-                <div class="fontBox" v-html="formValidate.agreement"></div>
+                <div class="fontBox" v-html="previewHtml"></div>
               </div>
               <div class="ueditor">
                 <div class="font"><span class="verticalLine"></span> {{ item.title }}</div>
-                <Tinymce v-model="formValidate.agreement" :key="keyIndex"></Tinymce>
+                <div class="lang-name-switch">
+                  <el-radio-group v-model="activeLang" size="small" @change="onLangChange">
+                    <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                      {{ lang.label }}
+                    </el-radio-button>
+                  </el-radio-group>
+                </div>
+                <Tinymce v-model="editorHtml" :key="editorKey"></Tinymce>
               </div>
             </div>
           </el-tab-pane>
@@ -47,7 +55,7 @@
               'platform:system:agreement:coupon:agreement:save',
               'platform:system:agreement:paid:member:save',
             ]"
-            >提交</el-button
+            >{{ $t('common.submit') }}</el-button
           >
         </div>
       </div>
@@ -67,33 +75,75 @@
 import Tinymce from '@/components/Tinymce/index';
 import { agreementInfoApi, agreementSaveApi } from '@/api/system';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import {
+  getLocalizedText,
+  parseLangJsonMap,
+  resolveFormActiveLang,
+} from '@/utils/localizedName';
 export default {
   name: 'agreements',
   components: { Tinymce },
   data() {
     return {
       loading: false,
-      tabList: [
-        { title: '用户协议', id: 1, info: 'userinfo', save: 'usersave' },
-        { title: '隐私协议', id: 2, info: 'userprivacyinfo', save: 'userprivacysave' },
-        { title: '入驻协议', id: 3, info: 'merincomminginfo', save: 'merincommingsave' },
-        { title: '关于我们', id: 4, info: 'aboutusinfo', save: 'aboutussave' },
-        { title: '资质证照', id: 5, info: 'intelligentinfo', save: 'intelligentsave' },
-        { title: '平台规则', id: 6, info: 'platfromruleinfo', save: 'platfromrulesave' },
-        { title: '注销协议', id: 7, info: 'useraccountcancelinfo', save: 'useraccountcancelsave' },
-        { title: '注销声明', id: 8, info: 'useraccountcancelnoticeinfo', save: 'useraccountcancelnoticesave' },
-        { title: '优惠券协议', id: 8, info: 'coupon/agreement/info', save: 'coupon/agreement/save' },
-        { title: '付费会员协议', id: 8, info: 'paid/member/info', save: 'paid/member/save' },
-      ],
       formValidate: {
         agreement: '',
+        agreementJson: '',
       },
       agreementValue: 'userinfo',
       agreementSave: 'usersave',
       keyIndex: 0,
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
     };
   },
+  computed: {
+    tabList() {
+      return [
+        { title: this.$t('systemSetting.userAgreement'), info: 'userinfo', save: 'usersave' },
+        { title: this.$t('systemSetting.privacyAgreement'), info: 'userprivacyinfo', save: 'userprivacysave' },
+        { title: this.$t('systemSetting.onboardingAgreement'), info: 'merincomminginfo', save: 'merincommingsave' },
+        { title: this.$t('systemSetting.aboutUs'), info: 'aboutusinfo', save: 'aboutussave' },
+        { title: this.$t('systemSetting.qualificationCertificates'), info: 'intelligentinfo', save: 'intelligentsave' },
+        { title: this.$t('systemSetting.platformRules'), info: 'platfromruleinfo', save: 'platfromrulesave' },
+        { title: this.$t('systemSetting.cancellationAgreement'), info: 'useraccountcancelinfo', save: 'useraccountcancelsave' },
+        { title: this.$t('systemSetting.cancellationStatement'), info: 'useraccountcancelnoticeinfo', save: 'useraccountcancelnoticesave' },
+        { title: this.$t('systemSetting.couponAgreement'), info: 'coupon/agreement/info', save: 'coupon/agreement/save' },
+        { title: this.$t('systemSetting.paidMemberAgreement'), info: 'paid/member/info', save: 'paid/member/save' },
+      ];
+    },
+    editorKey() {
+      return this.keyIndex + '-' + this.activeLang;
+    },
+    editorHtml: {
+      get() {
+        if (this.activeLang === this.defaultLangCode) return this.formValidate.agreement || '';
+        return parseLangJsonMap(this.formValidate.agreementJson)[this.activeLang] || '';
+      },
+      set(val) {
+        if (this.activeLang === this.defaultLangCode) {
+          this.formValidate.agreement = val;
+          return;
+        }
+        const map = parseLangJsonMap(this.formValidate.agreementJson);
+        if (this.hasHtmlContent(val)) map[this.activeLang] = val;
+        else delete map[this.activeLang];
+        this.formValidate.agreementJson = Object.keys(map).length ? JSON.stringify(map) : '';
+      },
+    },
+    previewHtml() {
+      return getLocalizedText(
+        this.formValidate.agreement,
+        this.formValidate.agreementJson,
+        this.activeLang,
+      );
+    },
+  },
   created() {
+    this.getLanguageList();
     if (
       checkPermi([
         'platform:system:agreement:user:info',
@@ -112,12 +162,55 @@ export default {
   },
   methods: {
     checkPermi,
+    hasHtmlContent(html) {
+      return String(html || '')
+        .replace(/<[^>]*>/g, '')
+        .replace(/&nbsp;/gi, ' ')
+        .trim().length > 0;
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
+    onLangChange() {
+      this.keyIndex += 1;
+    },
     getInfo(data) {
       this.loading = true;
       this.formValidate.agreement = '';
+      this.formValidate.agreementJson = '';
       agreementInfoApi(data)
         .then((res) => {
-          this.formValidate.agreement = res ? JSON.parse(res).agreement : '';
+          let obj = {};
+          try {
+            obj = res ? JSON.parse(res) : {};
+          } catch (e) {
+            obj = {};
+          }
+          this.formValidate.agreement = obj.agreement || '';
+          this.formValidate.agreementJson =
+            typeof obj.agreementJson === 'string'
+              ? obj.agreementJson
+              : obj.agreementJson
+                ? JSON.stringify(obj.agreementJson)
+                : '';
           this.keyIndex += 1;
           this.loading = false;
         })
@@ -126,13 +219,19 @@ export default {
         });
     },
     submenus() {
-      if (this.formValidate.agreement === '' || !this.formValidate.agreement) {
-        return this.$message.warning('请输入协议信息！');
-      } else {
-        agreementSaveApi(this.agreementSave, this.formValidate).then(async (res) => {
-          this.$message.success('保存成功');
-        });
+      const jsonForm = parseLangJsonMap(this.formValidate.agreementJson);
+      const hasContent =
+        this.hasHtmlContent(this.formValidate.agreement) ||
+        Object.keys(jsonForm).some((k) => this.hasHtmlContent(jsonForm[k]));
+      if (!hasContent) {
+        return this.$message.warning(this.$t('systemSetting.pleaseEnterAgreementInfo'));
       }
+      agreementSaveApi(this.agreementSave, {
+        agreement: this.formValidate.agreement || '',
+        agreementJson: this.formValidate.agreementJson || '',
+      }).then(async (res) => {
+        this.$message.success(this.$t('user.saveSuccess'));
+      });
     },
     tabStatus(e) {
       this.getInfo(e.name);
@@ -206,8 +305,15 @@ export default {
       font-size: 20px;
       font-weight: 600;
       color: #303133;
-      margin-bottom: 30px;
+      margin-bottom: 16px;
     }
+  }
+}
+.lang-name-switch {
+  margin-bottom: 16px;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
   }
 }
 </style>

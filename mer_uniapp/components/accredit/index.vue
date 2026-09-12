@@ -6,12 +6,12 @@
 					<image class="model_icon" :src="urlDomain+'crmebimage/presets/model_img.png'"></image>
 				</view>
 				<view class="model_content">
-					<view class="model_title">提示</view>
+					<view class="model_title">{{$t('提示')}}</view>
 					<view class="model_desc">{{content}}</view>
 					<view class="model_btns">
-						<view class="mbtn cancel_btn" @click="modelCancel()">取消</view>
-						<view class="mbtn confirm_btn" @click="modelConfirm()" v-if="locationType">确定</view>
-						<button class="mbtn confirm_btn" v-if="userPhoneType" open-type="getPhoneNumber" @getphonenumber="getphonenumber">确定</button>
+						<view class="mbtn cancel_btn" @click="modelCancel()">{{$t('取消')}}</view>
+						<view class="mbtn confirm_btn" @click="modelConfirm()" v-if="locationType">{{$t('确定')}}</view>
+						<button class="mbtn confirm_btn" v-if="userPhoneType" open-type="getPhoneNumber" @getphonenumber="getphonenumber">{{$t('确定')}}</button>
 					</view>
 				</view>
 			</view>
@@ -77,7 +77,7 @@
 			// #ifdef MP
 			// 小程序获取手机号码
 			getphonenumber(e){
-				uni.showLoading({ title: '加载中' });
+				uni.showLoading({ title: this.$t('加载中') });
 				Routine.getCode()
 					.then(code => {
 						this.getUserPhoneNumber(e.detail.encryptedData, e.detail.iv, code);

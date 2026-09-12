@@ -2,10 +2,10 @@
 	<view :data-theme="theme">
 		<view class='bill-details'>
 			<view class='nav acea-row'>
-				<view class='item' :class='type==="all" ? "on":""' @click='changeType("all")'>全部</view>
-				<view class='item' :class='type==="expenditure" ? "on":""' @click='changeType("expenditure")'>支出</view>
-				<view class='item' :class='type==="recharge" ? "on":""' @click='changeType("recharge")'>充值</view>
-				<view class='item' :class='type==="income" ? "on":""' @click='changeType("income")'>收入</view>
+				<view class='item' :class='type==="all" ? "on":""' @click='changeType("all")'>{{$t('全部')}}</view>
+				<view class='item' :class='type==="expenditure" ? "on":""' @click='changeType("expenditure")'>{{$t('支出')}}</view>
+				<view class='item' :class='type==="recharge" ? "on":""' @click='changeType("recharge")'>{{$t('充值')}}</view>
+				<view class='item' :class='type==="income" ? "on":""' @click='changeType("income")'>{{$t('收入')}}</view>
 			</view>
 			<view class='sign-record'>
 				<view class='list borderPad' v-for="(item,index) in userBillList" :key="index">
@@ -21,17 +21,17 @@
 									<view class='num font_color' v-if="vo.type == 1">+{{vo.amount}}</view>
 									<view class='num' v-else>-{{vo.amount}}</view>
 								</view>
-								<view class="remark">说明：{{vo.remark}}</view>
+								<view class="remark">{{$t('说明')}}：{{$t(vo.remark)}}</view>
 							</view>
 						</view>
 					</view>
 				</view>
 				<view class='loadingicon acea-row row-center-wrapper'>
 					<text class='loading iconfont icon-jiazai'
-						:hidden='loading==false'></text>{{userBillList.length > 0?loadTitle:''}}
+						:hidden='loading==false'></text>{{userBillList.length > 0?$t(loadTitle):''}}
 				</view>
 				<view v-if="userBillList.length == 0 && !loading">
-					<emptyPage title="暂无账单的记录哦～" :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
+					<emptyPage :title="$t('暂无账单的记录哦～')" :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
 				</view>
 			</view>
 		</view>
@@ -162,6 +162,9 @@
 	.remark {
 		font-size: 24rpx;
 		margin-top: 10rpx;
+		line-height: 1.4;
+		word-break: break-word;
+		white-space: normal;
 	}
 
 	.bill-details .nav {

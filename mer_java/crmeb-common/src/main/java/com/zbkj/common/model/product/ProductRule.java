@@ -37,6 +37,9 @@ public class ProductRule implements Serializable {
     @ApiModelProperty(value = "规格名称")
     private String ruleName;
 
+    @ApiModelProperty(value = "多语言规格名称(JSON)")
+    private String ruleNameJson;
+
     @ApiModelProperty(value = "规格值")
     private String ruleValue;
 

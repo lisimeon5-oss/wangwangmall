@@ -9,19 +9,23 @@
 // +----------------------------------------------------------------------
 
 import uploadFromComponent from './index.vue';
+import store from '@/store';
+import i18n from '@/i18n';
 const goodListFrom = {};
 goodListFrom.install = function (Vue, options) {
   const ToastConstructor = Vue.extend(uploadFromComponent);
-  // 生成一个该子类的实例
-  const instance = new ToastConstructor();
+  const instance = new ToastConstructor({
+    store,
+    i18n,
+  });
   instance.$mount(document.createElement('div'));
   document.body.appendChild(instance.$el);
   Vue.prototype.$modalGoodList = function (callback, handleNum, row, maxlength) {
-    instance.visible = true;
     instance.callback = callback;
-    instance.handleNum = handleNum; //多选还是单选，many多选
-    instance.checked = row;
-    instance.maxlength = maxlength; //最多一次性可以选择多少个商品
+    instance.handleNum = handleNum;
+    instance.checked = row || [];
+    instance.maxlength = maxlength;
+    instance.visible = true;
   };
 };
 export default goodListFrom;

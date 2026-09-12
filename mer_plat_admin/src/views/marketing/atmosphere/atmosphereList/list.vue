@@ -9,44 +9,44 @@
     >
       <div class="padding-add">
         <el-form ref="tableFrom" :model="tableFrom" size="small" :inline="true" @submit.native.prevent>
-          <el-form-item label="创建时间：" prop="date">
+          <el-form-item :label="$t('order.createTimeColon')" prop="date">
             <el-date-picker
               style="width: 260px"
               v-model="timeVal"
               type="datetimerange"
               range-separator="-"
               value-format="yyyy-MM-dd HH:mm:ss"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
+              :start-placeholder="$t('product.startDate')"
+              :end-placeholder="$t('product.endDate')"
               @change="onchangeTime"
             >
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="活动状态：" prop="status">
+          <el-form-item :label="$t('marketing.activityStatusLabel')" prop="status">
             <el-select
               v-model="tableFrom.runningStatus"
-              placeholder="请选择"
+              :placeholder="$t('el.select.placeholder')"
               class="selWidth"
               clearable
               @change="getList(1)"
             >
-              <el-option label="未开始" :value="0" />
-              <el-option label="进行中" :value="1" />
-              <el-option label="已结束" :value="-1" />
+              <el-option :label="$t('common.notStarted')" :value="0" />
+              <el-option :label="$t('common.ongoing')" :value="1" />
+              <el-option :label="$t('common.ended')" :value="-1" />
             </el-select>
           </el-form-item>
-          <el-form-item label="活动名称：">
+          <el-form-item :label="$t('marketing.activityNameLabel')">
             <el-input
               v-model="name"
-              placeholder="请输入活动名称"
+              :placeholder="$t('marketing.pleaseEnterActivityName')"
               class="selWidth"
               clearable
               @keyup.enter.native="getList(1)"
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset('tableFrom')">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset('tableFrom')">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -54,7 +54,7 @@
     <el-card class="box-card mt14" :body-style="{ padding: '20px' }" :bordered="false" shadow="never">
       <router-link :to="{ path: activityTpye === 1 ? '/marketing/atmosphere/add' : '/marketing/border/add' }">
         <el-button v-hasPermi="['platform:activitystyle:save']" size="small" type="primary">{{
-          activityTpye === 1 ? '添加氛围图' : '添加活动边框'
+          activityTpye === 1 ? $t('marketing.addAtmosphereImage') : $t('marketing.addActivityBorder')
         }}</el-button>
       </router-link>
       <el-table
@@ -66,49 +66,51 @@
         highlight-current-row
       >
         <el-table-column prop="id" label="ID" min-width="50" />
-        <el-table-column prop="name" label="活动名称" min-width="150" :show-overflow-tooltip="true" />
-        <el-table-column min-width="100" label="氛围图">
+        <el-table-column :label="$t('marketing.activityName')" min-width="150" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ getLocalizedActivityName(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column min-width="100" :label="$t('marketing.atmosphereImage')">
           <template slot-scope="scope">
             <el-image style="width: 36px; height: 36px" :src="scope.row.style" />
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="使用范围" min-width="110">
+        <el-table-column prop="name" :label="$t('product.usageScope')" min-width="110">
           <template slot-scope="scope">
             <span>{{ scope.row.method | activityMethodFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column min-width="260" label="活动日期">
+        <el-table-column min-width="260" :label="$t('marketing.activityDate')">
           <template slot-scope="{ row }">
             <div>{{ row.starttime }} - {{ row.endtime }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="活动状态" min-width="90">
+        <el-table-column :label="$t('marketing.activityStatus')" min-width="90">
           <template slot-scope="{ row }">
-            <el-tag class="notStartTag tag-background" v-if="row.runningStatus == 0">未开始</el-tag>
-            <el-tag class="doingTag tag-background" v-if="row.runningStatus == 1">进行中</el-tag>
-            <el-tag class="endTag tag-background" v-if="row.runningStatus == -1">已结束</el-tag>
+            <el-tag class="notStartTag tag-background" v-if="row.runningStatus == 0">{{ $t('common.notStarted') }}</el-tag>
+            <el-tag class="doingTag tag-background" v-if="row.runningStatus == 1">{{ $t('common.ongoing') }}</el-tag>
+            <el-tag class="endTag tag-background" v-if="row.runningStatus == -1">{{ $t('common.ended') }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createtime" label="创建时间" min-width="150" />
-        <el-table-column label="是否开启" fixed="right" min-width="90">
+        <el-table-column prop="createtime" :label="$t('product.createTime')" min-width="150" />
+        <el-table-column :label="$t('community.isEnabled')" fixed="right" min-width="90">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:activitystyle:updatestatus'])"
               v-model="scope.row.status"
               :active-value="true"
               :inactive-value="false"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
               @click.native="onchangeIsShow(scope.row)"
             />
-            <div v-else>{{ scope.row.status ? '开启' : '关闭' }}</div>
+            <div v-else>{{ scope.row.status ? $t('common.open') : $t('common.close') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="100" fixed="right">
           <template slot-scope="scope">
-            <a v-hasPermi="['platform:activitystyle:edite']" @click="onEdit(scope.row)">编辑</a>
+            <a v-hasPermi="['platform:activitystyle:edite']" @click="onEdit(scope.row)">{{ $t('common.edit') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a v-hasPermi="['platform:activitystyle:delete']" @click="handleDelete(scope.row.id, scope.$index)">删除</a>
+            <a v-hasPermi="['platform:activitystyle:delete']" @click="handleDelete(scope.row.id, scope.$index)">{{ $t('common.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -141,6 +143,7 @@
 import { atuosphereList, atmosphereDelete, atmosphereStatusApi } from '@/api/marketing';
 import { checkPermi } from '@/utils/permission';
 import { handleDeleteTable } from '@/libs/public'; // 权限判断函数
+import { getLocalizedName, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'HoneyList',
   components: {},
@@ -183,6 +186,9 @@ export default {
   },
   methods: {
     checkPermi,
+    getLocalizedActivityName(row) {
+      return getLocalizedName(row, getUiLocale(this));
+    },
     onEdit(item) {
       localStorage.setItem('activitystyle', JSON.stringify(item));
       this.$router.push({
@@ -212,7 +218,7 @@ export default {
     handleDelete(id, idx) {
       this.$modalSure(`删除活动后将无法恢复，请谨慎操作!`).then(() => {
         atmosphereDelete({ id: id }).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableFrom);
           this.getList('');
         });
@@ -246,7 +252,7 @@ export default {
     onchangeIsShow(row) {
       atmosphereStatusApi({ id: row.id, status: row.status })
         .then(() => {
-          this.$message.success('修改成功');
+          this.$message.success(this.$t('category.updateSuccess'));
           this.getList('');
         })
         .catch(() => {

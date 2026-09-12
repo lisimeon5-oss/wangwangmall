@@ -2,39 +2,39 @@
 	<view>
 		<view class='coupon-list-window' :class='coupon.coupon==true?"on":""'>
 			<text class="iconfont icon-guanbi5" @click="close"></text>
-			<view class="_tit text-center">领取优惠券</view>
+			<view class="_tit text-center">{{$t('领取优惠券')}}</view>
 			<view class='coupon-list borderPad' :style="{'margin-top':!orderShow?'0':'0'}">
 				
 				<block v-if="coupon.list.length">
 					<view class='item acea-row row-center-wrapper' v-for="(item,index) in coupon.list"
 						@click="getCouponUser(index,item.id)" :key='index'>
 						<view class='money acea-row row-column row-center-wrapper main_bg'>
-							<view>￥<text class='num'>{{item.money?Number(item.money):''}}</text></view>
-							<view class="pic-num">满{{item.minPrice}}元可用</view>
+							<view>฿<text class='num'>{{item.money?Number(item.money):''}}</text></view>
+							<view class="pic-num">{{$t('满')}}{{item.minPrice}}{{$t('铢可用')}}</view>
 						</view>
 						<view class='text'>
 							<view class='acea-row condition'>
-								<span v-if='item.merId===0' class='line-title select'>平台</span>
-								<span v-else class='line-title select'>店铺</span>
-								<span class="line2">{{item.name}}</span>
+								<span v-if='item.merId===0' class='line-title select'>{{$t('平台')}}</span>
+								<span v-else class='line-title select'>{{$t('店铺')}}</span>
+								<span class="line2">{{$t(item.name)}}</span>
 							</view>
 							<view class='data acea-row row-between-wrapper'>
 								<view class="width">
 									<view v-if="item.isFixedTime" class="_end">
-										{{ $util.getTime(item.useStartTimeStr) + ' - ' + $util.getTime(item.useEndTimeStr) + ' 可用' }}
+										{{ $util.getTime(item.useStartTimeStr) + ' - ' + $util.getTime(item.useEndTimeStr) + ' ' + $t('可用') }}
 									</view>
-									<view v-else class="_end">{{ '领取后' + item.day + '天内可用' }}</view>
+									<view v-else class="_end">{{ $t('领取后') + item.day + $t('天内可用') }}</view>
 								</view>
-								<view class='bnt main_bg' v-if="!item.isUse">{{coupon.statusTile || '立即领取'}}</view>
+								<view class='bnt main_bg' v-if="!item.isUse">{{coupon.statusTile || $t('立即领取')}}</view>
 							</view>
-							<span v-if="item.isUse" class="iconfont icon-yilingqu1 font-color"></span>
+							<view class="coupon-stamp font-color" v-if="item.isUse">{{$t('已领取')}}</view>
 						</view>
 					</view>
 				</block>
 				<!-- 无优惠券 -->
 				<view class='pictrue' v-else>
 					<image :src="urlDomain+'crmebimage/presets/noCoupon.png'"></image>
-					<view class="default_txt">暂无优惠券哦~</view>
+					<view class="default_txt">{{$t('暂无优惠券哦~')}}</view>
 				</view>
 			</view>
 
@@ -109,7 +109,7 @@
 						setCouponReceive(id).then(res => {
 							that.$emit('ChangCouponsUseState', index);
 							that.$util.Tips({
-								title: "领取成功"
+								title: this.$t('领取成功')
 							}, function(res) {
 								return that.$util.Tips({
 									title: res
@@ -133,12 +133,27 @@
 
 <style scoped lang="scss">
 
-	.icon-yilingqu1 {
+	.coupon-stamp {
 		position: absolute;
-		opacity: 0.1;
-		font-size: 160rpx;
-		top: 50rpx;
-		right: -20rpx;
+		right: 8rpx;
+		top: 24rpx;
+		width: 112rpx;
+		height: 112rpx;
+		border-radius: 50%;
+		border: 5rpx solid currentColor;
+		box-sizing: border-box;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		font-size: 22rpx;
+		font-weight: 700;
+		line-height: 1.2;
+		padding: 8rpx;
+		opacity: 0.4;
+		transform: rotate(-18deg);
+		pointer-events: none;
+		word-break: break-word;
 	}
 
 	._tit {

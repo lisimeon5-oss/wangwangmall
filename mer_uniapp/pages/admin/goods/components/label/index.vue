@@ -5,7 +5,7 @@
       <view class="accountTitle">
         <view :style="{height:getHeight.barTop+'px'}"></view>
         <view class="sysTitle acea-row row-center-wrapper" :style="{height:getHeight.barHeight+'px'}">
-          <view>筛选</view>
+          <view>{{$t('筛选')}}</view>
         </view>
       </view>
       <view :style="{height:(getHeight.barTop+getHeight.barHeight)+'px'}"></view>
@@ -13,12 +13,12 @@
             :style="'height: calc(100% - '+(getHeight.barTop+getHeight.barHeight*2+150)+'rpx - constant(safe-area-inset-bottom));height: calc(100% - '+(getHeight.barTop+getHeight.barHeight*2+150)+'rpx - env(safe-area-inset-bottom))'">
         <!-- #endif -->
         <!-- #ifndef MP -->
-        <view class="header">筛选</view>
+        <view class="header">{{$t('筛选')}}</view>
         <view class="list" v-if="isStore">
           <!-- #endif -->
           <scroll-view scroll-y="true" style="height: 100%">
             <view class="goods_type">
-              商品类型
+              {{$t('商品类型')}}
             </view>
             <view class="goods_type_box">
               <view class="goods_type_item" v-for="(item,index) in goodsType" :key="item.id"
@@ -27,13 +27,13 @@
               </view>
             </view>
             <view class="merchants_type">
-              商家分类
+              {{$t('商家分类')}}
             </view>
             <view class="merchants_type_box">
               <view class="merchants_type_item" v-for="(item,index) in productType" :key="item.id">
                 <view class="type_item_operate">
                   <text :class="{oneSelectActive:item.id==selectId.cateId}" @click="selectMerchant(item.id)">{{item.name}}</text>
-                  <text v-if="item.childList.length>3" @click="changeHide(item)">{{item.hide?'展开':'收起'}}<text class="iconfont"
+                  <text v-if="item.childList.length>3" @click="changeHide(item)">{{item.hide? $t('展开') : $t('收起')}}<text class="iconfont"
                                                                                                                   :class="item.hide?'icon-xiangxia':'icon-xiangshang'"></text></text>
                 </view>
                 <view class="main_box">
@@ -50,11 +50,11 @@
           </scroll-view>
         </view>
         <view class="empty-box" v-else>
-          <emptyPage title="暂无分类～" :imgSrc="urlDomain+'crmebimage/presets/noSearch.png'"></emptyPage>
+          <emptyPage :title="$t('暂无分类～')" :imgSrc="urlDomain+'crmebimage/presets/noSearch.png'"></emptyPage>
         </view>
         <view class="footer acea-row row-between-wrapper">
-          <view class="bnt acea-row row-center-wrapper" @tap="reset">重置</view>
-          <view class="bnt on acea-row row-center-wrapper" @tap="define">确定</view>
+          <view class="bnt acea-row row-center-wrapper" @tap="reset">{{$t('重置')}}</view>
+          <view class="bnt on acea-row row-center-wrapper" @tap="define">{{$t('确定')}}</view>
         </view>
     </view>
     </view>

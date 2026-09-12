@@ -1,0 +1,137 @@
+===== refund.vue (159-295) =====
+159:      <div class="block">
+160:        <el-pagination
+161:          background
+162:          :page-sizes="[20, 40, 60, 80]"
+163:          :page-size="tableFrom.limit"
+164:          :current-page="tableFrom.page"
+165:          layout="total, sizes, prev, pager, next, jumper"
+166:          :total="tableData.total"
+167:          @size-change="handleSizeChange"
+168:          @current-change="pageChange"
+169:        />
+170:      </div>
+171:    </el-card>
+172:    <div class="card_abs" v-show="card_select_show">
+173:      <template>
+174:        <div class="cell_ht">
+175:          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+176:            >全选
+177:          </el-checkbox>
+178:          <el-button type="text" @click="checkSave()">保存</el-button>
+179:        </div>
+180:        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+181:          <el-checkbox v-for="item in columnData" :label="item" :key="item" class="check_cell">{{ item }}</el-checkbox>
+182:        </el-checkbox-group>
+183:      </template>
+184:    </div>
+185:
+186:    <!--退款详情-->
+187:    <refund-order-detail
+188:      ref="orderDetail"
+189:      :drawerVisible="drawerVisible"
+190:      :refundOrderNo="refundOrderNo"
+191:      v-if="drawerVisible"
+192:      @onClosedrawerVisible="onClosedrawerVisible"
+193:      @compulsoryReturnSuccess="handlerCompulsoryReturnSuccess"
+194:    ></refund-order-detail>
+195:  </div>
+196:</template>
+197:
+198:<script>
+199:// +---------------------------------------------------------------------
+200:// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+201:// +---------------------------------------------------------------------
+202:// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+203:// +---------------------------------------------------------------------
+204:// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+205:// +---------------------------------------------------------------------
+206:// | Author: CRMEB Team <admin@crmeb.com>
+207:// +---------------------------------------------------------------------
+208:import {
+209:  orderDetailApi,
+210:  refundStatusNumApi,
+211:  refundListApi,
+212:  refundMarkApi,
+213:  orderRefundCompulsoryApi,
+214:} from '@/api/order';
+215:import RefundOrderDetail from './components/refundOrderDetail.vue';
+216:import { orderExcelApi } from '@/api/product';
+217:import { checkPermi } from '@/utils/permission'; // 权限判断函数
+218:import merchantName from '@/components/merchantName';
+219:export default {
+220:  name: 'orderRefund',
+221:  components: {
+222:    RefundOrderDetail,
+223:    merchantName,
+224:  },
+225:  data() {
+226:    return {
+227:      RefuseData: {},
+228:      refundData: {},
+229:      dialogVisibleJI: false,
+230:      tableDataLog: {
+231:        data: [],
+232:        total: 0,
+233:      },
+234:      LogLoading: false,
+235:      isCreate: 1,
+236:      editData: null,
+237:      dialogVisible: false,
+238:      tableData: {
+239:        data: [],
+240:        total: 0,
+241:      },
+242:      listLoading: true,
+243:      tableFrom: {
+244:        refundStatus: '9',
+245:        dateLimit: '',
+246:        orderNo: '',
+247:        refundOrderNo: '',
+248:        page: 1,
+249:        limit: 20,
+250:        merId: null,
+251:        searchType: 'all',
+252:        content: '',
+253:        trackingNumber: '',
+254:      },
+255:      orderChartType: {},
+256:      timeVal: [],
+257:      fromList: this.$constants.fromList,
+258:      selectionList: [],
+259:      ids: '',
+260:      orderids: '',
+261:      cardLists: [],
+262:      proType: 0,
+263:      active: false,
+264:      card_select_show: false,
+265:      checkAll: false,
+266:      checkedCities: [
+267:        '退款单号',
+268:        '订单编号',
+269:        '用户昵称',
+270:        '退款金额',
+271:        '退款状态',
+272:        '售后类型',
+273:        '退货类型',
+274:        '强制退款',
+275:        '创建时间',
+276:      ],
+277:      columnData: [
+278:        '退款单号',
+279:        '订单编号',
+280:        '用户昵称',
+281:        '退款金额',
+282:        '退款状态',
+283:        '售后类型',
+284:        '退货类型',
+285:        '强制退款',
+286:        '创建时间',
+287:      ],
+288:      isIndeterminate: true,
+289:      drawerVisible: false,
+290:      refundOrderNo: '', //退款单号
+291:    };
+292:  },
+293:  mounted() {
+294:    if (checkPermi(['platform:refund:order:page:list'])) this.getList();

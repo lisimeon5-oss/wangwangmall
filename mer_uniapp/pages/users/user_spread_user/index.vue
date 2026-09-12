@@ -7,21 +7,21 @@
 				</image>
 				<navigator
 					:url="'/pages/users/user_spread_money/index?type=1&extractCount='+promotionInfo.settledCommissionPrice"
-					hover-class="none" class='record'>结算记录<text class='iconfont icon-xiangyou'></text></navigator>
+					hover-class="none" class='record'>{{$t('结算记录')}}<text class='iconfont icon-xiangyou'></text></navigator>
 				<view class="head_box">
 					<view class='name acea-row row-center-wrapper'>
-						<view>当前佣金</view>
+						<view>{{$t('当前佣金')}}</view>
 					</view>
 					<view class='num'>{{promotionInfo.brokeragePrice}}</view>
 					<view class='profit acea-row row-between-wrapper'>
 						<view class='item'>
-							<view>冻结佣金</view>
+							<view>{{$t('冻结佣金')}}</view>
 							<view class='money'>
 								{{promotionInfo.freezePrice ? Number(promotionInfo.freezePrice).toFixed(2) : 0}}
 							</view>
 						</view>
 						<view class='item'>
-							<view>累积已提</view>
+							<view>{{$t('累积已提')}}</view>
 							<view class='money'>
 								{{promotionInfo.settledCommissionPrice ? Number(promotionInfo.settledCommissionPrice).toFixed(2) : 0}}
 							</view>
@@ -31,44 +31,44 @@
 			</view>
 			<view class="btnBox acea-row">
 				<view @click="openSubscribe('/pages/users/user_transferOut/index')" url="/pages/users/user_transferOut/index" hover-class="none" class='bnt bg_color left'>
-					<text>提现</text>
+					<text>{{$t('提现')}}</text>
 				</view>
 				<view @click="openSubscribe('/pages/users/user_spread_brokerage_out/index?brokeragePrice='+ promotionInfo.brokeragePrice)" hover-class="none"
 					class='bnt bg_color right'>
-					<text>转入</text>
+					<text>{{$t('转入')}}</text>
 				</view>
 			</view>
 			<view class='list acea-row row-between-wrapper'>
 				<navigator url='/pages/users/user_spread_code/index' hover-class="none"
 					class='item acea-row row-center-wrapper row-column'>
 					<text class='iconfont icon-erweima'></text>
-					<view>推广名片</view>
+					<view>{{$t('推广名片')}}</view>
 				</navigator>
 				<navigator url='/pages/users/promoter-list/index' hover-class="none"
 					class='item acea-row row-center-wrapper row-column'>
 					<text class='iconfont icon-tongji'></text>
-					<view>推广人统计</view>
+					<view>{{$t('推广人统计')}}</view>
 				</navigator>
 				<navigator
 					:url="'/pages/users/user_spread_money/index?type=2&commissionCount='+ promotionInfo.brokeragePrice"
 					hover-class="none" class='item acea-row row-center-wrapper row-column'>
 					<text class='iconfont icon-qiandai'></text>
-					<view>佣金记录</view>
+					<view>{{$t('佣金记录')}}</view>
 				</navigator>
 				<navigator url='/pages/users/promoter-order/index' hover-class="none"
 					class='item acea-row row-center-wrapper row-column'>
 					<text class='iconfont icon-dingdan'></text>
-					<view>推广人订单</view>
+					<view>{{$t('推广人订单')}}</view>
 				</navigator>
 				<navigator url='/pages/users/promoter_rank/index' hover-class="none"
 					class='item acea-row row-center-wrapper row-column'>
 					<text class='iconfont icon-paihang1'></text>
-					<view>推广人排行</view>
+					<view>{{$t('推广人排行')}}</view>
 				</navigator>
 				<navigator url='/pages/users/commission_rank/index' hover-class="none"
 					class='item acea-row row-center-wrapper row-column'>
 					<text class='iconfont icon-paihang'></text>
-					<view>佣金排行</view>
+					<view>{{$t('佣金排行')}}</view>
 				</navigator>
 			</view>
 		</view>

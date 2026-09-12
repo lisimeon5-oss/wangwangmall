@@ -4,7 +4,7 @@
       <div style="height: 100%">
         <el-row style="height: 100%; overflow: auto">
           <el-col :md="24" :lg="12" class="left-editor">
-            <div class="setting" title="资源引用" @click="showResource">
+            <div class="setting" :title="translateText('资源引用')" @click="showResource">
               <el-badge :is-dot="!!resources.length" class="item">
                 <i class="el-icon-setting" />
               </el-badge>
@@ -138,15 +138,15 @@ export default {
       text: (trigger) => {
         const codeStr = this.generateCode();
         this.$notify({
-          title: '成功',
-          message: '代码已复制到剪切板，可粘贴。',
+          title: this.translateText('成功'),
+          message: this.translateText('代码已复制到剪切板，可粘贴。'),
           type: 'success',
         });
         return codeStr;
       },
     });
     clipboard.on('error', (e) => {
-      this.$message.error('代码复制失败');
+      this.$message.error(this.translateText('代码复制失败'));
     });
   },
   beforeDestroy() {
@@ -217,7 +217,7 @@ export default {
         const ast = parse(jsCodeStr, { sourceType: 'module' });
         const astBody = ast.program.body;
         if (astBody.length > 1) {
-          this.$confirm('js格式不能识别，仅支持修改export default的对象内容', '提示', {
+          this.$confirm(this.translateText('js格式不能识别，仅支持修改export default的对象内容'), this.translateText('提示'), {
             type: 'warning',
           });
           return;
@@ -237,7 +237,7 @@ export default {
 
           this.$refs.previewPage.contentWindow.postMessage(postData, location.origin);
         } else {
-          this.$message.error('请使用export default');
+          this.$message.error(this.translateText('请使用export default'));
         }
       } catch (err) {
         this.$message.error(`js错误：${err}`);
@@ -250,10 +250,10 @@ export default {
       return beautifier.html(html + script + css, beautifierConf.html);
     },
     exportFile() {
-      this.$prompt('文件名:', '导出文件', {
+      this.$prompt(this.translateText('文件名:'), this.translateText('导出文件'), {
         inputValue: `${+new Date()}.vue`,
         closeOnClickModal: false,
-        inputPlaceholder: '请输入文件名',
+        inputPlaceholder: this.translateText('请输入文件名'),
       }).then(({ value }) => {
         if (!value) value = `${+new Date()}.vue`;
         const codeStr = this.generateCode();

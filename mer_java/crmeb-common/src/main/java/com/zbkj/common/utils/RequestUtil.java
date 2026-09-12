@@ -108,4 +108,22 @@ public class RequestUtil extends HttpServlet{
     public static String getClientIp() {
         return ServletUtil.getClientIP(getRequest(), null);
     }
+
+    public static String getLang() {
+        HttpServletRequest request = getRequest();
+        if (request == null) {
+            return "zh-cn";
+        }
+        String lang = request.getHeader("lang");
+        if (StringUtils.isBlank(lang)) {
+            lang = request.getHeader("Lang");
+        }
+        if (StringUtils.isBlank(lang)) {
+            lang = request.getParameter("lang");
+        }
+        if (StringUtils.isBlank(lang)) {
+            return "zh-cn";
+        }
+        return lang.trim().toLowerCase();
+    }
 }

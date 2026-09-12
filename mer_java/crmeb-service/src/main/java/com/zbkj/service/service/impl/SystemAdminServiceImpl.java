@@ -21,6 +21,7 @@ import com.zbkj.common.response.SystemAdminResponse;
 import com.zbkj.common.result.AdminResultCode;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.service.dao.SystemAdminDao;
 import com.zbkj.service.service.SystemAdminService;
@@ -139,7 +140,7 @@ public class SystemAdminServiceImpl extends ServiceImpl<SystemAdminDao, SystemAd
                 }
                 for (SystemRole role : roleList) {
                     if (role.getId().equals(roleId)) {
-                        roleNames.add(role.getRoleName());
+                        roleNames.add(I18nJsonUtil.resolveByRequest(role.getRoleName(), role.getRoleNameJson()));
                     }
                 }
             }

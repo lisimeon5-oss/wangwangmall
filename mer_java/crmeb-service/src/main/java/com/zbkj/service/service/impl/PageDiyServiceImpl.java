@@ -30,6 +30,8 @@ import com.zbkj.common.request.page.PageDiyRequest;
 import com.zbkj.common.response.page.PageDiyResponse;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.SystemConfigResultCode;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.I18nSearchUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.service.dao.page.PageDiyDao;
 import com.zbkj.service.service.PageDiyService;
@@ -77,7 +79,7 @@ public class PageDiyServiceImpl extends ServiceImpl<PageDiyDao, PageDiy> impleme
         // 列表查询时忽略掉value字段，以免影响查询速度
         lambdaQueryWrapper.select(PageDiy.class, i -> !i.getColumn().equals("value"));
         if (StrUtil.isNotBlank(name)) {
-            lambdaQueryWrapper.like(PageDiy::getName, URLUtil.decode(name));
+            I18nSearchUtil.likeName(lambdaQueryWrapper, PageDiy::getName, PageDiy::getNameJson, URLUtil.decode(name));
         }
         lambdaQueryWrapper.eq(PageDiy::getMerId, 0);
         lambdaQueryWrapper.eq(PageDiy::getIsDel, 0);
@@ -96,7 +98,7 @@ public class PageDiyServiceImpl extends ServiceImpl<PageDiyDao, PageDiy> impleme
         // 列表查询时忽略掉value字段，以免影响查询速度
         lqw.select(PageDiy.class, i -> !i.getColumn().equals("value"));
         if (StrUtil.isNotBlank(request.getKeywords())) {
-            lqw.like(PageDiy::getName, URLUtil.decode(request.getKeywords()));
+            I18nSearchUtil.likeName(lqw, PageDiy::getName, PageDiy::getNameJson, URLUtil.decode(request.getKeywords()));
         }
         lqw.eq(PageDiy::getMerId, systemAdmin.getMerId());
         lqw.eq(PageDiy::getIsDel, 0);
@@ -117,7 +119,7 @@ public class PageDiyServiceImpl extends ServiceImpl<PageDiyDao, PageDiy> impleme
         if (StrUtil.isBlank(adminApiPath)) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "应用设置中 微信小程序数据配置 或者 支付回调地址以及网站地址 配置不全");
         }
-        // 检查diy模版名称唯一
+        normalizeDiyI18n(pageDiy);
         checkPageDiyNameUnique(pageDiy.getName(), 0, 0);
         DocumentContext jsonContext = JsonPath.parse(pageDiy.getValue());
         // 通配符去掉关键子 再存储
@@ -138,7 +140,7 @@ public class PageDiyServiceImpl extends ServiceImpl<PageDiyDao, PageDiy> impleme
         if (StrUtil.isBlank(adminApiPath)) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "应用设置中 微信小程序数据配置 或者 支付回调地址以及网站地址 配置不全");
         }
-        // 检查diy模版名称唯一
+        normalizeDiyI18n(pageDiy);
         checkPageDiyNameUnique(pageDiy.getName(), pageDiy.getId(), 0);
         DocumentContext jsonContext = JsonPath.parse(pageDiy.getValue());
         // 通配符去掉关键子 再存储
@@ -159,11 +161,15 @@ public class PageDiyServiceImpl extends ServiceImpl<PageDiyDao, PageDiy> impleme
         if (!pageDiy.getMerId().equals(admin.getMerId())) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "当前DIY模版不存在");
         }
-        String name = URLUtil.decode(pageDiyEditNameRequest.getName());
-        // 检查diy模版名称唯一
+        String name = I18nJsonUtil.emptyToBlank(URLUtil.decode(StrUtil.nullToEmpty(pageDiyEditNameRequest.getName())));
+        String nameJson = pageDiyEditNameRequest.getNameJson() != null ? pageDiyEditNameRequest.getNameJson() : pageDiy.getNameJson();
+        if (StrUtil.isBlank(name) && !I18nJsonUtil.hasAnyText(nameJson)) {
+            throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "模版名称不能为空");
+        }
         checkPageDiyNameUnique(name, pageDiyEditNameRequest.getId(), admin.getMerId());
         LambdaUpdateWrapper<PageDiy> wrapper = Wrappers.lambdaUpdate();
         wrapper.set(PageDiy::getName, name);
+        wrapper.set(PageDiy::getNameJson, nameJson);
         wrapper.eq(PageDiy::getId, pageDiyEditNameRequest.getId());
         return update(wrapper);
     }
@@ -291,10 +297,10 @@ public class PageDiyServiceImpl extends ServiceImpl<PageDiyDao, PageDiy> impleme
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "应用设置中 微信小程序数据配置 或者 支付回调地址以及网站地址 配置不全");
         }
         SystemAdmin admin = SecurityUtil.getLoginUserVo().getUser();
-        // 检查diy模版名称唯一
-        checkPageDiyNameUnique(request.getName(), 0, admin.getMerId());
         PageDiy pageDiy = new PageDiy();
         BeanUtils.copyProperties(request, pageDiy);
+        normalizeDiyI18n(pageDiy);
+        checkPageDiyNameUnique(pageDiy.getName(), 0, admin.getMerId());
         pageDiy.setId(null);
         pageDiy.setValue(JSON.toJSONString(request.getValue()));
         pageDiy.setMerId(admin.getMerId());
@@ -324,10 +330,10 @@ public class PageDiyServiceImpl extends ServiceImpl<PageDiyDao, PageDiy> impleme
         if (!tempPageDiy.getMerId().equals(admin.getMerId())) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "当前DIY模版不存在");
         }
-        // 检查diy模版名称唯一
-        checkPageDiyNameUnique(request.getName(), tempPageDiy.getId(), admin.getMerId());
         PageDiy pageDiy = new PageDiy();
         BeanUtils.copyProperties(request, pageDiy);
+        normalizeDiyI18n(pageDiy);
+        checkPageDiyNameUnique(pageDiy.getName(), tempPageDiy.getId(), admin.getMerId());
         pageDiy.setValue(JSON.toJSONString(request.getValue()));
         DocumentContext jsonContext = JsonPath.parse(pageDiy.getValue());
         // 通配符去掉关键子 再存储
@@ -406,6 +412,7 @@ public class PageDiyServiceImpl extends ServiceImpl<PageDiyDao, PageDiy> impleme
 
         PageDiyResponse response = new PageDiyResponse();
         BeanUtils.copyProperties(pageDiy, response);
+        response.setTitle(I18nJsonUtil.resolveByRequest(pageDiy.getTitle(), pageDiy.getTitleJson()));
         String modifiedJsonString = getModifiedJsonString(jsonContext.jsonString());
         response.setValue(JSON.parseObject(modifiedJsonString));
         return response;
@@ -476,9 +483,20 @@ public class PageDiyServiceImpl extends ServiceImpl<PageDiyDao, PageDiy> impleme
 
         PageDiyResponse response = new PageDiyResponse();
         BeanUtils.copyProperties(pageDiy, response);
+        response.setTitle(I18nJsonUtil.resolveByRequest(pageDiy.getTitle(), pageDiy.getTitleJson()));
         String modifiedJsonString = getModifiedJsonString(jsonContext.jsonString());
         response.setValue(JSON.parseObject(modifiedJsonString));
         return response;
+    }
+
+    private void normalizeDiyI18n(PageDiy pageDiy) {
+        pageDiy.setName(I18nJsonUtil.emptyToBlank(pageDiy.getName()));
+        pageDiy.setTitle(I18nJsonUtil.emptyToBlank(pageDiy.getTitle()));
+        pageDiy.setNameJson(StrUtil.nullToEmpty(pageDiy.getNameJson()));
+        pageDiy.setTitleJson(StrUtil.nullToEmpty(pageDiy.getTitleJson()));
+        if (StrUtil.isBlank(pageDiy.getName()) && !I18nJsonUtil.hasAnyText(pageDiy.getNameJson())) {
+            throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "模版名称不能为空");
+        }
     }
 
     /**
@@ -488,6 +506,9 @@ public class PageDiyServiceImpl extends ServiceImpl<PageDiyDao, PageDiy> impleme
      * @param id          更新时的 diy id
      */
     private void checkPageDiyNameUnique(String pageDiyName, Integer id, Integer merId) {
+        if (StrUtil.isBlank(pageDiyName)) {
+            return;
+        }
         LambdaQueryWrapper<PageDiy> lqw = Wrappers.lambdaQuery();
         lqw.eq(PageDiy::getName, pageDiyName);
         if (id > 0) {

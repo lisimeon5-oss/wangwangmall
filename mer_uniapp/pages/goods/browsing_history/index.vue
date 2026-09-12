@@ -3,7 +3,7 @@
 		<view class="history_count">
 			<block v-if="list.length>0">
 				<view class="history_header acea-row">
-					<text>共{{total}}条，最多为您保存100条</text>
+					<text>{{$t('共')}}{{total}}{{$t('条，最多为您保存100条')}}</text>
 				</view>
 				<view class="list" v-for="(item,index) in list">
 					<view class="item_time">
@@ -21,13 +21,13 @@
 								<view class="info">
 									<view class="msg">
 										<block v-if="!itemn.isDel && itemn.isShow">
-											<view class="price line2"><text></text>￥{{itemn.price}}</view>
+											<view class="price line2"><text></text>฿{{itemn.price}}</view>
 										</block>
 										<block v-else-if="itemn.isDel">
-											<view class="tips">该商品已删除</view>
+											<view class="tips">{{$t('该商品已删除')}}</view>
 										</block>
 										<block v-else>
-											<view class="tips">该商品已下架</view>
+											<view class="tips">{{$t('该商品已下架')}}</view>
 										</block>
 									</view>
 								</view>
@@ -37,7 +37,7 @@
 				</view>
 			</block>
 			<block v-if="(list.length==0 && !loading ) " >
-				<emptyPage title="暂无浏览记录~" :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
+				<emptyPage :title="$t('暂无浏览记录~')" :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
 			</block>
 			<view class='loadingicon acea-row row-center-wrapper'>
 				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>
@@ -178,8 +178,8 @@
 				margin-right: 0;
 			}
 
-			/deep/image,
-			/deep/.easy-loadimage,
+			::v-deep image,
+			::v-deep .easy-loadimage,
 			uni-image {
 				width: 217rpx;
 				height: 217rpx;
@@ -194,7 +194,7 @@
 		}
 	}
 
-	/deep/.loadfail-img,
+	::v-deep .loadfail-img,
 	.easy-img {
 		width: 217rpx;
 		height: 217rpx;

@@ -37,6 +37,9 @@ public class SplashAdDataVo implements Serializable {
     @ApiModelProperty(value = "图片地址")
     private String imageUrl;
 
+    @ApiModelProperty(value = "多语言图片地址(JSON)")
+    private String imageUrlJson;
+
     @ApiModelProperty(value = "排序")
     private Integer sort;
 

@@ -1,0 +1,179 @@
+REUSE product.editProduct | 编辑商品
+REUSE product.notRequired | 不需要
+REUSE common.operate | 操作
+REUSE product.operateSuccess | 操作成功
+REUSE common.query | 查询
+REUSE product.createTime | 创建时间
+REUSE product.singleSpec | 单规格
+REUSE product.multiSpec | 多规格
+REUSE common.no | 否
+REUSE product.reject | 拒绝
+REUSE product.rejectReason | 拒绝原因
+REUSE product.stock | 库存
+REUSE category.name | 名称
+REUSE product.pleaseEnterProductName | 请输入商品名称
+REUSE product.pleaseEnterReason | 请输入原因
+REUSE product.pleaseEnterRejectReason | 请填写拒绝原因
+REUSE product.pleaseSelectAuditStatus | 请选择审核状态
+REUSE el.messagebox.cancel | 取消
+REUSE finance.confirmSpaced | 确 定
+REUSE product.deleteSuccess | 删除成功
+REUSE product.productCategoryLabel | 商品分类：
+REUSE product.auditTitle | 商品审核
+REUSE product.productInfo | 商品信息
+REUSE user.shelfSuccess | 上架成功
+REUSE finance.audit | 审核
+REUSE common.auditSuccess | 审核成功
+REUSE product.auditRejected | 审核拒绝
+REUSE common.auditFailed | 审核失败
+REUSE common.auditing | 审核中
+REUSE product.auditStatus | 审核状态
+REUSE product.videoProduct | 视频号
+REUSE common.yes | 是
+REUSE user.salePricePlaceholder | 售价
+REUSE common.submit | 提交
+REUSE finance.submitting | 提交中 ...
+REUSE product.addBrand | 添加品牌
+REUSE product.pass | 通过
+REUSE content.image | 图片
+REUSE common.finish | 完成
+REUSE product.wechatAuditSuccess | 微信审核成功
+REUSE product.wechatAuditFailed | 微信审核失败
+REUSE product.notAudited | 未审核
+REUSE finance.none | 无
+REUSE user.offShelfSuccess | 下架成功
+REUSE common.detail | 详情
+REUSE product.sales | 销量
+REUSE product.optional | 选填
+REUSE product.reason | 原因
+REUSE el.table.resetFilter | 重置
+REUSE common.status | 状态
+NEW  |  类
+NEW  | // +---------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +---------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +---------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +---------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | 报关单
+NEW  | 必填项！
+NEW  | 必须
+NEW  | 测试完成
+NEW  | 查看资质
+NEW  | 场景审核结果
+NEW  | 成本价
+NEW  | 成功
+NEW  | 初次需要去审核商家提审的视频号商品
+NEW  | 创建视频号
+NEW  | 代理品牌
+NEW  | 待提审
+NEW  | 单位：
+NEW  | 第 
+NEW  | 电商平台 -》
+NEW  | 订单接口调试完成
+NEW  | 发版完成
+NEW  | 发起一笔订单并支付成功
+NEW  | 服务类目：
+NEW  | 公众号场景
+NEW  | 国内品牌申请 -R 标
+NEW  | 国内品牌申请 -TM 标
+NEW  | 海外品牌申请 -R 标
+NEW  | 海外品牌申请 -TM 标
+NEW  | 划线价
+NEW  | 获得积分
+NEW  | 检查接入状态已更新
+NEW  | 接入微信视频号步骤
+NEW  | 可能喜欢
+NEW  | 客服售后 -》
+NEW  | 类目
+NEW  | 类目名称
+NEW  | 类目名称:
+NEW  | 类目申请
+NEW  | 类目资质
+NEW  | 类目资质：
+NEW  | 品牌：
+NEW  | 品牌经营类型
+NEW  | 品牌申请
+NEW  | 品牌ID
+NEW  | 平台审核
+NEW  | 请输入单位
+NEW  | 请输入商品ID
+NEW  | 请选择 商标分类
+NEW  | 请选择品牌
+NEW  | 取 消
+NEW  | 去申请(跳转文档链接)
+NEW  | 热卖商品
+NEW  | 认证审核类型
+NEW  | 删除吗？此操作不可逆，请谨慎操作！
+NEW  | 商标/品牌词
+NEW  | 商标变更证明
+NEW  | 商标分类
+NEW  | 商标申请人姓名
+NEW  | 商标申请时间
+NEW  | 商标有效期
+NEW  | 商标注册号/申请号
+NEW  | 商标注册人姓名
+NEW  | 商标注册申请受理通知书
+NEW  | 商标注册证书
+NEW  | 商品产地是否进口
+NEW  | 商品关键字：
+NEW  | 商品规格：
+NEW  | 商品简介：
+NEW  | 商品接口调试完成
+NEW  | 商品轮播图：
+NEW  | 商品名称：
+NEW  | 商品图片
+NEW  | 商品详情
+NEW  | 商品详情：
+NEW  | 商品资质
+NEW  | 商品资质图：
+NEW  | 商品ID：
+NEW  | 上传类目资质
+NEW  | 上传商品并审核成功
+NEW  | 上传微信类目资质
+NEW  | 上传资质
+NEW  | 申请开通自定义交易组件
+NEW  | 审核单ID
+NEW  | 审核时间
+NEW  | 审核完成
+NEW  | 视频号商品ID
+NEW  | 手动更新
+NEW  | 手动同步审核结果失败:
+NEW  | 手动同步审核结果完成
+NEW  | 售后接口调试完成
+NEW  | 售后接口调用成功
+NEW  | 提交类目审核成功
+NEW  | 体积(m³)
+NEW  | 完成自定义版交易组件接入后，小程序即可在视频号中实现商品展示和带货等功能，进一步提升经营能力。若您已开通标准化交易组件，则暂不支持切换
+NEW  | 微信商品类目：
+NEW  | 微信审核
+NEW  | 微信审核中
+NEW  | 未成功
+NEW  | 无品牌
+NEW  | 物流接口调试完成
+NEW  | 物流接口调用成功
+NEW  | 销售授权书
+NEW  | 销售授权书（如商持人为自然人，还需提供有其签名的身份证正反面扫描件)
+NEW  | 选填项！
+NEW  | 选择 商标申请时间
+NEW  | 选择 商标有效期
+NEW  | 选择品牌经营类型
+NEW  | 已经接入自定义交易组件
+NEW  | 营业执照或组织机构代码证
+NEW  | 营业执照或组织机构代码证 不能为空
+NEW  | 营业执照或组织机构证件：
+NEW  | 在微信平台中设置, 申请自定义交易组件，如果平台已有自定义交易组件跳过此步
+NEW  | 正确填写类目审核表单
+NEW  | 中华人民共和国海关进口货物报关单
+NEW  | 重量（KG）
+NEW  | 主打商品
+NEW  | 自定义版交易组件开通成功
+NEW  | 自定义版交易组件申请通过，接口调用场景检测
+NEW  | 自定义交易组件 - 品牌申请
+NEW  | 自定义交易组件开通后，小程序版本必须大于等于4.1.5，如果不是 需要更新小程序
+                  发布新的小程序(跳转小程序下载页面)
+NEW  | 自有品牌
+
+TOTAL unique: 169, NEW: 119

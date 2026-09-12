@@ -19,6 +19,7 @@ import com.zbkj.common.response.ShippingTemplatesInfoResponse;
 import com.zbkj.common.response.ShippingTemplatesRegionResponse;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.ProductResultCode;
+import com.zbkj.common.utils.I18nSearchUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.common.vo.LoginUserVo;
 import com.zbkj.service.dao.ShippingTemplatesDao;
@@ -81,7 +82,7 @@ public class ShippingTemplatesServiceImpl extends ServiceImpl<ShippingTemplatesD
         }
         if (StrUtil.isNotBlank(request.getKeywords())) {
             String keywords = URLUtil.decode(request.getKeywords());
-            lqw.like(ShippingTemplates::getName, keywords);
+            I18nSearchUtil.likeName(lqw, ShippingTemplates::getName, ShippingTemplates::getNameJson, keywords);
         }
         lqw.orderByDesc(ShippingTemplates::getSort).orderByDesc(ShippingTemplates::getId);
         return dao.selectList(lqw);
@@ -97,7 +98,7 @@ public class ShippingTemplatesServiceImpl extends ServiceImpl<ShippingTemplatesD
     public Boolean create(ShippingTemplatesRequest request) {
         SystemAdmin admin = SecurityUtil.getLoginUserVo().getUser();
         // 判断模板名称是否重复
-        if (isExistName(request.getName(), admin.getMerId())) {
+        if (StrUtil.isNotBlank(request.getName()) && isExistName(request.getName(), admin.getMerId())) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "模板名称已存在,请更换模板名称!");
         }
         List<ShippingTemplatesRegionRequest> shippingTemplatesRegionRequestList = request.getShippingTemplatesRegionRequestList();
@@ -107,6 +108,7 @@ public class ShippingTemplatesServiceImpl extends ServiceImpl<ShippingTemplatesD
 
         ShippingTemplates shippingTemplates = new ShippingTemplates();
         shippingTemplates.setName(request.getName());
+        shippingTemplates.setNameJson(request.getNameJson());
         shippingTemplates.setSort(request.getSort());
         shippingTemplates.setType(request.getType());
         shippingTemplates.setAppoint(request.getAppoint());
@@ -184,13 +186,14 @@ public class ShippingTemplatesServiceImpl extends ServiceImpl<ShippingTemplatesD
         if (!admin.getMerId().equals(shippingTemplates.getMerId())) {
             throw new CrmebException(ProductResultCode.SHIPPING_TEMPLATES_NOT_EXIST);
         }
-        if (!shippingTemplates.getName().equals(request.getName())) {
+        if (StrUtil.isNotBlank(request.getName()) && !StrUtil.equals(shippingTemplates.getName(), request.getName())) {
             if (isExistName(request.getName(), admin.getMerId())) {
                 throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "模板名称已存在,请更换模板名称!");
             }
         }
 
         shippingTemplates.setName(request.getName());
+        shippingTemplates.setNameJson(request.getNameJson());
         shippingTemplates.setSort(request.getSort());
         shippingTemplates.setType(request.getType());
 

@@ -6,7 +6,7 @@
 				<view class="longItem"
 					:style="'color:' + (index == ProductNavindex ? checkColor : fontColor)+';--color:'+checkColor"
 					:data-index="index" :class="index===ProductNavindex?'click':''" v-for="(item,index) in navList"
-					:key="index" :id="'id'+index" @click="ProductNavTab(item, index)">{{ item.val }}
+					:key="index" :id="'id'+index" @click="ProductNavTab(item, index)">{{ tabName(item) }}
 				</view>
 			</scroll-view>
 		</view>
@@ -16,7 +16,7 @@
 				<view class="listA" :style="[gridGap]">
 					<view class="item" v-for="(item, index) in tempArr" :key="index" @click="goDetail(item)">
 						<view class="pictrue">
-							<view v-show="item.stock===0" class="sellOut">已售罄</view>
+							<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 							<easy-loadimage :image-src="item.image"
 								:radius="dataConfig.contentStyle.val"></easy-loadimage>
 							<view v-if="item.activityStyle" :style="{ backgroundImage: `url(${item.activityStyle})` }"
@@ -42,7 +42,7 @@
 								</view>
 							</view>
 							<view class="old-price" v-if="soldShow" :style="[soldColor]">
-								已售 {{ item.sales || 0 }} {{ item.unitName }}
+								{{$t('已售')}} {{ item.sales || 0 }} {{ $t(item.unitName || '') }}
 							</view>
 						</view>
 					</view>
@@ -54,7 +54,7 @@
 					<view class="item" :style="[contentStyle]" v-for="(item, index) in tempArr" :key="index"
 						@click="goDetail(item)">
 						<view class="pictrue">
-							<view v-show="item.stock===0" class="sellOut">已售罄</view>
+							<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 							<easy-loadimage :image-src="item.image"
 								:radius="dataConfig.contentStyle.val"></easy-loadimage>
 							<view v-if="item.activityStyle" :style="{ backgroundImage: `url(${item.activityStyle})` }"
@@ -77,7 +77,7 @@
 										:productPrice="item" :svipPriceStyle="svipPriceStyle"></svip-price>
 								</view>
 								<view class="old-price " v-if="soldShow" :style="[soldColor]">
-									已售 {{ item.sales || 0 }} {{ item.unitName }}
+									{{$t('已售')}} {{ item.sales || 0 }} {{ $t(item.unitName || '') }}
 								</view>
 							</view>
 						</view>
@@ -89,7 +89,7 @@
 				<view class="listB" :style="[gridGap]">
 					<view class="item" v-for="(item, index) in tempArr" :key="index" @click="goDetail(item)">
 						<view class="pictrue">
-							<view v-show="item.stock===0" class="sellOut">已售罄</view>
+							<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 							<easy-loadimage :image-src="item.image"
 								:radius="dataConfig.contentStyle.val"></easy-loadimage>
 							<view v-if="item.activityStyle" :style="{ backgroundImage: `url(${item.activityStyle})` }"
@@ -113,7 +113,7 @@
 								</view>
 							</view>
 							<view class="old-price" v-if="soldShow" :style="[soldColor]">
-								已售 {{ item.sales || 0 }} {{ item.unitName }}
+								{{$t('已售')}} {{ item.sales || 0 }} {{ $t(item.unitName || '') }}
 							</view>
 						</view>
 					</view>
@@ -124,7 +124,7 @@
 				<view class="listBig" :style="[gridGap]">
 					<view class="itemBig" v-for="(item,index) in tempArr" :key="index" @click="goDetail(item)">
 						<view class="img-box">
-							<view v-show="item.stock===0" class="sellOut">已售罄</view>
+							<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 							<easy-loadimage :image-src="item.image"
 								:radius="dataConfig.contentStyle.val"></easy-loadimage>
 							<view v-if="item.activityStyle" :style="{ backgroundImage: `url(${item.activityStyle})` }"
@@ -148,7 +148,7 @@
 									:svipPriceStyle="svipPriceStyle"></svip-price>
 							</view>
 							<view class="old-price mt18" v-if="soldShow" :style="[soldColor]">
-								已售 {{ item.sales || 0 }} {{ item.unitName }}
+								{{$t('已售')}} {{ item.sales || 0 }} {{ $t(item.unitName || '') }}
 							</view>
 						</view>
 					</view>
@@ -178,6 +178,7 @@
 	import {
 		getMerProListApi
 	} from "../../api/merchant";
+	import { getLocalizedDiyVal } from '@/utils/localizedName';
 	export default {
 		name: 'homeTab',
 		props: {
@@ -372,11 +373,14 @@
 			styleIsolation: 'shared'
 		},
 		methods: {
+			tabName(item) {
+				return getLocalizedDiyVal(item, this.i18nLocale);
+			},
 			//根据商品id集合查询对应商品
 			getProductByids(data) {
 				if (!data.length) return;
 				uni.showLoading({
-					title: '加载中...'
+					title: this.$t('加载中...')
 				});
 				let ids = data.map((item) => item.id).join(',');
 				productByidsApi(ids).then((res) => {
@@ -472,7 +476,7 @@
 </script>
 
 <style lang="scss" scoped>
-	/deep/.x-money {
+	::v-deep .x-money {
 		color: inherit !important;
 	}
 
@@ -637,8 +641,8 @@
 		width: 100%;
 		padding: 0 20rpx;
 
-		/deep/.origin-img,
-		/deep/.easy-loadimage {
+		::v-deep .origin-img,
+		::v-deep .easy-loadimage {
 			border-bottom-left-radius: 0 !important;
 			border-bottom-right-radius: 0 !important;
 		}

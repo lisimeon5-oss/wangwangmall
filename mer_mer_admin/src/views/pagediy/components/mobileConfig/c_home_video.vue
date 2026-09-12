@@ -1,5 +1,12 @@
 <template>
   <div class="mobile-config">
+    <div class="lang-name-switch" v-if="showMediaLang">
+      <el-radio-group v-model="mediaLang" size="mini">
+        <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+          {{ lang.label }}
+        </el-radio-button>
+      </el-radio-group>
+    </div>
     <div v-for="(item, key) in rCom" :key="key">
       <component
         :is="item.components.name"
@@ -28,10 +35,15 @@
 // +---------------------------------------------------------------------
 import toolCom from '@/components/PageDiy/mobileConfigRight/index.js';
 import rightBtn from '@/components/PageDiy/rightBtn/index.vue';
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { applyDiyUiLabels, diyCname } from '@/utils/diyCname';
+import homeVideoPage from '../mobilePage/home_video.vue';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { parseLangJsonMap, resolveFormActiveLang } from '@/utils/localizedName';
 export default {
-  name: 'c_home_article',
-  componentsName: 'home_article',
+  name: 'c_home_video',
+  componentsName: 'home_video',
+  ...diyCname('pagediy.video'),
   components: {
     ...toolCom,
     rightBtn,
@@ -56,12 +68,26 @@ export default {
           configNme: 'setUp',
         },
       ],
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
     };
+  },
+  computed: {
+    showMediaLang() {
+      return this.configObj && this.configObj.setUp && Number(this.configObj.setUp.tabVal) === 0;
+    },
+    mediaLang: {
+      get() {
+        return (this.configObj && this.configObj.diyMediaLang) || this.defaultLangCode;
+      },
+      set(val) {
+        this.$set(this.configObj, 'diyMediaLang', val);
+      },
+    },
   },
   watch: {
     num(nVal) {
-      let value = JSON.parse(JSON.stringify(this.$store.state.mobildConfig.defaultArray[nVal]));
-      this.configObj = value;
+      this.loadConfig(nVal);
     },
     configObj: {
       handler(nVal, oVal) {
@@ -146,13 +172,51 @@ export default {
     },
   },
   mounted() {
+    this.getLanguageList();
     this.$nextTick(() => {
-      let value = JSON.parse(JSON.stringify(this.$store.state.mobildConfig.defaultArray[this.num]));
-      this.configObj = value;
+      this.loadConfig(this.num);
     });
   },
   created() {},
   methods: {
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.mediaLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.mediaLang = resolveFormActiveLang(this);
+        });
+    },
+    setMediaUrl(target, url) {
+      if (!target) return;
+      if (this.mediaLang === this.defaultLangCode) {
+        this.$set(target, 'url', url);
+        return;
+      }
+      const map = parseLangJsonMap(target.urlJson);
+      if (url) map[this.mediaLang] = url;
+      else delete map[this.mediaLang];
+      this.$set(target, 'urlJson', Object.keys(map).length ? JSON.stringify(map) : '');
+    },
+    loadConfig(nVal) {
+      const raw = this.$store.state.mobildConfig.defaultArray[nVal];
+      if (!raw) return;
+      const value = JSON.parse(JSON.stringify(raw));
+      this.configObj = applyDiyUiLabels(value, { data: homeVideoPage.data, num: nVal });
+    },
     getConfig(data) {
       if (data.name === 'radio' && data.values === 0) {
         this.configObj.uploadVideo.isShow = 1;
@@ -162,7 +226,7 @@ export default {
         this.configObj.link.isShow = 1;
       }
       if (data.name === 'video') {
-        this.configObj.uploadVideo.url = data.values;
+        this.setMediaUrl(this.configObj.uploadVideo, data.values);
       }
     },
   },
@@ -177,6 +241,13 @@ export default {
   span {
     margin-right: 14px;
     color: #999;
+  }
+}
+.lang-name-switch {
+  padding: 12px 20px 0;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
   }
 }
 </style>

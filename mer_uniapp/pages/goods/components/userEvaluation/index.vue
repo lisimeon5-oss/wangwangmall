@@ -11,12 +11,12 @@
 						<view class="acea-row row-between">
 							<view class="acea-row">
 								<view class="name line1">{{ item.nickname }}</view>
-								<view v-if="item.isLogoff === true" class="name line1">（已注销）</view>
+								<view v-if="item.isLogoff === true" class="name line1">{{$t('（已注销）')}}</view>
 								<view class="start" :class="'star' + item.star"></view>
 							</view>
 							<view class="time">{{ item.createTime }}</view>
 						</view>
-						<view class="sku">规格：{{ item.sku?item.sku:'无' }}</view>
+						<view class="sku">{{$t('规格')}}：{{ item.sku?item.sku:$t('无') }}</view>
 					</view>
 
 					<view class="evaluate-infor">{{ item.comment }}</view>
@@ -26,7 +26,7 @@
 						</view>
 					</view>
 					<view class="reply" v-if="item.merchantReplyContent">
-						<text class="font_color">店小二</text>：{{ item.merchantReplyContent }}
+						<text class="font_color">{{$t('店小二')}}</text>：{{ item.merchantReplyContent }}
 					</view>
 				</view>
 

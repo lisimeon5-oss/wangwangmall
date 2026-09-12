@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="新增物流公司"
+    :title="$t('systemSetting.addLogisticsCompany')"
     :visible.sync="dialogVisible"
     width="540px"
     append-to-body
@@ -15,15 +15,15 @@
       @submit.native.prevent
       label-width="80px"
     >
-      <el-form-item label="物流公司：" required prop="expressId">
-        <el-select v-model="formValidate.expressId" placeholder="请选择" clearable filterable style="width: 100%">
+      <el-form-item :label="$t('systemSetting.logisticsCompanyLabel')" required prop="expressId">
+        <el-select v-model="formValidate.expressId" :placeholder="$t('common.pleaseSelect')" clearable filterable style="width: 100%">
           <el-option v-for="item in expressAllList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="handleResetForm">取 消</el-button>
-      <el-button type="primary" @click="handleSure" :loading="loadingBtn">确 定</el-button>
+      <el-button @click="handleResetForm">{{ $t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="handleSure" :loading="loadingBtn">{{ $t('common.confirm') }}</el-button>
     </span>
   </el-dialog>
 </template>
@@ -54,7 +54,7 @@ export default {
       expressAllList: [],
       loadingBtn: false,
       rules: {
-        expressId: [{ required: true, message: '请选择物流公司', trigger: 'change' }],
+        expressId: [{ required: true, message: this.$t('systemSetting.pleaseSelectLogisticsCompany'), trigger: 'change' }],
       },
     };
   },
@@ -78,7 +78,7 @@ export default {
         if (valid) {
           expressRelateApi(this.formValidate)
             .then(async (res) => {
-              this.$message.success('新增成功');
+              this.$message.success(this.$t('common.addSuccess'));
               this.$emit('handlerSuccessSubmit');
               this.handleResetForm();
               this.loadingBtn = false;

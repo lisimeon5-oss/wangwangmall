@@ -3,11 +3,11 @@
     <el-card :bordered="false" shadow="never" class="ivu-mt" :body-style="{ padding: 0 }">
       <div class="padding-add">
         <el-form size="small" label-position="right" inline @submit.native.prevent>
-          <el-form-item label="商户名称：">
+          <el-form-item :label="$t('product.merchantNameLabel')">
             <merchant-name @getMerId="getMerId" :merIdChecked="merIds"></merchant-name>
           </el-form-item>
-          <el-form-item label="商户分类：" class="inline">
-            <el-select v-model="tableForm.merType" placeholder="请选择商户分类" size="small" clearable class="selWidth">
+          <el-form-item :label="$t('merchant.merchantCategoryLabel')" class="inline">
+            <el-select v-model="tableForm.merType" :placeholder="$t('merchant.pleaseSelectMerchantCategory')" size="small" clearable class="selWidth">
               <el-option
                 v-for="item in merchantClassify"
                 :key="item.id"
@@ -16,13 +16,27 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="直播状态：">
-            <el-select v-model="tableForm.liveStatus" placeholder="请选择" class="selWidth" clearable size="small">
+          <el-form-item :label="$t('marketing.liveStatusColon')">
+            <el-select
+              :key="'live-status-' + currentLocale"
+              v-model="tableForm.liveStatus"
+              :placeholder="$t('el.select.placeholder')"
+              class="selWidth"
+              clearable
+              size="small"
+            >
               <el-option v-for="item in studioStatusList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="显示状态：">
-            <el-select v-model="tableForm.storeShow" placeholder="请选择" class="selWidth" size="small" clearable>
+          <el-form-item :label="$t('menu.showStatus')">
+            <el-select
+              :key="'store-show-' + currentLocale"
+              v-model="tableForm.storeShow"
+              :placeholder="$t('el.select.placeholder')"
+              class="selWidth"
+              size="small"
+              clearable
+            >
               <el-option
                 v-for="item in studioShowStatusList"
                 :key="item.value"
@@ -32,8 +46,15 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="推荐级别：">
-            <el-select v-model="tableForm.star" placeholder="请选择" class="selWidth" size="small" clearable>
+          <el-form-item :label="$t('marketing.recommendLevelLabel')">
+            <el-select
+              :key="'star-' + currentLocale"
+              v-model="tableForm.star"
+              :placeholder="$t('el.select.placeholder')"
+              class="selWidth"
+              size="small"
+              clearable
+            >
               <el-option
                 v-for="item in recommendedLevelStatus"
                 :key="item.value"
@@ -42,28 +63,28 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="直播搜索：" label-width="66px">
+          <el-form-item :label="$t('marketing.liveSearchLabel')" label-width="66px">
             <el-input
               v-model="keywords"
               size="small"
-              placeholder="请输入直播间名称/ID/主播昵称/主播微信号/主播副号微信号"
+              :placeholder="$t('marketing.pleaseEnterLiveRoomSearch')"
               class="selWidth"
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="samll" @click="getList(1)">查询</el-button>
-            <el-button size="samll" @click="reset()">重置</el-button>
+            <el-button type="primary" size="samll" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="samll" @click="reset()">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '0 20px 20px' }" shadow="never" :bordered="false">
       <el-tabs class="list-tabs" v-model="reviewStatus" @tab-click="getList(1)">
-        <el-tab-pane label="全部" name="''" />
-        <el-tab-pane label="平台待审核" name="0" />
-        <el-tab-pane label="平台审核失败" name="1" />
-        <el-tab-pane label="微信审核失败" name="2" />
-        <el-tab-pane label="微信审核成功" name="3" />
+        <el-tab-pane :label="$t('el.table.clearFilter')" name="''" />
+        <el-tab-pane :label="$t('product.platformPendingAudit')" name="0" />
+        <el-tab-pane :label="$t('product.platformAuditFailed')" name="1" />
+        <el-tab-pane :label="$t('product.wechatAuditFailed')" name="2" />
+        <el-tab-pane :label="$t('product.wechatAuditSuccess')" name="3" />
       </el-tabs>
       <el-table
         v-loading="listLoading"
@@ -74,24 +95,24 @@
         class="mt5"
       >
         <el-table-column prop="id" label="ID" width="40" />
-        <el-table-column prop="roomName" label="直播间名称" min-width="120" />
-        <el-table-column prop="anchorName" label="主播昵称" min-width="90" />
-        <el-table-column prop="anchorWechat" label="主播微信号" min-width="100" />
-        <el-table-column key="14" label="显示在商城" min-width="100">
+        <el-table-column prop="roomName" :label="$t('marketing.liveName')" min-width="120" />
+        <el-table-column prop="anchorName" :label="$t('marketing.hostNickname')" min-width="90" />
+        <el-table-column prop="anchorWechat" :label="$t('marketing.hostWechat')" min-width="100" />
+        <el-table-column key="14" :label="$t('marketing.showInMall')" min-width="100">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:mp:live:room:showstore'])"
               v-model="scope.row.storeShow"
               :active-value="1"
               :inactive-value="0"
-              active-text="显示"
-              inactive-text="隐藏"
+              :active-text="$t('common.show')"
+              :inactive-text="$t('menu.hide')"
               @click.native="onchangeStoreShow(scope.row)"
             />
-            <div v-else>{{ scope.row.storeShow === 1 ? '显示' : '隐藏' }}</div>
+            <div v-else>{{ scope.row.storeShow === 1 ? $t('common.show') : $t('menu.hide') }}</div>
           </template>
         </el-table-column>
-        <el-table-column key="15" label="官方收录" min-width="100">
+        <el-table-column key="15" :label="$t('marketing.officialInclusion')" min-width="100">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:mp:live:room:isfeedspubic'])"
@@ -99,14 +120,14 @@
               v-model="scope.row.isFeedsPublic"
               :active-value="1"
               :inactive-value="0"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
               @click.native="onchangeIsFeeds(scope.row)"
             />
-            <div v-else>{{ scope.row.isFeedsPublic === 1 ? '开启' : '关闭' }}</div>
+            <div v-else>{{ scope.row.isFeedsPublic === 1 ? $t('common.open') : $t('common.close') }}</div>
           </template>
         </el-table-column>
-        <el-table-column key="16" label="评论" min-width="100">
+        <el-table-column key="16" :label="$t('community.comment')" min-width="100">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:mp:live:room:updatecomment'])"
@@ -114,14 +135,14 @@
               v-model="scope.row.closeComment"
               :active-value="1"
               :inactive-value="0"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
               @click.native="onchangeIsCommen(scope.row)"
             />
-            <div v-else>{{ scope.row.closeComment === 1 ? '开启' : '关闭' }}</div>
+            <div v-else>{{ scope.row.closeComment === 1 ? $t('common.open') : $t('common.close') }}</div>
           </template>
         </el-table-column>
-        <el-table-column key="18" label="回放" min-width="100">
+        <el-table-column key="18" :label="$t('marketing.replay')" min-width="100">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:mp:live:room:updatereplay'])"
@@ -129,19 +150,19 @@
               v-model="scope.row.closeReplay"
               :active-value="1"
               :inactive-value="0"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
               @click.native="onchangeCloseReplay(scope.row)"
             />
-            <div v-else>{{ scope.row.closeReplay === 1 ? '开启' : '关闭' }}</div>
+            <div v-else>{{ scope.row.closeReplay === 1 ? $t('common.open') : $t('common.close') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="直播状态" min-width="100">
+        <el-table-column :label="$t('marketing.liveStatus')" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.liveStatus | broadcastStatusFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="审核状态" min-width="110">
+        <el-table-column :label="$t('product.auditStatus')" min-width="110">
           <template slot-scope="scope">
             <el-tooltip
               v-if="scope.row.reviewStatus === 1 || scope.row.reviewStatus === 2"
@@ -150,28 +171,28 @@
               :content="scope.row.reviewReason"
               placement="top"
             >
-              <el-tag class="notStartTag tag-background" v-if="scope.row.reviewStatus === 1">平台审核失败</el-tag>
-              <el-tag class="notStartTag tag-background" v-if="scope.row.reviewStatus === 2">微信审核失败</el-tag>
+              <el-tag class="notStartTag tag-background" v-if="scope.row.reviewStatus === 1">{{ $t('product.platformAuditFailed') }}</el-tag>
+              <el-tag class="notStartTag tag-background" v-if="scope.row.reviewStatus === 2">{{ $t('product.wechatAuditFailed') }}</el-tag>
             </el-tooltip>
             <div v-else>
-              <el-tag class="doingTag tag-background" v-if="scope.row.reviewStatus === 0">待审核</el-tag>
-              <el-tag class="endTag tag-background" v-if="scope.row.reviewStatus === 3">微信审核成功</el-tag>
+              <el-tag class="doingTag tag-background" v-if="scope.row.reviewStatus === 0">{{ $t('dashboard.awaitAudit') }}</el-tag>
+              <el-tag class="endTag tag-background" v-if="scope.row.reviewStatus === 3">{{ $t('product.wechatAuditSuccess') }}</el-tag>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="startTime" min-width="150" label="直播开始时间" />
-        <el-table-column prop="endTime" min-width="150" label="直播计划结束时间" />
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column prop="startTime" min-width="150" :label="$t('marketing.liveStartTime')" />
+        <el-table-column prop="endTime" min-width="150" :label="$t('marketing.livePlanEndTime')" />
+        <el-table-column :label="$t('common.operate')" width="150" fixed="right">
           <template slot-scope="scope">
-            <a v-hasPermi="['platform:mp:live:room:list']" @click="onStudioDetails(scope.row, false)">详情</a>
+            <a v-hasPermi="['platform:mp:live:room:list']" @click="onStudioDetails(scope.row, false)">{{ $t('common.detail') }}</a>
             <el-divider direction="vertical"></el-divider>
             <a
               v-if="scope.row.reviewStatus === 0 && checkPermi(['platform:mp:live:room:review'])"
               @click="onStudioDetails(scope.row, true)"
-              >审核</a
+              >{{ $t('finance.audit') }}</a
             >
             <el-divider direction="vertical"></el-divider>
-            <a v-hasPermi="['platform:mp:live:room:delete']" @click="handleDelete(scope.row, scope.$index)">删除</a>
+            <a v-hasPermi="['platform:mp:live:room:delete']" @click="handleDelete(scope.row, scope.$index)">{{ $t('common.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -196,63 +217,63 @@
       size="1000px"
       @close="close('ruleForm')"
     >
-      <div slot="title" class="demo-drawer_title">直播详情</div>
+      <div slot="title" class="demo-drawer_title">{{ $t('marketing.liveDetail') }}</div>
       <div class="demo-drawer__content" v-loading="loading">
         <div class="description">
-          <div class="title">直播间信息</div>
+          <div class="title">{{ $t('marketing.liveInfo') }}</div>
           <div class="acea-row">
             <div class="description-term sp100">
-              <label class="name">直播间状态：</label>{{ roomInfo.liveStatus | broadcastStatusFilter }}
+              <label class="name">{{ $t('marketing.liveStatusLabel') }}</label>{{ roomInfo.liveStatus | broadcastStatusFilter }}
             </div>
-            <div class="description-term sp100"><label class="name">直播间名称：</label>{{ roomInfo.roomName }}</div>
-            <div class="description-term sp100"><label class="name">直播间ID：</label>{{ roomInfo.id }}</div>
-            <div class="description-term sp100"><label class="name">主播昵称：</label>{{ roomInfo.anchorName }}</div>
-            <!--<div class="description-term sp100"><label class="name">主播手机号：</label>{{ roomInfo.anchorPhone }}</div>-->
+            <div class="description-term sp100"><label class="name">{{ $t('marketing.liveNameLabel') }}</label>{{ roomInfo.roomName }}</div>
+            <div class="description-term sp100"><label class="name">{{ $t('marketing.liveIdLabel') }}</label>{{ roomInfo.id }}</div>
+            <div class="description-term sp100"><label class="name">{{ $t('marketing.hostNicknameLabel') }}</label>{{ roomInfo.anchorName }}</div>
+            <!--<div class="description-term sp100"><label class="name">{{ $t('marketing.hostPhoneLabel') }}</label>{{ roomInfo.anchorPhone }}</div>-->
             <div class="description-term sp100">
-              <label class="name">主播微信号：</label>{{ roomInfo.anchorWechat }}
-            </div>
-            <div class="description-term sp100">
-              <label class="name">主播副号微信号：</label>{{ roomInfo.subAnchorWechat }}
+              <label class="name">{{ $t('marketing.hostWechatLabel') }}</label>{{ roomInfo.anchorWechat }}
             </div>
             <div class="description-term sp100">
-              <label class="name">创建者微信号：</label>{{ roomInfo.activityName }}
+              <label class="name">{{ $t('marketing.hostSubWechatLabel') }}</label>{{ roomInfo.subAnchorWechat }}
             </div>
             <div class="description-term sp100">
-              <label class="name">审核结果：</label>{{ roomInfo.reviewStatus | roomReviewStatusFilter }}
+              <label class="name">{{ $t('marketing.creatorWechatLabel') }}</label>{{ roomInfo.activityName }}
+            </div>
+            <div class="description-term sp100">
+              <label class="name">{{ $t('order.auditResult') }}</label>{{ roomInfo.reviewStatus | roomReviewStatusFilter }}
             </div>
             <div v-show="roomInfo.reviewStatus === 1 || roomInfo.reviewStatus === 2" class="description-term sp100">
-              <label class="name">审核失败原因：</label>{{ roomInfo.reviewReason }}
+              <label class="name">{{ $t('community.auditFailReasonLabel') }}</label>{{ roomInfo.reviewReason }}
             </div>
-            <div class="description-term sp100"><label class="name">直播开始时间：</label>{{ roomInfo.startTime }}</div>
+            <div class="description-term sp100"><label class="name">{{ $t('marketing.liveStartTimeLabel') }}</label>{{ roomInfo.startTime }}</div>
             <div class="description-term sp100">
-              <label class="name">直播预计结束时间：</label>{{ roomInfo.endTime }}
-            </div>
-            <div class="description-term sp100">
-              <label class="name">直播间类型：</label>{{ roomInfo.type === 1 ? '推流' : '手机直播' }}
+              <label class="name">{{ $t('marketing.liveExpectedEndLabel') }}</label>{{ roomInfo.endTime }}
             </div>
             <div class="description-term sp100">
-              <label class="name">直播间点赞：</label>{{ roomInfo.closeLike | roomShowFilter }}
+              <label class="name">{{ $t('marketing.liveTypeLabel') }}</label>{{ roomInfo.type === 1 ? '推流' : $t('marketing.phoneLive') }}
             </div>
             <div class="description-term sp100">
-              <label class="name">直播间评论：</label>{{ roomInfo.closeComment | roomShowFilter }}
+              <label class="name">{{ $t('marketing.liveLikeLabel') }}</label>{{ roomInfo.closeLike | roomShowFilter }}
             </div>
             <div class="description-term sp100">
-              <label class="name">直播间货架：</label>{{ roomInfo.closeGoods | roomShowFilter }}
+              <label class="name">{{ $t('marketing.liveCommentLabel') }}</label>{{ roomInfo.closeComment | roomShowFilter }}
             </div>
             <div class="description-term sp100">
-              <label class="name">直播间客服：</label>{{ roomInfo.closeKf | roomShowFilter }}
+              <label class="name">{{ $t('marketing.liveShelfLabel') }}</label>{{ roomInfo.closeGoods | roomShowFilter }}
             </div>
             <div class="description-term sp100">
-              <label class="name">直播间回放：</label>{{ roomInfo.closeReplay | roomShowFilter }}
+              <label class="name">{{ $t('marketing.liveServiceLabel') }}</label>{{ roomInfo.closeKf | roomShowFilter }}
             </div>
             <div class="description-term sp100">
-              <label class="name">直播间分享：</label>{{ roomInfo.closeShare | roomShowFilter }}
+              <label class="name">{{ $t('marketing.liveReplayLabel') }}</label>{{ roomInfo.closeReplay | roomShowFilter }}
             </div>
             <div class="description-term sp100">
-              <label class="name">直播间官方收录：</label>{{ roomInfo.isFeedsPublic === 1 ? '开启' : '关闭' }}
+              <label class="name">{{ $t('marketing.liveShareLabel') }}</label>{{ roomInfo.closeShare | roomShowFilter }}
             </div>
             <div class="description-term sp100">
-              <label class="name">背景图：</label>
+              <label class="name">{{ $t('marketing.liveOfficialLabel') }}</label>{{ roomInfo.isFeedsPublic === 1 ? $t('common.open') : $t('common.close') }}
+            </div>
+            <div class="description-term sp100">
+              <label class="name">{{ $t('user.backgroundImage') }}</label>
               <div class="demo-image__preview mr10">
                 <el-image
                   style="width: 36px; height: 36px"
@@ -262,7 +283,7 @@
               </div>
             </div>
             <div class="description-term sp100">
-              <label class="name">封面图：</label>
+              <label class="name">{{ $t('community.coverLabel') }}</label>
               <div class="demo-image__preview mr10">
                 <el-image
                   style="width: 36px; height: 36px"
@@ -272,7 +293,7 @@
               </div>
             </div>
             <div class="description-term sp100">
-              <label class="name">分享图：</label>
+              <label class="name">{{ $t('marketing.shareImageLabel') }}</label>
               <div class="demo-image__preview mr10">
                 <el-image
                   style="width: 36px; height: 36px"
@@ -282,7 +303,7 @@
               </div>
             </div>
             <div v-if="roomInfo.reviewStatus === 3" class="description-term sp100">
-              <label class="name">直播小程序码：</label>
+              <label class="name">{{ $t('marketing.liveMiniProgramCodeLabel') }}</label>
               <div class="demo-image__preview mr10">
                 <el-image
                   style="width: 36px; height: 36px"
@@ -295,7 +316,7 @@
         </div>
         <el-divider v-if="goodsList.length > 0"></el-divider>
         <div v-if="goodsList.length > 0" class="description">
-          <div class="title">商品信息</div>
+          <div class="title">{{ $t('product.productInfo') }}</div>
           <div class="acea-row mb20">
             <div style="width: 100%">
               <el-table
@@ -310,26 +331,26 @@
                 style="width: 100%"
               >
                 <el-table-column prop="id" label="ID" min-width="50" />
-                <el-table-column label="商品图" min-width="100">
+                <el-table-column :label="$t('product.productImage')" min-width="100">
                   <template slot-scope="scope">
                     <div class="demo-image__preview line-heightOne">
                       <el-image :src="scope.row.coverImgUrlLocal" :preview-src-list="[scope.row.coverImgUrlLocal]" />
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column prop="name" label="商品名称" min-width="120" />
-                <el-table-column label="价格类型" min-width="80">
+                <el-table-column prop="name" :label="$t('product.productName')" min-width="120" />
+                <el-table-column :label="$t('marketing.priceType')" min-width="80">
                   <template slot-scope="scope">
                     <span>{{ scope.row.priceType | priceTypeFilter }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="价格" min-width="100">
+                <el-table-column :label="$t('marketing.price')" min-width="100">
                   <template slot-scope="scope">
                     <span v-if="scope.row.priceType === 1">{{ scope.row.price }}</span>
                     <span v-else>{{ scope.row.price + '~' + scope.row.price2 }}</span>
                   </template>
                 </el-table-column>
-                <!--<el-table-column prop="goods.pay_num" label="销售数量" min-width="50" />-->
+                <!--<el-table-column prop="goods.pay_num" :label="$t('marketing.salesCount')" min-width="50" />-->
               </el-table>
             </div>
           </div>
@@ -346,7 +367,7 @@
                 }
               "
               style="margin-left: 0"
-              >{{ loadingBtn ? '提交中 ...' : '审核拒绝' }}</el-button
+              >{{ loadingBtn ? $t('finance.submitting') : $t('product.auditRejected') }}</el-button
             >
             <el-button
               type="primary"
@@ -356,7 +377,7 @@
                   onSubmit(3);
                 }
               "
-              >{{ loadingBtnSuccess ? '提交中 ...' : '审核通过' }}</el-button
+              >{{ loadingBtnSuccess ? $t('finance.submitting') : $t('finance.auditPassed') }}</el-button
             >
           </div>
         </div>
@@ -394,22 +415,45 @@ import { mapGetters } from 'vuex';
 import merchantName from '@/components/merUseCategory';
 import { checkPermi } from '@/utils/permission';
 import { handleDeleteTable } from '@/libs/public'; // 权限判断函数
+import { getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'StudioList',
   computed: {
     ...mapGetters(['merchantClassify', 'merchantType']),
+    currentLocale() {
+      return getUiLocale(this);
+    },
+    recommendedLevelStatus() {
+      return [
+        { label: this.$t('common.all'), value: '' },
+        { label: this.$t('marketing.fiveStar'), value: '5' },
+        { label: this.$t('marketing.fourStar'), value: '4' },
+        { label: this.$t('marketing.threeStar'), value: '3' },
+        { label: this.$t('marketing.twoStar'), value: '2' },
+        { label: this.$t('marketing.oneStar'), value: '1' },
+      ];
+    },
+    studioShowStatusList() {
+      return [
+        { label: this.$t('common.show'), value: 1 },
+        { label: this.$t('common.close'), value: 0 },
+      ];
+    },
+    studioStatusList() {
+      return [
+        { label: this.$t('product.liveStreaming'), value: '101' },
+        { label: this.$t('common.ended'), value: '103' },
+        { label: this.$t('common.notStarted'), value: '102' },
+        { label: this.$t('product.banned'), value: '104' },
+        { label: this.$t('product.paused'), value: '105' },
+        { label: this.$t('product.abnormal'), value: '106' },
+        { label: this.$t('product.expiredOver'), value: '107' },
+      ];
+    },
   },
   components: { merchantName },
   data() {
     return {
-      recommendedLevelStatus: [
-        { label: '全部', value: '' },
-        { label: '5星', value: '5' },
-        { label: '4星', value: '4' },
-        { label: '3星', value: '3' },
-        { label: '2星', value: '2' },
-        { label: '1星', value: '1' },
-      ],
       merIds: [], //商户id
       loadingBtn: false,
       loading: false,
@@ -417,19 +461,6 @@ export default {
       dialogVisible: false,
       importVisible: false,
       listLoading: true,
-      studioShowStatusList: [
-        { label: '显示', value: 1 },
-        { label: '关闭', value: 0 },
-      ],
-      studioStatusList: [
-        { label: '直播中', value: '101' },
-        { label: '已结束', value: '103' },
-        { label: '未开始', value: '102' },
-        { label: '禁播', value: '104' },
-        { label: '暂停', value: '105' },
-        { label: '异常', value: '106' },
-        { label: '已过期', value: '107' },
-      ],
       tableData: { data: [], total: 0 },
       tableForm: {
         page: 1,
@@ -468,7 +499,7 @@ export default {
     },
     //审核拒绝
     cancelForm() {
-      this.$modalPrompt('textarea', '拒绝原因').then((V) => {
+      this.$modalPrompt('textarea', this.$t('product.rejectReason')).then((V) => {
         this.ruleForm.reviewReason = V;
         this.submit();
       });
@@ -477,7 +508,7 @@ export default {
     onSubmit(type) {
       this.ruleForm.reviewStatus = type;
       if (type === 3) {
-        this.$modalSure('审核通过该直播间吗？').then(() => {
+        this.$modalSure(this.$t('marketing.approveLiveRoomConfirm')).then(() => {
           this.submit();
         });
       } else {
@@ -493,7 +524,7 @@ export default {
       this.ruleForm.id = this.roomId;
       liveRoomReviewApi(this.ruleForm)
         .then((res) => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('product.operateSuccess'));
           this.dialogVisible = false;
           if (this.ruleForm.reviewStatus === 3) {
             this.loadingBtnSuccess = false;
@@ -531,9 +562,9 @@ export default {
     },
     // 删除
     handleDelete(item, idx) {
-      this.$modalSure('该直播间正在进行直播，删除后不可恢复，您确认删除吗？').then(() => {
+      this.$modalSure(this.$t('marketing.liveRoomDeleteConfirm')).then(() => {
         liveRoomDeleteApi(item.id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableFrom);
           this.getList('');
         });
@@ -541,9 +572,9 @@ export default {
     },
     // 推送消息
     onPushMessage(id) {
-      this.$confirm('给长期订阅用户推送消息？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('marketing.pushToSubscribersConfirm'), this.$t('el.messagebox.title'), {
+        confirmButtonText: this.$t('el.messagebox.confirm'),
+        cancelButtonText: this.$t('el.messagebox.cancel'),
         type: 'warning',
       })
         .then(() => {
@@ -558,7 +589,7 @@ export default {
         .catch((action) => {
           this.$message({
             type: 'info',
-            message: '已取消',
+            message: this.$t('common.cancelled'),
           });
         });
     },
@@ -605,28 +636,28 @@ export default {
     //开启回放
     onchangeCloseReplay(row) {
       liveRoomUpdatereplayApi(row.id, row.closeReplay).then(() => {
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('product.operateSuccess'));
         this.getList('');
       });
     },
     // 开启收录
     onchangeIsFeeds(row) {
       liveRoomIsFeedsPublicApi(row.id, row.isFeedsPublic).then(() => {
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('product.operateSuccess'));
         this.getList('');
       });
     },
     //是否显示在商城
     onchangeStoreShow(row) {
       liveRoomShowApi(row.id, row.storeShow).then(() => {
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('product.operateSuccess'));
         this.getList('');
       });
     },
     // 禁言
     onchangeIsCommen(row) {
       liveRoomUpdatecommentApi(row.id, row.closeComment).then(() => {
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('product.operateSuccess'));
         this.getList('');
       });
     },

@@ -14,34 +14,34 @@
     >
       <el-table-column v-if="handle === 'wu'" type="selection" width="55" />
       <el-table-column prop="id" label="ID" min-width="50" />
-      <el-table-column prop="name" label="优惠券名称" min-width="90" />
-      <el-table-column prop="money" label="优惠券面值" min-width="90" />
-      <el-table-column prop="minPrice" label="最低消费额" min-width="90">
+      <el-table-column prop="name" :label="$t('product.couponName')" min-width="90" />
+      <el-table-column prop="money" :label="$t('product.couponMoney')" min-width="90" />
+      <el-table-column prop="minPrice" :label="$t('product.minConsumption')" min-width="90">
         <template slot-scope="scope">
-          <span>{{ scope.row.minPrice === 0 ? '不限制' : scope.row.minPrice }}</span>
+          <span>{{ scope.row.minPrice === 0 ? $t('product.noLimit') : scope.row.minPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="有效期限" min-width="220">
+      <el-table-column :label="$t('product.validPeriod')" min-width="220">
         <template slot-scope="scope">
           <span>{{
-            scope.row.isFixedTime ? scope.row.useStartTime + ' 一 ' + scope.row.useEndTime : scope.row.day + '天'
+            scope.row.isFixedTime ? scope.row.useStartTime + ' ~ ' + scope.row.useEndTime : scope.row.day + $t('product.dayUnit')
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="剩余数量" min-width="90">
+      <el-table-column :label="$t('product.remainingQuantity')" min-width="90">
         <template slot-scope="scope">
-          <span>{{ !scope.row.isLimited ? '不限量' : scope.row.lastTotal }}</span>
+          <span>{{ !scope.row.isLimited ? $t('product.unlimited') : scope.row.lastTotal }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="handle === 'send'" label="操作" width="70" fixed="right">
+      <el-table-column v-if="handle === 'send'" :label="$t('common.operate')" width="70" fixed="right">
         <template slot-scope="scope">
-          <a class="mr10" @click="sendGrant(scope.row.id)" v-hasPermi="['admin:coupon:user:receive']">发送</a>
+          <a class="mr10" @click="sendGrant(scope.row.id)" v-hasPermi="['admin:coupon:user:receive']">{{ $t('product.send') }}</a>
         </template>
       </el-table-column>
     </el-table>
     <div v-if="handle === 'wu'" class="dialog-footer-inner btnBottom">
-      <el-button size="small" @click="dialogcloseFun">取消</el-button>
-      <el-button size="small" type="primary" @click="ok">确定</el-button>
+      <el-button size="small" @click="dialogcloseFun">{{ $t('common.cancel') }}</el-button>
+      <el-button size="small" type="primary" @click="ok">{{ $t('common.confirm') }}</el-button>
     </div>
   </div>
 </template>
@@ -161,7 +161,7 @@ export default {
         this.$emit('getCouponId', this.multipleSelectionAll);
         this.close();
       } else {
-        this.$message.warning('请先选择优惠劵');
+        this.$message.warning(this.$t('product.pleaseSelectCouponFirst'));
       }
     },
     // 列表
@@ -208,9 +208,9 @@ export default {
     },
     // 发送
     sendGrant(id) {
-      this.$modalSure('发送优惠劵吗').then(() => {
+      this.$modalSure(this.$t('product.sendCouponConfirm')).then(() => {
         couponUserApi({ couponId: id, uid: this.userIds }).then(() => {
-          this.$message.success('发送成功');
+          this.$message.success(this.$t('product.sendSuccess'));
           this.getList();
         });
       });

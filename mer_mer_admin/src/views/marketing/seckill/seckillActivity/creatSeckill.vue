@@ -3,18 +3,18 @@
     <div class="container_box">
       <pages-header
         ref="pageHeader"
-        title="添加秒杀商品"
+        :title="$t('marketing.addSeckillProduct')"
         :backUrl="this.isEdit ? `/marketing/seckill/seckillActivity` : '/marketing/seckill/list'"
       ></pages-header>
       <el-card class="box-card box-body mt14 list-tabs" shadow="never" :bordered="false">
         <el-tabs v-model="activeName">
-          <el-tab-pane v-if="!$route.params.activityId" label="基础设置" name="first"></el-tab-pane>
-          <el-tab-pane label="添加商品" name="second"></el-tab-pane>
+          <el-tab-pane v-if="!$route.params.activityId" :label="$t('product.basicSetting')" name="first"></el-tab-pane>
+          <el-tab-pane :label="$t('marketing.addProduct')" name="second"></el-tab-pane>
         </el-tabs>
         <el-form ref="form" :model="form" :rules="rules" size="small" class="demo-ruleForm">
           <template v-if="activeName == 'first' && !$route.params.isActivity !== '1'">
-            <el-form-item label="选择活动:" prop="id">
-              <span v-if="isCopy">{{ form.productList.activityName }}</span>
+            <el-form-item :label="$t('marketing.selectActivityLabel')" prop="id">
+              <span v-if="isCopy">{{ localizedName({ name: form.productList.activityName, nameJson: form.productList.activityNameJson }) }}</span>
               <el-select
                 v-else
                 class="from-ipt-width"
@@ -26,12 +26,12 @@
                 remote
                 :disabled="isCopy"
                 :remote-method="remoteMethod"
-                placeholder="请选择活动"
+                :placeholder="$t('marketing.pleaseSelectActivity')"
               >
                 <el-option
                   v-for="user in activityList"
                   :key="user.id"
-                  :label="user.name"
+                  :label="localizedName(user)"
                   :value="user.id"
                   :disabled="Number(user.status) > 1"
                 ></el-option>
@@ -42,18 +42,17 @@
             <div class="acea-row row-between-wrapper">
               <div class="acea-row mb20">
                 <el-button :disabled="!isEdit && isCopy" size="small" type="primary" @click="addGoods()"
-                  >添加商品</el-button
+                  >{{ $t('marketing.addProduct') }}</el-button
                 >
                 <el-dropdown size="small" class="ml10 mr10">
-                  <el-button :disabled="isShowCheck">
-                    批量设置<i class="el-icon-arrow-down el-icon--right"></i>
+                  <el-button :disabled="isShowCheck">{{ $t('product.batchSet') }}<i class="el-icon-arrow-down el-icon--right"></i>
                   </el-button>
                   <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item :disabled="isShowCheck" @click.native="setPrice(2)">限量</el-dropdown-item>
-                    <el-dropdown-item :disabled="isShowCheck" @click.native="setPrice(1)">活动价</el-dropdown-item>
+                    <el-dropdown-item :disabled="isShowCheck" @click.native="setPrice(2)">{{ $t('marketing.limited') }}</el-dropdown-item>
+                    <el-dropdown-item :disabled="isShowCheck" @click.native="setPrice(1)">{{ $t('marketing.activityPrice') }}</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
-                <el-button size="small" @click="batchDel" :disabled="isShowCheck">批量删除</el-button>
+                <el-button size="small" @click="batchDel" :disabled="isShowCheck">{{ $t('product.batchDelete') }}</el-button>
               </div>
             </div>
             <el-table
@@ -75,20 +74,22 @@
                   <el-checkbox :value="scope.row.checked" @change="(v) => handleCheckOneChange(v, scope.row)" />
                 </template>
               </el-table-column>
-              <el-table-column min-width="300" label="商品信息">
+              <el-table-column min-width="300" :label="$t('product.productInfo')">
                 <template slot-scope="scope">
                   <div class="acea-row">
                     <div class="demo-image__preview mr10 line-heightOne">
                       <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
                     </div>
-                    <div class="row_title line2">{{ scope.row.name }}</div>
+                    <div class="row_title line2">{{ scope.row.sku ? localizedSku(scope.row.sku, scope.row) : localizedName(scope.row) }}</div>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="categoryName" label="商品分类" min-width="80" />
-              <el-table-column prop="price" label="售价" width="120" />
-              <el-table-column prop="stock" label="库存" min-width="80" />
-              <el-table-column prop="quota" label="限量" width="120">
+              <el-table-column :label="$t('marketing.productCategory')" min-width="80">
+                <template slot-scope="scope">{{ localizedText(scope.row.categoryName, scope.row.categoryNameI18n || scope.row.categoryNameJson) }}</template>
+              </el-table-column>
+              <el-table-column prop="price" :label="$t('product.attrPrice')" width="120" />
+              <el-table-column prop="stock" :label="$t('product.stock')" min-width="80" />
+              <el-table-column prop="quota" :label="$t('marketing.limited')" width="120">
                 <template slot-scope="scope" v-if="scope.row.sku">
                   <el-input-number
                     v-model="scope.row.quota"
@@ -102,7 +103,7 @@
                   </el-input-number>
                 </template>
               </el-table-column>
-              <el-table-column prop="activityPrice" label="活动价格" width="120">
+              <el-table-column prop="activityPrice" :label="$t('marketing.activityPriceFull')" width="120">
                 <template slot-scope="scope" v-if="scope.row.sku">
                   <el-input-number
                     v-model="scope.row.activityPrice"
@@ -116,9 +117,9 @@
                   </el-input-number>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="70" fixed="right">
+              <el-table-column :label="$t('common.operate')" width="70" fixed="right">
                 <template slot-scope="scope">
-                  <a v-if="!scope.row.sku" @click="handleDelete(scope.$index, scope.row)">删除</a>
+                  <a v-if="!scope.row.sku" @click="handleDelete(scope.$index, scope.row)">{{ $t('common.delete') }}</a>
                 </template>
               </el-table-column>
             </el-table>
@@ -136,7 +137,7 @@
             size="small"
             type="primary"
             @click="activeName = 'second'"
-            >下一步</el-button
+            >{{ $t('product.nextStep') }}</el-button
           >
           <!--<el-button-->
           <!--v-show="activeName == 'second'"-->
@@ -156,7 +157,7 @@
               }
             "
             size="small"
-            >保存修改</el-button
+            >{{ $t('marketing.saveChanges') }}</el-button
           >
         </div>
       </el-card>
@@ -173,9 +174,9 @@ import {
   seckillActivityListApi,
 } from '@/api/marketing';
 import { productMarketingListApi } from '@/api/product';
-import timeOptions from '@/libs/timeOptions';
 import { mapGetters } from 'vuex';
 import activity from './activity.vue';
+import { localizeSpecSku, getLocalizedName, getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'creatSeckill',
   components: {
@@ -208,15 +209,14 @@ export default {
         productList: [],
       },
       rules: {
-        name: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
-        share: [{ required: true, message: '请选择优惠比例', trigger: 'change' }],
-        timeVal: [{ required: true, message: '请选择活动日期' }],
-        discount: [{ required: true, message: '请选择优惠方式' }],
-        timeVal2: [{ type: 'array', required: true, message: '请输入选择秒杀场次', trigger: 'change' }],
-        id: [{ required: true, message: '请选择秒杀活动', trigger: 'change' }],
+        name: [{ required: true, message: this.$t('marketing.pleaseEnterActivityName'), trigger: 'blur' }],
+        share: [{ required: true, message: this.$t('marketing.pleaseSelectDiscountRate'), trigger: 'change' }],
+        timeVal: [{ required: true, message: this.$t('marketing.pleaseSelectActivityDate') }],
+        discount: [{ required: true, message: this.$t('marketing.pleaseSelectDiscountMethod') }],
+        timeVal2: [{ type: 'array', required: true, message: this.$t('marketing.pleaseSelectSeckillSession'), trigger: 'change' }],
+        id: [{ required: true, message: this.$t('marketing.pleaseSelectSeckillActivity'), trigger: 'change' }],
       },
       timeVal2: [],
-      pickerOptions: timeOptions,
       spikeTimeList: [],
       multipleSelection: [],
       activityType: null,
@@ -249,6 +249,10 @@ export default {
     this.isCkecked();
   },
   computed: {
+    pickerOptions() {
+      this.$i18n.locale;
+      return this.$createTimeOptions();
+    },
     ...mapGetters(['merPlatProductClassify']),
     //判断是否有活动id
     isEdit() {
@@ -259,9 +263,24 @@ export default {
       if (this.$route.params.activityId && localStorage.getItem('seckillData')) return true;
       if (this.$route.params.activityId && !localStorage.getItem('seckillData')) return false;
       if (!this.$route.params.activityId && localStorage.getItem('seckillData')) return true;
+      return false;
     },
   },
   methods: {
+    localizedSku(sku, row) {
+      let attrList = row && row.attrList;
+      if ((!attrList || !attrList.length) && this.proData && this.proData.length) {
+        const parent = this.proData.find((p) => (p.children || []).some((c) => c === row || (c && row && c.id === row.id)));
+        attrList = parent && parent.attrList;
+      }
+      return localizeSpecSku(sku, this.$t.bind(this), attrList, getUiLocale(this));
+    },
+    localizedName(row) {
+      return getLocalizedName(row, getUiLocale(this));
+    },
+    localizedText(text, json) {
+      return getLocalizedText(text, json, getUiLocale(this));
+    },
     // 下拉加载更多
     selectLoadMore() {
       this.search.page = this.search.page + 1;
@@ -350,7 +369,7 @@ export default {
     },
     //行删除
     handleDelete(index, row) {
-      this.$modalSure('删除该秒杀商品吗？').then(() => {
+      this.$modalSure(this.$t('marketing.deleteSeckillProductConfirm')).then(() => {
         let i = this.proData.findIndex((item) => item == row);
         this.proData.splice(i, 1);
       });
@@ -386,7 +405,7 @@ export default {
     },
     //添加商品
     addGoods() {
-      if (!this.form.id) return this.$message.warning('请先选择秒杀活动');
+      if (!this.form.id) return this.$message.warning(this.$t('marketing.selectSeckillFirst'));
       const _this = this;
       this.$modalActivityProduct(
         function (row) {
@@ -399,17 +418,20 @@ export default {
         1,
       );
     },
-    // 选中商品
     getAttrValue(row) {
       const _this = this;
+      if (!Array.isArray(row) || !row.length) return;
       row.map((item) => {
-        _this.$set(item, 'children', item.attrValue);
+        _this.$set(item, 'children', item.attrValue || []);
         _this.$set(item, 'sort', 0);
         _this.$set(item, 'checked', true);
-        item.children.map((i) => {
+        (item.children || []).map((i) => {
           _this.$set(i, 'name', i.sku);
           _this.$set(i, 'merName', item.merName);
           _this.$set(i, 'categoryName', item.categoryName);
+          _this.$set(i, 'categoryNameJson', item.categoryNameJson);
+          _this.$set(i, 'categoryNameI18n', item.categoryNameI18n);
+          _this.$set(i, 'attrList', item.attrList);
           _this.$set(i, 'quota', i.quota ? i.quota : 0);
           _this.$set(i, 'quotaShow', i.quotaShow ? i.quotaShow : 0);
           // _this.$set(i, 'activityPrice', 0.01);
@@ -421,7 +443,7 @@ export default {
       _this.isCkecked();
     },
     batchDel() {
-      this.$modalSure(`批量删除商品吗？`).then(() => {
+      this.$modalSure(this.$t('marketing.batchDeleteProductsConfirm')).then(() => {
         this.proData = this.proData.filter((item) => !item.checked);
       });
     },
@@ -449,9 +471,9 @@ export default {
               price += i.activityPrice;
             });
           });
-          if (!total && total !== 0) return this.$message.warning('商品限量不能为空');
-          if (!price) return this.$message.warning('商品秒杀价格不能为空');
-          if (total < this.proData.length) return this.$message.warning('商品限量总和不能小于0');
+          if (!total && total !== 0) return this.$message.warning(this.$t('marketing.productLimitRequired'));
+          if (!price) return this.$message.warning(this.$t('marketing.spikePriceRequired'));
+          if (total < this.proData.length) return this.$message.warning(this.$t('marketing.productLimitSumTip'));
           let list = this.proData;
           //this.auditStatus === 3 获取商品规格id。因为重新提交 相当于添加商品，取普通商品规格id
           if (this.auditStatus === 3) {
@@ -486,7 +508,7 @@ export default {
           // this.form.id = this.$route.params.activityId ? this.$route.params.activityId : this.form.id;
           seckillProAddApi(this.form)
             .then((res) => {
-              this.$message.success('添加成功');
+              this.$message.success(this.$t('user.addSuccess'));
               if (this.$route.params.activityId) {
                 this.$router.push({ path: `/marketing/seckill/seckillActivity` });
               } else {

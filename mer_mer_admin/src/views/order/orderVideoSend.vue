@@ -1,7 +1,7 @@
 <template>
-  <el-dialog :visible.sync="modals" title="发货" class="order_box" :before-close="handleClose" width="600px">
+  <el-dialog :visible.sync="modals" :title="$t('order.ship')" class="order_box" :before-close="handleClose" width="600px">
     <el-form ref="formItem" :model="formItem" label-width="110px" @submit.native.prevent :rules="rules">
-      <el-form-item label="快递公司：" prop="expressCode">
+      <el-form-item :label="$t('order.expressCompanyLabel')" prop="expressCode">
         <el-select v-model="formItem.deliveryId" filterable style="width: 80%">
           <el-option
             v-for="(item, i) in express"
@@ -11,15 +11,15 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="快递单号：" prop="waybillId">
-        <el-input v-model.trim="formItem.waybillId" placeholder="请输入快递单号" style="width: 80%"></el-input>
+      <el-form-item :label="$t('order.trackingNoLabel')" prop="waybillId">
+        <el-input v-model.trim="formItem.waybillId" :placeholder="$t('order.pleaseEnterExpressNo')" style="width: 80%"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer">
       <el-button size="mini" type="primary" @click="putSend('formItem')" v-hasPermi="['merchant:order:send']"
-        >提交</el-button
+        >{{ $t('common.submit') }}</el-button
       >
-      <el-button size="mini" @click="cancel('formItem')">取消</el-button>
+      <el-button size="mini" @click="cancel('formItem')">{{ $t('common.cancel') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -53,12 +53,17 @@ export default {
       express: [],
       exportTempList: [],
       tempImg: '',
-      rules: {
-        deliveryId: [{ required: true, message: '请选择快递公司', trigger: 'change' }],
-        waybillId: [{ required: true, message: '请输入快递单号', trigger: 'blur' }],
-      },
       expressType: 'normal',
     };
+  },
+  computed: {
+    rules() {
+      this.$i18n.locale;
+      return {
+        deliveryId: [{ required: true, message: this.$t('order.pleaseSelectExpressCompany'), trigger: 'change' }],
+        waybillId: [{ required: true, message: this.$t('order.pleaseEnterExpressNo'), trigger: 'blur' }],
+      };
+    },
   },
   mounted() {
     this.express = JSON.parse(sessionStorage.getItem('videoExpress'));
@@ -77,13 +82,13 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           videoSendApi(this.formItem).then((async) => {
-            this.$message.success('发货成功');
+            this.$message.success(this.$t('order.shippingSuccess'));
             this.modals = false;
             this.$refs[name].resetFields();
             this.$emit('submitFail');
           });
         } else {
-          this.$message.error('请填写信息');
+          this.$message.error(this.$t('order.enterInformation'));
         }
       });
     }),

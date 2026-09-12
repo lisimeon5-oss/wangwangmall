@@ -4,9 +4,9 @@
 			<view class='search acea-row '>
 				<view class='input acea-row row-middle'>
 					<text class='iconfont icon-sousuo2'></text>
-					<input class="placeholder" type='text' :value='searchValue' :focus="focus" placeholder='请输入标题' placeholder-class='placeholder' @input="setValue" confirm-type="search" @confirm="searchBut()"></input>
+					<input class="placeholder" type='text' :value='searchValue' :focus="focus" :placeholder="$t('请输入标题')" placeholder-class='placeholder' @input="setValue" confirm-type="search" @confirm="searchBut()"></input>
 				</view>
-				<view class='bnt' @tap='searchBut'>搜索</view>
+				<view class='bnt' @tap='searchBut'>{{$t('搜索')}}</view>
 			</view>
 			<view class="tab-cont">
 				<view v-if="discoverList.length" class="goods-wrap">
@@ -18,7 +18,7 @@
 				<view :hidden="!loading" class="acea-row row-center-wrapper loadingicon">
 					<text class="iconfont icon-jiazai loading"></text>
 				</view>
-				<emptyPage v-if="discoverList.length == 0 && !loading" title="暂无更多内容~" mTop="13%" :imgSrc="urlDomain+'crmebimage/presets/noguanzhu.png'"></emptyPage>
+				<emptyPage v-if="discoverList.length == 0 && !loading" :title="$t('暂无更多内容~')" mTop="13%" :imgSrc="urlDomain+'crmebimage/presets/noguanzhu.png'"></emptyPage>
 			</view>
 		</view>
 	</view>

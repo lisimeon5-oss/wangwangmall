@@ -6,25 +6,23 @@
           <div class="circleUrl mr20"><img :src="circleUrl" /></div>
           <!--<el-avatar :size="50" :src="circleUrl" class="mr20" />-->
           <div class="dashboard-workplace-header-tip">
-            <div class="dashboard-workplace-header-tip-title">{{ smsAccount }}，祝您每一天开心！</div>
+            <div class="dashboard-workplace-header-tip-title">{{ smsAccount }}{{ $t('onePass.haveANiceDay') }}</div>
             <div class="dashboard-workplace-header-tip-desc">
               <span
                 class="mr10"
                 @click="onChangePassswordIndex"
                 v-if="checkPermi(['platform:one:pass:update:password'])"
-                >修改密码</span
+                >{{ $t('maintain.modifyPassword') }}</span
               >
               <span class="mr10" @click="onChangePhone" v-if="checkPermi(['platform:one:pass:update:phone'])"
-                >修改手机号</span
+                >{{ $t('merchant.modifyPhone') }}</span
               >
-              <span @click="signOut" class="mr10" v-if="checkPermi(['platform:one:pass:logout'])">退出登录</span>
+              <span @click="signOut" class="mr10" v-if="checkPermi(['platform:one:pass:logout'])">{{ $t('onePass.logout') }}</span>
               <template>
                 <el-popover trigger="hover" placement="right">
-                  <span class="mr10" slot="reference">平台说明</span>
+                  <span class="mr10" slot="reference">{{ $t('onePass.platformDescription') }}</span>
                   <div class="pup_card">
-                    一号通为我司一个第三方平台专门提供短信 ，
-                    物流查询，商品复制等个性化服务省去了自己单独接入功能的麻烦初次运行代码默认是没有账号的，需要自行注册，
-                    登录成功后根据提示购买自己需要用到的服务即可
+                    {{ $t('onePass.onePassIntro') }}
                   </div>
                 </el-popover>
               </template>
@@ -35,46 +33,46 @@
           <div class="dashboard-workplace-header-extra">
             <div class="acea-row">
               <div class="header-extra">
-                <p class="mb5"><span>短信条数</span></p>
+                <p class="mb5"><span>{{ $t('onePass.smsCount') }}</span></p>
                 <p class="mb5">{{ sms.num || 0 }}</p>
                 <el-button
                   size="mini"
                   type="primary"
                   @click="sms.open === 0 ? onOpen('sms') : mealPay('sms')"
-                  v-text="sms.open === 0 ? '开通服务' : '套餐购买'"
+                  v-text="sms.open === 0 ? $t('onePass.activateService') : $t('onePass.packagePurchase')"
                   v-hasPermi="['platform:one:pass:meal:code', 'platform:one:pass:service:open']"
                 ></el-button>
               </div>
               <div class="header-extra">
-                <p class="mb5"><span>采集次数</span></p>
+                <p class="mb5"><span>{{ $t('onePass.collectCount') }}</span></p>
                 <p class="mb5">{{ copy.num || 0 }}</p>
                 <el-button
                   size="mini"
                   type="primary"
                   @click="copy.open === 0 ? onOpen('copy') : mealPay('copy')"
-                  v-text="copy.open === 0 ? '开通服务' : '套餐购买'"
+                  v-text="copy.open === 0 ? $t('onePass.activateService') : $t('onePass.packagePurchase')"
                   v-hasPermi="['platform:one:pass:meal:code', 'platform:one:pass:service:open']"
                 ></el-button>
               </div>
               <div class="header-extra">
-                <p class="mb5"><span>物流查询次数</span></p>
+                <p class="mb5"><span>{{ $t('onePass.logisticsQueryCount') }}</span></p>
                 <p class="mb5">{{ query.num || 0 }}</p>
                 <el-button
                   size="mini"
                   type="primary"
                   @click="query.open === 0 ? onOpen('expr_query') : mealPay('expr_query')"
-                  v-text="query.open === 0 ? '开通服务' : '套餐购买'"
+                  v-text="query.open === 0 ? $t('onePass.activateService') : $t('onePass.packagePurchase')"
                   v-hasPermi="['platform:one:pass:meal:code', 'platform:one:pass:service:open']"
                 ></el-button>
               </div>
               <!-- <div class="header-extra" style="border: none">
-                <p class="mb5"><span>面单打印次数</span></p>
+                <p class="mb5"><span>{{ $t('onePass.waybillPrintCount') }}</span></p>
                 <p class="mb5">{{ dump.num || 0 }}</p>
                 <el-button
                   size="mini"
                   type="primary"
                   @click="dump.open === 0 ? onOpen('expr_dump') : mealPay('expr_dump')"
-                  v-text="dump.open === 0 ? '开通服务' : '套餐购买'"
+                  v-text="dump.open === 0 ? $t('onePass.activateService') : $t('onePass.packagePurchase')"
                   v-hasPermi="['platform:one:pass:meal:code', 'platform:one:pass:service:open']"
                 ></el-button>
               </div> -->
@@ -155,11 +153,7 @@ export default {
   },
   mounted() {
     if (checkPermi(['platform:one:pass:is:login'])) this.onIsLogin();
-    // if (!this.isLogin) {
-    //   this.onIsLogin()
-    // } else {
-    //   this.isShowList = true
-    // }
+    else this.isShowLogn = true;
   },
   methods: {
     checkPermi,
@@ -284,7 +278,7 @@ export default {
     },
     // 退出登录
     signOut() {
-      this.$modalSure('退出一号通吗？').then(() => {
+      this.$modalSure(this.$t('onePass.logoutOnePassConfirm')).then(() => {
         logoutApi().then(async (res) => {
           this.isShowLogn = true;
           this.isShowList = false;

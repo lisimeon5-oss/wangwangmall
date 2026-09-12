@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 import java.io.Serializable;
@@ -35,9 +36,17 @@ public class SystemGroupRequest implements Serializable {
     @Length(max = 50, message = "数据组名称长度不能超过50个字符")
     private String name;
 
+    @ApiModelProperty(value = "多语言数据组名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言数据组名称不能为空")
+    private String nameJson;
+
     @ApiModelProperty(value = "简介")
-    @Length(max = 256, message = "数据组名称长度不能超过256个字符")
+    @Length(max = 256, message = "数据简介长度不能超过256个字符")
     private String info;
+
+    @ApiModelProperty(value = "多语言数据简介(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言数据简介不能为空")
+    private String infoJson;
 
     @ApiModelProperty(value = "form 表单 id")
     private Integer formId;

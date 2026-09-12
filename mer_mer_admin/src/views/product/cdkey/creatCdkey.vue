@@ -4,7 +4,7 @@
     <el-card class="mt14" shadow="never" :bordered="false">
       <div class="acea-row mb20">
         <el-button size="small" type="primary" class="mr14" v-hasPermi="['merchant:card:secret:add']" @click="handleAdd"
-          >添加卡密</el-button
+          >{{ $t('product.addCdkey') }}</el-button
         >
         <el-upload
           v-hasPermi="['merchant:cdkey:library:import:excel']"
@@ -15,11 +15,11 @@
           :show-file-list="false"
           :before-upload="beforeUpload"
         >
-          <el-button size="small">导入卡密</el-button>
+          <el-button size="small">{{ $t('product.importCdkey') }}</el-button>
         </el-upload>
-        <el-button size="small" @click="handleDownload">下载模板</el-button>
+        <el-button size="small" @click="handleDownload">{{ $t('product.downloadTemplate') }}</el-button>
         <el-button size="small" v-if="checkPermi(['merchant:card:secret:delete'])" @click="handleBatchDel"
-          >批量删除</el-button
+          >{{ $t('product.batchDelete') }}</el-button
         >
       </div>
       <el-table
@@ -34,33 +34,33 @@
         class="operation tableSelection"
       >
         <el-table-column type="selection" width="55" :selectable="selectable"> </el-table-column>
-        <el-table-column prop="id" label="卡密ID" min-width="100" />
-        <el-table-column prop="libraryId" label="卡密库ID" min-width="100" />
-        <el-table-column label="卡号" prop="cardNumber" min-width="230" :show-overflow-tooltip="true">
+        <el-table-column prop="id" :label="$t('product.cdkeyId')" min-width="100" />
+        <el-table-column prop="libraryId" :label="$t('product.cdkeyLibraryId')" min-width="100" />
+        <el-table-column :label="$t('product.cardNumber')" prop="cardNumber" min-width="230" :show-overflow-tooltip="true">
         </el-table-column>
-        <el-table-column prop="secretNum" label="密码" min-width="230" :show-overflow-tooltip="true" />
-        <el-table-column label="出售情况" min-width="120" :show-overflow-tooltip="true">
+        <el-table-column prop="secretNum" :label="$t('product.password')" min-width="230" :show-overflow-tooltip="true" />
+        <el-table-column :label="$t('product.saleStatus')" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span :class="scope.row.isUse ? 'colorNotbuy' : 'colorAuxiliary'">{{
-              scope.row.isUse ? '已出售' : '未出售'
+              scope.row.isUse ? $t('product.sold') : $t('product.unsold')
             }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" min-width="200" />
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column prop="createTime" :label="$t('product.createTime')" min-width="200" />
+        <el-table-column :label="$t('product.operate')" width="100" fixed="right">
           <template slot-scope="scope">
             <el-button
               type="text"
               @click="handleEdit(scope.row)"
               :disabled="checkPermi(['merchant:cdkey:library:update']) && scope.row.isUse"
-              >编辑</el-button
+              >{{ $t('product.edit') }}</el-button
             >
             <el-divider direction="vertical"></el-divider>
             <el-button
               type="text"
               :disabled="checkPermi(['merchant:card:secret:delete']) && scope.row.isUse"
               @click="handleDelete(scope.row.id)"
-              >删除</el-button
+              >{{ $t('product.delete') }}</el-button
             >
           </template>
         </el-table-column>
@@ -148,7 +148,7 @@ export default {
       formData.append('file', param.file);
       const loading = this.$loading({
         lock: true,
-        text: '上传中，请稍候...',
+        text: this.$t('product.uploading'),
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)',
       });
@@ -156,7 +156,7 @@ export default {
         .then((res) => {
           loading.close();
           this.getList(1);
-          this.$message.success('导入成功');
+          this.$message.success(this.$t('product.importSuccess'));
         })
         .catch((res) => {
           loading.close();
@@ -168,10 +168,10 @@ export default {
     },
     //批量删除
     handleBatchDel() {
-      if (this.checkedIds.length === 0) return this.$message.warning('请至少选择一项卡密');
-      this.$modalSure('确定要将选中卡密删除吗？').then(() => {
+      if (this.checkedIds.length === 0) return this.$message.warning(this.$t('product.selectAtLeastOneCdkey'));
+      this.$modalSure(this.$t('product.batchDeleteCdkeyConfirm')).then(() => {
         cardSecretBatchDeleteApi({ ids: this.checkedIds.join(',') }).then(() => {
-          this.$message.success('批量删除成功');
+          this.$message.success(this.$t('product.batchDeleteSuccess'));
           if (this.tableData.data.length === 1 && this.tableFrom.page > 1)
             this.tableFrom.page = this.tableFrom.page - 1;
           this.getList('');
@@ -243,9 +243,9 @@ export default {
     },
     // 删除
     handleDelete(id) {
-      this.$modalSure('确定删除此卡密吗？').then(() => {
+      this.$modalSure(this.$t('product.deleteCdkeyConfirm')).then(() => {
         cardSecretDeleteApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           if (this.tableData.data.length === 1 && this.tableFrom.page > 1)
             this.tableFrom.page = this.tableFrom.page - 1;
           this.getList('');

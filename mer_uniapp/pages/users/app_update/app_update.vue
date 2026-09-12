@@ -6,7 +6,7 @@
 			<view class="version">Version {{appUpdate.versionCode}}</view>
 		</view>
 		<!-- <view class="jiancha" @click="appVersionConfig()">
-			<text>检查新版本</text>
+			<text>{{$t('检查新版本')}}</text>
 			<text class="iconfont icon-you"></text>
 		</view> -->
 	</view>
@@ -52,8 +52,8 @@
 							success:(res) => {
 								if(appVersion > nowVersion){
 									uni.showModal({
-										title: '更新提示',
-										content: '发现新版本，是否前去下载?',
+										title: this.$t('更新提示'),
+										content: this.$t('发现新版本，是否前去下载?'),
 										showCancel:that.appUpdate.openUpgrade == 'false' ? true : false,
 										cancelColor: '#eeeeee',
 										confirmColor: '#FF0000',
@@ -73,7 +73,7 @@
 									});
 								}else if(appVersion <= nowVersion){
 									uni.showToast({
-										title:'已是最新版本',
+										title:this.$t('已是最新版本'),
 										icon:'none'
 									})
 								}

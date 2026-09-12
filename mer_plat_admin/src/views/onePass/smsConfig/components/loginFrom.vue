@@ -12,13 +12,13 @@
           label-position="left"
         >
           <div class="title-container">
-            <h3 class="title mb15">短信账户登录</h3>
+            <h3 class="title mb15">{{ $t('onePass.smsAccountLogin') }}</h3>
           </div>
           <el-form-item prop="account">
             <el-input
               ref="account"
               v-model="formInline.account"
-              placeholder="用户名"
+              :placeholder="$t('login.username')"
               prefix-icon="el-icon-user"
               name="username"
               type="text"
@@ -32,7 +32,7 @@
               ref="password"
               v-model="formInline.password"
               :type="passwordType"
-              placeholder="密码"
+              :placeholder="$t('login.password')"
               name="password"
               tabindex="2"
               auto-complete="off"
@@ -49,7 +49,7 @@
             style="width: 100%; margin-bottom: 20px"
             @click="handleSubmit('formInline')"
             v-hasPermi="['platform:one:pass:login']"
-            >登录
+            >{{ $t('common.login') }}
           </el-button>
           <div class="acea-row row-center-wrapper mb20">
             <el-button
@@ -58,7 +58,7 @@
               type="text"
               style="margin-left: 0"
               @click="changePassword"
-              >忘记密码</el-button
+              >{{ $t('onePass.forgotPassword') }}</el-button
             >
             <el-divider direction="vertical"></el-divider>
             <el-button
@@ -67,21 +67,16 @@
               style="margin-left: 0"
               v-hasPermi="['platform:one:pass:register']"
               @click="changeReg"
-              >注册账户</el-button
+              >{{ $t('onePass.registerAccount') }}</el-button
             >
           </div>
           <el-tooltip
             class="item"
             effect="dark"
-            content="
-              一号通为我司一个第三方平台
-              专门提供短信 ， 物流查询，商品复制等个性化服务
-              省去了自己单独接入功能的麻烦
-              初次运行代码默认是没有账号的，需要自行注册，
-              登录成功后根据提示购买自己需要用到的服务即可"
+            :content="$t('onePass.onePassIntro')"
             placement="bottom"
           >
-            <span style="margin-left: 0">平台说明</span>
+            <span style="margin-left: 0">{{ $t('onePass.platformDescription') }}</span>
           </el-tooltip>
         </el-form>
       </el-col>
@@ -109,8 +104,8 @@ export default {
         password: '',
       },
       ruleInline: {
-        account: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+        account: [{ required: true, message: this.$t('login.pleaseEnterUsername'), trigger: 'blur' }],
+        password: [{ required: true, message: this.$t('login.pleaseEnterPassword'), trigger: 'blur' }],
       },
       passwordType: 'password',
       loading: false,
@@ -142,7 +137,7 @@ export default {
           this.loading = true;
           configApi(this.formInline)
             .then(async (res) => {
-              this.$message.success('登录成功!');
+              this.$message.success(this.$t('onePass.loginSuccessExcl'));
               this.$store.dispatch('user/isLogin');
               this.$emit('on-Login');
               this.loading = false;

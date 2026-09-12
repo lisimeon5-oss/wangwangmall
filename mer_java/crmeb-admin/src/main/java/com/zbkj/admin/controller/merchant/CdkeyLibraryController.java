@@ -52,7 +52,7 @@ public class CdkeyLibraryController {
     @LogControllerAnnotation(intoDB = true, methodType = MethodType.ADD, description = "新增卡密库")
     @ApiOperation(value = "新增卡密库")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public CommonResult<Object> save(@RequestBody CdkeyLibrarySaveRequest request) {
+    public CommonResult<Object> save(@RequestBody @Validated CdkeyLibrarySaveRequest request) {
         if (cdkeyLibraryService.add(request)) {
             return CommonResult.success().setMessage("新增卡密库成功");
         }
@@ -74,7 +74,7 @@ public class CdkeyLibraryController {
     @LogControllerAnnotation(intoDB = true, methodType = MethodType.UPDATE, description = "修改卡密库")
     @ApiOperation(value = "修改卡密库")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public CommonResult<Object> update(@RequestBody CdkeyLibrarySaveRequest request) {
+    public CommonResult<Object> update(@RequestBody @Validated CdkeyLibrarySaveRequest request) {
         if (cdkeyLibraryService.updateLibrary(request)) {
             return CommonResult.success().setMessage("修改卡密库成功");
         }

@@ -3,22 +3,22 @@
 		<view class="borderPad">
 			<view v-if="InvoiceList.length" class="logistics-title bgcolor">
 				<text class="iconfont icon-shuoming2"></text>
-				<text class="bgcolor-text">当前订单已发<text>{{deliveryNum}}</text>个包裹</text>
+				<text class="bgcolor-text">{{$t('当前订单已发')}}<text>{{deliveryNum}}</text>{{$t('个包裹')}}</text>
 			</view>
 			<view v-for="(item,index) in InvoiceList" :key="item.id" class='wrapper borRadius14'>
 				<view class='bnt cancel' hover-class='none' @click="toLogistics(item,index)">
 					<view v-if="item.deliveryType ==='express'" class="acea-row mb30 row-between">
-						<text class="wrapper-title colorSize">快递配送</text>
+						<text class="wrapper-title colorSize">{{$t('快递配送')}}</text>
 						<view class="wrapper-title colorSize color-999">{{item.expressName}}：{{item.trackingNumber}}
 						</view>
 					</view>
 					<view v-else-if="item.deliveryType ==='noNeed'" class="acea-row mb30 row-between">
-						<text class="wrapper-title colorSize">无需发货</text>
+						<text class="wrapper-title colorSize">{{$t('无需发货')}}</text>
 						<view class="wrapper-title colorSize color-999 text-right line1" style="width: 80%;"
 							:title="item.deliveryMark">{{item.deliveryMark}}</view>
 					</view>
 					<view v-else class="acea-row mb30 row-between">
-						<text class="wrapper-title colorSize">商家送货</text>
+						<text class="wrapper-title colorSize">{{$t('商家送货')}}</text>
 						<view class="wrapper-title colorSize color-999">{{item.deliveryCarrier}} {{item.carrierPhone}}
 						</view>
 					</view>
@@ -40,7 +40,7 @@
 							</view>
 						</view>
 					</view>
-					<view class="wrapper-num">共{{item.totalNum}}件商品</view>
+					<view class="wrapper-num">{{$t('共')}}{{item.totalNum}}{{$t('件商品')}}</view>
 				</view>
 
 			</view>
@@ -48,7 +48,7 @@
 		<view class='noCommodity' v-if="!InvoiceList.length">
 			<view class='pictrue text-center'>
 				<image :src="urlDomain+'crmebimage/presets/nowuliu.png'"></image>
-				<view class="default_txt">暂无物流信息~</view>
+				<view class="default_txt">{{$t('暂无物流信息~')}}</view>
 			</view>
 		</view>
 	</view>
@@ -95,7 +95,7 @@
 		methods: {
 			getOrderInvoiceListInfo(orderNo) {
 				uni.showLoading({
-					title: "正在加载中"
+					title: this.$t('正在加载中')
 				});
 				orderInvoiceListInfo(orderNo).then(res => {
 					uni.hideLoading();

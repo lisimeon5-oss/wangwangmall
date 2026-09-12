@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
+import com.zbkj.common.utils.I18nMessageUtil;
 
 /**
  * @ClassName ResultAdvice
@@ -53,10 +54,15 @@ public class ResultAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         if (body instanceof String) {// 如果Controller直接返回String的话，SpringBoot是直接返回，故我们需要手动转换成json。
-            return objectMapper.writeValueAsString(CommonResult.success(body));
+            return objectMapper.writeValueAsString(CommonResult.success(I18nMessageUtil.translateData(body)));
         }
-        if (body instanceof CommonResult) {// 如果返回的结果是CommonResult对象，直接返回即可。
-            return body;
+        if (body instanceof CommonResult) {
+            CommonResult result = (CommonResult) body;
+            if (result.getMessage() != null) {
+                result.setMessage(I18nMessageUtil.translate(result.getMessage()));
+            }
+            result.setData(I18nMessageUtil.translateData(result.getData()));
+            return result;
         }
         return CommonResult.success(body);
     }

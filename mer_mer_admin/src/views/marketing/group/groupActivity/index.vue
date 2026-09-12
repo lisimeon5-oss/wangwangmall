@@ -3,48 +3,48 @@
     <el-card :bordered="false" shadow="never" class="ivu-mt" :body-style="{ padding: 0 }">
       <div class="padding-add">
         <el-form size="small" label-position="right" inline @submit.native.prevent>
-          <el-form-item label="活动名称：">
-            <el-input v-model="formData.groupName" placeholder="请输入活动名称" class="selWidth" clearable></el-input>
+          <el-form-item :label="$t('marketing.activityNameLabel')">
+            <el-input v-model="formData.groupName" :placeholder="$t('marketing.pleaseEnterActivityName')" class="selWidth" clearable></el-input>
           </el-form-item>
-          <el-form-item label="活动进程：" class="inline">
+          <el-form-item :label="$t('marketing.activityProgressLabel')" class="inline">
             <el-select
               v-model="formData.groupProcess"
               clearable
-              placeholder="请选择活动进程"
+              :placeholder="$t('marketing.pleaseSelectActivityProgress')"
               class="selWidth"
               @change="selectChange"
             >
-              <el-option label="未开始" value="0" />
-              <el-option label="进行中" value="1" />
-              <el-option label="已结束" value="2" />
+              <el-option :label="$t('common.notStarted')" value="0" />
+              <el-option :label="$t('common.ongoing')" value="1" />
+              <el-option :label="$t('common.ended')" value="2" />
             </el-select>
           </el-form-item>
-          <el-form-item label="活动日期：" class="inline">
+          <el-form-item :label="$t('marketing.activityDateLabel')" class="inline">
             <el-date-picker
               class="selWidth"
               v-model="formData.startTime"
               type="date"
-              placeholder="选择日期时间"
+              :placeholder="$t('marketing.chooseDateTime')"
               value-format="yyyy-MM-dd"
               @change="timeChange"
             >
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="活动状态：" class="inline">
+          <el-form-item :label="$t('marketing.activityStatusLabel')" class="inline">
             <el-select
               v-model="formData.activityStatus"
               clearable
-              placeholder="请选择活动状态"
+              :placeholder="$t('marketing.pleaseSelectActivityStatus')"
               class="selWidth"
               @change="selectChange"
             >
-              <el-option label="开启" value="1" />
-              <el-option label="关闭" value="0" />
+              <el-option :label="$t('common.open')" value="1" />
+              <el-option :label="$t('common.close')" value="0" />
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="search">查询</el-button>
-            <el-button size="small" @click="reset">重置</el-button>
+            <el-button type="primary" size="small" @click="search">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset">{{ $t('common.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -52,22 +52,24 @@
 
     <el-card class="box-card mt14" :body-style="{ padding: '0 20px 20px' }" shadow="never" :bordered="false">
       <el-tabs v-model="formData.groupStatus" class="list-tabs" @tab-click="handleClick">
-        <el-tab-pane :label="`已通过(${countArr.length && countArr[3].count})`" name="4" />
-        <el-tab-pane :label="`待审核(${countArr.length && countArr[2].count})`" name="3" />
-        <el-tab-pane :label="`已拒绝(${countArr.length && countArr[0].count})`" name="1" />
-        <el-tab-pane :label="`已撤销(${countArr.length && countArr[1].count})`" name="2" />
+        <el-tab-pane :label="$t('marketing.tabApprovedCount', { count: countArr.length && countArr[3].count })" name="4" />
+        <el-tab-pane :label="$t('marketing.tabPendingAuditCount', { count: countArr.length && countArr[2].count })" name="3" />
+        <el-tab-pane :label="$t('marketing.tabRejectedCount', { count: countArr.length && countArr[0].count })" name="1" />
+        <el-tab-pane :label="$t('marketing.tabWithdrawnCount', { count: countArr.length && countArr[1].count })" name="2" />
       </el-tabs>
       <el-button type="primary" size="small" @click="toAdd" v-hasPermi="['merchant:groupbuy:activity:add']"
-        >添加活动</el-button
+        >{{ $t('marketing.addActivity') }}</el-button
       >
       <el-table :data="tableData" size="small" ref="multipleTable" row-key="id" class="mt20 tableSelection">
         <el-table-column label="ID" prop="id" width="60"></el-table-column>
-        <el-table-column label="活动名称" prop="groupName" min-width="150" />
-        <el-table-column label="活动时间" min-width="150">
-          <template slot-scope="scope"> {{ scope.row.startTime }} 至 {{ scope.row.endTime }} </template>
+        <el-table-column :label="$t('marketing.activityName')" min-width="150" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ localizedGroupName(scope.row) }}</template>
         </el-table-column>
-        <el-table-column label="成团人数" prop="buyCount" />
-        <el-table-column label="活动进程">
+        <el-table-column :label="$t('marketing.activityTime')" min-width="150">
+          <template slot-scope="scope"> {{ scope.row.startTime }} {{ $t('marketing.timeTo') }} {{ scope.row.endTime }} </template>
+        </el-table-column>
+        <el-table-column :label="$t('marketing.formedCount')" prop="buyCount" />
+        <el-table-column :label="$t('marketing.activityProgress')">
           <template slot-scope="scope">
             <el-tag
               size="mini"
@@ -77,52 +79,52 @@
             >
           </template>
         </el-table-column>
-        <el-table-column label="参与商品数" prop="productCount" />
-        <el-table-column label="开团数" prop="totalActivityBegin" :render-header="totalActivityBeginHeader" />
-        <el-table-column label="成团数" prop="totalActivityDone" :render-header="totalActivityDoneHeader" />
+        <el-table-column :label="$t('marketing.joinProductCount')" prop="productCount" />
+        <el-table-column :label="$t('marketing.startedGroupCount')" prop="totalActivityBegin" :render-header="totalActivityBeginHeader" />
+        <el-table-column :label="$t('marketing.formedGroupCount')" prop="totalActivityDone" :render-header="totalActivityDoneHeader" />
         <el-table-column
-          label="参团订单数"
+          :label="$t('marketing.joinGroupOrderCount')"
           prop="totalOrderBegin"
           min-width="100"
           :render-header="totalOrderBeginHeader"
         />
         <el-table-column
-          label="成团订单数"
+          :label="$t('marketing.formedOrderCount')"
           prop="totalOrderDone"
           min-width="100"
           :render-header="totalOrderDoneHeader"
         />
-        <el-table-column label="拒绝原因" prop="refusal" v-if="formData.groupStatus == 1" width="100">
+        <el-table-column :label="$t('product.rejectReason')" prop="refusal" v-if="formData.groupStatus == 1" width="100">
           <template slot-scope="scope">
-            <span>{{ scope.row.refusal || '平台强制关闭' }}</span>
+            <span>{{ scope.row.refusal || $t('marketing.platformForceClose') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="活动状态" prop="status">
+        <el-table-column :label="$t('marketing.activityStatus')" prop="status">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['merchant:groupbuy:activity:change:status'])"
               :active-value="1"
               :inactive-value="0"
               v-model="scope.row.activityStatus"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
               @change="changeStatus(scope.row, $event)"
             />
-            <div v-else>{{ scope.row.activityStatus ? '显示' : '隐藏' }}</div>
+            <div v-else>{{ scope.row.activityStatus ? $t('common.show') : $t('product.hide') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" prop="operate" min-width="200">
+        <el-table-column :label="$t('common.operate')" prop="operate" min-width="200">
           <template slot-scope="scope">
-            <a @click="toDeatil(scope.row)" v-hasPermi="['merchant:groupbuy:activity:info']">详情</a>
+            <a @click="toDeatil(scope.row)" v-hasPermi="['merchant:groupbuy:activity:info']">{{ $t('common.detail') }}</a>
             <el-divider v-if="scope.row.groupStatus != 3" direction="vertical"></el-divider>
             <a
               v-if="scope.row.groupStatus != 3"
               @click="toUpdate(scope.row)"
               v-hasPermi="['merchant:groupbuy:activity:info']"
-              >编辑</a
+              >{{ $t('common.edit') }}</a
             >
             <el-divider direction="vertical"></el-divider>
-            <a @click="toCopy(scope.row)">复制</a>
+            <a @click="toCopy(scope.row)">{{ $t('marketing.copy') }}</a>
             <el-divider direction="vertical" v-if="formData.groupStatus == '3'"></el-divider>
             <template
               v-if="
@@ -132,13 +134,13 @@
               "
             >
               <el-divider direction="vertical"></el-divider>
-              <a @click="delGroup(scope.row)">删除</a>
+              <a @click="delGroup(scope.row)">{{ $t('common.delete') }}</a>
             </template>
             <a
               v-if="scope.row.groupStatus == 3"
               @click="rollback(scope.row)"
               v-hasPermi="['merchant:groupbuy:activity:rollback']"
-              >撤回</a
+              >{{ $t('marketing.withdraw') }}</a
             >
           </template>
         </el-table-column>
@@ -172,6 +174,7 @@ import {
   groupActivityStatus,
   groupbuyActivityRollback,
 } from '@/api/group';
+import { getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   components: {
     activityDetail,
@@ -190,7 +193,7 @@ export default {
       },
       total: 0,
       countArr: [],
-      groupProcessArr: ['未开始', '进行中', '已结束'],
+      groupProcessArr: [this.$t('common.notStarted'), this.$t('common.ongoing'), this.$t('common.ended')],
     };
   },
   created() {
@@ -199,6 +202,9 @@ export default {
   },
   methods: {
     checkPermi,
+    localizedGroupName(row) {
+      return getLocalizedText(row.groupName, row.groupNameJson, getUiLocale(this));
+    },
     search() {
       this.formData.page = 1;
       this.getData();
@@ -207,18 +213,18 @@ export default {
       return this.headerText(
         h,
         column,
-        '成团订单数：此拼团活动用户已经拼团成功的所有成功订单数统计（不包含未支付的订单数据）',
+        this.$t('marketing.formedOrderCountTip'),
       );
     },
     totalOrderBeginHeader(h, { column }) {
-      return this.headerText(h, column, '参团订单数：此拼团活动用户开团的所有订单数统计（不包含未支付的订单数据）');
+      return this.headerText(h, column, this.$t('marketing.joinGroupOrderCountTip'));
     },
     totalActivityDoneHeader(h, { column }) {
-      return this.headerText(h, column, '成团数：此拼团活动用户已经拼团成功的团次数统计');
+      return this.headerText(h, column, this.$t('marketing.formedGroupCountTip'));
     },
     // 开团提示
     totalActivityBeginHeader(h, { column }) {
-      return this.headerText(h, column, '开团数：此拼团活动用户开团的次数统计');
+      return this.headerText(h, column, this.$t('marketing.startedGroupCountTip'));
     },
     headerText(h, column, text) {
       const serviceContent = [
@@ -251,11 +257,11 @@ export default {
     },
     //撤回
     rollback(row) {
-      this.$modalSure('要撤回此活动吗？').then(() => {
+      this.$modalSure(this.$t('marketing.withdrawActivityConfirm')).then(() => {
         groupbuyActivityRollback(row.id).then((res) => {
           this.$message({
             type: 'success',
-            message: '撤回成功!',
+            message: this.$t('marketing.withdrawSuccess'),
           });
           this.getData();
         });
@@ -278,7 +284,7 @@ export default {
       groupActivityStatus({ id: row.id, status: e }).then((res) => {
         this.$message({
           type: 'success',
-          message: '修改成功!',
+          message: this.$t('marketing.modifySuccessExcl'),
         });
       });
     },
@@ -303,11 +309,11 @@ export default {
     },
     //关闭
     delGroup(row) {
-      this.$modalSure('要删除此活动吗？').then(() => {
+      this.$modalSure(this.$t('marketing.deleteActivityConfirm')).then(() => {
         groupBuyDelete(row.id).then((res) => {
           this.$message({
             type: 'success',
-            message: '删除成功!',
+            message: this.$t('marketing.deleteSuccessExcl'),
           });
           this.getData();
         });

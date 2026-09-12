@@ -1,16 +1,16 @@
 <template>
 	<view  @touchstart="touchStart">
 		<!-- #ifdef MP || APP-->
-		<nav-bar ref="navBarRef" navTitle="积分商城" iconColor="#ffffff" :isBackgroundColor="false"
+		<nav-bar ref="navBarRef" :navTitle="$t('积分商城')" iconColor="#ffffff" :isBackgroundColor="false"
 			backgroundColor="linear-gradient( 90deg, #E93323 0%, #FF7931 100%)"></nav-bar>
 		<!-- #endif -->
 		<view class="header">
 			<view class="headerBg" :style="{'background-image': `url(${urlDomain}crmebimage/presets/points_bg.png)`}">
 				<view class="pictrue"></view>
-				<view class="num">当前积分{{integral}}</view>
+				<view class="num">{{$t('当前积分')}}{{integral}}</view>
 			</view>
 			<navigator hover-class='none' url='/pages/goods/order_list/index?secondType=1'
-				class="record acea-row row-center-wrapper">兑换记录</navigator>
+				class="record acea-row row-center-wrapper">{{$t('兑换记录')}}</navigator>
 		</view>
 		<view class="points-nav">
 			<view class="nav acea-row row-middle row-around borRadius14">
@@ -18,31 +18,31 @@
 					<view class="pictrue">
 						<image :src="`${urlDomain}crmebimage/presets/points_my.png`"></image>
 					</view>
-					<view>我的积分</view>
+					<view>{{$t('我的积分')}}</view>
 				</navigator>
 				<view class="line"></view>
 				<navigator hover-class='none' url='/pages/merchant/user_sgin/index' class="item">
 					<view class="pictrue">
 						<image :src="`${urlDomain}crmebimage/presets/points_qiandao.png`"></image>
 					</view>
-					<view>每日签到</view>
+					<view>{{$t('每日签到')}}</view>
 				</navigator>
 				<view class="line"></view>
 				<navigator hover-class='none' open-type='switchTab' url='/pages/index/index' class="item">
 					<view class="pictrue">
 						<image :src="`${urlDomain}crmebimage/presets/points_goods.png`"></image>
 					</view>
-					<view>购买商品</view>
+					<view>{{$t('购买商品')}}</view>
 				</navigator>
 			</view>
 		</view>
 		<view class="hot borRadius14" v-if="goodList.length">
 			<view class="flex-between-center">
-				<view class="title">热门推荐</view>
+				<view class="title">{{$t('热门推荐')}}</view>
 				<navigator v-show="goodList.length > 10 " hover-class='none' url='/pages/activity/goods_points/index'
 					class="item">
 					<view class="text-666 f-s-26 mr28 flex-center">
-						更多
+						{{$t('更多')}}
 						<text class="iconfont icon-xiangyou"></text>
 					</view>
 				</navigator>
@@ -54,18 +54,18 @@
 		</view>
 		<view class="body">
 			<view class="body-title flex">
-				<view class="scroll" @click="navTap(0,0)"><text class="item" :class="0 == current?'on':''">全部</text>
+				<view class="scroll" @click="navTap(0,0)"><text class="item" :class="0 == current?'on':''">{{$t('全部')}}</text>
 				</view>
 				<scroll-view scroll-x="true" class="scroll" style="width: 81%;">
 					<view class="item" :class="index+1 == current ?'on':''" v-for="(item, index) in navList"
-						:key="index" @click="navTap(item.id,index+1)">{{item.value}}{{index+1?'积分':''}}</view>
+						:key="index" @click="navTap(item.id,index+1)">{{item.value}}{{index+1?$t('积分'):''}}</view>
 				</scroll-view>
 			</view>
 			<view class="product-list" v-if="integralGood.length">
 				<PointsGoods :integralGood="integralGood" :pointsGoodsStyle="pointsStyle"></PointsGoods>
 			</view>
 			<view v-else-if="!loading" class="empty-box">
-				<emptyPage title="暂无商品，去看看别的吧～" mTop="0" :imgSrc="urlDomain+'crmebimage/presets/noShopper.png'">
+				<emptyPage :title="$t('暂无商品，去看看别的吧～')" mTop="0" :imgSrc="urlDomain+'crmebimage/presets/noShopper.png'">
 				</emptyPage>
 			</view>
 			<view v-if="loading" class='loadingicon acea-row row-center-wrapper' :hidden='loading==false'>

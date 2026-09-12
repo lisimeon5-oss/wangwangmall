@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="商品列表" :visible.sync="visible" width="896px" :before-close="handleClose">
+    <el-dialog :title="$t('product.listTitle')" :visible.sync="visible" width="896px" :before-close="handleClose" append-to-body>
       <good-list
         v-if="visible"
         @getStoreItem="getStoreItem"

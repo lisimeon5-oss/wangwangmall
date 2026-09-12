@@ -10,74 +10,74 @@
           </div>
           <div class="acea-row info-row">
             <div class="info-row-item">
-              <div class="info-row-item-title">余额</div>
+              <div class="info-row-item-title">{{ $t('user.balance') }}</div>
               <div>{{ userDetailData.nowMoney }}</div>
             </div>
             <div class="info-row-item">
-              <div class="info-row-item-title">用户经验</div>
+              <div class="info-row-item-title">{{ $t('user.experience') }}</div>
               <div>{{ userDetailData.experience }}</div>
             </div>
             <div class="info-row-item">
-              <div class="info-row-item-title">等级</div>
+              <div class="info-row-item-title">{{ $t('user.level') }}</div>
               <div>{{ userDetailData.grade }}</div>
             </div>
             <div class="info-row-item">
-              <div class="info-row-item-title">佣金金额</div>
+              <div class="info-row-item-title">{{ $t('user.commissionAmount') }}</div>
               <div>{{ userDetailData.brokeragePrice }}</div>
             </div>
             <div class="info-row-item">
-              <div class="info-row-item-title">用户积分</div>
+              <div class="info-row-item-title">{{ $t('user.points') }}</div>
               <div>{{ userDetailData.integral }}</div>
             </div>
             <div class="info-row-item">
-              <div class="info-row-item-title">用户购买次数</div>
+              <div class="info-row-item-title">{{ $t('user.purchaseCount') }}</div>
               <div>{{ userDetailData.payCount }}</div>
             </div>
             <div class="info-row-item">
-              <div class="info-row-item-title">连续签到天数</div>
+              <div class="info-row-item-title">{{ $t('user.consecutiveSignDays') }}</div>
               <div>{{ userDetailData.signNum }}</div>
             </div>
           </div>
           <div class="user-info">
             <div class="section">
-              <div class="section-hd">基本信息</div>
+              <div class="section-hd">{{ $t('user.basicInfo') }}</div>
               <div class="section-bd">
                 <div class="item">
-                  <div>用户电话：</div>
+                  <div>{{ $t('user.userPhoneLabel') }}</div>
                   <div class="value">{{ userDetailData.phone }}</div>
                 </div>
                 <div class="item">
-                  <div>真实姓名：</div>
+                  <div>{{ $t('user.realNameLabel') }}</div>
                   <div class="value">{{ userDetailData.realName || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>用户账号：</div>
+                  <div>{{ $t('user.userAccountLabel') }}</div>
                   <div class="value">{{ userDetailData.account || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>生日：</div>
+                  <div>{{ $t('user.birthdayLabel') }}</div>
                   <div class="value">{{ userDetailData.birthday || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>性别：</div>
+                  <div>{{ $t('user.genderLabel') }}</div>
                   <div class="value">
                     {{
                       userDetailData.sex == 0
-                        ? '未知'
+                        ? $t('user.unknown')
                         : userDetailData.sex == 1
-                        ? '男'
+                        ? $t('user.male')
                         : userDetailData.sex == 2
-                        ? '女'
-                        : '保密'
+                        ? $t('user.female')
+                        : $t('user.secret')
                     }}
                   </div>
                 </div>
                 <div class="item">
-                  <div>国家：</div>
-                  <div class="value">{{ userDetailData.country == 'CN' ? '中国' : '其他' || '-' }}</div>
+                  <div>{{ $t('user.countryLabel') }}</div>
+                  <div class="value">{{ userDetailData.country == 'CN' ? $t('user.china') : $t('user.other') || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>用户地址：</div>
+                  <div>{{ $t('user.userAddressLabel') }}</div>
                   <div class="value">
                     {{
                       userDetailData.province +
@@ -92,16 +92,16 @@
           </div>
           <div class="user-info">
             <div class="section">
-              <div class="section-hd">付费会员信息</div>
+              <div class="section-hd">{{ $t('user.paidMemberInfo') }}</div>
               <div class="section-bd">
                 <div class="item">
-                  <div>付费会员：</div>
-                  <div class="value">{{ userDetailData.isPaidMember ? '是' : '否' }}</div>
+                  <div>{{ $t('user.paidMemberLabel') }}</div>
+                  <div class="value">{{ userDetailData.isPaidMember ? $t('common.yes') : $t('common.no') }}</div>
                 </div>
                 <div v-show="userDetailData.isPaidMember" class="item">
-                  <div>会员到期时间：</div>
+                  <div>{{ $t('user.memberExpiryLabel') }}</div>
                   <div class="value">
-                    {{ userDetailData.isPermanentPaidMember ? '永久会员' : userDetailData.paidMemberExpirationTime }}
+                    {{ userDetailData.isPermanentPaidMember ? $t('user.permanentMember') : userDetailData.paidMemberExpirationTime }}
                   </div>
                 </div>
               </div>
@@ -109,100 +109,102 @@
           </div>
           <div class="user-info">
             <div class="section">
-              <div class="section-hd-other">其他信息</div>
+              <div class="section-hd-other">{{ $t('user.otherInfo') }}</div>
               <div class="section-bd">
                 <div class="item">
-                  <div>创建ip：</div>
+                  <div>{{ $t('user.createIpLabel') }}</div>
                   <div class="value">{{ userDetailData.addIp || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>添加时间：</div>
+                  <div>{{ $t('user.addTimeLabel') }}</div>
                   <div class="value">{{ userDetailData.createTime || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>是否关联ios：</div>
-                  <div class="value">{{ userDetailData.isBindingIos == true ? '是' : '否' || '-' }}</div>
+                  <div>{{ $t('user.boundIosLabel') }}</div>
+                  <div class="value">{{ userDetailData.isBindingIos == true ? $t('common.yes') : $t('common.no') || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>是否注销：</div>
-                  <div class="value">{{ userDetailData.isLogoff == true ? '是' : '否' || '-' }}</div>
+                  <div>{{ $t('user.loggedOffLabel') }}</div>
+                  <div class="value">{{ userDetailData.isLogoff == true ? $t('common.yes') : $t('common.no') || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>是否为推广员：</div>
-                  <div class="value">{{ userDetailData.isPromoter == true ? '是' : '否' || '-' }}</div>
+                  <div>{{ $t('user.isPromoterLabel') }}</div>
+                  <div class="value">{{ userDetailData.isPromoter == true ? $t('common.yes') : $t('common.no') || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>是否关联微信android：</div>
-                  <div class="value">{{ userDetailData.isWechatAndroid == true ? '是' : '否' || '-' }}</div>
+                  <div>{{ $t('user.boundWechatAndroidLabel') }}</div>
+                  <div class="value">{{ userDetailData.isWechatAndroid == true ? $t('common.yes') : $t('common.no') || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>是否关联微信ios：</div>
-                  <div class="value">{{ userDetailData.isWechatIos == true ? '是' : '否' || '-' }}</div>
+                  <div>{{ $t('user.boundWechatIosLabel') }}</div>
+                  <div class="value">{{ userDetailData.isWechatIos == true ? $t('common.yes') : $t('common.no') || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>是否关联公众号：</div>
-                  <div class="value">{{ userDetailData.isWechatPublic == true ? '是' : '否' || '-' }}</div>
+                  <div>{{ $t('user.boundOfficialAccountLabel') }}</div>
+                  <div class="value">{{ userDetailData.isWechatPublic == true ? $t('common.yes') : $t('common.no') || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>是否关联小程序：</div>
-                  <div class="value">{{ userDetailData.isWechatRoutine == true ? '是' : '否' || '-' }}</div>
+                  <div>{{ $t('user.boundMiniProgramLabel') }}</div>
+                  <div class="value">{{ userDetailData.isWechatRoutine == true ? $t('common.yes') : $t('common.no') || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>最后一次登录ip：</div>
+                  <div>{{ $t('user.lastLoginIpLabel') }}</div>
                   <div class="value">{{ userDetailData.lastIp || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>最后一次登录时间：</div>
+                  <div>{{ $t('user.lastLoginTimeLabel') }}</div>
                   <div class="value">{{ userDetailData.lastLoginTime || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>注销时间：</div>
+                  <div>{{ $t('user.logoffTimeLabel') }}</div>
                   <div class="value">{{ userDetailData.logoffTime || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>成为分销员时间：</div>
+                  <div>{{ $t('user.promoterTimeLabel') }}</div>
                   <div class="value">{{ userDetailData.promoterTime || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>注册类型：</div>
+                  <div>{{ $t('user.registerTypeLabel') }}</div>
                   <div class="value">
                     {{
                       userDetailData.registerType == 'wechat'
-                        ? '公众号'
+                        ? $t('user.registerWechat')
                         : userDetailData.registerType == 'routine'
-                        ? '小程序'
+                        ? $t('user.registerRoutine')
                         : userDetailData.registerType == 'h5'
-                        ? 'H5'
+                        ? $t('user.registerH5')
                         : userDetailData.registerType == 'iosWx'
-                        ? '微信ios'
+                        ? $t('user.registerIosWx')
                         : userDetailData.registerType == 'androidWx'
-                        ? '微信安卓'
-                        : 'ios' || '-'
+                        ? $t('user.registerAndroidWx')
+                        : userDetailData.registerType == 'ios'
+                        ? $t('user.registerIos')
+                        : '-'
                     }}
                   </div>
                 </div>
                 <div class="item">
-                  <div>下级人数：</div>
+                  <div>{{ $t('user.subordinateCountLabel') }}</div>
                   <div class="value">{{ userDetailData.spreadCount || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>上级推广员昵称：</div>
+                  <div>{{ $t('user.parentPromoterNicknameLabel') }}</div>
                   <div class="value">{{ userDetailData.spreadName || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>绑定上级推广员时间：</div>
+                  <div>{{ $t('user.bindParentPromoterTimeLabel') }}</div>
                   <div class="value">{{ userDetailData.spreadTime || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>上级推广员id：</div>
+                  <div>{{ $t('user.parentPromoterIdLabel') }}</div>
                   <div class="value">{{ userDetailData.spreadUid || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>状态：</div>
-                  <div class="value">{{ userDetailData.status == true ? '正常' : '禁止' || '-' }}</div>
+                  <div>{{ $t('user.statusColon') }}</div>
+                  <div class="value">{{ userDetailData.status == true ? $t('user.normal') : $t('user.disabled') || '-' }}</div>
                 </div>
                 <div class="item">
-                  <div>备注：</div>
+                  <div>{{ $t('user.remarkLabel') }}</div>
                   <div class="value">{{ userDetailData.mark || '-' }}</div>
                 </div>
               </div>

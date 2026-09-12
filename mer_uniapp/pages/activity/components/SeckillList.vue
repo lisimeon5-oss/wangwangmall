@@ -9,30 +9,30 @@
 			</view>
 			<view class="acea-row row-column row-between" :class="status == 1?'':''">
 				<view class="pro_name line1 f-w-700"><text v-if="item.isSelf"
-						class="font-bg-red bt-color mr10 self_min merType bg-color">自营</text>{{item.name}}</view>
+						class="font-bg-red bt-color mr10 self_min merType bg-color">{{$t('自营')}}</text>{{item.name}}</view>
 				<view v-if="status == 1" class="seckill_zhekou acea-row row-between">
-					<view class="zhekou_price futura f-s-22 frice_hua">￥{{item.price}}</view>
+					<view class="zhekou_price futura f-s-22 frice_hua">฿{{item.price}}</view>
 					<view class="acea-row row-column row-center row-middle pb-30">
-						<text class="f-s-24 reduce_color title">直降</text>
+						<text class="f-s-24 reduce_color title">{{$t('直降')}}</text>
 						<text
-							class="f-s-24 reduce_color">¥{{(Number(item.price)-Number(item.seckillPrice)).toFixed(2)}}</text>
+							class="f-s-24 reduce_color">฿{{(Number(item.price)-Number(item.seckillPrice)).toFixed(2)}}</text>
 					</view>
-					<view class="zhekou_price f-s-20 futura text-right">即将恢复</view>
+					<view class="zhekou_price f-s-20 futura text-right">{{$t('即将恢复')}}</view>
 				</view>
 				<view v-else class="acea-row row-between">
 					<text
-						class="f-s-24 reduce_color mts">商品直降¥{{(Number(item.price)-Number(item.seckillPrice)).toFixed(2)}}</text>
+						class="f-s-24 reduce_color mts">{{$t('商品直降')}}฿{{(Number(item.price)-Number(item.seckillPrice)).toFixed(2)}}</text>
 				</view>
 				<!--  抢购中按钮-->
 				<view class="seckill_btn seckill_btn_bg1 acea-row row-middle" v-if="status == 1">
 					<view class="seckill_btn_left f-w-700">
-						<text class="friceIcon">￥</text>{{item.seckillPrice}}
+						<text class="friceIcon">฿</text>{{item.seckillPrice}}
 					</view>
 					<view class="middle"></view>
 					<view class="acea-row row-column seckill_btn_right">
-						<text class="f-s-26 f-w-700 text-white text-center">立即抢购</text>
+						<text class="f-s-26 f-w-700 text-white text-center">{{$t('立即抢购')}}</text>
 						<view class="acea-row row-middle mt12">
-							<text class="f-s-17 text-white f-w-300">已抢{{item.payRange}}</text>
+							<text class="f-s-17 text-white f-w-300">{{$t('已抢')}}{{item.payRange}}</text>
 							<view class="w80 ml8">
 								<view class="activityProgress skeleton-rect">
 									<view class='bg-reds' :style="'width:'+item.payRange"></view>
@@ -44,30 +44,30 @@
 				<!--  未开始按钮-->
 				<view class="seckill_btn seckill_btn_bg2 acea-row row-middle" v-if="status == 2 || status ==3">
 					<view class="seckill_btn_left f-w-700">
-						<text class="friceIcon">￥</text>{{item.seckillPrice}}
+						<text class="friceIcon">฿</text>{{item.seckillPrice}}
 					</view>
 					<view class="middle"></view>
 					<view class="acea-row row-column">
-						<text class="f-s-28 f-w-700 btn_text text-center">敬请期待</text>
+						<text class="f-s-28 f-w-700 btn_text text-center">{{$t('敬请期待')}}</text>
 					</view>
 				</view>
 				<view class="seckill_btn seckill_btn_bg3 acea-row row-middle" v-if="status == 0">
 					<view class="seckill_btn_left f-w-700">
-						<text class="friceIcon">￥</text>{{item.seckillPrice}}
+						<text class="friceIcon">฿</text>{{item.seckillPrice}}
 					</view>
 					<view class="middle"></view>
 					<view class="acea-row row-center row-middle">
-						<text class="f-s-28 f-w-700 btn_text text-center">已结束</text>
+						<text class="f-s-28 f-w-700 btn_text text-center">{{$t('已结束')}}</text>
 					</view>
 				</view>
 			</view>
 		</view>
 		<view class='loadingicon acea-row row-center-wrapper'>
 			<text class='loading iconfont icon-jiazai'
-				:hidden='loading==false'></text>{{seckillList.length>0?loadTitle:''}}
+				:hidden='loading==false'></text>{{seckillList.length>0?$t(loadTitle):''}}
 		</view>
 		<view class="empty-boxs" v-if="!seckillList.length && !loading">
-			<emptyPage title="暂无秒杀商品~" mTop="31%" :imgSrc="urlDomain+'crmebimage/presets/noShopper.png'"></emptyPage>
+			<emptyPage :title="$t('暂无秒杀商品~')" mTop="31%" :imgSrc="urlDomain+'crmebimage/presets/noShopper.png'"></emptyPage>
 		</view>
 	</view>
 </template>
@@ -175,7 +175,7 @@
 		box-sizing: border-box;
 
 		.picture,
-		/deep/.easy-loadimage image {
+		::v-deep .easy-loadimage image {
 			display: block;
 			margin-right: 16rpx;
 		}

@@ -36,8 +36,14 @@ public class SystemFormTemp implements Serializable {
     @ApiModelProperty(value = "表单名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言表单名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "表单简介")
     private String info;
+
+    @ApiModelProperty(value = "多语言表单简介(JSON)")
+    private String infoJson;
 
     @ApiModelProperty(value = "表单内容")
     private String content;

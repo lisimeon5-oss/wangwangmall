@@ -32,17 +32,26 @@ public class MerchantBaseInfoResponse implements Serializable {
     @ApiModelProperty(value = "商户名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言商户名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "商户分类ID")
     private Integer categoryId;
 
     @ApiModelProperty(value = "商户分类")
     private String merCategory;
 
+    @ApiModelProperty(value = "多语言商户分类(JSON)")
+    private String merCategoryJson;
+
     @ApiModelProperty(value = "商户类型ID")
     private Integer typeId;
 
     @ApiModelProperty(value = "商户类型")
     private String merType;
+
+    @ApiModelProperty(value = "多语言店铺类型(JSON)")
+    private String merTypeJson;
 
     @ApiModelProperty(value = "商户姓名")
     private String realName;

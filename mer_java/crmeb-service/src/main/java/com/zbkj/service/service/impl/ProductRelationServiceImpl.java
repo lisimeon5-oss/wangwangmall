@@ -17,6 +17,7 @@ import com.zbkj.common.request.PageParamRequest;
 import com.zbkj.common.request.UserCollectRequest;
 import com.zbkj.common.response.UserProductRelationResponse;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.service.dao.ProductRelationDao;
 import com.zbkj.service.service.ProductRelationService;
 import com.zbkj.service.service.UserService;
@@ -75,6 +76,9 @@ public class ProductRelationServiceImpl extends ServiceImpl<ProductRelationDao, 
         Integer userId = userService.getUserIdException();
         Page<Object> page = PageHelper.startPage(pageParamRequest.getPage(), pageParamRequest.getLimit());
         List<UserProductRelationResponse> list = dao.getUserList(userId);
+        if (CollUtil.isNotEmpty(list)) {
+            list.forEach(e -> e.setName(I18nJsonUtil.resolveByRequest(e.getName(), e.getNameJson())));
+        }
         return CommonPage.copyPageInfo(page, list);
     }
 

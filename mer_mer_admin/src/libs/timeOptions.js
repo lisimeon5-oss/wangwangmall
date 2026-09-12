@@ -8,58 +8,58 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +---------------------------------------------------------------------
 
-export default {
-  shortcuts: [
-    {
-      text: '昨天',
-      onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24);
-        picker.$emit('pick', [start, start]);
+import i18n from '@/i18n';
+
+export function createTimeOptions() {
+  return {
+    shortcuts: [
+      {
+        text: i18n.t('common.yesterday'),
+        onClick(picker) {
+          const end = new Date();
+          const start = new Date();
+          start.setTime(start.getTime() - 3600 * 1000 * 24);
+          picker.$emit('pick', [start, start]);
+        },
       },
-    },
-    {
-      text: '最近七天',
-      onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
-        picker.$emit('pick', [start, end]);
+      {
+        text: i18n.t('common.last7Days'),
+        onClick(picker) {
+          const end = new Date();
+          const start = new Date();
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
+          picker.$emit('pick', [start, end]);
+        },
       },
-    },
-    {
-      text: '本月',
-      onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.setTime(new Date(new Date().getFullYear(), new Date().getMonth(), 1)));
-        picker.$emit('pick', [start, end]);
+      {
+        text: i18n.t('common.thisMonth'),
+        onClick(picker) {
+          const end = new Date();
+          const start = new Date();
+          start.setTime(start.setTime(new Date(new Date().getFullYear(), new Date().getMonth(), 1)));
+          picker.$emit('pick', [start, end]);
+        },
       },
-    },
-    {
-      text: '最近30天',
-      onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-        picker.$emit('pick', [start, end]);
+      {
+        text: i18n.t('common.last30Days'),
+        onClick(picker) {
+          const end = new Date();
+          const start = new Date();
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+          picker.$emit('pick', [start, end]);
+        },
       },
-    },
-    {
-      text: '最近一年',
-      onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
-        picker.$emit('pick', [start, end]);
+      {
+        text: i18n.t('common.lastYear'),
+        onClick(picker) {
+          const end = new Date();
+          const start = new Date();
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
+          picker.$emit('pick', [start, end]);
+        },
       },
-    },
-  ],
-  // disabledDate(time) {
-  //   let curDate = (new Date()).getTime();
-  //   let three = 365 * 24 * 3600 * 1000;
-  //   let threeMonths = curDate - three;
-  //   return time.getTime() > Date.now() || time.getTime() < threeMonths;;
-  // }
-};
+    ],
+  };
+}
+
+export default createTimeOptions;

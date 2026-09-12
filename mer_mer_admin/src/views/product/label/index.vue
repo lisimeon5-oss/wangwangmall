@@ -4,8 +4,8 @@
       <div slot="header" class="clearfix">
         <div class="container" v-hasPermi="['merchant:product:rule:page:list']">
           <el-form inline size="small" @submit.native.prevent>
-            <el-form-item label="标签名称：">
-              <el-input v-model.trim="keywords" placeholder="请输入标签名称" class="selWidth" clearable>
+            <el-form-item :label="$t('product.labelName')">
+              <el-input v-model.trim="keywords" :placeholder="$t('product.labelNamePlaceholder')" class="selWidth" clearable>
                 <el-button slot="append" icon="el-icon-search" @click="seachList" />
               </el-input>
             </el-form-item>
@@ -13,7 +13,7 @@
         </div>
         <div class="acea-row">
           <el-button size="small" type="primary" @click="handleAdd" v-hasPermi="['merchant:product:rule:save']"
-            >添加标签</el-button
+            >{{ $t('product.addLabel') }}</el-button
           >
         </div>
       </div>
@@ -26,13 +26,13 @@
         highlight-current-row
       >
         <el-table-column prop="id" label="ID" min-width="60" />
-        <el-table-column prop="ruleName" label="标签名称" />
-        <el-table-column prop="ruleName" label="排序" />
-        <el-table-column label="操作" fixed width="100">
+        <el-table-column prop="ruleName" :label="$t('product.labelNameColumn')" />
+        <el-table-column prop="ruleName" :label="$t('product.labelSort')" />
+        <el-table-column :label="$t('product.operate')" fixed width="100">
           <template slot-scope="scope">
-            <a @click="handleEdit(scope.row)" v-hasPermi="['merchant:product:rule:update']">编辑</a>
+            <a @click="handleEdit(scope.row)" v-hasPermi="['merchant:product:rule:update']">{{ $t('product.edit') }}</a>
             <el-divider></el-divider>
-            <a @click="handleDelete(scope.row.id, scope.$index)" v-hasPermi="['merchant:product:rule:delete']">删除</a>
+            <a @click="handleDelete(scope.row.id, scope.$index)" v-hasPermi="['merchant:product:rule:delete']">{{ $t('product.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -132,7 +132,7 @@ export default {
       this.$modalSure()
         .then(() => {
           attrDeleteApi(id).then(() => {
-            this.$message.success('删除成功');
+            this.$message.success(this.$t('product.deleteSuccess'));
             handleDeleteTable(this.tableData.data.length, this.tableFrom);
             this.getList();
           });

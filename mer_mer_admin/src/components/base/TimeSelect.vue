@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-time-select
-      placeholder="起始时间"
+      :placeholder="translateText('起始时间')"
       v-model="startTime"
       :picker-options="{
         start: '00:00',
@@ -11,7 +11,7 @@
     >
     </el-time-select>
     <el-time-select
-      placeholder="结束时间"
+      :placeholder="translateText('结束时间')"
       v-model="endTime"
       :picker-options="{
         start: '00:00',

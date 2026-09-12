@@ -32,6 +32,9 @@ import com.zbkj.common.response.ProductDetailResponse;
 import com.zbkj.common.response.ProductMerchantResponse;
 import com.zbkj.common.response.groupbuy.*;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.ProductSpecI18nUtil;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.service.dao.groupby.GroupBuyActivitySkuDao;
 import com.zbkj.service.service.*;
 import com.zbkj.service.service.groupbuy.GroupBuyActivityService;
@@ -148,13 +151,15 @@ public class GroupBuyActivitySkuServiceImpl extends ServiceImpl<GroupBuyActivity
         GroupBuyActivitySku currentActivitySku = currentSkuList.stream().min(Comparator.comparing(GroupBuyActivitySku::getActivePrice)).orElse(null);
         // 将团购商品属性和普通商品属性合并
         Product product = productService.getById(currentActivitySku.getProductId());
+        I18nJsonUtil.applyProductDisplay(product);
         // 排除审核失败的商品
         if(product.getAuditStatus().equals(ProductConstants.AUDIT_STATUS_WAIT) ||
                 product.getAuditStatus().equals(ProductConstants.AUDIT_STATUS_FAIL)) throw new CrmebException("当前商品为审核或者审核拒绝");
 
         ProductDescription sd = productDescriptionService.getByProductIdAndType(product.getId(), product.getType(), product.getMarketingType());
         if (ObjectUtil.isNotNull(sd)) {
-            product.setContent(StrUtil.isBlank(sd.getDescription()) ? "" : sd.getDescription());
+            product.setContentJson(sd.getDescriptionJson());
+            product.setContent(I18nJsonUtil.resolveLocalizedHtml(sd.getDescription(), sd.getDescriptionJson(), RequestUtil.getLang()));
         }
         // 获取用户
         Integer userId = userService.getUserId();
@@ -280,6 +285,7 @@ public class GroupBuyActivitySkuServiceImpl extends ServiceImpl<GroupBuyActivity
         }
         productDetailResponse.setProductInfo(product);
         productDetailResponse.setProductValue(skuMap);
+        ProductSpecI18nUtil.localizeForFront(attributeList, skuMap);
 
         // 获取商户信息
         Merchant merchant = merchantService.getById(product.getMerId());
@@ -330,6 +336,7 @@ public class GroupBuyActivitySkuServiceImpl extends ServiceImpl<GroupBuyActivity
         Integer offset = (paramRequest.getPage() - 1) * paramRequest.getLimit();
         List<GroupBuyActivityProductListForSale> listByGroupProductIdByList = dao.getListByGroupProductIdByList(offset, paramRequest.getLimit(), showgroup);
         for (GroupBuyActivityProductListForSale groupBuyActivityProductListForSale : listByGroupProductIdByList) {
+            applyFrontGroupProductI18n(groupBuyActivityProductListForSale);
             // 根据拼团主id 查询 对应拼团sku 信息和商品信息
             List<GroupBuyActivitySku> skus = getActivitySkusListByActivityIdAndProductId(groupBuyActivityProductListForSale.getGroupActivityId(), groupBuyActivityProductListForSale.getProductId());
 
@@ -655,6 +662,7 @@ public class GroupBuyActivitySkuServiceImpl extends ServiceImpl<GroupBuyActivity
         Page<GroupBuyActivitySku> page = PageHelper.startPage(request.getPage(), request.getLimit());
         List<GroupBuyActivityProductListForSale> productList = dao.findGroupMerchantProductListByFront(request.getMerId());
         for (GroupBuyActivityProductListForSale groupBuyActivityProductListForSale : productList) {
+            applyFrontGroupProductI18n(groupBuyActivityProductListForSale);
             // 根据拼团主id 查询 对应拼团sku 信息和商品信息
             List<GroupBuyActivitySku> skus = getActivitySkusListByActivityIdAndProductId(groupBuyActivityProductListForSale.getGroupActivityId(), groupBuyActivityProductListForSale.getProductId());
             // 根据拼团商品价格排序规则
@@ -666,6 +674,15 @@ public class GroupBuyActivitySkuServiceImpl extends ServiceImpl<GroupBuyActivity
                     groupBuyActivityProductListForSale.getGroupActivityId()));
         }
         return CommonPage.copyPageInfo(page, productList);
+    }
+
+    /** C 端拼团列表：按请求语言解析商品名 / 活动名 */
+    private void applyFrontGroupProductI18n(GroupBuyActivityProductListForSale item) {
+        if (item == null) {
+            return;
+        }
+        item.setProductName(I18nJsonUtil.resolveByRequest(item.getProductName(), item.getProductNameJson()));
+        item.setGroupName(I18nJsonUtil.resolveByRequest(item.getGroupName(), item.getGroupNameJson()));
     }
 
 

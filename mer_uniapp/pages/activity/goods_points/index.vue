@@ -4,7 +4,7 @@
 			:style="{'background-image': pointsgoodsImg}">
 			<!-- #ifndef H5 -->
 			<view class='cart_nav'>
-				<nav-bar navTitle="热门推荐" iconColor='#fff' :backgroundColor="backgroundColor"
+				<nav-bar :navTitle="$t('热门推荐')" iconColor='#fff' :backgroundColor="backgroundColor"
 					:isBackgroundColor="isBackgroundColor" ref="navBarRef"></nav-bar>
 			</view>
 			<!-- #endif -->
@@ -14,7 +14,7 @@
 			<view class="list-item" v-for="(item, index) in integralGood" :key="index">
 				<view class="group-bottom acea-row row-between" @click="toGroupDeatil(item)">
 					<view class="group-bottom-left relative">
-						<view v-show="item.stock===0" class="sellOut">已售罄</view>
+						<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 						<easy-loadimage :image-src="item.image" width="220rpx" height="220rpx"
 							:radius="10"></easy-loadimage>
 					</view>
@@ -22,9 +22,9 @@
 						<view class="title line2 h-80 lh-40rpx mb-46rpx mt-12">{{item.name}}</view>
 						<PointsPrice :pointsPrice="item" :pointsGoodsStyle="hotPointsStyle"></PointsPrice>
 						<view class="right-bottom acea-row  row-between mt-20rpx pos-rel">
-							<view class="sales text-24rpx text-999">已有{{item.sales}}人兑换</view>
+							<view class="sales text-24rpx text-999">{{$t('已有')}}{{item.sales}}{{$t('人兑换')}}</view>
 							<view class="btn-box mt-0 lh-56rpx h-56 px-32 abs-rb">
-								<view class="btn f-s-26">去兑换</view>
+								<view class="btn f-s-26">{{$t('去兑换')}}</view>
 							</view>
 						</view>
 					</view>

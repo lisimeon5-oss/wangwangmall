@@ -2298,7 +2298,10 @@
 }
 
 .icon-yuezhifu:before {
-  content: "\e65e";
+  content: "฿";
+  font-family: Arial, "PingFang SC", "Noto Sans Thai", sans-serif !important;
+  font-weight: 700;
+  font-size: 14px;
 }
 
 .icon-yuezhifu1:before {

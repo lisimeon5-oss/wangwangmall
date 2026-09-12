@@ -11,7 +11,7 @@
           <div v-for="(item, listIndex) in leftComponents" :key="listIndex">
             <div class="components-title">
               <svg-icon icon-class="component" />
-              {{ item.title }}
+              {{ fgT(item.title) }}
             </div>
             <draggable
               class="components-draggable"
@@ -30,7 +30,7 @@
               >
                 <div class="components-body">
                   <svg-icon :icon-class="element.__config__.tagIcon" />
-                  {{ element.__config__.label }}
+                  {{ fgT(element.__config__.label) }}
                 </div>
               </div>
             </draggable>
@@ -43,22 +43,22 @@
       <div class="action-bar">
         <el-form ref="selfForm" inline :model="selfForm">
           <el-form-item
-            label="名称"
+            :label="$t('category.name')"
             prop="name"
-            :rules="[{ required: true, message: '请填写名称', trigger: ['blur', 'change'] }]"
+            :rules="[{ required: true, message: $t('formGenerator.pleaseFillName'), trigger: ['blur', 'change'] }]"
           >
-            <el-input v-model.trim="selfForm.name" placeholder="名称" />
+            <el-input v-model.trim="selfForm.name" :placeholder="$t('category.name')" />
           </el-form-item>
           <el-form-item
-            label="描述"
+            :label="$t('maintain.description')"
             prop="info"
-            :rules="[{ required: true, message: '请填写描述', trigger: ['blur', 'change'] }]"
+            :rules="[{ required: true, message: $t('formGenerator.pleaseFillDesc'), trigger: ['blur', 'change'] }]"
           >
-            <el-input v-model.trim="selfForm.info" placeholder="描述" />
+            <el-input v-model.trim="selfForm.info" :placeholder="$t('maintain.description')" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handlerSaveJSON('selfForm')" v-hasPermi="['admin:system:form:update']"
-              >保存</el-button
+              >{{ $t('common.save') }}</el-button
             >
           </el-form-item>
         </el-form>
@@ -85,7 +85,7 @@
                 @deleteItem="drawingItemDelete"
               />
             </draggable>
-            <div v-show="!drawingList.length" class="empty-info">从左侧拖入或点选组件进行表单设计</div>
+            <div v-show="!drawingList.length" class="empty-info">{{ $t('formGenerator.dragHint') }}</div>
           </el-form>
         </el-row>
       </el-scrollbar>
@@ -107,7 +107,7 @@
     />
     <code-type-dialog
       :visible.sync="dialogVisible"
-      title="选择生成类型"
+      :title="translateText('选择生成类型')"
       :show-file-name="showFileName"
       @confirm="generate"
     />
@@ -151,6 +151,7 @@ import DraggableItem from './DraggableItem';
 import { getDrawingList, saveDrawingList, getIdGlobal, saveIdGlobal, getFormConf, getFormConfSelf } from '../utils/db';
 import loadBeautifier from '../utils/loadBeautifier';
 import { Debounce } from '@/utils/validate';
+import formGeneratorI18n from '../utils/formGeneratorI18n';
 let beautifier;
 const emptyActiveData = { style: {}, autosize: {} };
 let oldActiveId;
@@ -160,6 +161,7 @@ const formConfInDB = getFormConf();
 const idGlobal = getIdGlobal();
 
 export default {
+  mixins: [formGeneratorI18n],
   components: {
     draggable,
     render,
@@ -282,15 +284,15 @@ export default {
       text: (trigger) => {
         const codeStr = this.generateCode();
         this.$notify({
-          title: '成功',
-          message: '代码已复制到剪切板，可粘贴。',
+          title: this.translateText('成功'),
+          message: this.translateText('代码已复制到剪切板，可粘贴。'),
           type: 'success',
         });
         return codeStr;
       },
     });
     clipboard.on('error', (e) => {
-      this.$message.error('代码复制失败');
+      this.$message.error(this.translateText('代码复制失败'));
     });
   },
   methods: {
@@ -349,7 +351,7 @@ export default {
       document.getElementById('copyNode').click();
     },
     empty() {
-      this.$confirm('确定要清空所有组件吗？', '提示', { type: 'warning' }).then(() => {
+      this.$confirm(this.translateText('确定要清空所有组件吗？'), this.translateText('提示'), { type: 'warning' }).then(() => {
         this.drawingList = [];
         this.idGlobal = 100;
       });
@@ -407,7 +409,7 @@ export default {
         if (!result) return;
         const formConfig = getFormConfSelf();
         if (formConfig.fields.length === 0) {
-          this.$message.error('表单配置数据不能为空');
+          this.$message.error(this.translateText('表单配置数据不能为空'));
           return;
         }
         this.selfForm.content = JSON.stringify(formConfig);

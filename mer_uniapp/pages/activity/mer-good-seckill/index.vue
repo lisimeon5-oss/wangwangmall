@@ -2,7 +2,7 @@
 	<view class="activity-box">
 		<view class="activity_header" :style="{backgroundImage: headerBg}">
 			<view class='cart_nav'>
-				<nav-bar navTitle="秒杀列表" ref="navBarRef" iconColor='#fff' :backgroundColor="backgroundColor"
+				<nav-bar :navTitle="$t('秒杀列表')" ref="navBarRef" iconColor='#fff' :backgroundColor="backgroundColor"
 					:isBackgroundColor="false"></nav-bar>
 			</view>
 		</view>
@@ -107,11 +107,11 @@
 
 <style scoped lang="scss">
 	 @import "../static/css/activity.scss";
-	/deep/.seckill_list{
+	::v-deep .seckill_list{
 		padding: 0 !important;
 		background-color: #f5f5f5 !important;
 	}
-	/deep/.seckill_item{
+	::v-deep .seckill_item{
 		border: none;
 	}
 </style>

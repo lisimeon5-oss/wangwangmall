@@ -4,14 +4,14 @@
     <div v-if="isUpdate">
       <template v-if="configData.isHotspot != 1">
         <div class="divider"></div>
-        <div class="title mb10">布局</div>
+        <div class="title mb10">{{ $t('pagediy.layout') }}</div>
       </template>
-      <div class="tip mb20">选定布局区域，在下方添加图片，建议添加比例一致的图片</div>
+      <div class="tip mb20">{{ $t('pagediy.selectLayoutAddImageTip') }}</div>
       <div class="advert">
         <div v-if="style === 0">
           <div class="advertItem01 acea-row" v-for="(item, index) in configData.picList" :key="index">
-            <img :src="item.image" v-if="item.image" class="img-style" />
-            <div class="empty-box" v-else>尺寸不限</div>
+            <img :src="cubeImg(item)" v-if="cubeImg(item)" class="img-style" />
+            <div class="empty-box" v-else>{{ $t('pagediy.sizeUnlimited') }}</div>
           </div>
         </div>
         <div v-if="style === 1" class="advertItem02 acea-row" :style="gapStyle">
@@ -24,16 +24,16 @@
             :key="index"
           >
             <img
-              :src="item.image"
-              v-if="item.image"
+              :src="cubeImg(item)"
+              v-if="cubeImg(item)"
               :class="item.radioVal === '0' ? 'stretch' : item.radioVal === '1' ? 'scale' : 'fill'"
               class="img-style"
               :style="radiusStyle"
             />
             <div class="empty-box" v-else>
               <div>
-                <div>宽375像素</div>
-                <div>高度不限</div>
+                <div>{{ $t('pagediy.widthPx', { n: 375 }) }}</div>
+                <div>{{ $t('pagediy.heightUnlimited') }}</div>
               </div>
             </div>
           </div>
@@ -48,16 +48,16 @@
             :key="index"
           >
             <img
-              :src="item.image"
-              v-if="item.image"
+              :src="cubeImg(item)"
+              v-if="cubeImg(item)"
               :class="item.radioVal === '0' ? 'stretch' : item.radioVal === '1' ? 'scale' : 'fill'"
               class="img-style"
               :style="radiusStyle"
             />
             <div class="empty-box" v-else>
               <div>
-                <div>宽250像素</div>
-                <div>高度不限</div>
+                <div>{{ $t('pagediy.widthPx', { n: 250 }) }}</div>
+                <div>{{ $t('pagediy.heightUnlimited') }}</div>
               </div>
             </div>
           </div>
@@ -70,8 +70,8 @@
             :style="spaceStyleTwo"
           >
             <img
-              :src="configData.picList[0].image"
-              v-if="configData.picList[0].image"
+              :src="cubeImg(configData.picList[0])"
+              v-if="cubeImg(configData.picList[0])"
               :class="
                 configData.picList[0].radioVal === '0'
                   ? 'stretch'
@@ -82,13 +82,13 @@
               class="img-style img-left"
               :style="radiusStyle"
             />
-            <div class="empty-box" v-else>375*375像素或同比例</div>
+            <div class="empty-box" v-else>{{ $t('pagediy.sizeOrRatio', { w: 375, h: 375 }) }}</div>
           </div>
           <div class="item pic-four" :style="spaceStyleFour">
             <div class="pic" :class="currentIndex === 1 ? 'on' : ''" @click="currentTab(1, configData)">
               <img
-                :src="configData.picList[1].image"
-                v-if="configData.picList[1].image"
+                :src="cubeImg(configData.picList[1])"
+                v-if="cubeImg(configData.picList[1])"
                 :class="
                   configData.picList[1].radioVal === '0'
                     ? 'stretch'
@@ -99,12 +99,12 @@
                 class="img-style"
                 :style="radiusStyle"
               />
-              <div class="empty-box" v-else>375*188像素或同比例</div>
+              <div class="empty-box" v-else>{{ $t('pagediy.sizeOrRatio', { w: 375, h: 188 }) }}</div>
             </div>
             <div class="pic" :class="currentIndex === 2 ? 'on' : ''" @click="currentTab(2, configData)">
               <img
-                :src="configData.picList[2].image"
-                v-if="configData.picList[2].image"
+                :src="cubeImg(configData.picList[2])"
+                v-if="cubeImg(configData.picList[2])"
                 :class="
                   configData.picList[2].radioVal === '0'
                     ? 'stretch'
@@ -115,7 +115,7 @@
                 class="img-style"
                 :style="radiusStyle"
               />
-              <div class="empty-box" v-else>375*188像素或同比例</div>
+              <div class="empty-box" v-else>{{ $t('pagediy.sizeOrRatio', { w: 375, h: 188 }) }}</div>
             </div>
           </div>
         </div>
@@ -129,13 +129,13 @@
             :key="index"
           >
             <img
-              :src="item.image"
-              v-if="item.image"
+              :src="cubeImg(item)"
+              v-if="cubeImg(item)"
               :class="item.radioVal === '0' ? 'stretch' : item.radioVal === '1' ? 'scale' : 'fill'"
               class="img-style"
               :style="radiusStyle"
             />
-            <div class="empty-box" v-else>宽188像素高度不限</div>
+            <div class="empty-box" v-else>{{ $t('pagediy.widthPxHeightUnlimited', { n: 188 }) }}</div>
           </div>
         </div>
         <div v-if="style === 5" class="advertItem06 acea-row" :style="gapStyle">
@@ -148,13 +148,13 @@
             :key="index"
           >
             <img
-              :src="item.image"
-              v-if="item.image"
+              :src="cubeImg(item)"
+              v-if="cubeImg(item)"
               :class="item.radioVal === '0' ? 'stretch' : item.radioVal === '1' ? 'scale' : 'fill'"
               class="img-style"
               :style="radiusStyle"
             />
-            <div class="empty-box" v-else>375*188像素或同比例</div>
+            <div class="empty-box" v-else>{{ $t('pagediy.sizeOrRatio', { w: 375, h: 188 }) }}</div>
           </div>
         </div>
       </div>
@@ -172,6 +172,7 @@
 // +----------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
+import { getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'c_pictrue',
   props: {
@@ -190,7 +191,9 @@ export default {
       currentIndex: 0,
       arrayObj: {
         image: '',
+        imageJson: '',
         link: '',
+        radioVal: '0',
       },
     };
   },
@@ -263,6 +266,7 @@ export default {
         let list = this.defaults.menuConfig.list[0];
         if (this.configData.picList[0]) {
           list.img = this.configData.picList[0].image;
+          list.imgJson = this.configData.picList[0].imageJson || '';
           list.info[0].value = this.configData.picList[0].link;
         }
       },
@@ -270,17 +274,23 @@ export default {
     },
   },
   methods: {
+    cubeImg(item) {
+      if (!item) return '';
+      return getLocalizedText(item.image, item.imageJson, getUiLocale(this));
+    },
     currentTab(e, data) {
       this.currentIndex = e;
       this.configData.tabVal = e;
       if (this.defaults.menuConfig.isCube) {
         let list = this.defaults.menuConfig.list[0];
-        if (data.picList[e] && data.picList[e].image) {
-          list.img = data.picList[e].image;
-          list.info[0].value = data.picList[e].link;
-          list.info[0].radioVal = data.picList[e].radioVal;
+        if (data.picList[e]) {
+          list.img = data.picList[e].image || '';
+          list.imgJson = data.picList[e].imageJson || '';
+          list.info[0].value = data.picList[e].link || '';
+          list.info[0].radioVal = data.picList[e].radioVal || '0';
         } else {
           list.img = '';
+          list.imgJson = '';
           list.info[0].value = '';
           list.info[0].radioVal = '0';
         }
@@ -288,7 +298,12 @@ export default {
     },
     picArrayConcat(count) {
       for (let i = this.configData.picList.length; i < count; i++) {
-        this.configData.picList.push(this.arrayObj);
+        this.configData.picList.push({
+          image: '',
+          imageJson: '',
+          link: '',
+          radioVal: '0',
+        });
       }
     },
   },

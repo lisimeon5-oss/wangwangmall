@@ -68,7 +68,7 @@
 			<!-- dateranges -->
 			<view v-if="item.name=='dateranges'" class="discount">
 				<uni-datetime-picker v-model="item.value" type="daterange" class="text-28rpx flex" @maskClick="maskClick">
-          <view v-if="item.value == ''" class="text--w111-ccc">请选择</view>
+          <view v-if="item.value == ''" class="text--w111-ccc">{{$t('请选择')}}</view>
           <view v-else>{{item.value.length?item.value[0]+' - '+item.value[1]:item.tipConfig.val}}</view>
 					<text class='iconfont icon-xiangxia'></text>
 				</uni-datetime-picker>
@@ -97,7 +97,7 @@
 					range-key="val">
 					<view class="acea-row row-between-wrapper">
 						<view v-if="item.value" class="text-28rpx">{{item.value}}</view>
-						<view v-else class="text--w111-ccc text-28rpx">请选择</view>
+						<view v-else class="text--w111-ccc text-28rpx">{{$t('请选择')}}</view>
 						<text class='iconfont icon-xiangxia'></text>
 					</view>
 				</picker>
@@ -131,7 +131,7 @@
 					</view>
 					<view class='pictrue acea-row row-center-wrapper row-column' @tap='uploadpic(item)' style="margin-right: 0"
 						v-if="item.value.length < item.numConfig.val">
-						<view>上传图片</view>
+						<view>{{$t('上传图片')}}</view>
 					</view>
 				</view>
 			</view>

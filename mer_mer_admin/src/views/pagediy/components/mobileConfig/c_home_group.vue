@@ -1,5 +1,12 @@
 <template>
   <div class="mobile-config pro">
+    <div class="lang-name-switch" v-if="showMediaLang">
+      <el-radio-group v-model="mediaLang" size="mini">
+        <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+          {{ lang.label }}
+        </el-radio-button>
+      </el-radio-group>
+    </div>
     <div v-for="(item, key) in rCom" :key="key">
       <component
         :is="item.components.name"
@@ -29,7 +36,11 @@
 // +---------------------------------------------------------------------
 import toolCom from '@/components/PageDiy/mobileConfigRight/index.js';
 import rightBtn from '@/components/PageDiy/rightBtn/index.vue';
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { applyDiyUiLabels } from '@/utils/diyCname';
+import homeGroupPage from '../mobilePage/home_group.vue';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { resolveFormActiveLang } from '@/utils/localizedName';
 export default {
   name: 'c_home_group',
   componentsName: 'home_group',
@@ -57,12 +68,26 @@ export default {
           configNme: 'setUp',
         },
       ],
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
     };
+  },
+  computed: {
+    showMediaLang() {
+      return this.configObj && this.configObj.setUp && Number(this.configObj.setUp.tabVal) === 0;
+    },
+    mediaLang: {
+      get() {
+        return (this.configObj && this.configObj.diyMediaLang) || this.defaultLangCode;
+      },
+      set(val) {
+        this.$set(this.configObj, 'diyMediaLang', val);
+      },
+    },
   },
   watch: {
     num(nVal) {
-      let value = JSON.parse(JSON.stringify(this.$store.state.mobildConfig.defaultArray[nVal]));
-      this.configObj = value;
+      this.loadConfig(nVal);
     },
     configObj: {
       handler(nVal, oVal) {
@@ -231,18 +256,52 @@ export default {
     },
   },
   mounted() {
+    this.getLanguageList();
     this.$nextTick(() => {
-      let value = JSON.parse(JSON.stringify(this.$store.state.mobildConfig.defaultArray[this.num]));
-      this.configObj = value;
+      this.loadConfig(this.num);
     });
   },
   created() {},
   methods: {
-    getConfig(data) {
-      if (data.name && data.name === 'c_input_item') this.configObj.linkConfig.val = data.values;
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.mediaLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.mediaLang = resolveFormActiveLang(this);
+        });
     },
+    loadConfig(nVal) {
+      const raw = this.$store.state.mobildConfig.defaultArray[nVal];
+      if (!raw) return;
+      const value = JSON.parse(JSON.stringify(raw));
+      if (!value.diyMediaLang) value.diyMediaLang = this.defaultLangCode;
+      this.configObj = applyDiyUiLabels(value, { data: homeGroupPage.data, num: nVal });
+    },
+    getConfig() {},
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.lang-name-switch {
+  padding: 12px 20px 0;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+</style>

@@ -9,10 +9,10 @@
     >
       <div class="padding-add">
         <el-form inline @submit.native.prevent label-position="right">
-          <el-form-item label="数据搜索：">
+          <el-form-item :label="$t('maintain.dataSearchLabel')">
             <el-input
               v-model.trim="keywords"
-              placeholder="请输入组合数据名称"
+              :placeholder="$t('maintain.pleaseEnterGroupDataName')"
               class="selWidth"
               size="small"
               clearable
@@ -20,25 +20,29 @@
             ></el-input>
           </el-form-item>
           <el-form-item class="search-form-sub">
-            <el-button type="primary" size="small" @click="handlerSearch">搜索</el-button>
+            <el-button type="primary" size="small" @click="handlerSearch">{{ $t('common.search') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '20px' }" shadow="never" :bordered="false">
       <el-button size="mini" type="primary" @click="handlerOpenEdit({}, 0)" v-hasPermi="['platform:system:group:save']"
-        >添加数据组</el-button
+        >{{ $t('maintain.addDataGroup') }}</el-button
       >
       <el-table :data="dataList.list" class="mt20" size="small" highlight-current-row>
-        <el-table-column label="数据组名称" prop="name" min-width="150" />
-        <el-table-column label="简介" prop="info" min-width="150" />
-        <el-table-column label="操作" fixed="right" width="170">
+        <el-table-column :label="$t('maintain.dataGroupName')" min-width="150">
+          <template slot-scope="scope">{{ getLocalizedGroupName(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('maintain.intro')" min-width="150">
+          <template slot-scope="scope">{{ getLocalizedGroupInfo(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('common.operate')" fixed="right" width="170">
           <template slot-scope="scope">
-            <a @click="handleDataList(scope.row)" v-hasPermi="['platform:system:group:data:list']">数据列表</a>
+            <a @click="handleDataList(scope.row)" v-hasPermi="['platform:system:group:data:list']">{{ $t('maintain.dataList') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a @click="handlerOpenEdit(scope.row, 1)" v-hasPermi="['platform:system:group:update']">编辑</a>
+            <a @click="handlerOpenEdit(scope.row, 1)" v-hasPermi="['platform:system:group:update']">{{ $t('common.edit') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a @click="handleDelete(scope.row)" v-hasPermi="['platform:system:group:delete']">删除</a>
+            <a @click="handleDelete(scope.row)" v-hasPermi="['platform:system:group:delete']">{{ $t('common.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -53,7 +57,7 @@
       />
     </el-card>
     <el-dialog
-      :title="editDialogConfig.isCreate === 0 ? '创建数据组' : '编辑数据组'"
+      :title="editDialogConfig.isCreate === 0 ? $t('maintain.createDataGroup') : $t('maintain.editDataGroup')"
       :visible.sync="editDialogConfig.visible"
       class="dialog-bottom"
     >
@@ -65,7 +69,7 @@
         @closeDialog="closeDialog"
       />
     </el-dialog>
-    <el-dialog title="组合数据列表" :visible.sync="comDataListConfig.visible">
+    <el-dialog :title="$t('maintain.groupDataList')" :visible.sync="comDataListConfig.visible">
       <cm-data-list v-if="comDataListConfig.visible" :form-data="comDataListConfig.formData" />
     </el-dialog>
   </div>
@@ -85,6 +89,7 @@ import edit from '@/views/maintain/devconfig/combinedDataEdit';
 import * as systemGroupApi from '@/api/systemGroup';
 import cmDataList from './combineDataList';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { getLocalizedName, getLocalizedText } from '@/utils/localizedName';
 export default {
   // name: "combinedData"
   components: { edit, cmDataList },
@@ -117,6 +122,21 @@ export default {
   },
   methods: {
     checkPermi,
+    currentLocale() {
+      return (
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn'
+      );
+    },
+    getLocalizedGroupName(row) {
+      return getLocalizedName(row, this.currentLocale());
+    },
+    getLocalizedGroupInfo(row) {
+      return getLocalizedText(row ? row.info : '', row ? row.infoJson : '', this.currentLocale());
+    },
     closeDialog() {
       this.editDialogConfig.visible = false;
     },
@@ -136,14 +156,14 @@ export default {
       });
     },
     handleDataList(rowData) {
-      if (rowData.formId <= 0) return this.$message.error('请先关联表单');
+      if (rowData.formId <= 0) return this.$message.error(this.$t('maintain.pleaseAssociateFormFirst'));
       this.comDataListConfig.formData = rowData;
       this.comDataListConfig.visible = true;
     },
     handleDelete(rowData) {
-      this.$modalSure('删除当前数据吗').then(() => {
+      this.$modalSure(this.$t('maintain.deleteCurrentDataConfirm')).then(() => {
         systemGroupApi.groupDelete(rowData).then((data) => {
-          this.$message.success('删除数据成功');
+          this.$message.success(this.$t('content.deleteDataSuccess'));
           setTimeout(() => {
             this.handlerGetList(this.listPram);
           }, 800);

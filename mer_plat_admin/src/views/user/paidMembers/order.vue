@@ -9,75 +9,75 @@
     >
       <div class="padding-add">
         <el-form size="small" label-position="right" inline @submit.native.prevent>
-          <el-form-item label="支付时间：">
+          <el-form-item :label="$t('order.payTime')">
             <el-date-picker
               v-model="timeVal"
               size="small"
               type="daterange"
-              placeholder="选择日期"
+              :placeholder="$t('user.chooseDate')"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
               range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
+              :start-placeholder="$t('user.startDate')"
+              :end-placeholder="$t('user.endDate')"
               @change="onchangeTime"
               class="selWidth"
             />
           </el-form-item>
-          <el-form-item label="支付方式：">
+          <el-form-item :label="$t('user.payMethodLabel')">
             <el-select
               v-model.trim="tableFrom.payType"
               clearable
               size="small"
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="selWidth"
               @change="getList(1)"
             >
-              <el-option label="微信" value="weixin" />
-              <el-option label="支付宝" value="alipay" />
-              <el-option label="余额" value="yue" />
-              <el-option label="平台赠送" value="give" />
+              <el-option :label="$t('order.wechat')" value="weixin" />
+              <el-option :label="$t('order.alipay')" value="alipay" />
+              <el-option :label="$t('order.balance')" value="yue" />
+              <el-option :label="$t('user.platformGift')" value="give" />
             </el-select>
           </el-form-item>
-          <el-form-item label="支付状态：">
+          <el-form-item :label="$t('user.payStatusLabel')">
             <el-select
               v-model.trim="tableFrom.payStatus"
               clearable
               size="small"
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="selWidth"
               @change="getList(1)"
             >
-              <el-option label="未支付" value="0" />
-              <el-option label="已支付" value="1" />
+              <el-option :label="$t('order.unpaid')" value="0" />
+              <el-option :label="$t('order.paid')" value="1" />
             </el-select>
           </el-form-item>
-          <el-form-item label="订单编号：">
+          <el-form-item :label="$t('order.orderNoLabel')">
             <el-input
               v-model.trim="orderNoSeach"
               @keyup.enter.native="getList(1)"
               size="small"
               clearable
-              placeholder="请输入订单编号"
+              :placeholder="$t('order.pleaseEnterOrderNo')"
               class="selWidth"
             />
           </el-form-item>
-          <el-form-item label="会员卡名：">
+          <el-form-item :label="$t('user.cardNameSearch')">
             <el-input
               v-model.trim="cardName"
               @keyup.enter.native="getList(1)"
               size="small"
               clearable
-              placeholder="请输入会员卡名"
+              :placeholder="$t('user.pleaseEnterCardName')"
               class="selWidth"
             />
           </el-form-item>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('order.userSearch')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset">{{ $t('common.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -92,35 +92,35 @@
         class="mt20"
       >
         <el-table-column prop="id" label="ID" min-width="60" />
-        <el-table-column prop="orderNo" label="订单号" min-width="180" :show-overflow-tooltip="true" />
-        <el-table-column label="用户昵称/ID" min-width="120">
+        <el-table-column prop="orderNo" :label="$t('user.orderNoCol')" min-width="180" :show-overflow-tooltip="true" />
+        <el-table-column :label="$t('user.nicknameId')" min-width="120">
           <template slot-scope="scope">
             <span class="spBlock">{{ scope.row.userNickname + '/' + scope.row.uid }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="userPhone" label="手机号" min-width="150" />
-        <el-table-column prop="cardName" label="会员卡名称" min-width="150" />
-        <el-table-column prop="price" label="支付金额(元)" min-width="110" />
-        <el-table-column prop="payType" label="支付状态" min-width="110">
+        <el-table-column prop="userPhone" :label="$t('user.phoneCol')" min-width="150" />
+        <el-table-column prop="cardName" :label="$t('user.cardNameCol')" min-width="150" />
+        <el-table-column prop="price" :label="$t('user.payAmount')" min-width="110" />
+        <el-table-column prop="payType" :label="$t('user.payStatusCol')" min-width="110">
           <template slot-scope="scope">
             <span class="spBlock">{{ scope.row.paid | paidFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="payType" label="支付方式" min-width="110">
+        <el-table-column prop="payType" :label="$t('user.payMethodCol')" min-width="110">
           <template slot-scope="scope">
             <span class="spBlock">{{ scope.row.payType | filterCardPayType }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="payTime" label="支付时间" min-width="150" />
-        <el-table-column prop="cardExpirationTime" label="到期时间" min-width="150">
+        <el-table-column prop="payTime" :label="$t('user.payTimeCol')" min-width="150" />
+        <el-table-column prop="cardExpirationTime" :label="$t('user.expireTime')" min-width="150">
           <template slot-scope="scope">
-            <span v-if="scope.row.type === 2" class="spBlock">永久</span>
+            <span v-if="scope.row.type === 2" class="spBlock">{{ $t('user.permanent') }}</span>
             <span v-else class="spBlock">{{ scope.row.cardExpirationTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="80" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="80" fixed="right">
           <template slot-scope="scope">
-            <a @click="handleInfo(scope.row.orderNo)" v-hasPermi="['platform:paid:member:order:info']">详情 </a>
+            <a @click="handleInfo(scope.row.orderNo)" v-hasPermi="['platform:paid:member:order:info']">{{ $t('common.detail') }} </a>
           </template>
         </el-table-column>
       </el-table>

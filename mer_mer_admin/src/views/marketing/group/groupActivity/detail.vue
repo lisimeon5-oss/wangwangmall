@@ -7,7 +7,7 @@
             <div class="order_icon"><span class="iconfont icon-dingdan"></span></div>
             <div class="text">
               <div class="title">
-                <span>{{ groupInfo.groupName }}</span>
+                <span>{{ localizedGroupName(groupInfo) }}</span>
                 <el-tag
                   size="mini"
                   effect="plain"
@@ -16,77 +16,77 @@
                 >
               </div>
               <div>
-                <span class="mr20">{{ `${groupInfo.startTime}至${groupInfo.endTime}` }}</span>
+                <span class="mr20">{{ groupInfo.startTime }} {{ $t('marketing.timeTo') }} {{ groupInfo.endTime }}</span>
               </div>
             </div>
           </div>
           <ul class="list">
             <li class="item">
-              <div class="title">审核状态</div>
+              <div class="title">{{ $t('product.auditStatus') }}</div>
               <div>
                 <span>{{ groupStatusArr[groupInfo.groupStatus] }}</span>
               </div>
             </li>
             <li class="item">
-              <div class="title">开团数</div>
+              <div class="title">{{ $t('marketing.startedGroupCount') }}</div>
               <div>{{ groupInfo.totalActivityBegin }}</div>
             </li>
             <li class="item">
-              <div class="title">成团数</div>
+              <div class="title">{{ $t('marketing.formedGroupCount') }}</div>
               <div>{{ groupInfo.totalActivityDone }}</div>
             </li>
             <li class="item">
-              <div class="title">参团订单数</div>
+              <div class="title">{{ $t('marketing.joinGroupOrderCount') }}</div>
               <div>{{ groupInfo.totalOrderBegin }}</div>
             </li>
             <li class="item">
-              <div class="title">成团订单数</div>
+              <div class="title">{{ $t('marketing.formedOrderCount') }}</div>
               <div>{{ groupInfo.totalOrderDone }}</div>
             </li>
           </ul>
         </div>
         <el-tabs type="border-card" v-model="activeName">
-          <el-tab-pane label="活动信息" name="detail">
+          <el-tab-pane :label="$t('marketing.activityInfo')" name="detail">
             <div class="detailSection" style="border: none">
-              <div class="title">基础信息</div>
+              <div class="title">{{ $t('community.basicInfo') }}</div>
               <ul class="list">
                 <li class="item">
-                  <div class="tips">活动标签：</div>
-                  <div class="value">{{ groupInfo.buyCount }}人团</div>
+                  <div class="tips">{{ $t('marketing.activityTagLabel') }}</div>
+                  <div class="value">{{ $t('marketing.peopleGroup', { count: groupInfo.buyCount }) }}</div>
                 </li>
                 <li class="item">
-                  <div class="tips">成团人数：</div>
+                  <div class="tips">{{ $t('marketing.formedCountLabel') }}</div>
                   <div class="value">{{ groupInfo.buyCount }}</div>
                 </li>
                 <li class="item">
-                  <div class="tips">成团有效期：</div>
-                  <div class="value">{{ groupInfo.validHour }}小时</div>
+                  <div class="tips">{{ $t('marketing.formedValidityLabel') }}</div>
+                  <div class="value">{{ $t('marketing.hoursValue', { count: groupInfo.validHour }) }}</div>
                 </li>
                 <li class="item">
-                  <div class="tips">活动限购：</div>
-                  <div class="value">{{ groupInfo.allQuota == -1 ? '不限' : groupInfo.allQuota }}</div>
+                  <div class="tips">{{ $t('marketing.activityPurchaseLimitLabel') }}</div>
+                  <div class="value">{{ groupInfo.allQuota == -1 ? $t('marketing.unlimited') : groupInfo.allQuota }}</div>
                 </li>
                 <li class="item">
-                  <div class="tips">单次限购：</div>
-                  <div class="value">{{ groupInfo.oncQuota == -1 ? '不限' : groupInfo.oncQuota }}</div>
+                  <div class="tips">{{ $t('marketing.singlePurchaseLimitLabel') }}</div>
+                  <div class="value">{{ groupInfo.oncQuota == -1 ? $t('marketing.unlimited') : groupInfo.oncQuota }}</div>
                 </li>
               </ul>
             </div>
             <div class="detailSection">
-              <div class="title">高级设置</div>
+              <div class="title">{{ $t('marketing.advancedSettings') }}</div>
               <ul class="list">
                 <li class="item">
-                  <div class="tips">凑团：</div>
-                  <div class="value">{{ groupInfo.showGroup ? '开启' : '关闭' }}</div>
+                  <div class="tips">{{ $t('marketing.joinGroupLabel') }}</div>
+                  <div class="value">{{ groupInfo.showGroup ? $t('common.open') : $t('common.close') }}</div>
                 </li>
                 <li class="item">
-                  <div class="tips">虚拟成团：</div>
-                  <div class="value">{{ groupInfo.fictiStatus ? '开启' : '关闭' }}</div>
+                  <div class="tips">{{ $t('marketing.virtualGroupLabel') }}</div>
+                  <div class="value">{{ groupInfo.fictiStatus ? $t('common.open') : $t('common.close') }}</div>
                 </li>
               </ul>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="商品信息" name="goods">
+          <el-tab-pane :label="$t('product.productInfo')" name="goods">
             <div>
               <div
                 class="table-box"
@@ -102,13 +102,11 @@
                     ></i>
                     <img :src="item.image" alt="" />
                     <div class="text table-text">
-                      <div class="title line1" :title="item.productName">{{ item.productName }}</div>
+                      <div class="title line1" :title="localizedProductName(item)">{{ localizedProductName(item) }}</div>
                     </div>
                   </div>
                 </div>
-                <div class="tablelHead text-title" v-if="!item.groupBuyActivitySkuResponses.length">
-                  该商品已下架，无法进行拼团购买！
-                </div>
+                <div class="tablelHead text-title" v-if="!item.groupBuyActivitySkuResponses.length">{{ $t('marketing.productOffShelfGroupBuyTip') }}</div>
                 <div class="tablelHead" v-if="item.groupBuyActivitySkuResponses.length">
                   <el-table
                     :data="item.groupBuyActivitySkuResponses"
@@ -116,33 +114,33 @@
                     size="small"
                     v-if="!item.visible"
                   >
-                    <el-table-column label="图片">
+                    <el-table-column :label="$t('product.image')">
                       <template slot-scope="scope">
                         <img :src="scope.row['attrValue'][0].image" alt="" />
                       </template>
                     </el-table-column>
-                    <el-table-column label="规格" prop="sku">
+                    <el-table-column :label="$t('marketing.spec')" prop="sku">
                       <template slot-scope="scope">
-                        <span>{{ scope.row['attrValue'][0].sku }}</span>
+                        <span>{{ localizedSku(scope.row, item) }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="商品编码" prop="barCode">
+                    <el-table-column :label="$t('marketing.productCode')" prop="barCode">
                       <template slot-scope="scope">
                         <span>{{ scope.row['attrValue'][0].barCode || '--' }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="售价（元）" prop="price">
+                    <el-table-column :label="$t('marketing.salePriceYuan')" prop="price">
                       <template slot-scope="scope">
                         <span>{{ scope.row['attrValue'][0].price }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="剩余库存" prop="stock">
+                    <el-table-column :label="$t('marketing.remainingStock')" prop="stock">
                       <template slot-scope="scope">
                         <span>{{ scope.row['attrValue'][0].stock }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="拼团价（元）" prop="activePrice"></el-table-column>
-                    <el-table-column label="拼团限量" prop="quota"></el-table-column>
+                    <el-table-column :label="$t('marketing.groupPriceYuan')" prop="activePrice"></el-table-column>
+                    <el-table-column :label="$t('marketing.groupQuotaLimit')" prop="quota"></el-table-column>
                   </el-table>
                 </div>
               </div>
@@ -165,6 +163,8 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 
+import { getLocalizedText, getUiLocale, localizeSpecSku } from '@/utils/localizedName';
+
 export default {
   props: {},
   data() {
@@ -173,8 +173,8 @@ export default {
       direction: 'rtl',
       dialogVisible: false,
       groupInfo: {},
-      groupStatusArr: ['初始化', '已拒绝', '已撤销', '待审核', '已通过'],
-      groupProcessArr: ['未开始', '进行中', '已结束'],
+      groupStatusArr: [this.$t('marketing.initialize'), this.$t('common.rejected'), this.$t('order.revoked'), this.$t('product.listAwaitAudit'), this.$t('common.approved')],
+      groupProcessArr: [this.$t('common.notStarted'), this.$t('common.ongoing'), this.$t('common.ended')],
     };
   },
   watch: {},
@@ -182,6 +182,18 @@ export default {
     this.activeName = 'detail';
   },
   methods: {
+    localizedGroupName(row) {
+      return getLocalizedText(row.groupName, row.groupNameJson, getUiLocale(this));
+    },
+    localizedProductName(row) {
+      return getLocalizedText(row.productName, row.productNameJson, getUiLocale(this));
+    },
+    localizedSku(row, product) {
+      const attrValue = row && row.attrValue && row.attrValue[0];
+      const sku = (attrValue && attrValue.sku) || (row && row.sku) || '';
+      const attrList = (product && product.attrList) || (row && row.attrList);
+      return localizeSpecSku(sku, this.$t.bind(this), attrList, getUiLocale(this));
+    },
     openClose(item) {
       if (item.visible) {
         this.$set(item, 'visible', false);

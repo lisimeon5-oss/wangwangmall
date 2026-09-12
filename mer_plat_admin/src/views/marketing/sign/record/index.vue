@@ -9,7 +9,7 @@
     >
       <div class="padding-add">
         <el-form size="small" inline @submit.native.prevent>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('product.timeSelectLabel')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -17,17 +17,17 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               style="width: 260px"
               @change="onchangeTime"
             />
           </el-form-item>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('product.userSearchLabel')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -41,26 +41,26 @@
         :highlight-current-row="true"
       >
         <el-table-column prop="id" label="ID" min-width="50" />
-        <el-table-column label="头像" min-width="80">
+        <el-table-column :label="$t('user.avatar')" min-width="80">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.avatar" :preview-src-list="[scope.row.avatar]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="昵称" min-width="150" :show-overflow-tooltip="true">
+        <el-table-column :label="$t('user.nickname')" min-width="150" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.nickname }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="手机号" prop="phone" min-width="100" :show-overflow-tooltip="true"> </el-table-column>
-        <el-table-column label="连续签到天数" prop="day" min-width="100" :show-overflow-tooltip="true">
+        <el-table-column :label="$t('user.phoneCol')" prop="phone" min-width="100" :show-overflow-tooltip="true"> </el-table-column>
+        <el-table-column :label="$t('marketing.continuousSignDays')" prop="day" min-width="100" :show-overflow-tooltip="true">
         </el-table-column>
-        <el-table-column prop="experience" label="签到经验" min-width="100" />
-        <el-table-column prop="integral" label="签到积分" min-width="100" />
-        <el-table-column prop="awardExperience" label="连续签获经验" min-width="100" />
-        <el-table-column prop="awardIntegral" label="连续签获积分" min-width="100" />
-        <el-table-column label="签到日期" min-width="120">
+        <el-table-column prop="experience" :label="$t('marketing.signExperience')" min-width="100" />
+        <el-table-column prop="integral" :label="$t('marketing.signPoints')" min-width="100" />
+        <el-table-column prop="awardExperience" :label="$t('marketing.continuousSignExp')" min-width="100" />
+        <el-table-column prop="awardIntegral" :label="$t('marketing.continuousSignPoints')" min-width="100" />
+        <el-table-column :label="$t('marketing.signDate')" min-width="120">
           <template slot-scope="scope">
             <span>{{ scope.row.date }}</span>
           </template>

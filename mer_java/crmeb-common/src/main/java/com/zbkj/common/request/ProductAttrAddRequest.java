@@ -40,6 +40,9 @@ public class ProductAttrAddRequest implements Serializable {
     @NotBlank(message = "规格名不能为空")
     private String attributeName;
 
+    @ApiModelProperty(value = "多语言规格名称(JSON)")
+    private String attributeNameJson;
+
     @ApiModelProperty(value = "是否展示规格图片", required = true)
     @NotNull(message = "请选择是否展示规格图片")
     private Boolean isShowImage;

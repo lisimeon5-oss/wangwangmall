@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zbkj.common.model.product.ProductAttrValue;
+import com.zbkj.common.model.product.ProductAttribute;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -125,6 +126,10 @@ public class SeckillProduct implements Serializable {
     @TableField(exist = false)
     private List<ProductAttrValue> attrValue;
 
+    @ApiModelProperty(value = "主商品规格（含多语言规格值）")
+    @TableField(exist = false)
+    private List<ProductAttribute> attrList;
+
     @ApiModelProperty(value = "商品分类名称")
     @TableField(exist = false)
     private String categoryName;
@@ -136,4 +141,8 @@ public class SeckillProduct implements Serializable {
     @ApiModelProperty(value = "商品详情")
     @TableField(exist = false)
     private String content;
+
+    @ApiModelProperty(value = "多语言商品详情(JSON)")
+    @TableField(exist = false)
+    private String contentJson;
 }

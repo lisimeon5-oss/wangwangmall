@@ -4,7 +4,7 @@
 			<view class="header"></view>
 			<view class="whiteBg" v-if="tabOn == 2">
 				<view class="input">
-					<input type="number" placeholder="请输入核销码" v-model="verify_code" />
+					<input type="number" :placeholder="$t('请输入核销码')" v-model="verify_code" />
 				</view>
 				<view class="bnt" @click="codeChange">
 					<text class="iconfont icon-sousuo7"></text>
@@ -16,11 +16,11 @@
 			<view class="tabbar-box acea-row">
 				<view class="item" :class="{ on: tabOn == 1 }" @click="onTab(1)">
 					<view class="bg"></view>
-					<view class="inner"><text class="iconfont icon-ic_Scan"></text>扫码核销</view>
+					<view class="inner"><text class="iconfont icon-ic_Scan"></text>{{$t('扫码核销')}}</view>
 				</view>
 				<view class="item" :class="{ on: tabOn == 2 }" @click="onTab(2)">
 					<view class="bg"></view>
-					<view class="inner"><text class="iconfont icon-ic_edit"></text>手动输入</view>
+					<view class="inner"><text class="iconfont icon-ic_edit"></text>{{$t('手动输入')}}</view>
 				</view>
 			</view>
 		</view>
@@ -96,7 +96,7 @@
 				let self = this
 				let ref = /^[0-9]*$/;
 				if (!this.verify_code) return self.$util.Tips({
-					title: '请输入核销码'
+					title: this.$t('请输入核销码')
 				});
 				orderGetVerfication({
 					verifyCode: this.verify_code
@@ -138,7 +138,7 @@
 					})
 				}else{
 					return self.$util.Tips({
-						title: '扫码核销仅支持小程序/公众号/APP',
+						title: this.$t('扫码核销仅支持小程序/公众号/APP'),
 						endtime:2000,
 					});
 				}

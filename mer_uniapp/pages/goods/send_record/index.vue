@@ -1,7 +1,7 @@
 <template>
 	<view :data-theme="theme" class="record-box">
 		<!-- #ifndef APP-PLUS || MP -->
-		<nav-bar navTitle='发货记录' ref="navBarRef"></nav-bar>
+		<nav-bar :navTitle="$t('发货记录')" ref="navBarRef"></nav-bar>
 		<!-- #endif -->
 		<view class="mp-bg"></view>
 		<view class="product-box"  @touchstart="touchStart">
@@ -21,19 +21,19 @@
 			</view>
 			<view class="info-box">
 				<view class="item acea-row row-between">
-					<view>发货方式</view>
-					<view>{{deliveryInfo.deliveryType=='merchant'?'商家送货':'无需发货'}}</view>
+					<view>{{$t('发货方式')}}</view>
+					<view>{{deliveryInfo.deliveryType=='merchant'? $t('商家送货') : $t('无需发货')}}</view>
 				</view>
 				<view class="item acea-row row-between" v-if="deliveryInfo.deliveryType=='noNeed'">
-					<view>发货备注</view>
+					<view>{{$t('发货备注')}}</view>
 					<view class="text-width wrap-normal">{{deliveryInfo.deliveryMark}}</view>
 				</view>
 				<view class="item acea-row row-between" v-if="deliveryInfo.deliveryType=='merchant'">
-					<view>配送人员</view>
+					<view>{{$t('配送人员')}}</view>
 					<view>{{deliveryInfo.deliveryCarrier}}</view>
 				</view>
 				<view class="item acea-row row-between" v-if="deliveryInfo.deliveryType=='merchant'">
-					<view>手机号码</view>
+					<view>{{$t('手机号码')}}</view>
 					<view>{{deliveryInfo.carrierPhone}}</view>
 				</view>
 			</view>

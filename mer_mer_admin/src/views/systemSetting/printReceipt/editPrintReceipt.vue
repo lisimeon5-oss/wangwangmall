@@ -2,91 +2,91 @@
   <div>
     <el-form :model="editDataLocal" ref="editDataLocal" label-width="100px" class="demo-dynamic">
       <el-form-item
-        label="配置名称："
+        :label="$t('systemSetting.configNameLabel')"
         prop="printName"
-        :rules="{ required: true, message: '打印机配置名称不能为空', trigger: 'blur' }"
+        :rules="{ required: true, message: $t('systemSetting.printerConfigNameRequired'), trigger: 'blur' }"
       >
-        <el-input v-model="editDataLocal.printName" placeholder="打印机配置名称"></el-input>
+        <el-input v-model="editDataLocal.printName" :placeholder="$t('systemSetting.printerConfigName')"></el-input>
       </el-form-item>
-      <el-form-item label="打印机类型：">
+      <el-form-item :label="$t('systemSetting.printerTypeLabel')">
         <el-radio-group v-model="editDataLocal.printType">
-          <el-radio :label="0">易联云</el-radio>
-          <el-radio :label="1">飞鹅云</el-radio>
+          <el-radio :label="0">{{ $t('systemSetting.yilianyun') }}</el-radio>
+          <el-radio :label="1">{{ $t('systemSetting.feieyun') }}</el-radio>
         </el-radio-group>
       </el-form-item>
       <div v-if="editDataLocal.printType === 0">
         <el-form-item
           label="AppId："
           prop="printYlyAppid"
-          :rules="{ required: true, message: 'AppId不能为空', trigger: 'blur' }"
+          :rules="{ required: true, message: $t('systemSetting.requiredField', { field: 'AppId' }), trigger: 'blur' }"
         >
           <el-input v-model="editDataLocal.printYlyAppid" placeholder="AppId"></el-input>
         </el-form-item>
         <el-form-item
           label="Userid："
           prop="printYlyUserid"
-          :rules="{ required: true, message: 'Userid不能为空', trigger: 'blur' }"
+          :rules="{ required: true, message: $t('systemSetting.requiredField', { field: 'Userid' }), trigger: 'blur' }"
         >
           <el-input v-model="editDataLocal.printYlyUserid" placeholder="Userid"></el-input>
         </el-form-item>
         <el-form-item
           label="Sec："
           prop="printYlySec"
-          :rules="{ required: true, message: 'Sec不能为空', trigger: 'blur' }"
+          :rules="{ required: true, message: $t('systemSetting.requiredField', { field: 'Sec' }), trigger: 'blur' }"
         >
           <el-input v-model="editDataLocal.printYlySec" placeholder="Sec"></el-input>
         </el-form-item>
         <el-form-item
-          label="打印机编码："
+          :label="$t('systemSetting.printerCodeLabel')"
           prop="printYlyMerchineNo"
-          :rules="{ required: true, message: '打印机编码不能为空', trigger: 'blur' }"
+          :rules="{ required: true, message: $t('systemSetting.printerCodeRequired'), trigger: 'blur' }"
         >
-          <el-input v-model="editDataLocal.printYlyMerchineNo" placeholder="打印机编码"></el-input>
+          <el-input v-model="editDataLocal.printYlyMerchineNo" :placeholder="$t('systemSetting.printerCode')"></el-input>
         </el-form-item>
       </div>
       <div v-if="editDataLocal.printType === 1">
         <el-form-item
           label="Name："
           prop="printFeName"
-          :rules="{ required: true, message: 'Name不能为空', trigger: 'blur' }"
+          :rules="{ required: true, message: $t('systemSetting.requiredField', { field: 'Name' }), trigger: 'blur' }"
         >
           <el-input v-model="editDataLocal.printFeName" placeholder="Name"></el-input>
         </el-form-item>
         <el-form-item
           label="User："
           prop="printFeUser"
-          :rules="{ required: true, message: 'User不能为空', trigger: 'blur' }"
+          :rules="{ required: true, message: $t('systemSetting.requiredField', { field: 'User' }), trigger: 'blur' }"
         >
           <el-input v-model="editDataLocal.printFeUser" placeholder="User"></el-input>
         </el-form-item>
         <el-form-item
           label="Ukey："
           prop="printFeUkey"
-          :rules="{ required: true, message: 'Ukey不能为空', trigger: 'blur' }"
+          :rules="{ required: true, message: $t('systemSetting.requiredField', { field: 'Ukey' }), trigger: 'blur' }"
         >
           <el-input v-model="editDataLocal.printFeUkey" placeholder="Ukey"></el-input>
         </el-form-item>
         <el-form-item
-          label="打印机编码："
+          :label="$t('systemSetting.printerCodeLabel')"
           prop="printFeSn"
-          :rules="{ required: true, message: '打印机编码不能为空', trigger: 'blur' }"
+          :rules="{ required: true, message: $t('systemSetting.printerCodeRequired'), trigger: 'blur' }"
         >
-          <el-input v-model="editDataLocal.printFeSn" placeholder="打印机编码"></el-input>
+          <el-input v-model="editDataLocal.printFeSn" :placeholder="$t('systemSetting.printerCode')"></el-input>
         </el-form-item>
       </div>
-      <el-form-item label="状态：">
+      <el-form-item :label="$t('user.statusColon')">
         <el-switch
           v-model="editDataLocal.status"
           :active-value="1"
-          active-text="启用"
+          :active-text="$t('common.enable')"
           :inactive-value="0"
-          inactive-text="停用"
+          :inactive-text="$t('common.disable')"
         />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer-inner">
-      <el-button @click="close">取消</el-button>
-      <el-button type="primary" @click="handleSubmitClickUp('editDataLocal')">提交</el-button>
+      <el-button @click="close">{{ $t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="handleSubmitClickUp('editDataLocal')">{{ $t('common.submit') }}</el-button>
     </div>
   </div>
 </template>
@@ -180,13 +180,13 @@ export default {
     },
     handledAddPrintConfig(param) {
       systemSetting.merchantPrintSave(param).then((data) => {
-        this.$message.success('新增成功');
+        this.$message.success(this.$t('common.addSuccess'));
         this.handledCloseDia();
       });
     },
     handledEditPrintConfig(param) {
       systemSetting.merchantPrintEdit(param).then((data) => {
-        this.$message.success('编辑成功');
+        this.$message.success(this.$t('common.editSuccess'));
         this.handledCloseDia();
       });
     },

@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.zbkj.common.model.community.CommunityTopic">
         <id column="id" property="id" />
         <result column="name" property="name" />
+        <result column="name_json" property="nameJson" />
         <result column="is_hot" property="isHot" />
         <result column="count_use" property="countUse" />
         <result column="count_view" property="countView" />
@@ -18,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, `name`, is_hot, count_use, count_view, sort, is_del, create_type, create_time, update_time
+        id, `name`, name_json, is_hot, count_use, count_view, sort, is_del, create_type, create_time, update_time
     </sql>
 
 </mapper>

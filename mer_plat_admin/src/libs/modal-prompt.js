@@ -16,36 +16,32 @@
  * @returns {Promise<any>}
  */
 export default function modalPrompt(inputType, title, val) {
-  return new Promise((resolve, reject) => {
+  const locale = String((this.$i18n && this.$i18n.locale) || 'zh-cn').toLowerCase();
+  const join = locale.startsWith('zh') ? '' : ' ';
+  const pleaseEnter = `${this.$t('formGenerator.pleaseEnter')}${join}${title}`.trim();
+  return new Promise((resolve) => {
     this.$prompt('', `${title}`, {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      inputErrorMessage: `请输入${title}`,
+      confirmButtonText: this.$t('el.messagebox.confirm'),
+      cancelButtonText: this.$t('el.messagebox.cancel'),
+      inputErrorMessage: pleaseEnter,
       inputType: inputType,
       inputValue: val ? val : '',
       showClose: true,
       closeOnClickModal: false,
       customClass: 'prompt-form',
-      inputPlaceholder: `请输入${title}`,
-      // inputValidator: (val) => {
-      //   if (val === null) {
-      //     return true;
-      //   }
-      //   return !(val.length > 11 || val.length < 11)
-      // },
-      //inputErrorMessage: '格式不正确',
+      inputPlaceholder: pleaseEnter,
       inputValidator: (value) => {
         if (value === null) {
           return true;
         }
-        if (!value) return '输入不能为空';
-        if (value.indexOf(' ') !== -1) return '输入不能为空';
-        if (value.length > 50) return '输入限制50字以内';
+        if (!value) return this.$t('common.inputCannotBeEmpty');
+        if (value.indexOf(' ') !== -1) return this.$t('common.inputCannotBeEmpty');
+        if (value.length > 50) return this.$t('common.inputMax50');
       },
       beforeClose: (action, instance, done) => {
         if (action === 'confirm') {
           instance.confirmButtonLoading = true;
-          instance.confirmButtonText = '执行中...';
+          instance.confirmButtonText = this.$t('common.executing');
           setTimeout(() => {
             done();
             instance.confirmButtonLoading = false;
@@ -59,7 +55,7 @@ export default function modalPrompt(inputType, title, val) {
         resolve(value);
       })
       .catch(() => {
-        this.$message.info('取消输入');
+        this.$message.info(this.$t('common.cancelInput'));
       });
   });
 }

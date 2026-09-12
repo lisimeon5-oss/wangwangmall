@@ -36,8 +36,14 @@ public class MerchantType implements Serializable {
     @ApiModelProperty(value = "类型名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言类型名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "类型要求说明")
     private String info;
+
+    @ApiModelProperty(value = "多语言类型要求说明(JSON)")
+    private String infoJson;
 
     @ApiModelProperty(value = "是否删除")
     private Boolean isDel;

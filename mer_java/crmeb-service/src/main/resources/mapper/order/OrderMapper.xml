@@ -42,7 +42,8 @@
         <if test="keywords != null and keywords !='' ">
             and (order_no like CONCAT('%',#{keywords},'%')
                 or
-                order_no in (select order_no from eb_order_detail where product_name like CONCAT('%',#{keywords},'%')))
+                order_no in (select order_no from eb_order_detail where product_name like CONCAT('%',#{keywords},'%')
+                    or product_id in (select id from eb_product where name_json like CONCAT('%',#{keywords},'%'))))
         </if>
         <if test="secondType != null">
             and second_type = 1

@@ -11,7 +11,7 @@
 					<view class="longItem"
 						:style="'width:'+isWidth+'px;color:' + (index == tabClick ? checkColor : fontColor)+';--color:'+checkColor"
 						:data-index="index" :class="index===tabClick?'click':''" v-for="(item,index) in tabList"
-						:key="index" :id="'id'+index" @click="longClick(index,item)">{{ item.title }}
+						:key="index" :id="'id'+index" @click="longClick(index,item)">{{ tabTitleText(item) }}
 					</view>
 				</scroll-view>
 			</view>
@@ -33,6 +33,7 @@
 	import {
 		getCategoryFirst,
 	} from '@/api/api.js';
+	import { getLocalizedDiyTitle } from '@/utils/localizedName';
 	let app = getApp();
 	export default {
 		name: 'tabNav',
@@ -74,17 +75,16 @@
 			},
 			//选中颜色
 			checkColor() {
-				return this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.checkColor.color[0].item:this.themeColor
+				return this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.checkColor.color[0].item:this.themeColor
 			},
 			tabList() {
-				//type=0微页面，1分类，2首页
-				let tabList = this.dataConfig.listConfig.list;
-				tabList.unshift({
+				//type=0微页面，1分类，2首页；「首页」由前端固定插入，不在装修列表里
+				const list = (this.dataConfig.listConfig && this.dataConfig.listConfig.list) || [];
+				return [{
 					title: '首页',
 					type: 2,
 					val: 0
-				})
-				return tabList
+				}].concat(list);
 			},
 		},
 		created() {
@@ -126,6 +126,9 @@
 			}
 		},
 		methods: {
+			tabTitleText(item) {
+				return getLocalizedDiyTitle(item, this.i18nLocale);
+			},
 			// 导航栏点击
 			longClick(index, item) {
 				this.tabItem = item;

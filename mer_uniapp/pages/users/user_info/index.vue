@@ -4,7 +4,7 @@
 			<view class='personal-data borderPad'>
 				<view class='list borRadius14'>
 					<view class="item acea-row row-between-wrapper">
-						<view>头像</view>
+						<view>{{$t('头像')}}</view>
 						<!-- #ifndef MP -->
 						<view class="pictrue" @click.stop='uploadpic'>
 							<image :src='avatarUrl'></image>
@@ -21,48 +21,75 @@
 						<!-- #endif -->
 					</view>
 					<view class='item acea-row row-between-wrapper'>
-						<view>昵称</view>
+						<view>{{$t('昵称')}}</view>
 						<view class='input fontColor'>
 							<!-- #ifndef MP -->
 							<input type='text' name='nickname' :value='nickname' maxlength="10"></input>
 							<!-- #endif -->
 							<!-- #ifdef MP -->
 							<input type="nickname" name='nickname' :value='nickname' class="weui-input"
-								placeholder="请输入昵称" maxlength="10"/>
+								:placeholder="$t('请输入昵称')" maxlength="10"/>
 							<!-- #endif -->
 						</view>
 					</view>
 					<view class='item acea-row row-between-wrapper'>
-						<view>性别</view>
-						<view class='input'>
-							<picker @change="bindSexChange" :value="sexindex" :range="sexList" range-key="name">
-								<view class="uni-input">{{sexList[sexindex].name}}</view>
-							</picker>
+						<view>{{$t('性别')}}</view>
+						<view class='input' @click="openSexPicker">
+							<view class="uni-input">{{(sexPickerList[sexindex] && sexPickerList[sexindex].name) || ''}}</view>
 						</view>
 					</view>
 					<view class='item acea-row row-between-wrapper'>
-						<view>出生日期</view>
-						<view class='input'>
-							<picker mode="date" :value="date"
-								@change="bindDateChange">
-								<view class="uni-input">{{date}}</view>
-							</picker>
+						<view>{{$t('出生日期')}}</view>
+						<view class='input' @click="openBirthdayPicker">
+							<view class="uni-input">{{date}}</view>
 						</view>
 					</view>
 					<view class='item acea-row row-between-wrapper'>
-						<view>地区</view>
-						<view class='input'>
-							<picker mode="multiSelector" :value="cityIndex" :range="cityData" @change="bindCityChange"
-								@columnchange="selMonitor">
-								<view class="uni-input">{{addressNode.province&&addressNode.city ? addressNode.province + ' , ' + addressNode.city : '-'}}
-								</view>
-							</picker>
+						<view>{{$t('地区')}}</view>
+						<view class='input' @click="openRegionPicker">
+							<view class="uni-input">{{addressNode.province&&addressNode.city ? addressNode.province + ' , ' + addressNode.city : '-'}}
+							</view>
 						</view>
 					</view>
 				</view>
-				<button class='modifyBnt bg_color' formType="submit">保存修改</button>
+				<button class='modifyBnt bg_color' formType="submit">{{$t('保存修改')}}</button>
 			</view>
 		</form>
+		<view v-if="pickerType" class="bday-mask" @click="closePicker" @touchmove.stop.prevent>
+			<view class="bday-panel" @click.stop>
+				<view class="bday-bar">
+					<text class="bday-bar-btn" @click="closePicker">{{$t('取消')}}</text>
+					<text class="bday-bar-btn bday-bar-ok" @click="confirmPicker">{{$t('完成')}}</text>
+				</view>
+				<picker-view v-if="pickerType === 'sex'" class="bday-view" indicator-style="height: 44px;"
+					:value="sexPickIndex" @change="onSexPickChange">
+					<picker-view-column>
+						<view class="bday-item" v-for="(item, i) in sexPickerList" :key="'s'+i">{{item.name}}</view>
+					</picker-view-column>
+				</picker-view>
+				<picker-view v-else-if="pickerType === 'birthday'" class="bday-view" indicator-style="height: 44px;"
+					:value="birthdayIndex" @change="onBirthdayChange">
+					<picker-view-column>
+						<view class="bday-item" v-for="(y, i) in birthdayYears" :key="'y'+i">{{y}}{{dateUnit.year}}</view>
+					</picker-view-column>
+					<picker-view-column>
+						<view class="bday-item" v-for="(m, i) in birthdayMonths" :key="'m'+i">{{m}}{{dateUnit.month}}</view>
+					</picker-view-column>
+					<picker-view-column>
+						<view class="bday-item" v-for="(d, i) in birthdayDays" :key="'d'+i">{{d}}{{dateUnit.day}}</view>
+					</picker-view-column>
+				</picker-view>
+				<picker-view v-else-if="pickerType === 'region'" class="bday-view" indicator-style="height: 44px;"
+					:value="regionIndex" @change="onRegionChange">
+					<picker-view-column>
+						<view class="bday-item" v-for="(p, i) in cityData[0]" :key="'p'+i">{{p}}</view>
+					</picker-view-column>
+					<picker-view-column>
+						<view class="bday-item" v-for="(c, i) in cityData[1]" :key="'c'+i">{{c}}</view>
+					</picker-view-column>
+				</picker-view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -91,6 +118,9 @@
 	import {
 		Debounce
 	} from '@/utils/validate.js'
+	import {
+		getLocale
+	} from '@/i18n'
 	import city from "../static/js/city.js";
 	let app = getApp();
 	const CACHE_ADDRESS = {};
@@ -130,18 +160,61 @@
 				cityAllList: [],
 				avatarUrl: "",
 				nickname: '',
-				userInfo: null
+				userInfo: null,
+				pickerType: '',
+				birthdayIndex: [0, 0, 0],
+				sexPickIndex: [0],
+				regionIndex: [0, 0]
 			};
 		},
 		computed: {
 			...mapGetters(['isLogin']),
+			sexPickerList() {
+				return this.sexList.map((item) => ({
+					val: item.val,
+					name: this.$t(item.name)
+				}));
+			},
 			startDate() {
 				return this.getDate('start');
 			},
 			endDate() {
 				return this.getDate('end');
+			},
+			dateUnit() {
+				if (getLocale() === 'zh-cn') {
+					return { year: '年', month: '月', day: '日' };
+				}
+				return { year: '', month: '', day: '' };
+			},
+			birthdayYears() {
+				const start = parseInt(this.startDate.slice(0, 4), 10);
+				const end = parseInt(this.endDate.slice(0, 4), 10);
+				const years = [];
+				for (let y = start; y <= end; y++) {
+					years.push(String(y));
+				}
+				return years;
+			},
+			birthdayMonths() {
+				const months = [];
+				for (let m = 1; m <= 12; m++) {
+					months.push(m < 10 ? '0' + m : String(m));
+				}
+				return months;
+			},
+			birthdayDays() {
+				const yi = this.birthdayIndex[0] || 0;
+				const mi = this.birthdayIndex[1] || 0;
+				const year = parseInt(this.birthdayYears[yi] || '2000', 10);
+				const month = parseInt(this.birthdayMonths[mi] || '1', 10);
+				const count = new Date(year, month, 0).getDate();
+				const days = [];
+				for (let d = 1; d <= count; d++) {
+					days.push(d < 10 ? '0' + d : String(d));
+				}
+				return days;
 			}
-
 		},
 		onLoad() {
 			//this.loadAddress(1, 1);
@@ -201,7 +274,7 @@
 					avatarUrl
 				} = e.detail
 				uni.showLoading({
-					title: '加载中...'
+					title: this.$t('加载中...')
 				});
 				this.$util.uploadImgs( avatarUrl, {
 					url: 'upload/image',
@@ -267,12 +340,98 @@
 					city: this.cityData[1][val[1]]
 				}
 			},
-			bindSexChange(e) {
-				this.sexindex = e.detail.value;
-				this.sex = this.sexList[this.sexindex].val;
+			openSexPicker() {
+				this.sexPickIndex = [this.sexindex || 0];
+				this.pickerType = 'sex';
 			},
-			bindDateChange: function(e) {
-				this.date = e.detail.value
+			onSexPickChange(e) {
+				this.sexPickIndex = e.detail.value || [0];
+			},
+			openRegionPicker() {
+				let pi = this.cityData[0].indexOf(this.addressNode.province);
+				if (pi < 0) pi = 0;
+				this.cityData[1] = this.cityAllList[pi] || [];
+				let ci = this.cityData[1].indexOf(this.addressNode.city);
+				if (ci < 0) ci = 0;
+				this.regionIndex = [pi, ci];
+				this.pickerType = 'region';
+			},
+			onRegionChange(e) {
+				const val = e.detail.value || [0, 0];
+				const pi = val[0] || 0;
+				if (pi !== this.regionIndex[0]) {
+					this.cityData[1] = this.cityAllList[pi] || [];
+					this.regionIndex = [pi, 0];
+					return;
+				}
+				let ci = val[1] || 0;
+				if (ci > this.cityData[1].length - 1) ci = Math.max(this.cityData[1].length - 1, 0);
+				this.regionIndex = [pi, ci];
+			},
+			closePicker() {
+				this.pickerType = '';
+			},
+			confirmPicker() {
+				if (this.pickerType === 'sex') {
+					const idx = this.sexPickIndex[0] || 0;
+					this.sexindex = idx;
+					this.sex = this.sexList[idx].val;
+				} else if (this.pickerType === 'birthday') {
+					this.confirmBirthday();
+					return;
+				} else if (this.pickerType === 'region') {
+					const pi = this.regionIndex[0] || 0;
+					const ci = this.regionIndex[1] || 0;
+					this.addressNode = {
+						province: this.cityData[0][pi],
+						city: this.cityData[1][ci]
+					};
+				}
+				this.pickerType = '';
+			},
+			padDatePart(n) {
+				n = parseInt(n, 10);
+				return n < 10 ? '0' + n : String(n);
+			},
+			openBirthdayPicker() {
+				const parts = String(this.date || '2000-01-01').split('-');
+				const y = parts[0] || '2000';
+				const m = this.padDatePart(parts[1] || '1');
+				const d = this.padDatePart(parts[2] || '1');
+				let yi = this.birthdayYears.indexOf(y);
+				if (yi < 0) yi = 0;
+				let mi = this.birthdayMonths.indexOf(m);
+				if (mi < 0) mi = 0;
+				this.birthdayIndex = [yi, mi, 0];
+				this.$nextTick(() => {
+					let di = this.birthdayDays.indexOf(d);
+					if (di < 0) di = Math.max(this.birthdayDays.length - 1, 0);
+					this.birthdayIndex = [yi, mi, di];
+					this.pickerType = 'birthday';
+				});
+			},
+			closeBirthday() {
+				this.pickerType = '';
+			},
+			onBirthdayChange(e) {
+				const val = e.detail.value || [0, 0, 0];
+				this.birthdayIndex = [val[0] || 0, val[1] || 0, val[2] || 0];
+				this.$nextTick(() => {
+					const max = this.birthdayDays.length - 1;
+					if (this.birthdayIndex[2] > max) {
+						this.birthdayIndex = [this.birthdayIndex[0], this.birthdayIndex[1], max];
+					}
+				});
+			},
+			confirmBirthday() {
+				const y = this.birthdayYears[this.birthdayIndex[0]] || '2000';
+				const m = this.birthdayMonths[this.birthdayIndex[1]] || '01';
+				let d = this.birthdayDays[this.birthdayIndex[2]] || '01';
+				if (this.birthdayDays.indexOf(d) < 0) {
+					d = this.birthdayDays[this.birthdayDays.length - 1];
+				}
+				this.date = y + '-' + m + '-' + d;
+				this.pickerType = '';
 			},
 			getDate(type) {
 				const date = new Date();
@@ -313,11 +472,11 @@
 				let that = this,
 					value = e.detail.value
 				if (!value.nickname) return that.$util.Tips({
-					title: '用户姓名不能为空'
+					title: this.$t('用户姓名不能为空')
 				});
 				value.avatar = that.avatarUrl ? that.avatarUrl : that.userInfo.avatar;
 				uni.showLoading({
-					title: '加载中...'
+					title: this.$t('加载中...')
 				});
 
 				userEdit({
@@ -330,7 +489,7 @@
 				}).then(res => {
 					uni.hideLoading();
 					that.$util.Tips({
-						title: '保存成功',
+						title: this.$t('保存成功'),
 						icon: 'success'
 					});
 					setTimeout(function() {
@@ -353,6 +512,58 @@
 <style scoped lang="scss">
 	.fontColor {
 		color: #868686;
+	}
+
+	.bday-mask {
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.45);
+		z-index: 999;
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+	}
+
+	.bday-panel {
+		width: 100%;
+		background: #fff;
+		border-radius: 24rpx 24rpx 0 0;
+		padding-bottom: env(safe-area-inset-bottom);
+	}
+
+	.bday-bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 24rpx 32rpx;
+		border-bottom: 1rpx solid #eee;
+	}
+
+	.bday-bar-btn {
+		font-size: 30rpx;
+		color: #666;
+	}
+
+	.bday-bar-ok {
+		color: var(--view-theme, #e93323);
+		font-weight: 600;
+	}
+
+	.bday-view {
+		width: 100%;
+		height: 440rpx;
+	}
+
+	.bday-item {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 44px;
+		font-size: 30rpx;
+		color: #333;
 	}
 
 	.personal-data .wrapper {

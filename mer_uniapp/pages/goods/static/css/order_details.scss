@@ -7,10 +7,26 @@
 		background-color: #fff;
 	}
 
+	.orderGoodsBox .p-24 .item {
+		flex-wrap: nowrap;
+		align-items: flex-start;
+		column-gap: 16rpx;
+	}
+
+	.orderGoodsBox .p-24 .item .conter {
+		flex: 1;
+		min-width: 0;
+		text-align: right;
+		white-space: nowrap;
+	}
+
 	.userRemarkBox {
 		width: 100%;
 		padding: 0 24rpx;
 		padding-bottom: 24rpx;
+		flex-wrap: nowrap;
+		align-items: flex-start;
+		column-gap: 16rpx;
 	}
 
 	.refundPrice {
@@ -33,7 +49,10 @@
 	}
 
 	.text-overflow {
-		width: 392rpx;
+		flex: 1;
+		min-width: 0;
+		width: auto;
+		max-width: 360rpx;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -144,7 +163,16 @@
 	}
 
 	.order-details .nav .navCon {
-		padding: 0 40rpx;
+		padding: 0 24rpx;
+		flex-wrap: nowrap;
+	}
+
+	.order-details .nav .navCon > view {
+		flex: 1;
+		min-width: 0;
+		text-align: center;
+		padding: 0 4rpx;
+		line-height: 1.3;
 	}
 
 	.order-details .nav .on {
@@ -209,32 +237,56 @@
 	.order-details .wrapper .item {
 		font-size: 28rpx;
 		color: #282828;
+		flex-wrap: nowrap;
+		align-items: flex-start;
+		column-gap: 16rpx;
 	}
 
 	.order-details .wrapper .item~.item {
 		margin-top: 20rpx;
 	}
 
+	.order-details .wrapper .item > view:first-child {
+		flex: 0 1 auto;
+		max-width: 52%;
+		min-width: 0;
+		padding-right: 8rpx;
+		line-height: 1.4;
+	}
+
 	.order-details .wrapper .item .conter {
 		color: #868686;
-		width: 460rpx;
+		flex: 1 1 0;
+		width: auto;
+		max-width: none;
+		min-width: 140rpx;
 		text-align: right;
 		overflow: hidden;
+		white-space: nowrap;
+		line-height: 1.4;
+		flex-wrap: nowrap;
+		align-items: center;
+		justify-content: flex-end;
 	}
 
 	.mark_show {
 		color: #868686;
-		width: 470rpx;
+		flex: 1;
+		min-width: 0;
+		width: auto;
 		text-align: right;
 	}
 
 	.order-details .wrapper .item .conter .copy {
-		width: 70rpx;
+		width: auto;
+		min-width: 70rpx;
+		padding: 0 12rpx;
 		height: 40rpx;
 		border-radius: 20rpx;
 		display: inline-block;
+		flex-shrink: 0;
 		color: #333;
-		margin-left: 24rpx;
+		margin-left: 12rpx;
 		line-height: 40rpx;
 		text-align: center;
 		font-size: 20rpx;
@@ -245,6 +297,9 @@
 		border-top: 1rpx solid #eee;
 		margin-top: 30rpx;
 		padding-top: 30rpx;
+		flex-wrap: nowrap;
+		align-items: center;
+		column-gap: 16rpx;
 	}
 
 	.order-details .wrapper .actualPay .money {
@@ -261,20 +316,23 @@
 		background-color: #fff;
 		padding-right: 30rpx;
 		box-sizing: border-box;
-		height: calc(100rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(100rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(100rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
-		padding-bottom: calc(0rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		padding-bottom: calc(0rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		padding-bottom: calc(0rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 	}
 
 	.order-details .footer .bnt {
-		width: 158rpx;
+		width: auto;
+		min-width: 158rpx;
+		padding: 0 24rpx;
 		height: 54rpx;
 		text-align: center;
 		line-height: 54rpx;
 		border-radius: 50rpx;
 		color: #fff;
 		font-size: 27rpx;
+		box-sizing: border-box;
 	}
 
 	.order-details .footer .bnt.cancel {
@@ -442,11 +500,13 @@
 	}
 
 	.userRemark {
-		width: 76%;
+		flex: 1;
+		min-width: 0;
+		width: auto;
 		display: inline-block;
-		word-break: break-all; /* 允许在单词内换行 */
-		  overflow-wrap: break-word; /* 在单词内换行的另一种实现方式 */
-		  white-space: pre-wrap; /* 保持空白符序列，但是允许文本正常地换行 */
+		word-break: break-all;
+		overflow-wrap: break-word;
+		white-space: pre-wrap;
 	}
 
 	.cor-86 {

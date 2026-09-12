@@ -24,6 +24,8 @@ import com.zbkj.common.request.merchant.MerchantProductSearchRequest;
 import com.zbkj.common.response.*;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.ProductSpecI18nUtil;
 import com.zbkj.front.service.FrontProductService;
 import com.zbkj.front.service.SeckillService;
 import com.zbkj.service.service.*;
@@ -181,6 +183,7 @@ public class FrontProductServiceImpl implements FrontProductService {
             skuMap.put(atr.getSku(), atr);
         }
         productDetailResponse.setProductValue(skuMap);
+        ProductSpecI18nUtil.localizeForFront(attributeList, skuMap);
 
         Integer userId = userService.getUserId();
 
@@ -189,6 +192,7 @@ public class FrontProductServiceImpl implements FrontProductService {
             Merchant merchant = merchantService.getById(product.getMerId());
             ProductMerchantResponse merchantResponse = new ProductMerchantResponse();
             BeanUtils.copyProperties(merchant, merchantResponse);
+            merchantResponse.setName(I18nJsonUtil.resolveByRequest(merchant.getName(), merchant.getNameJson()));
             merchantResponse.setCollectNum(userMerchantCollectService.getCountByMerId(merchant.getId()));
             // 获取商户推荐商品
             List<ProMerchantProductResponse> merchantProductResponseList = productService.getRecommendedProductsByMerId(merchant.getId(), 6);
@@ -245,6 +249,7 @@ public class FrontProductServiceImpl implements FrontProductService {
     private List<ProductCommonResponse> productToIndexProduct(List<Product> productList) {
         List<ProductCommonResponse> productResponseArrayList = new ArrayList<>();
         for (Product product : productList) {
+            I18nJsonUtil.applyProductDisplay(product);
             ProductCommonResponse productResponse = new ProductCommonResponse();
             BeanUtils.copyProperties(product, productResponse);
             // 评论总数
@@ -318,7 +323,7 @@ public class FrontProductServiceImpl implements FrontProductService {
             ProductFrontResponse response = new ProductFrontResponse();
             BeanUtils.copyProperties(product, response);
             Merchant merchant = merchantMap.get(product.getMerId());
-            response.setMerName(merchant.getName());
+            response.setMerName(I18nJsonUtil.resolveByRequest(merchant.getName(), merchant.getNameJson()));
             response.setMerCategoryId(merchant.getCategoryId());
             response.setMerTypeId(merchant.getTypeId());
             response.setSales(product.getSales() + product.getFicti());
@@ -346,7 +351,7 @@ public class FrontProductServiceImpl implements FrontProductService {
             Product product = productMap.get(detail.getProductId());
             ProductSimpleResponse response = new ProductSimpleResponse();
             response.setProductId(product.getId());
-            response.setName(product.getName());
+            response.setName(I18nJsonUtil.resolveByRequest(product.getName(), product.getNameJson()));
             response.setImage(product.getImage());
             response.setPrice(product.getPrice());
             return response;
@@ -373,7 +378,7 @@ public class FrontProductServiceImpl implements FrontProductService {
             Product product = productMap.get(detail.getProductId());
             ProductSimpleResponse response = new ProductSimpleResponse();
             response.setProductId(product.getId());
-            response.setName(product.getName());
+            response.setName(I18nJsonUtil.resolveByRequest(product.getName(), product.getNameJson()));
             response.setImage(product.getImage());
             response.setPrice(product.getPrice());
             response.setStock(product.getStock());
@@ -407,7 +412,7 @@ public class FrontProductServiceImpl implements FrontProductService {
             ProductFrontResponse response = new ProductFrontResponse();
             BeanUtils.copyProperties(product, response);
             Merchant merchant = merchantMap.get(product.getMerId());
-            response.setMerName(merchant.getName());
+            response.setMerName(I18nJsonUtil.resolveByRequest(merchant.getName(), merchant.getNameJson()));
             response.setMerCategoryId(merchant.getCategoryId());
             response.setMerTypeId(merchant.getTypeId());
             response.setReplyNum(productReplyService.getCountByScore(product.getId(), ProductConstants.PRODUCT_REPLY_TYPE_ALL));

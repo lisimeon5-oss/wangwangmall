@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-cascader
+      :key="'mer-use-category-' + currentLocale"
       v-model="merIds"
       class="selWidth"
       :show-all-levels="false"
@@ -8,24 +9,15 @@
       :props="merProps"
       filterable
       clearable
-      placeholder="请选择商户"
+      :placeholder="$t('merchant.pleaseSelectMerchant')"
       @change="onChangeMerId"
     />
   </div>
 </template>
 
 <script>
-// +----------------------------------------------------------------------
-// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
-// +----------------------------------------------------------------------
-// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
-// +----------------------------------------------------------------------
-// | Author: CRMEB Team <admin@crmeb.com>
-// +----------------------------------------------------------------------
 import * as merchant from '@/api/merchant';
-import product from '@/mixins/product';
+import { localizeNamedTree, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'index',
   props: {
@@ -34,13 +26,21 @@ export default {
       default: true,
     },
     merIdChecked: {
-      type: [Array , String, Number],
+      type: [Array, String, Number],
       default: () => null,
     },
   },
   watch: {
     merIdChecked(n) {
       this.merIds = n;
+    },
+    currentLocale() {
+      this.applyLocalizedMerSelect();
+    },
+  },
+  computed: {
+    currentLocale() {
+      return getUiLocale(this);
     },
   },
   data() {
@@ -53,6 +53,7 @@ export default {
         emitPath: false,
         multiple: this.multiple,
       },
+      merSelectRaw: [],
       merSelect: [],
       merIds: null,
     };
@@ -62,10 +63,13 @@ export default {
     this.getMerList();
   },
   methods: {
-    // 列表
+    applyLocalizedMerSelect() {
+      this.merSelect = localizeNamedTree(this.merSelectRaw, this.currentLocale, 'merchantList');
+    },
     getMerList() {
       merchant.merCategoryListApi().then((res) => {
-        this.merSelect = res;
+        this.merSelectRaw = res || [];
+        this.applyLocalizedMerSelect();
       });
     },
     onChangeMerId() {
@@ -75,7 +79,7 @@ export default {
 };
 </script>
 <style lang="scss">
-::v-deep.el-cascader__search-input{
+::v-deep.el-cascader__search-input {
   color: white;
   opacity: 0 !important;
 }

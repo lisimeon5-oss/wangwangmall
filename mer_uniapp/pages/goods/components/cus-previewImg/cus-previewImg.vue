@@ -10,7 +10,7 @@
 						<PointsPrice v-if="src.type === ProductTypeEnum.Integral" :pointsPrice="src"
 							:pointsGoodsStyle="hotPointsStyle"></PointsPrice>
 						<view v-else>
-							<text class="sku_price">￥{{!type?src.price:src.groupPrice}}</text>
+							<text class="sku_price">฿{{!type?src.price:src.groupPrice}}</text>
 						</view>
 					</view>
 				</swiper-item>
@@ -108,7 +108,7 @@
 </script>
 
 <style lang="scss" scoped>
-	/deep/.price-box{
+	::v-deep .price-box{
 		color: #fff !important;
 	}
 	@mixin full {

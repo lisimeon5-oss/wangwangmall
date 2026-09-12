@@ -39,6 +39,9 @@ public class SystemRole implements Serializable {
     @ApiModelProperty(value = "身份管理名称")
     private String roleName;
 
+    @ApiModelProperty(value = "多语言角色名称(JSON)")
+    private String roleNameJson;
+
     @ApiModelProperty(value = "身份管理权限(menus_id)")
     private String rules;
 

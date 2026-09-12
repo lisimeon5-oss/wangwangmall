@@ -1,0 +1,82 @@
+### storeName (count=1)
+
+:"50"}}),n("el-table-column",{attrs:{label:"商品图","min-width":"80"},scopedSlots:e._u([{key:"default",fn:function(e){return[n("div",{staticClass:"demo-image__preview line-heightOne"},[n("el-image",{attrs:{src:e.row.image,"preview-src-list":[e.row.image]}})],1)]}}])}),n("el-table-column",{attrs:{prop:"storeName",label:"商品名称","min-width":"180"}})],1),n("div",{staticClass:"block mb20"},[n("el-pagination",{attrs:{"page-sizes":[1,2,3,4],"page-size":e.tableFrom.limit,"current-page":e.tableFrom.page,layout:"total, sizes, prev, pager, next, jumper",total:e.tableData.total},on:{"size-change":e.handleSizeChange,"current-change":e.pageChange}})],1),"many"===e.handleNum?n("div",{staticClass:"right-align"},[n("el-button",{attrs:{size:"small",type:"primary"},on:{click:e.ok}},[e._v("确定")])],1):e._e()],1)},o=[],i=n("c4c8"),a={name:"goodList",props:{handleNum:{type:String,default:""},checked:{type:Array,default:fun
+
+=====================
+
+### cateId (count=9)
+
+tableFrom,"categoryId",t)},expression:"tableFrom.categoryId"}})],1),n("el-form-item",{attrs:{label:"商户商品分类555:"}},[n("el-cascader",{staticClass:"selWidth",attrs:{options:e.mercategoryList,props:e.props,filterable:"",clearable:""},on:{change:function(t){return e.getList(1)}},model:{value:e.tableFrom.cateId,callback:function(t){e.$set(e.tableFrom,"cateId",t)},expression:"tableFrom.cateId"}})],1),n("el-form-item",{attrs:{label:"商品状态:"}},[n("el-select",{staticClass:"selWidth",attrs:{clearable:"",placeholder:"请选择商品状态"},on:{change:function(t){return e.getList(1)}},model:{value:e.tableFrom.isShow,callback:function(t){e.$set(e.tableFrom,"isShow",t)},expression:"tableFrom.isShow"}},[n("el-option",{attrs:{label:"上架",value:"1"}}),n("el-option",{attrs:{label:"下架",value:"0"}})],1)],1)],1)],1)]),n("el-table",{directives:[{name:"loading",rawName:"v-loading",value:e.listLoading,expression:"listLoading"}],ref:
+
+---
+
+.categoryId"}})],1),n("el-form-item",{attrs:{label:"商户商品分类555:"}},[n("el-cascader",{staticClass:"selWidth",attrs:{options:e.mercategoryList,props:e.props,filterable:"",clearable:""},on:{change:function(t){return e.getList(1)}},model:{value:e.tableFrom.cateId,callback:function(t){e.$set(e.tableFrom,"cateId",t)},expression:"tableFrom.cateId"}})],1),n("el-form-item",{attrs:{label:"商品状态:"}},[n("el-select",{staticClass:"selWidth",attrs:{clearable:"",placeholder:"请选择商品状态"},on:{change:function(t){return e.getList(1)}},model:{value:e.tableFrom.isShow,callback:function(t){e.$set(e.tableFrom,"isShow",t)},expression:"tableFrom.isShow"}},[n("el-option",{attrs:{label:"上架",value:"1"}}),n("el-option",{attrs:{label:"下架",value:"0"}})],1)],1)],1)],1)]),n("el-table",{directives:[{name:"loading",rawName:"v-loading",value:e.listLoading,expression:"listLoading"}],ref:"multipleTable",staticStyle:{width:"100%"},attrs
+
+---
+
+m",{attrs:{label:"商户商品分类555:"}},[n("el-cascader",{staticClass:"selWidth",attrs:{options:e.mercategoryList,props:e.props,filterable:"",clearable:""},on:{change:function(t){return e.getList(1)}},model:{value:e.tableFrom.cateId,callback:function(t){e.$set(e.tableFrom,"cateId",t)},expression:"tableFrom.cateId"}})],1),n("el-form-item",{attrs:{label:"商品状态:"}},[n("el-select",{staticClass:"selWidth",attrs:{clearable:"",placeholder:"请选择商品状态"},on:{change:function(t){return e.getList(1)}},model:{value:e.tableFrom.isShow,callback:function(t){e.$set(e.tableFrom,"isShow",t)},expression:"tableFrom.isShow"}},[n("el-option",{attrs:{label:"上架",value:"1"}}),n("el-option",{attrs:{label:"下架",value:"0"}})],1)],1)],1)],1)]),n("el-table",{directives:[{name:"loading",rawName:"v-loading",value:e.listLoading,expression:"listLoading"}],ref:"multipleTable",staticStyle:{width:"100%"},attrs:{data:e.tableData.data,size:"mini
+
+---
+
+e:Array,default:function(){return[]}},maxlength:{type:Number,default:0}},data:function(){return{templateRadio:0,props:{children:"childList",label:"name",value:"id",multiple:!1,emitPath:!1},listLoading:!0,tableData:{data:[],total:0},tableFrom:{categoryId:"",page:1,limit:this.$constants.page.limit[0],cateId:"",keywords:"",type:1},imgList:[],multipleSelection:[],checkedPage:[],isChecked:!1,isIndex:0,checkBox:[],merCateList:s["a"].getters.merProductClassify,checkedIds:[],categoryList:[],mercategoryList:[]}},created:function(){localStorage.getItem("merProductClassify")||s["a"].dispatch("product/getMerProductClassify")},computed:{},mounted:function(){var e=this;if(s["a"].getters.merPlatProductClassify.length||s["a"].dispatch("product/getAdminProductClassify"),s["a"].getters.merProductClassify.length||s["a"].dispatch("product/getMerProductClassify"),this.$nextTick((function(){e.categoryList=s["a"].ge
+
+---
+
+(e.tableFrom,"categoryId",t)},expression:"tableFrom.categoryId"}})],1),n("el-form-item",{attrs:{label:"商户商品分类:"}},[n("el-cascader",{staticClass:"selWidth",attrs:{options:e.mercategoryList,props:e.props,filterable:"",clearable:""},on:{change:function(t){return e.getList(1)}},model:{value:e.tableFrom.cateId,callback:function(t){e.$set(e.tableFrom,"cateId",t)},expression:"tableFrom.cateId"}})],1),n("el-form-item",{attrs:{label:"商品状态:"}},[n("el-select",{staticClass:"selWidth",attrs:{clearable:"",placeholder:"请选择商品状态"},on:{change:function(t){return e.getList(1)}},model:{value:e.tableFrom.isShow,callback:function(t){e.$set(e.tableFrom,"isShow",t)},expression:"tableFrom.isShow"}},[n("el-option",{attrs:{label:"上架",value:"1"}}),n("el-option",{attrs:{label:"下架",value:"0"}})],1)],1)],1)],1)]),n("el-table",{directives:[{name:"loading",rawName:"v-loading",value:e.listLoading,expression:"listLoading"}],ref:
+
+---
+
+rom.categoryId"}})],1),n("el-form-item",{attrs:{label:"商户商品分类:"}},[n("el-cascader",{staticClass:"selWidth",attrs:{options:e.mercategoryList,props:e.props,filterable:"",clearable:""},on:{change:function(t){return e.getList(1)}},model:{value:e.tableFrom.cateId,callback:function(t){e.$set(e.tableFrom,"cateId",t)},expression:"tableFrom.cateId"}})],1),n("el-form-item",{attrs:{label:"商品状态:"}},[n("el-select",{staticClass:"selWidth",attrs:{clearable:"",placeholder:"请选择商品状态"},on:{change:function(t){return e.getList(1)}},model:{value:e.tableFrom.isShow,callback:function(t){e.$set(e.tableFrom,"isShow",t)},expression:"tableFrom.isShow"}},[n("el-option",{attrs:{label:"上架",value:"1"}}),n("el-option",{attrs:{label:"下架",value:"0"}})],1)],1)],1)],1)]),n("el-table",{directives:[{name:"loading",rawName:"v-loading",value:e.listLoading,expression:"listLoading"}],ref:"multipleTable",staticStyle:{width:"100%"},attrs
+
+---
+
+item",{attrs:{label:"商户商品分类:"}},[n("el-cascader",{staticClass:"selWidth",attrs:{options:e.mercategoryList,props:e.props,filterable:"",clearable:""},on:{change:function(t){return e.getList(1)}},model:{value:e.tableFrom.cateId,callback:function(t){e.$set(e.tableFrom,"cateId",t)},expression:"tableFrom.cateId"}})],1),n("el-form-item",{attrs:{label:"商品状态:"}},[n("el-select",{staticClass:"selWidth",attrs:{clearable:"",placeholder:"请选择商品状态"},on:{change:function(t){return e.getList(1)}},model:{value:e.tableFrom.isShow,callback:function(t){e.$set(e.tableFrom,"isShow",t)},expression:"tableFrom.isShow"}},[n("el-option",{attrs:{label:"上架",value:"1"}}),n("el-option",{attrs:{label:"下架",value:"0"}})],1)],1)],1)],1)]),n("el-table",{directives:[{name:"loading",rawName:"v-loading",value:e.listLoading,expression:"listLoading"}],ref:"multipleTable",staticStyle:{width:"100%"},attrs:{data:e.tableData.data,size:"mini
+
+---
+
+ver",checkStrictly:!1,emitPath:!1,multiple:!1},merProps:{value:"id",label:"name",children:"merchantList",expandTrigger:"hover",checkStrictly:!0,emitPath:!1,multiple:!0},listLoading:!0,tableData:{data:[],total:0},tableFrom:{page:1,limit:10,activityId:this.activityId,name:"",isShow:"",categoryId:null,cateId:null,marketingType:this.marketingType},imgList:[],multipleSelection:[],checkedPage:[],isChecked:!1,isIndex:0,categoryList:[],mercategoryList:[],checkBox:[],checkedIds:[]}},computed:{},mounted:function(){var e=this;if(s["a"].getters.merPlatProductClassify.length||s["a"].dispatch("product/getAdminProductClassify"),s["a"].getters.merProductClassify.length||s["a"].dispatch("product/getMerProductClassify"),this.$nextTick((function(){e.categoryList=s["a"].getters.merPlatProductClassify,e.mercategoryList=s["a"].getters.merProductClassify})),this.getList(),this.checked.length){var t=u(this.checked),n
+
+---
+
+},o=[],i=n("c4c8"),a={name:"goodList",props:{handleNum:{type:String,default:""},checked:{type:Array,default:function(){return[]}}},data:function(){return{templateRadio:0,props:{children:"child",label:"name",value:"id",emitPath:!1},listLoading:!0,tableData:{data:[],total:0},tableFrom:{page:1,limit:1,cateId:"",keywords:"",type:"1"},imgList:[],multipleSelection:[],multipleSelectionAll:[],checkedPage:[],isChecked:!1,isIndex:0,idKey:"id",checkBox:[],checkedIds:[]}},mounted:function(){var e=this;this.tableFrom.page=1,this.getList(),this.checked&&this.checked.forEach((function(t){e.$refs.table.toggleRowSelection(t)}))},methods:{onInput:function(e){this.$forceUpdate()},changeType:function(e){this.isChecked=e;var t=this.checkedPage.indexOf(this.tableFrom.page);this.isIndex=t,this.checkedPage.push(this.tableFrom.page),t>-1&&this.checkedPage.splice(t,1),this.syncCheckedId(e)},changeOne:function(e,t){if(e
+
+=====================
+
+### sliderImage (count=0)
+
+
+
+=====================
+
+### attrValue (count=0)
+
+
+
+=====================
+
+### skuList (count=0)
+
+
+
+=====================
+
+### specType (count=0)
+
+
+
+=====================
+
+### otPrice (count=0)
+
+
+
+=====================
+
+### barCode (count=0)
+
+
+
+=====================
+
+### unitName (count=0)
+

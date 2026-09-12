@@ -16,10 +16,10 @@
         <if test="productSearch != null and productSearch !=''">
             <choose>
                 <when test="merId != null">
-                    and pr.product_id in (select p.id from eb_product p where p.name like CONCAT('%',#{productSearch},'%') and p.is_del = 0 and p.mer_id = #{merId})
+                    and pr.product_id in (select p.id from eb_product p where (p.name like CONCAT('%',#{productSearch},'%') or p.name_json like CONCAT('%',#{productSearch},'%')) and p.is_del = 0 and p.mer_id = #{merId})
                 </when>
                 <otherwise>
-                    and pr.product_id in (select p.id from eb_product p where p.name like CONCAT('%',#{productSearch},'%') and p.is_del = 0)
+                    and pr.product_id in (select p.id from eb_product p where (p.name like CONCAT('%',#{productSearch},'%') or p.name_json like CONCAT('%',#{productSearch},'%')) and p.is_del = 0)
                 </otherwise>
             </choose>
         </if>
@@ -62,10 +62,10 @@
         <if test="productSearch != null and productSearch !=''">
             <choose>
                 <when test="merId != null">
-                    and pr.product_id in (select p.id from eb_product p where p.name like CONCAT('%',#{productSearch},'%') and p.is_del = 0 and p.mer_id = #{merId})
+                    and pr.product_id in (select p.id from eb_product p where (p.name like CONCAT('%',#{productSearch},'%') or p.name_json like CONCAT('%',#{productSearch},'%')) and p.is_del = 0 and p.mer_id = #{merId})
                 </when>
                 <otherwise>
-                    and pr.product_id in (select p.id from eb_product p where p.name like CONCAT('%',#{productSearch},'%') and p.is_del = 0)
+                    and pr.product_id in (select p.id from eb_product p where (p.name like CONCAT('%',#{productSearch},'%') or p.name_json like CONCAT('%',#{productSearch},'%')) and p.is_del = 0)
                 </otherwise>
             </choose>
         </if>

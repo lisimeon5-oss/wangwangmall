@@ -11,7 +11,7 @@
 				<!-- #ifndef MP -->
 				<view class='acea-row row-between-wrapper input'>
 					<text class='iconfont icon-sousuo'></text>
-					<input type='text' placeholder='点击搜索商品信息' @confirm="searchSubmitValue" confirm-type='search' name="search"
+					<input type='text' :placeholder="$t('cate.searchPlaceholder')" @confirm="searchSubmitValue" confirm-type='search' name="search"
 					 placeholder-class='placeholder' maxlength="20"></input>
 				</view>
 				<!-- #endif -->
@@ -29,7 +29,7 @@
 					<scroll-view scroll-y="true" style="height: 100%; overflow: hidden;" scroll-with-animation='true' :scroll-into-view="intoindex">
 						<view v-for="(item,index) in productList" :key="item.id">
 							<view class='item acea-row row-center-wrapper' :class='index==navActive?"on":""' v-if='item.childList && item.childList.length > 0'
-							 :key="item.id" @click='tap(index,"b"+item.id)' :id='"sort"+index'><text class="item_text skeleton-rect">{{item.name}}</text>
+							 :key="item.id" @click='tap(index,"b"+item.id)' :id='"sort"+index'><text class="item_text skeleton-rect">{{$t(item.name)}}</text>
 							 </view>
 						</view>
 					</scroll-view>
@@ -39,7 +39,7 @@
 						<view v-for="(p,i) in productList" :key="p.id">
 							<view class='listw' :id="'b'+p.id+index" v-for="(item,index) in p.childList" :key="item.id">
 								<view class='title acea-row'>
-									<view class='name skeleton-rect'>{{item.name}}</view>
+									<view class='name skeleton-rect'>{{$t(item.name)}}</view>
 								</view>
 								<view class='list acea-row'>
 									<block v-for="(itemn,indexn) in item.childList" :key="itemn.id">
@@ -48,7 +48,7 @@
 											<view class='picture skeleton-rect'>
 												<easy-loadimage mode="widthFix" :image-src="itemn.icon"></easy-loadimage>
 											</view>
-											<view class='name line1'>{{itemn.name}}</view>
+											<view class='name line1'>{{$t(itemn.name)}}</view>
 										</navigator>
 									</block>
 								</view>
@@ -195,6 +195,7 @@
 				uni.removeStorageSync('categoryId');
 			}
 			this.pid && this.navActive && setTimeout(()=>this.tap(this.navActive, 'b' + this.pid), 200);
+			this.getAllCategory();
 			setTimeout(() => {
 				uni.removeStorageSync('categoryId');
 				uni.removeStorageSync('cateNavActive');
@@ -273,14 +274,14 @@
 					})
 				else
 					return this.$util.Tips({
-						title: '请填写要搜索的产品信息'
+						title: this.$t('请填写要搜索的产品信息')
 					});
 			},
 		}
 	}
 </script>
 <style scoped lang="scss">
-	/deep/.origin-img{
+	::v-deep .origin-img{
 		border-radius: 50%;
 	}
 	.productSort {
@@ -401,7 +402,7 @@
 	.productSort .conter .list .item .picture,
 	.productSort .conter uni-image,
 	.productSort .conter .list .item image,
-	/deep/.easy-loadimage{
+	::v-deep .easy-loadimage{
 		width: 110rpx;
 		height: 110rpx;
 		border-radius: 50%;

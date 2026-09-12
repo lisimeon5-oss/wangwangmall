@@ -213,6 +213,8 @@ public class SysConfigConstants {
     public static final String CONFIG_ORDER_AUTO_COMPLETE_DAY = "auto_complete_day";
     /** 退款理由 */
     public static final String CONFIG_KEY_STOR_REASON = "stor_reason";
+    /** 退款理由其它语言(JSON) */
+    public static final String CONFIG_KEY_STOR_REASON_JSON = "stor_reason_json";
 
 
     /** 商户保证金额 */
@@ -237,8 +239,10 @@ public class SysConfigConstants {
     /** 移动商城api接口地址 */
     public static final String CONFIG_KEY_FRONT_API_URL = "front_api_url";
 
-    /** 充值注意事项 */
+    /** 充值注意事项（默认语言） */
     public static final String CONFIG_RECHARGE_ATTENTION = "recharge_attention";
+    /** 充值注意事项其它语言(JSON)，无需改表 */
+    public static final String CONFIG_RECHARGE_ATTENTION_JSON = "recharge_attention_json";
 
     /********************************************************************************************* 协议START ****************/
     /** 商户入驻协议 */
@@ -261,6 +265,11 @@ public class SysConfigConstants {
     public static final String COUPON_AGREEMENT = "couponAgreement";
     /** 付费会员协议 */
     public static final String PAID_MEMBER_AGREEMENT = "paidMemberAgreement";
+
+    /** 协议其它语言：原 key + _json，无需改表 */
+    public static String agreementJsonKey(String agreementName) {
+        return agreementName + "_json";
+    }
 
     /********************************************************************************************* 协议END ****************/
 
@@ -288,6 +297,8 @@ public class SysConfigConstants {
 
     /** 签到规则说明 */
     public static final String CONFIG_SIGN_RULE_DESCRIPTION = "sign_rule_description ";
+    /** 多语言签到规则说明(JSON) */
+    public static final String CONFIG_SIGN_RULE_DESCRIPTION_JSON = "sign_rule_description_json";
     /** 用户最小充值金额 */
     public static final String USER_RECHARGE_MIN_AMOUNT = "store_user_min_recharge";
 

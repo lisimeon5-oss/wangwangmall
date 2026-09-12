@@ -31,10 +31,12 @@ import toolCom from '@/components/PageDiy/mobileConfigRight/index.js';
 import rightBtn from '@/components/PageDiy/rightBtn/index.vue';
 import { mapGetters } from 'vuex';
 import store from '@/store';
+import { diyCname, applyDiyUiLabels } from '@/utils/diyCname';
+import goodsListPage from '../mobilePage/home_goods_list.vue';
 export default {
   name: 'c_home_goods_list',
   componentsName: 'home_goods_list',
-  cname: '商品列表',
+  ...diyCname('pagediy.productList'),
   props: {
     activeIndex: {
       type: null,
@@ -119,8 +121,7 @@ export default {
   },
   watch: {
     num(nVal) {
-      let value = JSON.parse(JSON.stringify(this.$store.state.mobildConfig.defaultArray[nVal]));
-      this.configObj = value;
+      this.loadConfig(nVal);
     },
     configObj: {
       handler(nVal, oVal) {
@@ -227,14 +228,21 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      let value = JSON.parse(JSON.stringify(this.$store.state.mobildConfig.defaultArray[this.num]));
-      this.configObj = value;
+      this.loadConfig(this.num);
       this.$nextTick(() => {
-        this.$set(this.configObj.selectConfig, 'list', this.merProductClassify);
+        if (this.configObj.selectConfig) {
+          this.$set(this.configObj.selectConfig, 'list', this.merProductClassify);
+        }
       });
     });
   },
   methods: {
+    loadConfig(nVal) {
+      const raw = this.$store.state.mobildConfig.defaultArray[nVal];
+      if (!raw) return;
+      const value = JSON.parse(JSON.stringify(raw));
+      this.configObj = applyDiyUiLabels(value, { data: goodsListPage.data, num: nVal });
+    },
     getConfig(data) {
       //选择tab获取商品列表.0指定商品
       if (data.name && data.name === 'goods') {

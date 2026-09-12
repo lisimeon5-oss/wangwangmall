@@ -7,12 +7,12 @@
 			<swiper-item v-for="(item,index) in advData.adList" :key="index" @click="jump(item.linkUrl)">
 				<view class="swiper-item">
 					<view class="swiper-item-img">
-						<image :src="item.imageUrl" mode="aspectFill"></image>
+						<image :src="adImage(item)" mode="aspectFill"></image>
 					</view>
 				</view>
 			</swiper-item>
 		</swiper>
-		<view class="jump-over" :style="{ top: navH + 'rpx' }" @tap="launchFlag()">跳过<text
+		<view class="jump-over" :style="{ top: navH + 'rpx' }" @tap="launchFlag()">{{$t('跳过')}}<text
 				v-if="closeType == 1">{{time}}</text>
 			<slot name="bottom"></slot>
 		</view>
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+	import { getLocalizedText } from '@/utils/localizedName';
 	let app = getApp();
 	let sysHeight = uni.getSystemInfoSync().statusBarHeight;
 	//let menuHeight = uni.getMenuButtonBoundingClientRect().height; // 获取胶囊高度并设置标题高度
@@ -60,6 +61,9 @@
 			clearInterval(this.timecount)
 		},
 		methods: {
+			adImage(item) {
+				return getLocalizedText(item && item.imageUrl, item && item.imageUrlJson);
+			},
 			stopChange() {
 				if (this.advData.adList.length == 1) {
 					return false

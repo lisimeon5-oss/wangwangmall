@@ -6,12 +6,12 @@
 				<merchant-list :merchantList="merchantList" :isStreet="true"></merchant-list>
 			</view>
 			<view class='loadingicon acea-row row-center-wrapper'>
-				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{loadTitle}}
+				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{$t(loadTitle)}}
 			</view>
 			<view class='no-shop' v-if="!merchantList.length && !loading">
 				<view class='pictrue' style="margin: 0 auto;">
 					<!-- <image src='/static/images/no-shop.png'></image> -->
-					<text>暂无店铺，快去搜索其他店铺吧</text>
+					<text>{{$t('暂无店铺，快去搜索其他店铺吧')}}</text>
 				</view>
 			</view>
 		</view>
@@ -121,13 +121,13 @@
 </style>
 <style scoped lang="scss">
 	.street-box{
-		/deep/.mer_name {
+		::v-deep .mer_name {
 			color: #fff;
 		}
 	}
 	.pad-30{
 		padding: 30rpx 30rpx 0 30rpx;
-		/deep/.street-pad20{
+		::v-deep .street-pad20{
 			padding: 0;
 		}
 	}

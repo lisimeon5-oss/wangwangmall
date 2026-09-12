@@ -45,6 +45,9 @@ public class GroupBuyActivityProductListForSale {
     @ApiModelProperty(value = "拼团活动名称")
     private String groupName;
 
+    @ApiModelProperty(value = "多语言拼团活动名称(JSON)")
+    private String groupNameJson;
+
     @ApiModelProperty(value = "成团总人数")
     private Integer buyCount;
 
@@ -74,6 +77,9 @@ public class GroupBuyActivityProductListForSale {
 
     @ApiModelProperty(value = "商品名称")
     private String productName;
+
+    @ApiModelProperty(value = "多语言商品名称(JSON)")
+    private String productNameJson;
 
     @ApiModelProperty(value = "商品售价")
     private BigDecimal price;

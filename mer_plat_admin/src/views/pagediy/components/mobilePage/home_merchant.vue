@@ -3,11 +3,11 @@
     <div class="indexList tui-skeleton" :style="boxStyle">
       <div class="title acea-row row-between-wrapper">
         <div class="text line1 tui-skeleton-rect acea-row">
-          <el-image :src="src" class="image"></el-image>
-          <span class="label" :style="titleColor">{{ configObj.titleConfig.val }}</span>
+          <el-image :src="iconSrc" class="image"></el-image>
+          <span class="label" :style="titleColor">{{ displayTitle }}</span>
         </div>
         <div class="more tui-skeleton-rect f-s-12" :style="moreColor">
-          更多
+          {{ $t('user.more') }}
           <span class="iconfont icon-xuanze f-s-12"></span>
         </div>
       </div>
@@ -49,7 +49,7 @@
                   <div class="con-box">
                     <div class="name line1 acea-row row-middle street-name">
                       <span v-show="nameShow" class="mer_name line1" :style="nameColor">{{ item.name }}</span>
-                      <div v-show="typeShow" class="merType mr10 label" :style="labelColor">自营</div>
+                      <div v-show="typeShow" class="merType mr10 label" :style="labelColor">{{ $t('product.selfOperated') }}</div>
                     </div>
                   </div>
                 </div>
@@ -60,7 +60,7 @@
                     <el-image :src="goods.image" mode="aspectFill"></el-image>
                   </div>
                   <div class="pic-name line2 street-pic">{{ goods.name }}</div>
-                  <div class="street-price" :style="priceColor">￥{{ goods.price }}</div>
+                  <div class="street-price" :style="priceColor">฿{{ goods.price }}</div>
                 </div>
               </div>
             </div>
@@ -82,9 +82,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapGetters } from 'vuex';
+import { diyCname } from '@/utils/diyCname';
+import { getLocalizedDiyVal, getLocalizedDiyUrl, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'home_merchant',
-  cname: '店铺街',
+  ...diyCname('pagediy.shopStreet'),
   icon: 't-icon-zujian-dianpujie',
   configName: 'c_home_merchant',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -128,6 +130,14 @@ export default {
     //标题颜色
     titleColor() {
       return { color: this.configObj.titleColor.color[0].item };
+    },
+    displayTitle() {
+      return getLocalizedDiyVal(this.configObj && this.configObj.titleConfig, getUiLocale(this));
+    },
+    iconSrc() {
+      const fallback = (typeof localStorage !== 'undefined' && localStorage.getItem('mediaDomain')) + '/crmebimage/presets/haodian.png';
+      const url = getLocalizedDiyUrl(this.configObj && this.configObj.logoConfig, getUiLocale(this));
+      return url || fallback;
     },
     //名称颜色
     nameColor() {
@@ -221,92 +231,94 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '店铺街',
+          cname: this.$t('pagediy.shopStreet'),
         },
         logoConfig: {
-          tabTitle: '图标设置',
-          title: '上传图标',
-          tips: '建议：124px*32px',
+          tabTitle: this.$t('pagediy.iconSettings'),
+          title: this.$t('pagediy.uploadIcon'),
+          tips: this.$t('pagediy.suggestIconSize124'),
           isShow: 1,
           url: localStorage.getItem('mediaDomain') + '/crmebimage/presets/haodian.png',
+          urlJson: '',
         },
         titleConfig: {
-          tabTitle: '标题设置',
-          title: '标题内容',
+          tabTitle: this.$t('pagediy.titleSettings'),
+          title: this.$t('pagediy.titleContent'),
           val: '正品大牌低价购',
-          place: '请输入标题',
+          valJson: '',
+          place: this.$t('pagediy.pleaseEnterTitle'),
           isShow: 1,
           max: 10,
         },
         linkConfig: {
-          title: '更多链接',
+          title: this.$t('pagediy.moreLink'),
           val: '/pages/merchant/merchant_street/index',
-          place: '请选择链接',
+          place: this.$t('application.pleaseSelectLink'),
           isShow: 1,
           max: 100,
         },
         //数量
         numConfig: {
-          tabTitle: '内容数量',
-          title: '展示数量',
+          tabTitle: this.$t('pagediy.contentCount'),
+          title: this.$t('pagediy.displayQuantity'),
           val: 3,
           isShow: 1,
           max: 9,
         },
         //显示内容
         typeConfig: {
-          title: '展示信息',
-          tabTitle: '显示内容',
+          title: this.$t('pagediy.displayInfo'),
+          tabTitle: this.$t('pagediy.displayContent'),
           name: 'rowsNum',
           activeValue: [0, 1, 2],
           list: [
             {
-              val: '店铺名称',
+              val: this.$t('pagediy.shopName'),
               icon: 'icon2hang',
             },
             {
-              val: '店铺logo',
+              val: this.$t('pagediy.shopLogo'),
               icon: 'icon3hang',
             },
             {
-              val: '店铺类型',
+              val: this.$t('merchant.storeType'),
               icon: 'icon4hang',
             },
           ],
         },
         tabConfig: {
-          title: '展示样式',
-          tabTitle: '布局设置',
+          title: this.$t('pagediy.displayStyle'),
+          tabTitle: this.$t('pagediy.layoutSettings'),
           name: 'listStyle',
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '样式一',
+              val: this.$t('pagediy.styleOne'),
               icon: 'icon-dianpujie-yangshiyi',
             },
             {
-              val: '样式二',
+              val: this.$t('pagediy.styleTwo'),
               icon: 'icon-yangshisan',
             },
           ],
         },
         listConfig: {
-          tabTitle: '店铺数据',
-          title: '店铺数据',
+          tabTitle: this.$t('pagediy.shopData'),
+          title: this.$t('pagediy.shopData'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              name: '默认规则',
+              name: this.$t('pagediy.defaultRule'),
             },
             {
-              name: '自定义',
+              name: this.$t('pagediy.customStyle'),
             },
           ],
         },
         activeValueMer: {
-          title: '选择店铺',
+          title: this.$t('pagediy.selectShop'),
           activeValue: [],
           list: [],
           isShow: 0,
@@ -315,8 +327,8 @@ export default {
         }, //商户
         // 背景颜色
         bgColor: {
-          tabTitle: '颜色设置',
-          title: '背景颜色',
+          tabTitle: this.$t('pagediy.colorSettings'),
+          title: this.$t('pagediy.backgroundColor'),
           color: [
             {
               item: 'rgba(255,255,255,0)',
@@ -336,7 +348,7 @@ export default {
         },
         labelColor: {
           isShow: 0,
-          title: '标签背景颜色',
+          title: this.$t('pagediy.tagBackgroundColor'),
           name: 'labelColor',
           color: [
             {
@@ -350,7 +362,7 @@ export default {
           ],
         },
         labelFontColor: {
-          title: '标签文字颜色',
+          title: this.$t('pagediy.tagTextColor'),
           name: 'labelColor',
           color: [
             {
@@ -364,7 +376,7 @@ export default {
           ],
         },
         titleColor: {
-          title: '标题颜色',
+          title: this.$t('pagediy.titleColor'),
           color: [
             {
               item: '#999999',
@@ -377,7 +389,7 @@ export default {
           ],
         },
         moreColor: {
-          title: '更多按钮颜色',
+          title: this.$t('pagediy.moreButtonColor'),
           color: [
             {
               item: '#282828',
@@ -390,7 +402,7 @@ export default {
           ],
         },
         nameColor: {
-          title: '店铺名称颜色',
+          title: this.$t('pagediy.shopNameColor'),
           color: [
             {
               item: '#282828',
@@ -404,21 +416,21 @@ export default {
         },
         //色调
         themeStyleConfig: {
-          title: '色调',
+          title: this.$t('pagediy.colorTone'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '跟随主题风格',
+              val: this.$t('pagediy.followTheme'),
             },
             {
-              val: '自定义',
+              val: this.$t('pagediy.customStyle'),
             },
           ],
         },
         priceColor: {
           isShow: 0,
-          title: '价格颜色',
+          title: this.$t('pagediy.priceColor'),
           color: [
             {
               item: '#e93323',
@@ -431,15 +443,15 @@ export default {
           ],
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         contentStyle: {
-          title: '内容圆角',
+          title: this.$t('pagediy.contentRadius'),
           name: 'bgStyle',
           val: 7,
           min: 0,
@@ -447,33 +459,33 @@ export default {
         },
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          title: '下边距',
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 0,
           min: 0,
           max: 25,
         },
         contentConfig: {
-          title: '内容间距',
+          title: this.$t('pagediy.contentSpacing'),
           val: 10,
           min: 0,
           max: 30,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },
@@ -570,9 +582,6 @@ export default {
       if (data) {
         this.configObj = data;
         this.listStyle = this.configObj.tabConfig.tabVal;
-        this.src = this.configObj.logoConfig.url
-          ? this.configObj.logoConfig.url
-          : localStorage.getItem('mediaDomain') + '/crmebimage/presets/haodian.png';
         this.themeStyle = data.themeStyleConfig.tabVal;
         this.themeColor = this.$options.filters.filterTheme(this.mobileTheme - 1);
       }

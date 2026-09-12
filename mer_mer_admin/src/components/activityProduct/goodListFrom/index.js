@@ -8,20 +8,24 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import uploadFromComponent from './index.vue';
+import store from '@/store';
+import i18n from '@/i18n';
 const goodListFrom = {};
 goodListFrom.install = function (Vue, options) {
   const ToastConstructor = Vue.extend(uploadFromComponent);
-  // 生成一个该子类的实例
-  const instance = new ToastConstructor();
+  const instance = new ToastConstructor({
+    store,
+    i18n,
+  });
   instance.$mount(document.createElement('div'));
   document.body.appendChild(instance.$el);
   Vue.prototype.$modalActivityProduct = function (callback, handleNum, row, activityId, marketingType) {
-    instance.visible = true;
     instance.callback = callback;
-    instance.handleNum = handleNum; //多选还是单选
-    instance.checked = row; // 选中的列表
-    instance.activityId = activityId; //秒杀活动ID，商户端使用必传,秒杀使用
-    instance.marketingType = marketingType; // 营销类型：0=基础商品,1=秒杀,2=拼团
+    instance.handleNum = handleNum;
+    instance.checked = row || [];
+    instance.activityId = activityId;
+    instance.marketingType = marketingType;
+    instance.visible = true;
   };
 };
 export default goodListFrom;

@@ -1,9 +1,9 @@
 <template>
   <div class="login-container">
     <el-steps :active="current" align-center>
-      <el-step title="验证账号信息"></el-step>
-      <el-step title="修改手机号码"></el-step>
-      <el-step title="登录"></el-step>
+      <el-step :title="$t('onePass.verifyAccountInfo')"></el-step>
+      <el-step :title="$t('onePass.modifyPhoneNumber')"></el-step>
+      <el-step :title="$t('common.login')"></el-step>
     </el-steps>
     <el-form
       ref="formInline"
@@ -20,7 +20,7 @@
             type="text"
             v-model="formInline.account"
             prefix="ios-contact-outline"
-            placeholder="请输入当前账号"
+            :placeholder="$t('onePass.pleaseEnterCurrentAccount')"
             size="large"
           />
         </el-form-item>
@@ -29,7 +29,7 @@
             type="password"
             v-model="formInline.password"
             prefix="ios-contact-outline"
-            placeholder="请输入密码"
+            :placeholder="$t('login.pleaseEnterPassword')"
             size="large"
           />
         </el-form-item>
@@ -40,7 +40,7 @@
             type="text"
             v-model="formInline.phone"
             prefix="ios-lock-outline"
-            placeholder="请输入新手机号"
+            :placeholder="$t('onePass.pleaseEnterNewPhone')"
             size="large"
           />
         </el-form-item>
@@ -49,7 +49,7 @@
             <el-input
               ref="username"
               v-model="formInline.code"
-              placeholder="验证码"
+              :placeholder="$t('onePass.verificationCode')"
               name="username"
               type="text"
               tabindex="1"
@@ -63,10 +63,10 @@
       </template>
       <template v-if="current === 2">
         <el-form-item prop="phone" class="maxInpt">
-          <el-input type="text" v-model="formInline.phone" prefix="ios-contact-outline" placeholder="请输入手机号" />
+          <el-input type="text" v-model="formInline.phone" prefix="ios-contact-outline" :placeholder="$t('onePass.pleaseEnterPhone')" />
         </el-form-item>
         <el-form-item prop="password" class="maxInpt">
-          <el-input type="password" v-model="formInline.password" prefix="ios-lock-outline" placeholder="请输入密码" />
+          <el-input type="password" v-model="formInline.password" prefix="ios-lock-outline" :placeholder="$t('login.pleaseEnterPassword')" />
         </el-form-item>
       </template>
       <el-form-item class="maxInpt">
@@ -75,27 +75,27 @@
           type="primary"
           @click="handleSubmit1('formInline', current)"
           class="mb20 width100"
-          >下一步</el-button
+          >{{ $t('product.nextStep') }}</el-button
         >
         <el-button
           v-if="current === 1 && checkPermi(['platform:one:pass:update:phone'])"
           type="primary"
           @click="handleSubmit2('formInline', current)"
           class="mb20 width100"
-          >提交</el-button
+          >{{ $t('common.submit') }}</el-button
         >
         <el-button
           v-if="current === 2 && checkPermi(['platform:one:pass:register'])"
           type="primary"
           @click="handleSubmit('formInline', current)"
           class="mb20 width100"
-          >登录</el-button
+          >{{ $t('common.login') }}</el-button
         >
-        <el-button @click="returns('formInline')" class="width100" style="margin-left: 0px">返回</el-button>
+        <el-button @click="returns('formInline')" class="width100" style="margin-left: 0px">{{ $t('common.back') }}</el-button>
       </el-form-item>
 
-      <!--<el-button v-if="current === 0"  size="mini" :loading="loading" type="primary" style="width:100%;margin-bottom:20px;" @click="handleSubmit('formInline')">注册</el-button>-->
-      <!--<el-button size="mini" type="primary" style="width:100%;margin-bottom:20px;" @click="changelogo">立即登录</el-button>-->
+      <!--<el-button v-if="current === 0"  size="mini" :loading="loading" type="primary" style="width:100%;margin-bottom:20px;" @click="handleSubmit('formInline')">{{ $t('onePass.register') }}</el-button>-->
+      <!--<el-button size="mini" type="primary" style="width:100%;margin-bottom:20px;" @click="changelogo">{{ $t('onePass.loginNow') }}</el-button>-->
     </el-form>
   </div>
 </template>
@@ -123,7 +123,7 @@ export default {
   },
   data() {
     return {
-      cutNUm: '获取验证码',
+      cutNUm: this.$t('onePass.getVerificationCode'),
       canClick: true,
       current: 0,
       formInline: {
@@ -134,9 +134,9 @@ export default {
       },
       ruleInline: {
         phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
-        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-        account: [{ required: true, message: '请输入当前账号', trigger: 'blur' }],
+        code: [{ required: true, message: this.$t('onePass.pleaseEnterVerificationCode'), trigger: 'blur' }],
+        password: [{ required: true, message: this.$t('login.pleaseEnterPassword'), trigger: 'blur' }],
+        account: [{ required: true, message: this.$t('onePass.pleaseEnterCurrentAccount'), trigger: 'blur' }],
       },
     };
   },
@@ -158,20 +158,20 @@ export default {
         let time = setInterval(() => {
           this.cutNUm--;
           if (this.cutNUm === 0) {
-            this.cutNUm = '获取验证码';
+            this.cutNUm = this.$t('onePass.getVerificationCode');
             this.canClick = true;
             clearInterval(time);
           }
         }, 1000);
       } else {
-        this.$message.warning('请填写手机号!');
+        this.$message.warning(this.$t('onePass.pleaseEnterPhoneExcl'));
       }
     },
     handleSubmit1(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
           phoneValidatorApi(this.formInline).then(async (res) => {
-            this.$message.success('操作成功');
+            this.$message.success(this.$t('product.operateSuccess'));
             this.current = 1;
           });
         } else {
@@ -183,7 +183,7 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           updateHoneApi(this.formInline).then(async (res) => {
-            this.$message.success('操作成功');
+            this.$message.success(this.$t('product.operateSuccess'));
             this.current = 2;
           });
         } else {
@@ -199,7 +199,7 @@ export default {
             account: this.formInline.account,
             password: this.formInline.password,
           }).then(async (res) => {
-            num === 1 ? this.$message.success('原手机号密码正确') : this.$message.success('登录成功');
+            num === 1 ? this.$message.success(this.$t('onePass.originalPhonePasswordCorrect')) : this.$message.success(this.$t('onePass.loginSuccess'));
             num === 1 ? (this.current = 1) : this.$emit('on-Login');
           });
         } else {

@@ -25,7 +25,9 @@ export default {
     //开始的文字
     startText: {
       type: String,
-      default: '拖动滑块到最右侧',
+      default: function () {
+        return this.$t('login.dragSliderRight');
+      },
     },
   },
   name: 'SilderVerify',
@@ -72,7 +74,7 @@ export default {
         } else {
           this.endMovetime = new Date().getTime();
           this.rangeStatus = true;
-          this.successText = `${((this.endMovetime - this.startMoveTime) / 1000).toFixed(2)}s验证成功`;
+          this.successText = `${((this.endMovetime - this.startMoveTime) / 1000).toFixed(2)}s`;
           this.$emit('success', this.rangeStatus);
         }
         document.onmousemove = null;

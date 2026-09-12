@@ -35,6 +35,9 @@ public class ProductGuarantee implements Serializable {
     @ApiModelProperty(value = "保障条款名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言保障条款名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "图标")
     private String icon;
 

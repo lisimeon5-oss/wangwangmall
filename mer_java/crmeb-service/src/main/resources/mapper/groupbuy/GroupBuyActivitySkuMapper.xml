@@ -13,7 +13,7 @@
             sku.sku_id,
             sku.group_status,
             sku.activity_status,
-            ac.group_name,
+            ac.group_name, ac.group_name_json,
             ac.group_status AS activity_group_status,
             ac.product_count,
             ac.buy_count,
@@ -23,6 +23,7 @@
             ac.activity_status AS activity_activity_status,
             product.image AS image_url,  -- 从 eb_product 表中获取商品图片
             product.name AS product_name, -- 从 eb_product 表中获取商品名称
+            product.name_json AS product_name_json,
             product.price AS price -- 从 eb_product 表中获取商品售价
         FROM
             eb_group_buy_activity_sku sku
@@ -100,7 +101,7 @@
         sku.sku_id,
         sku.group_status,
         sku.activity_status,
-        ac.group_name,
+        ac.group_name, ac.group_name_json,
         ac.group_status AS activity_group_status,
         ac.product_count,
         ac.buy_count,
@@ -110,6 +111,7 @@
         ac.activity_status AS activity_activity_status,
         product.image AS image_url,  -- 从 eb_product 表中获取商品图片
         product.name AS product_name, -- 从 eb_product 表中获取商品名称
+        product.name_json AS product_name_json,
         product.price AS price -- 从 eb_product 表中获取商品售价
         FROM
         eb_group_buy_activity_sku sku

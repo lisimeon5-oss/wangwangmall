@@ -9,17 +9,17 @@
     >
       <div class="padding-add">
         <el-form inline label-position="right" @submit.native.prevent>
-          <el-form-item label="商品搜索：">
+          <el-form-item :label="$t('product.productSearchLabel')">
             <el-input
               v-model="keywords"
-              placeholder="请输入商品名称，关键字"
+              :placeholder="$t('product.pleaseEnterProductName')"
               class="selWidth"
               size="small"
               clearable
               @keyup.enter.native="handleSeachList"
             ></el-input>
           </el-form-item>
-          <el-form-item label="商品分类：">
+          <el-form-item :label="$t('product.productCategoryLabel')">
             <el-cascader
               ref="cascader"
               v-model="tableFrom.categoryId"
@@ -29,43 +29,44 @@
               :props="categoryProps"
               size="small"
               class="selWidth"
+              :placeholder="$t('common.pleaseSelect')"
             />
           </el-form-item>
-          <el-form-item label="商户类别：">
+          <el-form-item :label="$t('product.merchantType')">
             <el-select
               v-model="tableFrom.isSelf"
               clearable
               size="small"
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="selWidth"
               @change="handleSeachList"
             >
-              <el-option label="自营" :value="1" />
-              <el-option label="非自营" :value="0" />
+              <el-option :label="$t('product.selfOperated')" :value="1" />
+              <el-option :label="$t('product.notSelfOperated')" :value="0" />
             </el-select>
           </el-form-item>
-          <el-form-item label="商户名称：">
+          <el-form-item :label="$t('product.merchantNameLabel')">
             <merchant-name @getMerId="getMerId" :merIdChecked="tableFrom.merId"></merchant-name>
           </el-form-item>
-          <el-form-item label="会员商品：">
+          <el-form-item :label="$t('product.memberProduct')">
             <el-select
               v-model="tableFrom.isPaidMember"
               clearable
               size="small"
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="selWidth"
               @change="handleSeachList"
             >
-              <el-option label="是" value="true" />
-              <el-option label="否" value="false" />
+              <el-option :label="$t('common.yes')" value="true" />
+              <el-option :label="$t('common.no')" value="false" />
             </el-select>
           </el-form-item>
-          <el-form-item label="商品类型：">
+          <el-form-item :label="$t('product.productType')">
             <el-select
               v-model="tableFrom.productType"
               clearable
               size="small"
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="selWidth"
               @change="handleSeachList"
             >
@@ -74,20 +75,20 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" size="small" @click="handleSeachList" v-hasPermi="['platform:product:page:list']"
-              >查询</el-button
+              >{{ $t('product.query') }}</el-button
             >
-            <el-button size="small" @click="reset">重置</el-button>
+            <el-button size="small" @click="reset">{{ $t('product.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '0 20px 20px' }" shadow="never" :bordered="false">
       <div class="clearfix" ref="headerBox">
-        <el-tabs class="list-tabs mb5" v-model="tableFrom.type" @tab-click="handleSeachList">
+        <el-tabs class="list-tabs mb5" :key="currentLocale" v-model="tableFrom.type" @tab-click="handleSeachList">
           <el-tab-pane
-            :label="item.name + '(' + item.count + ')'"
+            :label="item.label"
             :name="item.type.toString()"
-            v-for="(item, index) in headeNum"
+            v-for="(item, index) in headerTabs"
             :key="index"
           />
         </el-tabs>
@@ -98,14 +99,14 @@
           :disabled="!multipleSelection.length"
           @click.native="handlebatchOff()"
           v-if="tableFrom.type === ProductTypeEnum.OnSale && checkPermi(['platform:product:force:down'])"
-          >强制下架</el-button
+          >{{ $t('product.forceOff') }}</el-button
         >
         <el-button
           size="small"
           :disabled="!multipleSelection.length"
           @click.native="handlebatchAudit"
           v-if="tableFrom.type === ProductTypeEnum.Audit && checkPermi(['platform:product:batch:audit'])"
-          >批量审核</el-button
+          >{{ $t('product.batchAudit') }}</el-button
         >
         <el-button
           size="small"
@@ -115,7 +116,7 @@
             (Number(tableFrom.type) < 4 || Number(tableFrom.type) === 6) &&
             checkPermi(['platform:product:batch:set:virtual:sales'])
           "
-          >增加初始销量</el-button
+          >{{ $t('product.increaseInitialSales') }}</el-button
         >
       </div>
       <el-table
@@ -136,21 +137,21 @@
         <el-table-column type="expand" width="40">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="商户类别：">
+              <el-form-item :label="$t('merchant.merchantTypeLabel')">
                 <span>{{ props.row.isSelf | selfTypeFilter }}</span>
               </el-form-item>
-              <el-form-item label="初始销量：">
+              <el-form-item :label="$t('product.initialSalesLabel')">
                 <span>{{ props.row.ficti }}</span>
               </el-form-item>
 
-              <el-form-item label="拒绝原因：" v-if="tableFrom.type == 7">
+              <el-form-item :label="$t('order.rejectReason')" v-if="tableFrom.type == 7">
                 <span>{{ props.row.reason }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="id" label="ID" width="50" v-if="checkedCities.includes('ID')" />
-        <el-table-column label="商品图" width="80" v-if="checkedCities.includes('商品图')">
+        <el-table-column prop="id" label="ID" width="50" v-if="isColumnChecked('id')" />
+        <el-table-column :label="$t('product.productImage')" width="80" v-if="isColumnChecked('image')">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
@@ -159,59 +160,59 @@
         </el-table-column>
         <el-table-column
           prop="name"
-          label="商品名称"
+          :label="$t('product.productName')"
           min-width="200"
-          v-if="checkedCities.includes('商品名称')"
+          v-if="isColumnChecked('name')"
           :show-overflow-tooltip="true"
         >
           <template slot-scope="scope">
             <div>
               <span class="tags_name" :class="'name' + scope.row.specType">{{
-                scope.row.specType ? '[多规格]' : '[单规格]'
+                scope.row.specType ? $t('product.multiSpec') : $t('product.singleSpec')
               }}</span
-              >{{ scope.row.name || '-' }}
+              >{{ getLocalizedName(scope.row, currentLocale) || '-' }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="商品售价" prop="price" min-width="100" v-if="checkedCities.includes('商品售价')">
+        <el-table-column :label="$t('product.productPrice')" prop="price" min-width="100" v-if="isColumnChecked('price')">
         </el-table-column>
         <el-table-column
           prop="merchantName"
-          label="商户名称"
-          v-if="checkedCities.includes('商户名称')"
+          :label="$t('product.merchantName')"
+          v-if="isColumnChecked('merchantName')"
           min-width="180"
           :show-overflow-tooltip="true"
         />
-        <el-table-column label="商户类别" min-width="100" v-if="checkedCities.includes('商户类别')">
+        <el-table-column :label="$t('product.merchantType')" min-width="100" v-if="isColumnChecked('merchantType')">
           <template slot-scope="scope">
             <span>{{ scope.row.isSelf | selfTypeFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="sales" label="销量" v-if="checkedCities.includes('销量')" min-width="100" />
-        <el-table-column prop="stock" label="库存" min-width="70" v-if="checkedCities.includes('库存')" />
-        <el-table-column label="审核状态" min-width="80" fixed="right" v-if="checkedCities.includes('审核状态')">
+        <el-table-column prop="sales" :label="$t('product.sales')" v-if="isColumnChecked('sales')" min-width="100" />
+        <el-table-column prop="stock" :label="$t('product.stock')" min-width="70" v-if="isColumnChecked('stock')" />
+        <el-table-column :label="$t('product.auditStatus')" min-width="80" fixed="right" v-if="isColumnChecked('auditStatus')">
           <template slot-scope="scope">
             <span>{{ scope.row.auditStatus | auditStatusFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="190px" fixed="right" :scoped-slot="renderHeader">
+        <el-table-column :label="$t('common.operate')" width="190px" fixed="right" :scoped-slot="renderHeader">
           <template slot-scope="scope">
-            <a @click="handleAudit(scope.row.id, false)" v-hasPermi="['platform:product:info']">详情</a>
+            <a @click="handleAudit(scope.row.id, false)" v-hasPermi="['platform:product:info']">{{ $t('common.detail') }}</a>
             <template v-if="tableFrom.type === '1'">
               <el-divider direction="vertical"></el-divider>
-              <a @click="handlePreview(scope.row.id)">预览</a>
+              <a @click="handlePreview(scope.row.id)">{{ $t('user.preview') }}</a>
             </template>
             <template v-if="tableFrom.type === '6' && checkPermi(['platform:product:audit'])">
               <el-divider direction="vertical"></el-divider>
-              <a @click="handleAudit(scope.row.id, true)">审核</a>
+              <a @click="handleAudit(scope.row.id, true)">{{ $t('finance.audit') }}</a>
             </template>
             <template v-if="Number(tableFrom.type) < 7 && checkPermi(['platform:product:update'])">
               <el-divider direction="vertical"></el-divider>
-              <a @click="handleEdit(scope.row)">编辑</a>
+              <a @click="handleEdit(scope.row)">{{ $t('common.edit') }}</a>
             </template>
             <template v-if="Number(tableFrom.type) < 2 && checkPermi(['platform:product:force:down'])">
               <el-divider direction="vertical"></el-divider>
-              <a @click="handleOff(scope.row.id)">下架</a>
+              <a @click="handleOff(scope.row.id)">{{ $t('product.offShelf') }}</a>
             </template>
           </template>
         </el-table-column>
@@ -233,12 +234,14 @@
       <template>
         <div class="cell_ht">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-            >全选</el-checkbox
+            >{{ $t('common.selectAll') }}</el-checkbox
           >
-          <el-button type="text" @click="checkSave()">保存</el-button>
+          <el-button type="text" @click="checkSave()">{{ $t('common.save') }}</el-button>
         </div>
         <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-          <el-checkbox v-for="item in columnData" :label="item" :key="item" class="check_cell">{{ item }}</el-checkbox>
+          <el-checkbox v-for="item in columnOptions" :label="item.key" :key="item.key" class="check_cell">{{
+            item.label
+          }}</el-checkbox>
         </el-checkbox-group>
       </template>
     </div>
@@ -262,17 +265,38 @@
     </div>
 
     <!-- 批量增加销量-->
-    <el-dialog title="增加初始销量" :visible.sync="dialogVisible" width="540px" :before-close="handleClose">
+    <el-dialog :title="$t('product.increaseInitialSales')" :visible.sync="dialogVisible" width="540px" :before-close="handleClose">
       <el-form :model="formData" ref="formData" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="增加初始销量：" required>
+        <el-form-item :label="$t('product.increaseInitialSalesLabel')" required>
           <el-input-number v-model.trim="formData.ficti" :min="0" :max="99999"></el-input-number>
         </el-form-item>
       </el-form>
       <span slot="footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button @click="dialogVisible = false">{{ $t('el.messagebox.cancel') }}</el-button>
         <el-button type="primary" @click="submitForm('formData')" v-hasPermi="['platform:express:update']"
-          >确定</el-button
+          >{{ $t('el.messagebox.confirm') }}</el-button
         >
+      </span>
+    </el-dialog>
+
+    <!-- 编辑商品（初始销量 / 排序）-->
+    <el-dialog
+      :title="$t('product.editProduct')"
+      :visible.sync="editDialogVisible"
+      width="480px"
+      :close-on-click-modal="false"
+    >
+      <el-form ref="editForm" :model="editForm" label-width="120px">
+        <el-form-item :label="$t('product.initialSalesLabel')">
+          <el-input-number v-model="editForm.ficti" :min="0" :max="99999" />
+        </el-form-item>
+        <el-form-item :label="$t('product.sort')">
+          <el-input-number v-model="editForm.rank" :min="0" :max="9999" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
+        <el-button @click="editDialogVisible = false">{{ $t('product.cancel') }}</el-button>
+        <el-button type="primary" :loading="editLoading" @click="submitEdit">{{ $t('product.save') }}</el-button>
       </span>
     </el-dialog>
 
@@ -308,34 +332,14 @@ import Debounce from '@/libs/debounce';
 import { ProductTypeEnum } from '@/enums/productEnums';
 import BatchAudit from '@/views/product/batchAudit.vue';
 import { handleDeleteTable } from '@/libs/public';
-import { useProduct } from '@/hooks/use-product';
 import product from '@/mixins/product';
-const headerName = [
-  {
-    name: '出售中商品',
-    type: 1,
-  },
-  {
-    name: '仓库中商品',
-    type: 2,
-  },
-  {
-    name: '待审核商品',
-    type: 6,
-  },
-  {
-    name: '审核未通过商品',
-    type: 7,
-  },
-];
-const { productTypeList } = useProduct();
+import { getLocalizedName, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'ProductList',
   components: { BatchAudit, infoFrom, merchantName, previewBox },
   mixins: [product],
   data() {
     return {
-      productTypeList: productTypeList, //商品类型
       componentKey: 0,
       isAtud: false,
       isShow: false,
@@ -381,8 +385,8 @@ export default {
       dialogVisible: false,
       card_select_show: false,
       checkAll: false,
-      checkedCities: ['ID', '商品图', '商品名称', '商品售价', '商户名称', '商户类别', '销量', '库存', '审核状态'],
-      columnData: ['ID', '商品图', '商品名称', '商品售价', '商户名称', '商户类别', '销量', '库存', '审核状态'],
+      columnKeys: ['id', 'image', 'name', 'price', 'merchantName', 'merchantType', 'sales', 'stock', 'auditStatus'],
+      checkedCities: ['id', 'image', 'name', 'price', 'merchantName', 'merchantType', 'sales', 'stock', 'auditStatus'],
       isIndeterminate: true,
       merchantList: [],
       search: {
@@ -399,6 +403,9 @@ export default {
       previewVisible: false,
       frontDomainUrl: '', // iframe地址
       formData: { ficti: 0, idList: [] },
+      editDialogVisible: false,
+      editLoading: false,
+      editForm: { id: 0, ficti: 0, rank: 0 },
       //dialogVisibleInfo: false //详情
     };
   },
@@ -406,13 +413,54 @@ export default {
     if (checkPermi(['platform:product:tabs:headers'])) this.goodHeade();
     if (!localStorage.getItem('merPlatProductClassify')) this.$store.dispatch('product/getAdminProductClassify');
     if (checkPermi(['platform:product:page:list'])) this.getList(1);
-    this.checkedCities = this.$cache.local.has('goods_stroge')
-      ? this.$cache.local.getJSON('goods_stroge')
-      : this.checkedCities;
+    this.checkedCities = this.normalizeCheckedColumns(
+      this.$cache.local.has('goods_stroge') ? this.$cache.local.getJSON('goods_stroge') : this.checkedCities,
+    );
   },
   computed: {
     ProductTypeEnum() {
       return ProductTypeEnum;
+    },
+    productTypeList() {
+      return [
+        { label: this.$t('product.normalProduct'), value: 0 },
+        { label: this.$t('product.virtualProduct'), value: 2 },
+        { label: this.$t('product.cloudProduct'), value: 5 },
+        { label: this.$t('product.cardKeyProduct'), value: 6 },
+      ];
+    },
+    headerName() {
+      return [
+        { name: this.$t('product.onSale'), type: 1 },
+        { name: this.$t('product.inWarehouse'), type: 2 },
+        { name: this.$t('product.pendingAudit'), type: 6 },
+        { name: this.$t('product.auditFailed'), type: 7 },
+      ];
+    },
+    currentLocale() {
+      return this.$i18n.locale || 'zh-cn';
+    },
+    columnOptions() {
+      return [
+        { key: 'id', label: 'ID' },
+        { key: 'image', label: this.$t('product.productImage') },
+        { key: 'name', label: this.$t('product.productName') },
+        { key: 'price', label: this.$t('product.productPrice') },
+        { key: 'merchantName', label: this.$t('product.merchantName') },
+        { key: 'merchantType', label: this.$t('product.merchantType') },
+        { key: 'sales', label: this.$t('product.sales') },
+        { key: 'stock', label: this.$t('product.stock') },
+        { key: 'auditStatus', label: this.$t('product.auditStatus') },
+      ];
+    },
+    headerTabs() {
+      return (this.headeNum || []).map((item) => {
+        const found = this.headerName.find((h) => Number(h.type) === Number(item.type));
+        return {
+          ...item,
+          label: (found ? found.name : item.name) + '(' + item.count + ')',
+        };
+      });
     },
     ...mapGetters(['merPlatProductClassify', 'frontDomain']),
     heightBoxs: function () {
@@ -424,6 +472,17 @@ export default {
   },
   methods: {
     checkPermi,
+    getLocalizedName,
+    getUiLocale,
+    isColumnChecked(key) {
+      return this.checkedCities.includes(key);
+    },
+    normalizeCheckedColumns(saved) {
+      const keys = this.columnKeys;
+      if (!Array.isArray(saved) || !saved.length) return keys.slice();
+      const valid = saved.filter((item) => keys.includes(item));
+      return valid.length ? valid : keys.slice();
+    },
     //搜索
     handleSeachList() {
       this.getList(1);
@@ -431,7 +490,7 @@ export default {
     },
     //批量审核
     handlebatchAudit() {
-      if (this.multipleSelection.length === 0) return this.$message.warning('请先选择商品');
+      if (this.multipleSelection.length === 0) return this.$message.warning(this.$t('product.pleaseSelectProductsFirst'));
       this.$refs.refBatchAudit.dialogVisible = true;
     },
     //批量审核提交成功回调
@@ -444,7 +503,7 @@ export default {
     },
     //批量增加初始销量
     handleBatchSales() {
-      if (this.multipleSelection.length === 0) return this.$message.warning('请先选择商品');
+      if (this.multipleSelection.length === 0) return this.$message.warning(this.$t('product.pleaseSelectProductsFirst'));
       this.dialogVisible = true;
     },
     /** 提交按钮 */
@@ -453,7 +512,7 @@ export default {
         if (valid) {
           this.formData.idList = this.checkedIds;
           productBatchVirtualSalesApi(this.formData).then((response) => {
-            this.$modal.msgSuccess('操作成功');
+            this.$modal.msgSuccess(this.$t('product.operateSuccess'));
             this.getList(1);
             this.handleClose();
           });
@@ -478,18 +537,18 @@ export default {
     },
     // 批量下架
     handlebatchOff() {
-      if (this.multipleSelection.length === 0) return this.$message.warning('请先选择商品');
+      if (this.multipleSelection.length === 0) return this.$message.warning(this.$t('product.pleaseSelectProductsFirst'));
       this.handleOff(this.checkedIds);
     },
     // 下架
     handleOff(id) {
-      this.$modalSure('强制下架吗').then(() => {
+      this.$modalSure(this.$t('product.forceOffConfirm')).then(() => {
         offShellApi({
           ids: id.toString(),
         }).then((res) => {
           this.$message({
             type: 'success',
-            message: '提交成功',
+            message: this.$t('user.submitSuccess'),
           });
           this.subSuccess();
         });
@@ -504,33 +563,28 @@ export default {
       this.checkedIds = data;
     },
     handleEdit(row) {
-      if (!row && this.checkedIds.length === 0) return this.$message.warning('请至少选择一个商品');
-      const _this = this;
-      this.$modalParserFrom(
-        '编辑商品',
-        '平台商品编辑',
-        1,
-        { ficti: row.ficti || '0', id: row.id, rank: row.rank },
-        function (formValue) {
-          _this.submit(formValue, row.id);
-        },
-        (this.keyNum += 5),
-      );
-    },
-    submit(formValue, id) {
-      const data = {
-        id: id,
-        ficti: formValue.ficti,
-        rank: formValue.rank,
+      if (!row && this.checkedIds.length === 0) return this.$message.warning(this.$t('product.pleaseSelectAtLeastOneProduct'));
+      this.editForm = {
+        id: row.id,
+        ficti: row.ficti || 0,
+        rank: row.rank || 0,
       };
-      updateProductApi(data)
-        .then((res) => {
-          this.$message.success('操作成功');
-          this.$msgbox.close();
+      this.editDialogVisible = true;
+    },
+    submitEdit() {
+      this.editLoading = true;
+      updateProductApi({
+        id: this.editForm.id,
+        ficti: this.editForm.ficti,
+        rank: this.editForm.rank,
+      })
+        .then(() => {
+          this.$message.success(this.$t('product.operateSuccess'));
+          this.editDialogVisible = false;
           this.getList(1);
         })
-        .catch(() => {
-          this.loading = false;
+        .finally(() => {
+          this.editLoading = false;
         });
     },
     subSuccess() {
@@ -567,9 +621,6 @@ export default {
       delete data.type;
       productHeadersApi(data)
         .then((res) => {
-          res.map((item, index) => {
-            if (item.type === headerName[index].type) item.name = headerName[index].name;
-          });
           this.headeNum = res;
         })
         .catch((res) => {
@@ -613,10 +664,10 @@ export default {
     },
     // 删除
     handleDelete(id, type) {
-      this.$modalSure(`删除 id 为 ${id} 的商品`).then(() => {
+      this.$modalSure(this.$t('common.confirmPrefix') + ` id ${id} ` + this.$t('common.permanentDelete')).then(() => {
         const deleteFlag = type == 5 ? 'delete' : 'recycle';
         productDeleteApi(id, deleteFlag).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableFrom);
           this.getList();
           this.goodHeade();
@@ -626,7 +677,7 @@ export default {
     renderHeader(h) {
       return (
         <p>
-          <span style="padding-right:5px;">操作</span>
+          <span style="padding-right:5px;">{this.$t('common.operate')}</span>
           <i class="el-icon-setting" onClick={() => this.handleAddItem()}></i>
         </p>
       );
@@ -639,17 +690,17 @@ export default {
       }
     },
     handleCheckAllChange(val) {
-      this.checkedCities = val ? this.columnData : [];
+      this.checkedCities = val ? this.columnKeys.slice() : [];
       this.isIndeterminate = false;
     },
     handleCheckedCitiesChange(value) {
       let checkedCount = value.length;
-      this.checkAll = checkedCount === this.columnData.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.columnData.length;
+      this.checkAll = checkedCount === this.columnKeys.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.columnKeys.length;
     },
     checkSave() {
       this.$set(this, 'card_select_show', false);
-      this.$modal.loading('正在保存到本地，请稍候...');
+      this.$modal.loading(this.$t('order.savingToLocal'));
       this.$cache.local.setJSON('goods_stroge', this.checkedCities);
       setTimeout(this.$modal.closeLoading(), 1000);
     },

@@ -9,118 +9,120 @@
     >
       <div class="padding-add">
         <el-form size="small" label-position="right" label-width="78px" @submit.native.prevent inline>
-          <el-form-item label="优惠券名：">
+          <el-form-item :label="$t('marketing.couponNameColon')">
             <el-input
               v-model.trim="name"
               @keyup.enter.native="getList(1)"
-              placeholder="请输入优惠券名称"
+              :placeholder="$t('user.pleaseEnterCouponName')"
               clearable
               class="selWidth"
             ></el-input>
           </el-form-item>
-          <el-form-item label="开启状态：">
-            <el-select v-model="tableFrom.status" placeholder="请选择开启状态" clearable class="selWidth">
-              <el-option label="开启" :value="1"></el-option>
-              <el-option label="关闭" :value="0"></el-option>
+          <el-form-item :label="$t('marketing.openStatusLabel')">
+            <el-select v-model="tableFrom.status" :placeholder="$t('marketing.pleaseSelectOpenStatus')" clearable class="selWidth">
+              <el-option :label="$t('common.open')" :value="1"></el-option>
+              <el-option :label="$t('common.close')" :value="0"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="领取方式：">
-            <el-select v-model="tableFrom.receiveType" clearable placeholder="请选择领取方式" class="selWidth">
-              <el-option label="用户领取" :value="1"></el-option>
-              <el-option label="平台活动使用" :value="3"></el-option>
+          <el-form-item :label="$t('marketing.receiveMethodLabel')">
+            <el-select v-model="tableFrom.receiveType" clearable :placeholder="$t('marketing.pleaseSelectReceiveMethod')" class="selWidth">
+              <el-option :label="$t('marketing.userReceive')" :value="1"></el-option>
+              <el-option :label="$t('marketing.platformActivityUse')" :value="3"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="使用范围：">
+          <el-form-item :label="$t('marketing.useScopeLabel')">
             <el-select
               v-model="tableFrom.category"
               clearable
-              placeholder="请选择使用范围"
+              :placeholder="$t('marketing.pleaseSelectUseScope')"
               @change="getList(1)"
               class="selWidth"
             >
-              <el-option label="商品" :value="2"></el-option>
-              <el-option label="通用" :value="3"></el-option>
-              <el-option label="品类" :value="4"></el-option>
-              <el-option label="品牌" :value="5"></el-option>
-              <el-option label="跨店" :value="6"></el-option>
+              <el-option :label="$t('marketing.product')" :value="2"></el-option>
+              <el-option :label="$t('marketing.general')" :value="3"></el-option>
+              <el-option :label="$t('marketing.category')" :value="4"></el-option>
+              <el-option :label="$t('product.brand')" :value="5"></el-option>
+              <el-option :label="$t('marketing.crossStore')" :value="6"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '20px' }" shadow="never" :bordered="false">
       <router-link v-hasPermi="['platform:coupon:add']" :to="{ path: '/marketing/platformCoupon/creatCoupon' }">
-        <el-button size="small" type="primary" class="mr10">添加优惠券</el-button>
+        <el-button size="small" type="primary" class="mr10">{{ $t('marketing.addCouponWord') }}</el-button>
       </router-link>
       <el-table v-loading="listLoading" :data="tableData.data" size="small" ref="multipleTable" class="mt20">
         <el-table-column prop="id" label="ID" min-width="50" />
-        <el-table-column prop="name" :show-overflow-tooltip="true" label="优惠券名称" min-width="150" />
-        <el-table-column prop="category" label="使用范围" min-width="90">
+        <el-table-column :show-overflow-tooltip="true" :label="$t('user.couponNameCol')" min-width="150">
+          <template slot-scope="scope">{{ getLocalizedCouponName(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column prop="category" :label="$t('product.usageScope')" min-width="90">
           <template slot-scope="scope">
             <span>{{ scope.row.category | couponCategory }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="money" label="面值" min-width="90" />
-        <el-table-column prop="minPrice" label="使用门槛" min-width="90" />
-        <el-table-column prop="issuedNum" label="使用/发放数量" min-width="100">
+        <el-table-column prop="money" :label="$t('marketing.faceValueCol')" min-width="90" />
+        <el-table-column prop="minPrice" :label="$t('marketing.useThreshold')" min-width="90" />
+        <el-table-column prop="issuedNum" :label="$t('marketing.useGrantCount')" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.usedNum }}/{{ scope.row.issuedNum }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="isLimited" label="发布数量" min-width="90">
+        <el-table-column prop="isLimited" :label="$t('marketing.publishCount')" min-width="90">
           <template slot-scope="scope">
-            <span>{{ !scope.row.isLimited ? '不限量' : scope.row.total }}</span>
+            <span>{{ !scope.row.isLimited ? $t('user.unlimited') : scope.row.total }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="receiveType" label="领取方式" min-width="100">
+        <el-table-column prop="receiveType" :label="$t('user.receiveMethod')" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.receiveType | receiveType }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="receiveStartTime" label="领取日期" min-width="150">
+        <el-table-column prop="receiveStartTime" :label="$t('marketing.receiveDate')" min-width="150">
           <template slot-scope="scope">
             <div v-if="scope.row.receiveEndTime">
               {{ scope.row.receiveStartTime }} -<br />
               {{ scope.row.receiveEndTime }}
             </div>
-            <span v-else>不限时</span>
+            <span v-else>{{ $t('marketing.noTimeLimit') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="是否开启" fixed="right" min-width="90">
+        <el-table-column :label="$t('community.isEnabled')" fixed="right" min-width="90">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:coupon:switch'])"
               v-model="scope.row.status"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
               @change="onchangeIsShow(scope.row)"
             />
-            <div v-else>{{ scope.row.status ? '开启' : '关闭' }}</div>
+            <div v-else>{{ scope.row.status ? $t('common.open') : $t('common.close') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="120" fixed="right">
           <template slot-scope="scope">
-            <a v-if="checkPermi(['platform:coupon:detail'])" @click="look(scope.row.id)">详情</a>
+            <a v-if="checkPermi(['platform:coupon:detail'])" @click="look(scope.row.id)">{{ $t('common.detail') }}</a>
             <el-divider direction="vertical"></el-divider>
             <el-dropdown trigger="click">
-              <span class="el-dropdown-link"> 更多<i class="el-icon-arrow-down el-icon--right" /> </span>
+              <span class="el-dropdown-link"> {{ $t('user.more') }}<i class="el-icon-arrow-down el-icon--right" /> </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item v-hasPermi="['platform:coupon:detail', 'platform:coupon:update']">
                   <router-link :to="{ path: '/marketing/platformCoupon/creatCoupon/' + scope.row.id }">
-                    编辑
+                    {{ $t('common.edit') }}
                   </router-link>
                 </el-dropdown-item>
                 <el-dropdown-item v-hasPermi="['platform:coupon:detail', 'platform:coupon:add']">
                   <router-link :to="{ path: '/marketing/platformCoupon/creatCoupon/' + scope.row.id + '/' + 1 }">
-                    复制
+                    {{ $t('marketing.copy') }}
                   </router-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="handleDelete(scope.row.id)" v-hasPermi="['platform:coupon:delete']">
-                  删除
+                  {{ $t('common.delete') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -142,81 +144,81 @@
     </el-card>
 
     <!--优惠券详情-->
-    <el-drawer title="优惠券详情" size="1000px" :visible.sync="showInfo" direction="rtl" :before-close="handleClose">
+    <el-drawer :title="$t('marketing.couponDetail')" size="1000px" :visible.sync="showInfo" direction="rtl" :before-close="handleClose">
       <div v-loading="loading">
         <div class="detailHead" :class="!showTab ? 'bdbtmSolid' : ''">
           <div class="full">
             <div class="order_icon"><span class="iconfont icon-youhuiquan"></span></div>
             <div class="text">
-              <div class="title">{{ cell.name }}</div>
+              <div class="title">{{ getLocalizedCouponName(cell) }}</div>
               <div>
-                <span class="mr20">优惠券面值：{{ cell.money }}元</span>
+                <span class="mr20">{{ $t('marketing.couponFaceValueLabel') }}{{ cell.money }}{{ $t('dashboard.yuan') }}</span>
               </div>
             </div>
           </div>
         </div>
         <el-tabs type="border-card" v-model="activeNames" v-if="showTab">
-          <el-tab-pane label="基础信息" name="one"></el-tab-pane>
+          <el-tab-pane :label="$t('community.basicInfo')" name="one"></el-tab-pane>
           <el-tab-pane :label="tabPaneName" name="two"></el-tab-pane>
         </el-tabs>
         <div class="px35" v-if="activeNames == 'one'">
           <div class="detailSection" style="border: none">
-            <div class="title">优惠券信息</div>
+            <div class="title">{{ $t('marketing.couponInfo') }}</div>
             <ul class="list">
               <li class="item">
-                <div class="tips">使用门槛：</div>
-                <div class="value">{{ cell.minPrice }}元</div>
+                <div class="tips">{{ $t('marketing.useThresholdLabel') }}</div>
+                <div class="value">{{ cell.minPrice }}{{ $t('dashboard.yuan') }}</div>
               </li>
               <li class="item">
-                <div class="tips">领取时间：</div>
+                <div class="tips">{{ $t('marketing.receiveTimeLabel') }}</div>
                 <div class="value">
-                  {{ cell.isTimeReceive ? cell.receiveStartTime + ' - ' + cell.receiveEndTime : '不限时' }}
+                  {{ cell.isTimeReceive ? cell.receiveStartTime + ' - ' + cell.receiveEndTime : $t('marketing.noTimeLimit') }}
                 </div>
               </li>
               <li class="item">
-                <div class="tips">领取方式：</div>
+                <div class="tips">{{ $t('marketing.receiveMethodLabel') }}</div>
                 <div class="value">
                   {{ cell.receiveType | receiveType }}
                 </div>
               </li>
               <li class="item">
-                <div class="tips">使用范围：</div>
+                <div class="tips">{{ $t('marketing.useScopeLabel') }}</div>
                 <div class="value">{{ cell.category | couponCategory }}</div>
               </li>
               <li class="item">
-                <div class="tips">重复领取：</div>
-                <div class="value">{{ cell.isRepeated ? '可重复领取' : '不可重复领取' }}</div>
+                <div class="tips">{{ $t('marketing.repeatReceiveLabel') }}</div>
+                <div class="value">{{ cell.isRepeated ? $t('marketing.canRepeatReceive') : $t('marketing.noRepeatReceive') }}</div>
               </li>
               <li class="item">
-                <div class="tips">发布数量：</div>
-                <div class="value">{{ !cell.isLimited ? '不限量' : cell.total }}</div>
+                <div class="tips">{{ $t('marketing.publishCountLabel') }}</div>
+                <div class="value">{{ !cell.isLimited ? $t('user.unlimited') : cell.total }}</div>
               </li>
 
               <li class="item">
-                <div class="tips">是否开启：</div>
-                <div class="value">{{ cell.status ? '开启' : '关闭' }}</div>
+                <div class="tips">{{ $t('merchant.enableLabel') }}</div>
+                <div class="value">{{ cell.status ? $t('common.open') : $t('common.close') }}</div>
               </li>
               <li class="item">
-                <div class="tips">使用有效期：</div>
+                <div class="tips">{{ $t('marketing.useValidityLabel') }}</div>
                 <div class="value">
                   {{
                     cell.isFixedTime
-                      ? cell.useStartTime + ' - ' + cell.useEndTime + ' 有效'
-                      : '领取后' + cell.day + '天内有效'
+                      ? $t('marketing.rangeValid', { range: cell.useStartTime + ' - ' + cell.useEndTime })
+                      : $t('marketing.afterReceiveValid', { day: cell.day })
                   }}
                 </div>
               </li>
             </ul>
           </div>
           <div class="detailSection">
-            <div class="title">优惠券情况</div>
+            <div class="title">{{ $t('marketing.couponSituation') }}</div>
             <ul class="list">
               <li class="item">
-                <div class="tips">已发放数量：</div>
+                <div class="tips">{{ $t('marketing.grantedCountLabel') }}</div>
                 <div class="value">{{ cell.issuedNum }}</div>
               </li>
               <li class="item">
-                <div class="tips">已使用数量：</div>
+                <div class="tips">{{ $t('marketing.usedCountLabel') }}</div>
                 <div class="value">{{ cell.usedNum }}</div>
               </li>
             </ul>
@@ -225,30 +227,30 @@
         <div class="px35" v-if="cell.category == 2 && activeNames == 'two'">
           <el-table ref="tableList" v-loading="listLoading" :data="cell.productList" class="mt20" size="small">
             <el-table-column prop="id" label="ID" width="55"> </el-table-column>
-            <el-table-column label="商品图" min-width="80">
+            <el-table-column :label="$t('product.productImage')" min-width="80">
               <template slot-scope="scope">
                 <div class="demo-image__preview line-heightOne">
                   <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
                 </div>
               </template>
             </el-table-column>
-            <el-table-column :show-overflow-tooltip="true" prop="name" label="商品名称" min-width="150" />
-            <el-table-column prop="price" label="售价" min-width="90" />
-            <el-table-column prop="stock" label="库存" min-width="70" />
+            <el-table-column :show-overflow-tooltip="true" prop="name" :label="$t('product.productName')" min-width="150" />
+            <el-table-column prop="price" :label="$t('user.salePricePlaceholder')" min-width="90" />
+            <el-table-column prop="stock" :label="$t('product.stock')" min-width="70" />
           </el-table>
         </div>
         <div class="px35" v-if="cell.category == 6 && activeNames == 'two'">
           <el-table ref="tableList" :data="cell.merchantList" class="mt20" size="small">
             <el-table-column prop="categoryId" label="ID" min-width="55"> </el-table-column>
-            <el-table-column label="商户头像" min-width="80">
+            <el-table-column :label="$t('marketing.merchantAvatar')" min-width="80">
               <template slot-scope="scope">
                 <div class="demo-image__preview line-heightOne">
                   <el-image :src="scope.row.avatar" :preview-src-list="[scope.row.avatar]" />
                 </div>
               </template>
             </el-table-column>
-            <el-table-column :show-overflow-tooltip="true" prop="name" label="商户名称" min-width="150" />
-            <el-table-column label="商户类别" min-width="80">
+            <el-table-column :show-overflow-tooltip="true" prop="name" :label="$t('product.merchantName')" min-width="150" />
+            <el-table-column :label="$t('product.merchantType')" min-width="80">
               <template slot-scope="scope">
                 <span>{{ scope.row.isSelf | selfTypeFilter }}</span>
               </template>
@@ -257,16 +259,16 @@
         </div>
       </div>
     </el-drawer>
-    <el-dialog title="删除" :visible.sync="delShow" width="430px" :before-close="handleClose">
+    <el-dialog :title="$t('common.delete')" :visible.sync="delShow" width="430px" :before-close="handleClose">
       <div>
-        <el-radio v-model="loseEfficacyStatus" :label="0">已领取的优惠券仍可正常使用</el-radio><br />
+        <el-radio v-model="loseEfficacyStatus" :label="0">{{ $t('marketing.receivedCouponStillValid') }}</el-radio><br />
         <el-radio v-model="loseEfficacyStatus" :label="1" class="mt20"
-          >同步删除已领取的优惠券，已领取的优惠券展示为已失效</el-radio
+          >{{ $t('marketing.syncDeleteCouponTip') }}</el-radio
         >
       </div>
       <div class="acea-row row-right mt20 btnBottom">
-        <el-button size="small" @click="delShow = false">取消</el-button>
-        <el-button size="small" type="primary" @click="confirmDelete()">删除</el-button>
+        <el-button size="small" @click="delShow = false">{{ $t('el.messagebox.cancel') }}</el-button>
+        <el-button size="small" type="primary" @click="confirmDelete()">{{ $t('common.delete') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -274,6 +276,7 @@
 <script>
 import { couponDeleteApi, couponInfoApi, couponStatusApi, platformCouponListApi } from '@/api/marketing';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { getLocalizedName } from '@/utils/localizedName';
 export default {
   name: 'platformCoupon',
   data() {
@@ -297,20 +300,21 @@ export default {
       delShow: false,
       cell: {},
       loseEfficacyStatus: 0,
-      tabPaneName: '更多',
+      tabPaneName: this.$t('user.more'),
       activeNames: 'one',
       showTab: false,
       loading: false,
     };
   },
-  filters: {
-    receiveType(val) {
-      const typeObj = {
-        1: '用户领取',
-        2: '商品赠送券',
-        3: '平台活动使用',
-      };
-      return typeObj[val];
+  computed: {
+    currentLocale() {
+      return (
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn'
+      );
     },
   },
   mounted() {
@@ -319,10 +323,13 @@ export default {
   },
   methods: {
     checkPermi,
+    getLocalizedCouponName(row) {
+      return getLocalizedName(row, this.currentLocale);
+    },
     onchangeIsShow(row) {
       couponStatusApi(row.id)
         .then(async () => {
-          this.$message.success('修改成功');
+          this.$message.success(this.$t('category.updateSuccess'));
         })
         .catch(() => {
           row.status = !row.status;
@@ -335,10 +342,10 @@ export default {
       couponInfoApi(id)
         .then((res) => {
           if (res.category == 6) {
-            this.tabPaneName = '商户列表';
+            this.tabPaneName = this.$t('marketing.merchantList');
             this.showTab = true;
           } else if (res.category == 2) {
-            this.tabPaneName = '商品列表';
+            this.tabPaneName = this.$t('marketing.productList');
             this.showTab = true;
           }
           this.cell = res;
@@ -394,7 +401,7 @@ export default {
         id: this.rowId,
         loseEfficacyStatus: this.loseEfficacyStatus,
       }).then(() => {
-        this.$message.success('删除成功');
+        this.$message.success(this.$t('product.deleteSuccess'));
         this.delShow = false;
         if (this.tableData.data.length === 1 && this.tableFrom.page > 1) this.tableFrom.page = this.tableFrom.page - 1;
         this.getList(1);

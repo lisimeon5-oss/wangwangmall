@@ -1,7 +1,7 @@
 <template>
   <!--富文本编辑器-->
   <div class="box borderPadding" v-if="configData">
-    <Tinymce v-model="configData.val" style="width: 100%; height: 60%"></Tinymce>
+    <Tinymce :key="formLang" v-model="displayVal" style="width: 100%; height: 60%"></Tinymce>
   </div>
 </template>
 
@@ -16,7 +16,7 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import Tinymce from '@/components/Tinymce/index';
-import { getToken } from '@/utils/auth';
+import { parseLangJsonMap } from '@/utils/localizedName';
 
 export default {
   name: 'c_page_ueditor',
@@ -30,12 +30,11 @@ export default {
   },
   components: { Tinymce },
   data() {
-    // const url = SettingMer.https + '/upload/image/0/file?ueditor=1&token=' + getToken()
     return {
       myConfig: {
-        autoHeightEnabled: false, // 编辑器不自动被内容撑高
-        initialFrameHeight: 350, // 初始容器高度
-        initialFrameWidth: '100%', // 初始容器宽度
+        autoHeightEnabled: false,
+        initialFrameHeight: 350,
+        initialFrameWidth: '100%',
         UEDITOR_HOME_URL: '/UEditor/',
         imageFieldName: 'file',
         imageUrlPrefix: '',
@@ -43,10 +42,33 @@ export default {
         imageMaxSize: 2048000,
         imageAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'],
       },
-      description: '',
       defaults: {},
       configData: {},
+      defaultLangCode: 'zh-cn',
     };
+  },
+  computed: {
+    formLang() {
+      return (this.configObj && this.configObj.diyMediaLang) || this.defaultLangCode;
+    },
+    displayVal: {
+      get() {
+        if (!this.configData) return '';
+        if (this.formLang === this.defaultLangCode) return this.configData.val || '';
+        return parseLangJsonMap(this.configData.valJson)[this.formLang] || '';
+      },
+      set(val) {
+        if (!this.configData) return;
+        if (this.formLang === this.defaultLangCode) {
+          this.$set(this.configData, 'val', val);
+          return;
+        }
+        const map = parseLangJsonMap(this.configData.valJson);
+        if (this.hasRichText(val)) map[this.formLang] = val;
+        else delete map[this.formLang];
+        this.$set(this.configData, 'valJson', Object.keys(map).length ? JSON.stringify(map) : '');
+      },
+    },
   },
   created() {
     this.defaults = this.configObj;
@@ -54,12 +76,21 @@ export default {
   },
   watch: {
     configObj: {
-      handler(nVal, oVal) {
+      handler(nVal) {
         this.defaults = nVal;
         this.configData = nVal[this.configNme];
       },
       immediate: true,
       deep: true,
+    },
+  },
+  methods: {
+    hasRichText(html) {
+      return String(html || '')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/<[^>]+>/g, '')
+        .trim()
+        .length > 0;
     },
   },
 };

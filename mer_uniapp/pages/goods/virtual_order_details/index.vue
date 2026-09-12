@@ -24,11 +24,11 @@
           class="nav"
         >
           <view class="navCon acea-row row-between-wrapper">
-            <view :class="orderInfo.status == 0 ? 'on' : ''">待付款</view>
-            <view :class="orderInfo.status == 1 ? 'on' : ''">待发货</view>
-            <view :class="orderInfo.status == 4 ? 'on' : ''">待收货</view>
-            <view :class="orderInfo.status == 5 ? 'on' : ''">已收货</view>
-            <view :class="orderInfo.status == 6 ? 'on' : ''">已完成</view>
+            <view :class="orderInfo.status == 0 ? 'on' : ''">{{$t('待付款')}}</view>
+            <view :class="orderInfo.status == 1 ? 'on' : ''">{{$t('待发货')}}</view>
+            <view :class="orderInfo.status == 4 ? 'on' : ''">{{$t('待收货')}}</view>
+            <view :class="orderInfo.status == 5 ? 'on' : ''">{{$t('已收货')}}</view>
+            <view :class="orderInfo.status == 6 ? 'on' : ''">{{$t('已完成')}}</view>
           </view>
           <!-- 订单状态（0：待支付，1：待发货,2：部分发货， 3：待核销，4：待收货,5：已收货,6：已完成，9：已取消） -->
           <view class="progress acea-row row-between-wrapper">
@@ -107,9 +107,9 @@
         </view>
         <view v-if="shippingType === 2" class="nav">
           <view class="navCon acea-row row-between-wrapper">
-            <view :class="orderInfo.status == 0 ? 'on' : ''">待付款</view>
-            <view :class="orderInfo.status == 3 ? 'on' : ''">待核销</view>
-            <view :class="orderInfo.status == 6 ? 'on' : ''">已收货</view>
+            <view :class="orderInfo.status == 0 ? 'on' : ''">{{$t('待付款')}}</view>
+            <view :class="orderInfo.status == 3 ? 'on' : ''">{{$t('待核销')}}</view>
+            <view :class="orderInfo.status == 6 ? 'on' : ''">{{$t('已收货')}}</view>
           </view>
           <!-- 订单状态（0：待支付，1：待发货,2：部分发货， 3：待核销，4：待收货,5：已收货,6：已完成，9：已取消） -->
           <view class="progress acea-row row-between-wrapper">
@@ -171,11 +171,11 @@
               :isShowBtn="false"
             ></orderGoods>
             <view class="flex justify-between userRemarkBox">
-              <view class="f-s-30 color28">配送方式：</view>
-              <view class="cor-86 f-s-30">自动发货</view>
+              <view class="f-s-30 color28">{{$t('配送方式：')}}</view>
+              <view class="cor-86 f-s-30">{{$t('自动发货')}}</view>
             </view>
             <view class="flex justify-between userRemarkBox">
-              <view class="f-s-30 color28">买家留言：</view>
+              <view class="f-s-30 color28">{{$t('买家留言：')}}</view>
               <view class="flex align-center userRemark">
                 <view class="cor-86 f-s-30">{{ item.userRemark || "-" }}</view>
               </view>
@@ -195,19 +195,19 @@
               class="borRadius14 fictitious wrapper"
             >
               <view class="item acea-row row-between">
-                <view class="f-s-30 color28">云盘信息：</view>
+                <view class="f-s-30 color28">{{$t('云盘信息：')}}</view>
                 <!-- #ifndef H5 -->
                 <text
                   class="copy f-s-22 font-color"
                   @tap="handleCopy(items.expand)"
-                  >复制</text
+                  >{{$t('复制')}}</text
                 >
                 <!-- #endif -->
                 <!-- #ifdef H5 -->
                 <text
                   class="copy copy-data f-s-22 font-color"
                   :data-clipboard-text="items.expand"
-                  >复制</text
+                  >{{$t('复制')}}</text
                 >
                 <!-- #endif -->
               </view>
@@ -228,7 +228,7 @@
               class="borRadius14 fictitious wrapper"
             >
               <view class="item acea-row row-between">
-                <view class="f-s-30 color28">卡密信息：</view>
+                <view class="f-s-30 color28">{{$t('卡密信息：')}}</view>
               </view>
               <view class="mt-26">
                 <view
@@ -238,10 +238,10 @@
                 >
                   <view style="width: 540rpx">
                     <view class="f-s-26 text-666 mb-20 break-word"
-                      >卡号：{{ its.cardNumber }}</view
+                      >{{$t('卡号')}}：{{ its.cardNumber }}</view
                     >
                     <view class="f-s-26 text-666 break-word"
-                      >密码：{{ its.secretNum }}</view
+                      >{{$t('密码')}}：{{ its.secretNum }}</view
                     >
                   </view>
                   <!-- #ifndef H5 -->
@@ -249,19 +249,19 @@
                     class="copy f-s-22 font-color"
                     @tap="
                       handleCopy(
-                        '卡号:' + its.cardNumber + ',密码:' + its.secretNum
+                        this.$t('卡号') + ':' + its.cardNumber + ',' + this.$t('密码') + ':' + its.secretNum
                       )
                     "
-                    >复制</text
+                    >{{$t('复制')}}</text
                   >
                   <!-- #endif -->
                   <!-- #ifdef H5 -->
                   <text
                     class="copy copy-data f-s-22 font-color"
                     :data-clipboard-text="
-                      '卡号:' + its.cardNumber + ',密码:' + its.secretNum
+                      $t('卡号') + ':' + its.cardNumber + ',' + $t('密码') + ':' + its.secretNum
                     "
-                    >复制</text
+                    >{{$t('复制')}}</text
                   >
                   <!-- #endif -->
                 </view>
@@ -281,7 +281,7 @@
       <view class="borderPad">
         <view class="wrapper borRadius14">
           <view class="item acea-row row-between">
-            <view>订单编号：</view>
+            <view>{{$t('订单编号：')}}</view>
             <view
               class="conter acea-row row-middle row-right"
               style="width: auto"
@@ -290,67 +290,67 @@
               <text
                 class="copy line-heightOne"
                 @tap="handleCopy(orderInfo.orderNo)"
-                >复制</text
+                >{{$t('复制')}}</text
               >
               <!-- #endif -->
               <!-- #ifdef H5 -->
               <text
                 class="copy copy-data"
                 :data-clipboard-text="orderInfo.orderNo"
-                >复制</text
+                >{{$t('复制')}}</text
               >
               <!-- #endif -->
             </view>
           </view>
           <view class="item acea-row row-between" style="margin-top: 22rpx">
-            <view>下单时间：</view>
+            <view>{{$t('下单时间：')}}</view>
             <view class="conter">{{ orderInfo.createTime || 0 }}</view>
           </view>
           <view class="item acea-row row-between">
-            <view>支付状态：</view>
-            <view class="conter" v-if="orderInfo.paid">已支付</view>
-            <view class="conter" v-else>未支付</view>
+            <view>{{$t('支付状态：')}}</view>
+            <view class="conter" v-if="orderInfo.paid">{{$t('已支付')}}</view>
+            <view class="conter" v-else>{{$t('未支付')}}</view>
           </view>
           <view v-if="orderInfo.payType" class="item acea-row row-between">
-            <view>支付方式：</view>
+            <view>{{$t('支付方式：')}}</view>
             <view class="conter">{{ orderInfo.payType | payTypeFilter }}</view>
           </view>
         </view>
         <view class="wrapper borRadius14">
           <view class="item acea-row row-between">
-            <view>商品总价：</view>
-            <view class="conter">￥{{ orderInfo.proTotalPrice || 0 }}</view>
+            <view>{{$t('商品总价：')}}</view>
+            <view class="conter">฿{{ orderInfo.proTotalPrice || 0 }}</view>
           </view>
           <view
             class="item acea-row row-between"
             v-if="orderInfo.payPostage > 0"
           >
-            <view>运费：</view>
-            <view class="conter">￥{{ orderInfo.payPostage || 0 }}</view>
+            <view>{{$t('运费：')}}</view>
+            <view class="conter">฿{{ orderInfo.payPostage || 0 }}</view>
           </view>
           <view
             class="item acea-row row-between"
             v-if="orderInfo.merCouponPrice > 0"
           >
-            <view>店铺优惠：</view>
-            <view class="conter">-￥{{ orderInfo.merCouponPrice || 0 }}</view>
+            <view>{{$t('店铺优惠：')}}</view>
+            <view class="conter">-฿{{ orderInfo.merCouponPrice || 0 }}</view>
           </view>
           <view
             class="item acea-row row-between"
             v-if="orderInfo.platCouponPrice > 0"
           >
-            <view>平台优惠：</view>
-            <view class="conter">-￥{{ orderInfo.platCouponPrice || 0 }}</view>
+            <view>{{$t('平台优惠：')}}</view>
+            <view class="conter">-฿{{ orderInfo.platCouponPrice || 0 }}</view>
           </view>
           <view
             class="item acea-row row-between"
             v-if="orderInfo.integralPrice > 0"
           >
-            <view>积分抵扣：</view>
-            <view class="conter">-￥{{ orderInfo.integralPrice || 0 }}</view>
+            <view>{{$t('积分抵扣：')}}</view>
+            <view class="conter">-฿{{ orderInfo.integralPrice || 0 }}</view>
           </view>
           <view class="actualPay acea-row row-right"
-            >实付款：<text class="money">￥{{ orderInfo.payPrice || 0 }}</text>
+            >{{$t('实付款：')}}<text class="money">฿{{ orderInfo.payPrice || 0 }}</text>
           </view>
         </view>
         <view style="height: 120rpx"></view>
@@ -363,32 +363,32 @@
             class="qs-btn"
             v-if="orderInfo.status == 0"
             @click.stop="cancelOrder"
-            >取消订单</view
+            >{{$t('取消订单')}}</view
           >
           <view
             class="bnt bg_color"
             v-if="orderInfo.status == 4"
             @tap="confirmOrder"
-            >确认收货</view
+            >{{$t('确认收货')}}</view
           >
           <view
             class="bnt cancel"
             v-if="orderInfo.status == 6 || orderInfo.status == 9"
             @tap="delOrder"
-            >删除订单
+            >{{$t('删除订单')}}
           </view>
           <view
             class="bnt bg_color"
             v-if="orderInfo.status == 0"
             @tap="goPay(orderInfo)"
-            >立即付款</view
+            >{{$t('立即付款')}}</view
           >
           <view
             class="bnt bg_color"
             v-if="orderInfo.status > 0"
             @tap="goOrderConfirm"
           >
-            再次购买</view
+            {{$t('再次购买')}}</view
           >
         </view>
       </view>
@@ -474,7 +474,7 @@ export default {
     if (!options.orderNo)
       return this.$util.Tips(
         {
-          title: "缺少参数",
+          title: this.$t('缺少参数'),
         },
         {
           tab: 3,
@@ -509,7 +509,7 @@ export default {
       const clipboard = new ClipboardJS(".copy-data");
       clipboard.on("success", () => {
         this.$util.Tips({
-          title: "复制成功",
+          title: this.$t('复制成功'),
         });
       });
     });
@@ -522,7 +522,7 @@ export default {
      */
     goPay: Debounce(function (item) {
       uni.showLoading({
-        title: "加载中...",
+        title: this.$t('加载中...'),
       });
 
       uni.navigateTo({
@@ -544,7 +544,7 @@ export default {
     getOrderInfo: function () {
       let that = this;
       uni.showLoading({
-        title: "正在加载中",
+        title: this.$t('正在加载中'),
       });
       getOrderDetail(that.orderNo)
         .then((res) => {
@@ -605,7 +605,7 @@ export default {
      */
     goOrderConfirm: Debounce(function () {
       uni.showLoading({
-        title: "加载中...",
+        title: this.$t('加载中...'),
       });
       let cartListRequest = [];
       let that = this;
@@ -631,15 +631,15 @@ export default {
     confirmOrder: Debounce(function () {
       let that = this;
       uni.showModal({
-        title: "确认收货",
-        content: "为保障权益，请收到货确认无误后，再确认收货",
+        title: this.$t('确认收货'),
+        content: this.$t('为保障权益，请收到货确认无误后，再确认收货'),
         success: function (res) {
           if (res.confirm) {
             orderTake(that.orderNo)
               .then((res) => {
                 return that.$util.Tips(
                   {
-                    title: "操作成功",
+                    title: this.$t('操作成功'),
                     icon: "success",
                   },
                   function () {
@@ -662,7 +662,7 @@ export default {
      */
     delOrder: Debounce(function () {
       uni.showModal({
-        content: "确定删除该订单",
+        content: this.$t('确定删除该订单'),
         cancelText: "取消",
         confirmText: "确定",
         showCancel: true,
@@ -674,7 +674,7 @@ export default {
               .then((res) => {
                 return that.$util.Tips(
                   {
-                    title: "删除成功",
+                    title: this.$t('删除成功'),
                     icon: "success",
                   },
                   {
@@ -696,15 +696,15 @@ export default {
     cancelOrder: Debounce(function () {
       let self = this;
       uni.showModal({
-        title: "提示",
-        content: "确认取消该订单?",
+        title: this.$t('提示'),
+        content: this.$t('确认取消该订单?'),
         success: function (res) {
           if (res.confirm) {
             orderCancel(self.orderNo)
               .then((data) => {
                 self.$util.Tips(
                   {
-                    title: "取消成功",
+                    title: this.$t('取消成功'),
                   },
                   {
                     tab: 4,

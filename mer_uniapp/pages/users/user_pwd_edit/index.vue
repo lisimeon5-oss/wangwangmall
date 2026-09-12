@@ -2,28 +2,28 @@
 	<view :data-theme="theme" class="upda_pasd">
 		<view class="ChangePassword">
 			<form @submit="editPwd" report-submit='true'>
-				<view class="phone">当前手机号：{{userInfo.phone}}</view>
+				<view class="phone">{{$t('当前手机号')}}：{{userInfo.phone}}</view>
 				<view class="list">
 					<view class="item">
-						<input type='password' placeholder='6-8位字母加数字' placeholder-class='placeholder' name="password"
+						<input type='password' :placeholder="$t('6-8位字母加数字')" placeholder-class='placeholder' name="password"
 							:value="password" maxlength="18" @blur="checkPasd"></input>
 					</view>
 					<view class="item">
-						<input type='password' placeholder='确认新密码' placeholder-class='placeholder' name="qr_password"
+						<input type='password' :placeholder="$t('确认新密码')" placeholder-class='placeholder' name="qr_password"
 							:value="qr_password" maxlength="18" @blur="checkPassword"></input>
 					</view>
 					<view class="item acea-row row-between-wrapper">
-						<input type='number' placeholder='填写验证码' placeholder-class='placeholder' class="codeIput"
+						<input type='number' :placeholder="$t('填写验证码')" placeholder-class='placeholder' class="codeIput"
 							name="captcha" :value="captcha" maxlength="6"></input>
 						<button class="code" :class="disabled === true ? 'on' : ''" :disabled='disabled' @click="code">
 							{{ text }}
 						</button>
 					</view>
 				</view>
-				<button form-type="submit" class="confirmBnt">确认修改</button>
+				<button form-type="submit" class="confirmBnt">{{$t('确认修改')}}</button>
 			</form>
 		</view>
-		<Verify @success="handlerOnVerSuccess" :captchaType="'clickWord'" :imgSize="{ width: '330px', height: '155px' }"
+		<Verify @success="handlerOnVerSuccess" :captchaType="'blockPuzzle'" :imgSize="{ width: '330px', height: '155px' }"
 			ref="verify"></Verify>
 	</view>
 </template>
@@ -107,7 +107,7 @@
 				let that = this;
 				updatePasswordCodeApi().then(res => {
 					that.$util.Tips({
-						title: '发送成功'
+						title: this.$t('发送成功')
 					});
 					that.sendCode();
 				}).catch(err => {
@@ -123,10 +123,10 @@
 			code: Debounce(function(e) {
 				let that = this;
 				if (!that.userInfo.phone) return that.$util.Tips({
-					title: '手机号码不存在,无法发送验证码！'
+					title: this.$t('手机号码不存在,无法发送验证码！')
 				});
 				if (that.qr_password != that.password) return that.$util.Tips({
-					title: '两次输入的密码不一致！'
+					title: this.$t('两次输入的密码不一致！')
 				});
 				that.$refs.verify.show();
 			}),
@@ -141,7 +141,7 @@
 				that.password = password;
 				// if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,8}$/i.test(password)) return that.$util.Tips({
 				if (!/^[a-zA-Z]\w{5,17}$/i.test(password)) return that.$util.Tips({
-					title: '密码格式错误，密码必须以字母开头，长度在6~8之间，只能包含字符数字和下划线'
+					title: this.$t('密码格式错误，密码必须以字母开头，长度在6~8之间，只能包含字符数字和下划线')
 				});
 			},
 			checkPassword(e) {
@@ -149,7 +149,7 @@
 					qr_password = e.detail.value;
 					that.qr_password = qr_password;
 				if (qr_password != that.password) return that.$util.Tips({
-					title: '两次输入的密码不一致！'
+					title: this.$t('两次输入的密码不一致！')
 				});
 			},
 			editPwd: Debounce(function(e) {
@@ -158,16 +158,16 @@
 					qr_password = e.detail.value.qr_password,
 					captcha = e.detail.value.captcha;
 				if (!password) return that.$util.Tips({
-					title: '请输入新密码'
+					title: this.$t('请输入新密码')
 				});
 				if (!qr_password) return that.$util.Tips({
-					title: '请确认新密码'
+					title: this.$t('请确认新密码')
 				});
 				if (!captcha) return that.$util.Tips({
-					title: '请输入验证码'
+					title: this.$t('请输入验证码')
 				});
 				uni.showLoading({
-					title: '加载中',
+					title: this.$t('加载中'),
 					mask: true
 				});
 				phoneRegisterReset({
@@ -176,7 +176,7 @@
 				}).then(res => {
 					uni.hideLoading();
 					return that.$util.Tips({
-						title: '操作成功'
+						title: this.$t('操作成功')
 					}, {
 						tab: 3,
 						url: 1

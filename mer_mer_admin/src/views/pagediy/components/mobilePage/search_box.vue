@@ -3,7 +3,7 @@
     <img src="../../images/leftMenu.png" alt="" mode="widthFix" />
     <div :style="contentStyle" class="box">
       <span class="line1"
-        ><i class="el-icon-search" /><span>{{ hotWord }}</span></span
+        ><i class="el-icon-search" /><span>{{ displayHotWord }}</span></span
       >
     </div>
     <div class="capsule"><img src="@/assets/imgs/capsule.png" alt="" /></div>
@@ -21,9 +21,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState } from 'vuex';
+import { diyCname } from '@/utils/diyCname';
+import { getLocalizedDiyVal, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'search_box',
-  cname: '搜索框',
+  ...diyCname('pagediy.searchBox'),
   icon: 't-icon-zujian-sousuokuang',
   configName: 'c_search_box',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -64,6 +66,15 @@ export default {
         },
       ];
     },
+    displayHotWord() {
+      const data = this.configObj;
+      if (!data) return this.hotWord;
+      const locale = getUiLocale(this);
+      if (data.hotWords && data.hotWords.list && data.hotWords.list.length > 0) {
+        return getLocalizedDiyVal(data.hotWords.list[0], locale);
+      }
+      return getLocalizedDiyVal(data.placeWords, locale);
+    },
   },
   watch: {
     pageData: {
@@ -95,37 +106,37 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '搜索框',
+          cname: this.$t('pagediy.searchBox'),
         },
         textPosition: {
-          title: '文本位置',
-          tabTitle: '文本位置',
+          title: this.$t('pagediy.textPosition'),
+          tabTitle: this.$t('pagediy.textPosition'),
           name: 'textPosition',
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '居左',
+              val: this.$t('pagediy.alignLeft'),
               icon: 'icon-juzuo',
               style: 'left',
             },
             {
-              val: '居中',
+              val: this.$t('pagediy.alignCenter'),
               icon: 'icon-juzhong',
               style: 'center',
             },
           ],
         },
         bgStyle: {
-          title: '背景圆角',
-          tabTitle: '圆角设置',
+          title: this.$t('pagediy.backgroundCircle'),
+          tabTitle: this.$t('pagediy.radiusSettings'),
           name: 'bgStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         contentStyle: {
-          title: '内容圆角',
+          title: this.$t('pagediy.contentRadius'),
           name: 'contentStyle',
           val: 15,
           min: 0,
@@ -133,8 +144,8 @@ export default {
         },
         // 背景颜色
         bgColor: {
-          title: '背景颜色',
-          tabTitle: '颜色设置',
+          title: this.$t('pagediy.backgroundColor'),
+          tabTitle: this.$t('pagediy.colorSettings'),
           color: [
             {
               item: '#E93323',
@@ -154,7 +165,7 @@ export default {
         },
         // 框体颜色
         borderColor: {
-          title: '框体颜色',
+          title: this.$t('pagediy.frameColor'),
           color: [
             {
               item: '#fff',
@@ -167,7 +178,7 @@ export default {
           ],
         },
         textColor: {
-          title: '输入文字颜色',
+          title: this.$t('pagediy.inputTextColor'),
           default: [
             {
               item: '#303133',
@@ -180,33 +191,34 @@ export default {
           ],
         },
         hotWords: {
-          title: '搜索热词',
-          tabTitle: '搜索热词',
-          tips: '最多可设置20个热词，鼠标拖拽左侧圆点可调整热词顺序',
+          title: this.$t('pagediy.searchHotWords'),
+          tabTitle: this.$t('pagediy.searchHotWords'),
+          tips: this.$t('pagediy.searchHotWordsTip'),
           list: [
             {
               val: '兰蔻小黑瓶',
+              valJson: '',
             },
           ],
         },
         placeWords: {
-          title: '提示文字',
-          tabTitle: '提示文字设置',
-          val: '搜索商品名称',
+          title: this.$t('pagediy.hintText'),
+          tabTitle: this.$t('pagediy.hintTextSettings'),
+          val: this.$t('pagediy.searchProductName'),
           isShow: 1,
         },
         titleConfig: {
-          title: '切换时间',
+          title: this.$t('pagediy.switchTime'),
           val: 3,
-          place: '设置搜索热词显示时间',
+          place: this.$t('pagediy.setHotWordDisplayTime'),
           max: 100,
-          unit: '秒',
+          unit: this.$t('pagediy.second'),
           isShow: 1,
         },
         // 左右间距
         lrConfig: {
-          tabTitle: '边距设置',
-          title: '左右边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 20,

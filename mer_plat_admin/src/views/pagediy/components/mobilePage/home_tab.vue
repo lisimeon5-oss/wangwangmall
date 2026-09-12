@@ -9,7 +9,7 @@
           color: curIndex === index ? (checkThemeStyle ? configObj.checkColor.color[0].item : themeColor) : fontColor,
         }"
       >
-        {{ item.val }} <span :style="checkColor"></span>
+        {{ tabName(item) }} <span :style="checkColor"></span>
       </div>
     </div>
 
@@ -38,7 +38,7 @@
                 </div>
                 <div class="price" :style="priceColor">
                   <div class="num semiBold" v-if="priceShow">
-                    ￥<span>{{ item.price }}</span>
+                    ฿<span>{{ item.price }}</span>
                   </div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">
@@ -56,12 +56,12 @@
                 <div class="hd">
                   <div class="text">
                     <div class="title line2" :style="titleColor">
-                      <span v-if="titleShow">商品名称</span>
+                      <span v-if="titleShow">{{ $t('product.productName') }}</span>
                     </div>
                   </div>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>199</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>199</span></div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
               </div>
@@ -74,12 +74,12 @@
                 <div class="hd">
                   <div class="text">
                     <div class="title line2" :style="titleColor">
-                      <span v-if="titleShow">商品名称</span>
+                      <span v-if="titleShow">{{ $t('product.productName') }}</span>
                     </div>
                   </div>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>199</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>199</span></div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
               </div>
@@ -104,7 +104,7 @@
                 </div>
                 <div class="price" :style="priceColor">
                   <div class="num semiBold" v-if="priceShow">
-                    ¥<span>{{ item.price }}</span>
+                    ฿<span>{{ item.price }}</span>
                   </div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">
@@ -120,10 +120,10 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span class="title line2" v-if="titleShow" :style="titleColor">商品名称</span>
+                  <span class="title line2" v-if="titleShow" :style="titleColor">{{ $t('product.productName') }}</span>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
               </div>
@@ -134,10 +134,10 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span class="title line2" v-if="titleShow" :style="titleColor">商品名称</span>
+                  <span class="title line2" v-if="titleShow" :style="titleColor">{{ $t('product.productName') }}</span>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
               </div>
@@ -162,7 +162,7 @@
                 </div>
                 <div class="price semiBold" :style="priceColor">
                   <div class="num" v-if="priceShow">
-                    ¥<span>{{ item.price }}</span>
+                    ฿<span>{{ item.price }}</span>
                   </div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">
@@ -178,10 +178,10 @@
               </div>
               <div class="info">
                 <div class="hd acea-row" :style="titleColor">
-                  <span class="title line2" v-if="titleShow">商品名称</span>
+                  <span class="title line2" v-if="titleShow">{{ $t('product.productName') }}</span>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
               </div>
@@ -192,10 +192,10 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span class="title line2" v-if="titleShow" :style="titleColor">商品名称</span>
+                  <span class="title line2" v-if="titleShow" :style="titleColor">{{ $t('product.productName') }}</span>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
               </div>
@@ -206,10 +206,10 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span class="title line2" v-if="titleShow" :style="titleColor">商品名称</span>
+                  <span class="title line2" v-if="titleShow" :style="titleColor">{{ $t('product.productName') }}</span>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
               </div>
@@ -235,7 +235,7 @@
                 </div>
                 <div class="price" :style="priceColor">
                   <div class="num semiBold" v-if="priceShow">
-                    ¥<span>{{ item.price }}</span>
+                    ฿<span>{{ item.price }}</span>
                   </div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">
@@ -251,10 +251,10 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span class="title line2" v-if="titleShow" :style="titleColor">商品名称</span>
+                  <span class="title line2" v-if="titleShow" :style="titleColor">{{ $t('product.productName') }}</span>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
               </div>
@@ -265,10 +265,10 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span v-if="titleShow" class="title line2" :style="titleColor">商品名称</span>
+                  <span v-if="titleShow" class="title line2" :style="titleColor">{{ $t('product.productName') }}</span>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
               </div>
@@ -291,9 +291,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapGetters } from 'vuex';
+import { diyCname } from '@/utils/diyCname';
+import { getLocalizedDiyVal, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'home_tab',
-  cname: '选项卡',
+  ...diyCname('pagediy.tabComponent'),
   configName: 'c_home_tab',
   icon: 't-icon-zujian-xuanxiangka',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -428,16 +430,17 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '选项卡',
+          cname: this.$t('pagediy.tabComponent'),
         },
         tabItemConfig: {
-          tabTitle: '选项卡设置',
-          title: '选项卡设置',
+          tabTitle: this.$t('pagediy.tabSettings'),
+          title: this.$t('pagediy.tabSettings'),
           name: 'tabItemConfig',
           tabVal: 0,
           list: [
             {
-              val: '选项卡',
+              val: this.$t('pagediy.tabComponent'),
+              valJson: '',
               activeList: null,
               activeTabIndex: 0,
               brandGoodsList: [],
@@ -447,71 +450,71 @@ export default {
           ],
         },
         itemStyle: {
-          tabTitle: '展现形式',
-          title: '展现样式',
+          tabTitle: this.$t('pagediy.displayForm'),
+          title: this.$t('pagediy.displayStyle'),
           name: 'itemSstyle',
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '单列',
+              val: this.$t('pagediy.singleColumn'),
               icon: 'icon-shangpin-danlie',
             },
             {
-              val: '两列',
+              val: this.$t('pagediy.twoColumns'),
               icon: 'icon-shangpin-lianglie',
             },
             {
-              val: '三列',
+              val: this.$t('pagediy.threeColumns'),
               icon: 'icon-shangpin-sanlie',
             },
             {
-              val: '大图',
+              val: this.$t('pagediy.bigImage'),
               icon: 'icon-shangpin-datu',
             },
           ],
         },
         tabConfig: {
-          tabTitle: '商品设置',
-          title: '商品列表',
+          tabTitle: this.$t('pagediy.productSettings'),
+          title: this.$t('marketing.productList'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              name: '指定商品',
+              name: this.$t('common.specifiedProducts'),
             },
             {
-              name: '指定分类',
+              name: this.$t('pagediy.specifiedCategory'),
             },
             {
-              name: '指定品牌',
+              name: this.$t('common.specifiedBrand'),
             },
             {
-              name: '指定商户',
+              name: this.$t('common.specifiedMerchant'),
             },
           ],
         },
         //显示内容
         typeConfig: {
-          title: '展示信息',
-          tabTitle: '显示内容',
+          title: this.$t('pagediy.displayInfo'),
+          tabTitle: this.$t('pagediy.displayContent'),
           name: 'rowsNum',
           activeValue: [0, 1, 2],
           list: [
             {
-              val: '商品名称',
+              val: this.$t('product.productName'),
             },
             {
-              val: '商品价格',
+              val: this.$t('pagediy.productPriceLabel'),
             },
             {
-              val: '已售数量',
+              val: this.$t('pagediy.soldCount'),
             },
           ],
         },
         //分类
         selectConfig: {
-          title: '商品分类',
+          title: this.$t('marketing.productCategory'),
           activeValue: [],
           list: [],
           isMultiple: true,
@@ -520,7 +523,7 @@ export default {
         },
         //商户
         activeValueMer: {
-          title: '商户名称',
+          title: this.$t('product.merchantName'),
           activeValue: [],
           list: [],
           isMultiple: true,
@@ -529,7 +532,7 @@ export default {
         },
         //品牌
         activeValueBrand: {
-          title: '商品品牌',
+          title: this.$t('pagediy.productBrand'),
           activeValue: [],
           list: [],
           isMultiple: true,
@@ -537,21 +540,21 @@ export default {
           isShow: 0,
         },
         goodsSort: {
-          title: '商品排序',
+          title: this.$t('pagediy.productSort'),
           name: 'goodsSort',
           tabVal: 0,
           isShow: 0,
           list: [
             {
-              val: '综合',
+              val: this.$t('pagediy.comprehensive'),
               icon: 'icon-zonghe',
             },
             {
-              val: '销量',
+              val: this.$t('product.sales'),
               icon: 'icon-xiaoliang',
             },
             {
-              val: '价格',
+              val: this.$t('marketing.price'),
               icon: 'icon-jiage',
             },
           ],
@@ -563,8 +566,8 @@ export default {
         },
         //背景设置
         bgColor: {
-          tabTitle: '背景设置',
-          title: '背景颜色',
+          tabTitle: this.$t('pagediy.backgroundSettings'),
+          title: this.$t('pagediy.backgroundColor'),
           default: [
             {
               item: '#FFFFFF',
@@ -583,7 +586,7 @@ export default {
           ],
         },
         tabBgColor: {
-          title: '背景颜色',
+          title: this.$t('pagediy.backgroundColor'),
           default: [
             {
               item: '#FFFFFF',
@@ -603,8 +606,8 @@ export default {
         },
         //标签设置
         fontColor: {
-          tabTitle: '标签设置',
-          title: '文字颜色',
+          tabTitle: this.$t('pagediy.tagSettings'),
+          title: this.$t('pagediy.textColor'),
           name: 'fontColor',
           color: [
             {
@@ -619,35 +622,35 @@ export default {
         },
         //选中文字色调
         checkThemeStyleConfig: {
-          title: '色调',
+          title: this.$t('pagediy.colorTone'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '跟随主题风格',
+              val: this.$t('pagediy.followTheme'),
             },
             {
-              val: '自定义',
+              val: this.$t('pagediy.customStyle'),
             },
           ],
         },
         //价格色调
         priceThemeStyleConfig: {
-          title: '色调',
+          title: this.$t('pagediy.colorTone'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '跟随主题风格',
+              val: this.$t('pagediy.followTheme'),
             },
             {
-              val: '自定义',
+              val: this.$t('pagediy.customStyle'),
             },
           ],
         },
         checkColor: {
           isShow: 0,
-          title: '选中颜色',
+          title: this.$t('pagediy.selectedColor'),
           name: 'checkColor',
           color: [
             {
@@ -662,7 +665,7 @@ export default {
         },
         priceColor: {
           isShow: 0,
-          title: '价格颜色',
+          title: this.$t('pagediy.priceColor'),
           name: 'priceColor',
           default: [
             {
@@ -676,7 +679,7 @@ export default {
           ],
         },
         soldColor: {
-          title: '已售数量颜色',
+          title: this.$t('pagediy.soldCountColor'),
           name: 'soldColor',
           color: [
             {
@@ -690,7 +693,7 @@ export default {
           ],
         },
         titleColor: {
-          title: '商品标题颜色',
+          title: this.$t('pagediy.productTitleColor'),
           name: 'titleColor',
           color: [
             {
@@ -704,8 +707,8 @@ export default {
           ],
         },
         labelColor: {
-          tabTitle: '显示内容',
-          title: '标签背景颜色',
+          tabTitle: this.$t('pagediy.displayContent'),
+          title: this.$t('pagediy.tagBackgroundColor'),
           name: 'labelColor',
           color: [
             {
@@ -720,39 +723,39 @@ export default {
         },
         // 上间距
         upConfig: {
-          title: '上边距',
-          tabTitle: '边距设置',
+          title: this.$t('pagediy.topMargin'),
+          tabTitle: this.$t('pagediy.marginSettings'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          tabTitle: '边距设置',
-          title: '下边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
           max: 100,
         },
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 15,
         },
         contentConfig: {
-          title: '商品间距',
+          title: this.$t('pagediy.productSpacing'),
           val: 10,
           min: 0,
           max: 20,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 0,
           min: 0,
         },
         topConfig: {
-          title: '内容间距',
+          title: this.$t('pagediy.contentSpacing'),
           val: 10,
           min: 0,
           max: 30,
@@ -764,15 +767,15 @@ export default {
           list: [],
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 7,
           min: 0,
           max: 30,
         },
         contentStyle: {
-          title: '内容圆角',
+          title: this.$t('pagediy.contentRadius'),
           name: 'contentStyle',
           val: 7,
           min: 0,
@@ -800,6 +803,9 @@ export default {
     });
   },
   methods: {
+    tabName(item) {
+      return getLocalizedDiyVal(item, getUiLocale(this));
+    },
     setConfig(data) {
       if (!data) return;
       setTimeout(() => {

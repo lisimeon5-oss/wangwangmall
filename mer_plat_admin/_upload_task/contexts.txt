@@ -1,0 +1,27 @@
+### merchant/login"
+
+.d(t,"d",(function(){return a})),n.d(t,"f",(function(){return c})),n.d(t,"b",(function(){return s})),n.d(t,"e",(function(){return u}));var r=n("b775");function o(e){return Object(r["a"])({url:"/admin/merchant/login",method:"post",data:e})}function i(){return Object(r["a"])({url:"/admin/merchant/getAdminInfoByToken",method:"get"})}function a(){return Object(r["a"])({url:"/admin/merchant/logout",method:"get"})}function c(e){return Object(r["a"])({url:"/admin/merchant/user/list",method:"get",params:e})}function s(){return Object(r["a"])({url:"/admin/merchant/getLoginPic",method:"get"})}function u(e){return Obje
+
+=====================
+
+### product/save
+
+ction(){return ce})),n.d(t,"I",(function(){return se})),n.d(t,"Y",(function(){return ue})),n.d(t,"X",(function(){return le}));var r=n("b775");function o(e){return Object(r["a"])({url:"/admin/merchant/product/save",method:"POST",data:e})}function i(e){return Object(r["a"])({url:"/admin/merchant/product/update",method:"POST",data:e})}function a(e){return Object(r["a"])({url:"/admin/merchant/product/info/".concat(e),method:"GET"})}function c(e){return Object(r["a"])({url:"/admin/merchant/product/delete",method:"post",data:e})}function s(e){return Object(r["a"])({url:"/admin/merchant/product/tabs/headers",met
+
+=====================
+
+### upload/image
+
+tion(){return A}));var r=n("b775");function o(e,t){return Object(r["a"])({url:"/admin/merchant/upload/file",method:"POST",params:t,data:e})}function i(e,t){return Object(r["a"])({url:"/admin/merchant/upload/image",method:"POST",params:t,data:e})}function a(e){return Object(r["a"])({url:"/admin/merchant/attachment/list",method:"get",params:e})}function c(e){return Object(r["a"])({url:"/admin/merchant/attachment/delete",method:"post",data:{ids:e}})}function s(e){return Object(r["a"])({url:"/admin/merchant/attachment/move",method:"post",data:e})}function u(e){return Object(r["a"])({url:"/admin/merchant/print
+
+=====================
+
+### getLoginPic
+
+a"])({url:"/admin/merchant/logout",method:"get"})}function c(e){return Object(r["a"])({url:"/admin/merchant/user/list",method:"get",params:e})}function s(){return Object(r["a"])({url:"/admin/merchant/getLoginPic",method:"get"})}function u(e){return Object(r["a"])({url:"/admin/merchant/user/detail/".concat(e),method:"get"})}},c2ff:function(e,t,n){"use strict";n.r(t);var r=n("c4c8"),o=n("2f2c");function i(e){return i="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":
+
+=====================
+
+### account/detection
+
+ction(){return c}));var r=n("b775");function o(){return Object(r["a"])({url:"/admin/merchant/copyright/get/company/info",method:"get"})}function i(e){return Object(r["a"])({url:"/admin/merchant/login/account/detection",method:"post",data:e})}function a(){return Object(r["a"])({url:"/publicly/config/get/front/domain",method:"get"})}function c(){return Object(r["a"])({url:"/publicly/config/get/change/color",method:"get"})}},"7f6c":function(e,t,n){"use strict";var r=n("4360"),o={inserted:function(e,t,n){var o=t.value,i="admin",a=r["a"].state.user.name;if(!(o&&o instanceof Array&&o.length>0))throw new Error('请设置角色

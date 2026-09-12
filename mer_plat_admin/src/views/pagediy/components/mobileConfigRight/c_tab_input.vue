@@ -10,7 +10,7 @@
           <div class="item" :class="activeIndex === index ? 'checked' : ''" @click="onChecked(item, index)">
             <div class="info">
               <div class="info-item">
-                <span>{{ item.val }} </span>
+                <span>{{ tabListLabel(item) }} </span>
               </div>
             </div>
           </div>
@@ -23,19 +23,26 @@
     <template v-if="configData.list">
       <div class="add-btn">
         <el-button size="small" icon="el-icon-plus" plain style="width: 100%; height: 35px" @click="addBox"
-          >添加选项卡</el-button
+          >{{ $t('pagediy.addTab') }}</el-button
         >
       </div>
     </template>
-    <div class="title-bar mt10">选项卡内容</div>
+    <div class="title-bar mt10">{{ $t('pagediy.tabContent') }}</div>
+    <div class="lang-name-switch">
+      <el-radio-group v-model="activeLang" size="mini">
+        <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+          {{ lang.label }}
+        </el-radio-button>
+      </el-radio-group>
+    </div>
     <div class="c_row-item">
       <div class="label">
-        <span>选项名称</span>
+        <span>{{ $t('pagediy.optionName') }}</span>
       </div>
       <div class="slider-box">
         <el-input
-          v-model="tabVal"
-          placeholder="请输入选项名称（最多10个字）"
+          :value="tabVal"
+          :placeholder="tabPlaceholder"
           :step="1"
           maxlength="10"
           minlength="1"
@@ -58,6 +65,9 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import vuedraggable from 'vuedraggable';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { parseLangJsonMap, resolveFormActiveLang, getLocalizedDiyVal } from '@/utils/localizedName';
 export default {
   name: 'c_tab_input',
   props: {
@@ -80,7 +90,6 @@ export default {
   },
   data() {
     return {
-      tabVal: '',
       defaults: {},
       configData: {},
       menus: [],
@@ -91,7 +100,7 @@ export default {
         },
       ],
       modalPic: false,
-      isChoice: '单选',
+      isChoice: this.$t('maintain.singleSelect'),
       gridBtn: {
         xl: 4,
         lg: 8,
@@ -110,14 +119,36 @@ export default {
       indexLast: 0,
       lastObj: {},
       linkList: [],
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
     };
+  },
+  computed: {
+    currentTab() {
+      return this.configData && this.configData.list ? this.configData.list[this.activeIndex] : null;
+    },
+    tabVal() {
+      const item = this.currentTab;
+      if (!item) return '';
+      if (this.activeLang === this.defaultLangCode) return item.val || '';
+      return parseLangJsonMap(item.valJson)[this.activeLang] || '';
+    },
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
+    },
+    tabPlaceholder() {
+      if (this.activeLang === this.defaultLangCode) return this.$t('pagediy.enterOptionNameMax10');
+      return this.$t('pagediy.inputOptionNameInLang', { lang: this.activeLangLabel });
+    },
   },
   mounted() {
     this.$nextTick(() => {
       this.defaults = this.configObj;
       this.configData = this.configObj[this.configNme];
-      this.activeIndex = this.configData.tabVal;
-      this.tabVal = this.configData.list[0].val;
+      this.activeIndex = this.configData.tabVal || 0;
+      this.getLanguageList();
     });
   },
   watch: {
@@ -128,23 +159,52 @@ export default {
       },
       deep: true,
     },
-    activeIndex(nVal) {
-      this.tabVal = this.configData.list[nVal].val;
-    },
   },
   methods: {
+    tabListLabel(item) {
+      return getLocalizedDiyVal(item, this.activeLang);
+    },
     onInput(value) {
-      this.configData.list[this.activeIndex].val = value;
+      const item = this.currentTab;
+      if (!item) return;
+      if (this.activeLang === this.defaultLangCode) {
+        this.$set(item, 'val', value);
+        return;
+      }
+      const map = parseLangJsonMap(item.valJson);
+      if (String(value || '').trim()) map[this.activeLang] = value;
+      else delete map[this.activeLang];
+      this.$set(item, 'valJson', Object.keys(map).length ? JSON.stringify(map) : '');
     },
     onChecked(item, index) {
       this.activeIndex = index;
-      this.tabVal = item.val;
       this.$emit('getConfig', { name: 'tab_input', values: index });
     },
     addBox() {
       this.activeIndex += 1; //默认选中新填的tab
-      this.configData.list.push({ val: '选项卡' });
+      this.configData.list.push({ val: this.$t('pagediy.tabComponent'), valJson: '' });
       this.$emit('getConfig', { name: 'add_tab', values: this.configData.list });
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.activeLang = resolveFormActiveLang(this);
+        });
     },
     onBlur() {
       let data = this.defaults.menuConfig;
@@ -172,6 +232,14 @@ export default {
 .label {
   font-size: 12px;
   color: #999;
+}
+.lang-name-switch {
+  width: 100%;
+  margin-bottom: 10px;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 .slider-box {
   width: 81%;

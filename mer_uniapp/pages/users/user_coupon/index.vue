@@ -2,9 +2,9 @@
 	<view :data-theme="theme">
 		<view class="navbar acea-row row-around">
 			<view class="item acea-row row-center-wrapper" :class="{ on: navOn === 'usable' }" @click="onNav('usable')">
-				未使用</view>
+				{{$t('未使用')}}</view>
 			<view class="item acea-row row-center-wrapper" :class="{ on: navOn === 'unusable' }"
-				@click="onNav('unusable')">已使用/失效</view>
+				@click="onNav('unusable')">{{$t('已使用/失效')}}</view>
 		</view>
 		<view class="coupon-box">
 			<view class='coupon-list' v-if="couponsList.length">
@@ -18,8 +18,8 @@
 					@click="goCouponsProList(item)">
 					<view class='money'
 						:class="item.validStr==='unusable'||item.validStr==='overdue' ? 'moneyGray' : 'main_bg'">
-						<view class="logo">￥<text class='num'>{{item.money?Number(item.money):''}}</text></view>
-						<view class="pic-num">满{{ Number(item.minPrice) }}元可用</view>
+						<view class="logo">฿<text class='num'>{{item.money?Number(item.money):''}}</text></view>
+						<view class="pic-num">{{$t('满')}}{{ Number(item.minPrice) }}{{$t('铢可用')}}</view>
 					</view>
 					<view class='text'>
 						<view class='condition acea-row'>
@@ -33,12 +33,13 @@
 							<view v-if="item.startTime && item.endTime && navOn === 'usable'">
 								{{$util.getCouponTime(item.startTime,item.endTime)}}</view>
 							<view v-if="navOn === 'unusable'">
-								<span v-show="item.validStr==='overdue'">该优惠券已失效无法使用</span>
-								<span v-show="item.validStr==='unusable'">该优惠券已使用</span>
+								<span v-show="item.validStr==='overdue'">{{$t('该优惠券已失效无法使用')}}</span>
+								<span v-show="item.validStr==='unusable'">{{$t('该优惠券已使用')}}</span>
 							</view>
+							<view class="coupon-stamp" v-if="item.validStr==='usable'||item.validStr==='notStart'">{{$t('已领取')}}</view>
 							<span class="iconfont"
-								:class="{'icon-yilingqu1':item.validStr==='usable'||item.validStr==='notStart',
-								'icon-yishiyong':item.validStr==='unusable',
+								v-else
+								:class="{'icon-yishiyong':item.validStr==='unusable',
 								'icon-yishixiao':item.validStr==='overdue',
 								'font-color':item.validStr==='usable'||item.validStr==='notStart'
 								}
@@ -48,13 +49,13 @@
 				</view>
 			</view>
 			<view v-if="couponsList.length" class='loadingicon acea-row row-center-wrapper'>
-				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{loadTitle}}
+				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{$t(loadTitle)}}
 			</view>
 		</view>
 		<view class='noCommodity' v-if="!couponsList.length && !loading">
 			<view class='pictrue'>
 				<image :src="urlDomain + 'crmebimage/presets/noCoupon.png'"></image>
-				<span class="coupon">暂无优惠券可使用哦~</span>
+				<span class="coupon">{{$t('暂无优惠券可使用哦~')}}</span>
 			</view>
 		</view>
 	</view>
@@ -233,6 +234,30 @@
 	.coupon-list .item .text {
 		height: 100%;
 		position: relative;
+
+		.coupon-stamp {
+			right: 8rpx;
+			position: absolute;
+			width: 112rpx;
+			height: 112rpx;
+			border-radius: 50%;
+			border: 5rpx solid currentColor;
+			box-sizing: border-box;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			font-size: 22rpx;
+			font-weight: 700;
+			line-height: 1.2;
+			padding: 8rpx;
+			bottom: 8rpx;
+			z-index: 1;
+			opacity: 0.45;
+			transform: rotate(-18deg);
+			pointer-events: none;
+			word-break: break-word;
+		}
 
 		.iconfont {
 			right: -16rpx;

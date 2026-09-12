@@ -8,6 +8,8 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 
+import { translateFormField } from '@/utils/i18nText';
+
 function vModel(self, dataObject, defaultValue) {
   dataObject.props.value = defaultValue;
 
@@ -39,6 +41,7 @@ export default {
       style: {},
     };
     const confClone = JSON.parse(JSON.stringify(this.conf));
+    translateFormField(confClone);
     const children = [];
 
     const childObjs = componentChild[confClone.__config__.tag];

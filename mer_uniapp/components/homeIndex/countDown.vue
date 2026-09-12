@@ -2,7 +2,7 @@
 	<!-- 时间倒计时 -->
 	<view class="time" :style="justifyLeft">
 		<text class="" v-if="tipText">{{ tipText }}</text>
-		<text class="styleAll p6" v-if="isDay === true" :style="{background:bgColor.bgColor,color:bgColor.Color}">{{ day }}{{bgColor.isDay?'天':''}}</text>
+		<text class="styleAll p6" v-if="isDay === true" :style="{background:bgColor.bgColor,color:bgColor.Color}">{{ day }}{{bgColor.isDay?$t('天'):''}}</text>
 		<text class="timeTxt" v-if="dayText" :style="{width:bgColor.timeTxtwidth,color:bgColor.bgColor}">{{ dayText }}</text>
 		<text class="styleAll" :class='isCol?"timeCol":""' :style="{background:bgColor.bgColor,color:bgColor.Color,width:bgColor.width}">{{ hour }}</text>
 		<text class="timeTxt" v-if="hourText" :class='isCol?"whit":""' :style="{width:bgColor.timeTxtwidth,color:bgColor.bgColor}">{{ hourText }}</text>

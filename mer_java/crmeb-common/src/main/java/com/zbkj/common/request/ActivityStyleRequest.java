@@ -2,6 +2,7 @@ package com.zbkj.common.request;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
@@ -23,8 +24,11 @@ public class ActivityStyleRequest {
     private Integer id;
 
     @ApiModelProperty(value = "活动名称")
-    @NotEmpty(message = "活动名称不能为空")
     private String name;
+
+    @ApiModelProperty(value = "多语言活动名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言活动名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "活动类型0=活动边框，1=活动背景")
     private Boolean type;

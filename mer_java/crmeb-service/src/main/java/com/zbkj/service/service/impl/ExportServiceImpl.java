@@ -66,7 +66,7 @@ public class ExportServiceImpl implements ExportService {
         }
         List<Order> orderList = orderService.findExportList(request);
         if (CollUtil.isEmpty(orderList)) {
-            throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "没有可导出的数据！");
+            throw new CrmebException(CommonResultCode.VALIDATE_FAILED, I18nMessageUtil.translate("没有可导出的数据！"));
         }
 
         List<Integer> merIdList = orderList.stream().filter(e -> e.getMerId() > 0).map(Order::getMerId).distinct().collect(Collectors.toList());
@@ -79,16 +79,17 @@ public class ExportServiceImpl implements ExportService {
         List<OrderExcelVo> voList = CollUtil.newArrayList();
         for (Order order : orderList) {
             OrderExcelVo vo = new OrderExcelVo();
-            vo.setType(getOrderType(order.getType()));
+            vo.setType(t(getOrderType(order.getType())));
             vo.setOrderNo(order.getOrderNo());
-            vo.setMerName(order.getMerId() > 0 ? merchantMap.get(order.getMerId()).getName() : "");
+            Merchant merchant = order.getMerId() > 0 ? merchantMap.get(order.getMerId()) : null;
+            vo.setMerName(merchant == null ? "" : I18nJsonUtil.resolveByRequest(merchant.getName(), merchant.getNameJson()));
             vo.setUserNickname(userMap.get(order.getUid()).getNickname() + "|" + order.getUid());
             vo.setPayPrice(order.getPayPrice().toString());
-            vo.setPaidStr(order.getPaid() ? "已支付" : "未支付");
-            vo.setPayType(getOrderPayType(order.getPayType()));
-            vo.setPayChannel(getOrderPayChannel(order.getPayChannel()));
-            vo.setStatus(getOrderStatus(order.getStatus()));
-            vo.setRefundStatus(getOrderRefundStatus(order.getRefundStatus()));
+            vo.setPaidStr(t(order.getPaid() ? "已支付" : "未支付"));
+            vo.setPayType(t(getOrderPayType(order.getPayType())));
+            vo.setPayChannel(t(getOrderPayChannel(order.getPayChannel())));
+            vo.setStatus(t(getOrderStatus(order.getStatus())));
+            vo.setRefundStatus(t(getOrderRefundStatus(order.getRefundStatus())));
             vo.setCreateTime(CrmebDateUtil.dateToStr(order.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
             vo.setProductInfo(getOrderProductInfo(orderDetailMap.get(order.getOrderNo())));
             vo.setRealName(StrUtil.isBlank(merchantOrderMap.get(order.getOrderNo()).get(0).getRealName()) ? "" : merchantOrderMap.get(order.getOrderNo()).get(0).getRealName());
@@ -107,30 +108,35 @@ public class ExportServiceImpl implements ExportService {
         // 上传设置
         UploadUtil.setHzwServerPath((crmebConfig.getImagePath() + "/").replace(" ", "").replace("//", "/"));
 
-        // 文件名
-        String fileName = "订单导出_".concat(CrmebDateUtil.nowDateTime(DateConstants.DATE_TIME_FORMAT_NUM)).concat(CrmebUtil.randomCount(111111111, 999999999).toString()).concat(".xlsx");
+        String exportTitle = t("订单导出");
+        String fileName = exportTitle.replaceAll("[\\\\/:*?\"<>|\\s]+", "_").concat("_")
+                .concat(CrmebDateUtil.nowDateTime(DateConstants.DATE_TIME_FORMAT_NUM))
+                .concat(CrmebUtil.randomCount(111111111, 999999999).toString()).concat(".xlsx");
 
-        //自定义标题别名
         LinkedHashMap<String, String> aliasMap = new LinkedHashMap<>();
-        aliasMap.put("type", "订单类型");
-        aliasMap.put("orderNo", "订单号");
-        aliasMap.put("merName", "商户名称");
-        aliasMap.put("userNickname", "用户昵称");
-        aliasMap.put("payPrice", "实际支付金额");
-        aliasMap.put("paidStr", "支付状态");
-        aliasMap.put("payType", "支付方式");
-        aliasMap.put("payChannel", "支付渠道");
-        aliasMap.put("status", "订单状态");
-        aliasMap.put("refundStatus", "退款状态");
-        aliasMap.put("createTime", "创建时间");
-        aliasMap.put("productInfo", "商品信息");
-        aliasMap.put("realName", "收货人");
-        aliasMap.put("userPhone", "收货电话");
-        aliasMap.put("userAddress", "收货地址");
-        aliasMap.put("userRemark", "用户备注");
-        aliasMap.put("merchantRemark", "商户备注");
+        aliasMap.put("type", t("订单类型"));
+        aliasMap.put("orderNo", t("订单号"));
+        aliasMap.put("merName", t("商户名称"));
+        aliasMap.put("userNickname", t("用户昵称"));
+        aliasMap.put("payPrice", t("实际支付金额"));
+        aliasMap.put("paidStr", t("支付状态"));
+        aliasMap.put("payType", t("支付方式"));
+        aliasMap.put("payChannel", t("支付渠道"));
+        aliasMap.put("status", t("订单状态"));
+        aliasMap.put("refundStatus", t("退款状态"));
+        aliasMap.put("createTime", t("创建时间"));
+        aliasMap.put("productInfo", t("商品信息"));
+        aliasMap.put("realName", t("收货人"));
+        aliasMap.put("userPhone", t("收货电话"));
+        aliasMap.put("userAddress", t("收货地址"));
+        aliasMap.put("userRemark", t("用户备注"));
+        aliasMap.put("merchantRemark", t("商户备注"));
 
-        return ExportUtil.exportExcel(fileName, "订单导出", voList, aliasMap);
+        return ExportUtil.exportExcel(fileName, exportTitle, voList, aliasMap);
+    }
+
+    private String t(String zh) {
+        return I18nMessageUtil.translate(zh);
     }
 
     private String getOrderProductInfo(List<OrderDetail> orderDetails) {

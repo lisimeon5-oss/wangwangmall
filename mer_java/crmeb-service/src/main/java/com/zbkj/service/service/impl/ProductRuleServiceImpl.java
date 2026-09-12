@@ -18,6 +18,8 @@ import com.zbkj.common.request.ProductRuleRequest;
 import com.zbkj.common.request.ProductRuleSearchRequest;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.ProductResultCode;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.I18nSearchUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.service.dao.ProductRuleDao;
 import com.zbkj.service.service.ProductRuleService;
@@ -60,7 +62,7 @@ public class ProductRuleServiceImpl extends ServiceImpl<ProductRuleDao, ProductR
         lambdaQueryWrapper.eq(ProductRule::getMerId, systemAdmin.getMerId());
         if (StrUtil.isNotBlank(request.getKeywords())) {
             String keywords = URLUtil.decode(request.getKeywords());
-            lambdaQueryWrapper.like(ProductRule::getRuleName, keywords);
+            I18nSearchUtil.likeName(lambdaQueryWrapper, ProductRule::getRuleName, ProductRule::getRuleNameJson, keywords);
         }
         lambdaQueryWrapper.orderByDesc(ProductRule::getId);
         List<ProductRule> list = dao.selectList(lambdaQueryWrapper);
@@ -75,11 +77,13 @@ public class ProductRuleServiceImpl extends ServiceImpl<ProductRuleDao, ProductR
     @Override
     public boolean save(ProductRuleRequest productRuleRequest) {
         SystemAdmin systemAdmin = SecurityUtil.getLoginUserVo().getUser();
-        if (existRuleName(productRuleRequest.getRuleName(), systemAdmin.getMerId())) {
+        String ruleName = I18nJsonUtil.emptyToBlank(productRuleRequest.getRuleName());
+        if (StrUtil.isNotBlank(ruleName) && existRuleName(ruleName, systemAdmin.getMerId())) {
             throw new CrmebException(ProductResultCode.PRODUCT_RULE_EXIST);
         }
         ProductRule productRule = new ProductRule();
         BeanUtils.copyProperties(productRuleRequest, productRule);
+        productRule.setRuleName(ruleName);
         productRule.setMerId(systemAdmin.getMerId());
         return save(productRule);
     }
@@ -111,6 +115,7 @@ public class ProductRuleServiceImpl extends ServiceImpl<ProductRuleDao, ProductR
         getRuleInfo(productRuleRequest.getId());
         ProductRule newProductRule = new ProductRule();
         BeanUtils.copyProperties(productRuleRequest, newProductRule);
+        newProductRule.setRuleName(I18nJsonUtil.emptyToBlank(productRuleRequest.getRuleName()));
         return updateById(newProductRule);
     }
 

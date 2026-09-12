@@ -182,6 +182,10 @@ public class ProductCategoryServiceImpl extends ServiceImpl<ProductCategoryDao, 
         ProductCategory category = new ProductCategory();
         BeanUtils.copyProperties(request, category);
         category.setPid(oldCategory.getPid());
+        // 未传多语言名称字段(null)时保留原多语言名称，传空字符串则清空多语言名称
+        if (ObjectUtil.isNull(request.getNameJson())) {
+            category.setNameJson(oldCategory.getNameJson());
+        }
         if (StrUtil.isNotBlank(category.getIcon())) {
             category.setIcon(systemAttachmentService.clearPrefix(category.getIcon()));
         }
@@ -261,25 +265,14 @@ public class ProductCategoryServiceImpl extends ServiceImpl<ProductCategoryDao, 
      */
     @Override
     public List<ProCategoryCacheVo> getCacheTree() {
-        List<ProductCategory> categoryList = CollUtil.newArrayList();
-        if (redisUtil.exists(RedisConstants.PRODUCT_CATEGORY_CACHE_LIST_KEY)) {
-            categoryList = redisUtil.get(RedisConstants.PRODUCT_CATEGORY_CACHE_LIST_KEY);
-        } else {
-            LambdaQueryWrapper<ProductCategory> lqw = Wrappers.lambdaQuery();
-            lqw.eq(ProductCategory::getIsDel, false);
-            categoryList = dao.selectList(lqw);
-            if (CollUtil.isEmpty(categoryList)) {
-                return CollUtil.newArrayList();
-            }
-            redisUtil.set(RedisConstants.PRODUCT_CATEGORY_CACHE_LIST_KEY, categoryList);
+        LambdaQueryWrapper<ProductCategory> lqw = Wrappers.lambdaQuery();
+        lqw.eq(ProductCategory::getIsDel, false);
+        List<ProductCategory> categoryList = dao.selectList(lqw);
+        if (CollUtil.isEmpty(categoryList)) {
+            return CollUtil.newArrayList();
         }
-        List<ProCategoryCacheVo> voList = categoryList.stream().map(e -> {
-            ProCategoryCacheVo cacheVo = new ProCategoryCacheVo();
-            BeanUtils.copyProperties(e, cacheVo);
-            return cacheVo;
-        }).collect(Collectors.toList());
-        ProCategoryCacheTree categoryTree = new ProCategoryCacheTree(voList);
-        return categoryTree.buildTree();
+        redisUtil.set(RedisConstants.PRODUCT_CATEGORY_CACHE_LIST_KEY, categoryList);
+        return toCacheTree(categoryList);
     }
 
     /**
@@ -289,26 +282,24 @@ public class ProductCategoryServiceImpl extends ServiceImpl<ProductCategoryDao, 
      */
     @Override
     public List<ProCategoryCacheVo> getMerchantCacheTree() {
-        List<ProductCategory> categoryList = CollUtil.newArrayList();
-        if (redisUtil.exists(RedisConstants.PRODUCT_CATEGORY_CACHE_MERCHANT_LIST_KEY)) {
-            categoryList = redisUtil.get(RedisConstants.PRODUCT_CATEGORY_CACHE_MERCHANT_LIST_KEY);
-        } else {
-            LambdaQueryWrapper<ProductCategory> lqw = Wrappers.lambdaQuery();
-            lqw.eq(ProductCategory::getIsShow, true);
-            lqw.eq(ProductCategory::getIsDel, false);
-            categoryList = dao.selectList(lqw);
-            if (CollUtil.isEmpty(categoryList)) {
-                return CollUtil.newArrayList();
-            }
-            redisUtil.set(RedisConstants.PRODUCT_CATEGORY_CACHE_MERCHANT_LIST_KEY, categoryList);
+        LambdaQueryWrapper<ProductCategory> lqw = Wrappers.lambdaQuery();
+        lqw.eq(ProductCategory::getIsShow, true);
+        lqw.eq(ProductCategory::getIsDel, false);
+        List<ProductCategory> categoryList = dao.selectList(lqw);
+        if (CollUtil.isEmpty(categoryList)) {
+            return CollUtil.newArrayList();
         }
+        redisUtil.set(RedisConstants.PRODUCT_CATEGORY_CACHE_MERCHANT_LIST_KEY, categoryList);
+        return toCacheTree(categoryList);
+    }
+
+    private List<ProCategoryCacheVo> toCacheTree(List<ProductCategory> categoryList) {
         List<ProCategoryCacheVo> voList = categoryList.stream().map(e -> {
             ProCategoryCacheVo cacheVo = new ProCategoryCacheVo();
             BeanUtils.copyProperties(e, cacheVo);
             return cacheVo;
         }).collect(Collectors.toList());
-        ProCategoryCacheTree categoryTree = new ProCategoryCacheTree(voList);
-        return categoryTree.buildTree();
+        return new ProCategoryCacheTree(voList).buildTree();
     }
 
     /**
@@ -438,6 +429,9 @@ public class ProductCategoryServiceImpl extends ServiceImpl<ProductCategoryDao, 
      * @return Boolean
      */
     private Boolean checkName(String name, Integer pid) {
+        if (StrUtil.isBlank(name)) {
+            return Boolean.FALSE;
+        }
         LambdaQueryWrapper<ProductCategory> lqw = Wrappers.lambdaQuery();
         lqw.select(ProductCategory::getId);
         lqw.eq(ProductCategory::getName, name);

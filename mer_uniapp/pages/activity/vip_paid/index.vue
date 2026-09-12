@@ -3,7 +3,7 @@
 	<view class="vipBox" @touchstart="touchStart">
 		<view class="vipPaid pt-40">
 			<!-- #ifdef MP -->
-			<nav-bar ref="navBarRef" navTitle="SVIP会员" :iconColor="iconColor" :isBackgroundColor="false"
+			<nav-bar ref="navBarRef" :navTitle="$t('SVIP会员')" :iconColor="iconColor" :isBackgroundColor="false"
 				:backgroundColor="backgroundColor"></nav-bar>
 			<!-- #endif -->
 			<view class="headerBg" :style="{'background-image': `url(${urlDomain}crmebimage/presets/svipbg.png)`}">
@@ -19,8 +19,8 @@
 						</view>
 					</view>
 					<view class="acea-row row-middle tips" @click="goToRecord">
-						<view v-if="svipInfo.isPermanentPaidMember">永久SVIP会员</view>
-						<view v-else>SVIP会员至{{svipInfo.paidMemberExpirationTime}}</view>
+						<view v-if="svipInfo.isPermanentPaidMember">{{$t('永久SVIP会员')}}</view>
+						<view v-else>{{$t('SVIP会员至{time}', { time: svipInfo.paidMemberExpirationTime })}}</view>
 						<text class="f-s-20 iconfont icon-gengduo3 ml-8"></text>
 					</view>
 				</view>
@@ -28,9 +28,9 @@
 			<!-- 会员权益 -->
 			<view class="benefits-section" :class="!svipInfo.isPaidMember?'bgColor':''">
 				<view class="acea-row row-between mb-36" @click="goToBenefits(0)">
-					<view class="title">会员尊享权益</view>
+					<view class="title">{{$t('会员尊享权益')}}</view>
 					<view class="acea-row row-middle">
-						<view class="f-s-24 text mr10">权益介绍</view>
+						<view class="f-s-24 text mr10">{{$t('权益介绍')}}</view>
 						<text class="text f-s-20 iconfont icon-gengduo3"></text>
 					</view>
 				</view>
@@ -43,8 +43,8 @@
 							</view>
 						</view>
 						<view class="text">
-							<view class="name f-s-24 lh-34rpx">{{item.value}}</view>
-							<view class="f-s-20 lh-28rpx">{{item.message}}</view>
+							<view class="name f-s-24 lh-34rpx">{{$t(item.value)}}</view>
+							<view class="f-s-20 lh-28rpx">{{$t(item.message)}}</view>
 						</view>
 					</view>
 				</view>
@@ -57,15 +57,15 @@
 					class="type-section" id="card">
 					<view class="type-section-inner">
 						<view class="title acea-row row-between-wrapper">
-							<view class="">开通SVIP</view>
+							<view class="">{{$t('开通SVIP')}}</view>
 						</view>
 						<scroll-view class="scroll" scroll-x="true">
 							<view v-for="item in svipInfo.cardList" :key="item.id" class="item"
 								:class="{on: item.id === svip.id}" @click="checkType(item)">
-								<view v-show="item.label" class="badge">{{item.label}}</view>
-								<view class="name">{{item.name}}</view>
-								<view class="new">￥<text class="num semiBold">{{item.price | moneyFormat}}</text></view>
-								<view class="old">￥{{item.originalPrice | moneyFormat}}</view>
+								<view v-show="item.label" class="badge">{{$t(item.label)}}</view>
+								<view class="name">{{$t(item.name)}}</view>
+								<view class="new">฿<text class="num semiBold">{{item.price | moneyFormat}}</text></view>
+								<view class="old">฿{{item.originalPrice | moneyFormat}}</view>
 							</view>
 						</scroll-view>
 					</view>
@@ -74,7 +74,7 @@
 				<view v-if="recommendList.length">
 					<view class="flex-center recommend-box mt-20">
 						<image :src="`${urlDomain}crmebimage/presets/haowuzuo.png`"></image>
-						<view class="f-s-32 lh-44rpx ml-4">会员专享好物</view>
+						<view class="f-s-32 lh-44rpx ml-4">{{$t('会员专享好物')}}</view>
 						<image class="ml-6" :src="`${urlDomain}crmebimage/presets/haowuyou.png`"></image>
 					</view>
 					<recommend style="margin-top: -6rpx;" ref="recommendIndex" :isShowTitle="false" :isDefault="false"
@@ -89,20 +89,20 @@
 							<text v-if="!isAgree" class="iconfont icon-weixuanzhong"></text>
 							<text v-else class="iconfont icon-xuanzhong1"></text>
 						</view>
-						<text class="f-s-24 text-999 ml-8">开通前请确认<text @click="userAgree"
-								class="protocol_text f-s-24">《会员服务协议》</text></text>
+						<text class="f-s-24 text-999 ml-8">{{$t('开通前请确认')}}<text @click="userAgree"
+								class="protocol_text f-s-24">{{$t('《会员服务协议》')}}</text></text>
 					</view>
 					<view v-show="svip.giftBalance!=0" class="isFirstChargeGive f-s-24"
 						:style="{'background-image': `url(${urlDomain}crmebimage/presets/juxing.png)`}">
-						{{svip.isFirstChargeGive?'首次开通':'现在购买'}}立送{{svip.giftBalance}}元余额
+						{{svip.isFirstChargeGive? $t('首次开通') : $t('现在购买')}}{{$t('立送{n}元余额', { n: svip.giftBalance })}}
 					</view>
 					<view class="acea-row">
 						<view class="text acea-row row-middle">
-							<view><text class="symbol">¥ </text> <text class="number semiBold ml-4">
+							<view><text class="symbol">฿ </text> <text class="number semiBold ml-4">
 									{{ svip.price }}</text><text
-									class="original regular">原价¥{{ parseFloat(svip.originalPrice) }}</text></view>
+									class="original regular">{{$t('原价')}}฿{{ parseFloat(svip.originalPrice) }}</text></view>
 						</view>
-						<view class="buy acea-row row-center-wrapper" @tap="subOrder">立即开通</view>
+						<view class="buy acea-row row-center-wrapper" @tap="subOrder">{{$t('立即开通')}}</view>
 					</view>
 				</view>
 				<!-- <view v-show="!svipInfo.isPermanentPaidMember" class="footer-placeholder"></view> -->
@@ -112,10 +112,10 @@
 		<uni-popup type="center" animation ref="activate" :mask-click="false">
 			<view class="w-600 h-344 bg--w111-fff rd-14rpx acea-row row-column activate-box">
 				<span class="iconfont icon-guanbi5 absolute" @click="onClose"></span>
-				<view class="f-s-32 text--w111-333 lh-44rpx mb-24 text-center">确认开通</view>
-				<view class="text--w111-666 mb-40">我已阅读并同意<text @click="userAgree"
-						class="protocol_text f-s-24">《会员服务协议》</text>，确认开通该套餐。</view>
-				<view class="btn" @click="sureOrder">继续开通</view>
+				<view class="f-s-32 text--w111-333 lh-44rpx mb-24 text-center">{{$t('确认开通')}}</view>
+				<view class="text--w111-666 mb-40">{{$t('我已阅读并同意')}}<text @click="userAgree"
+						class="protocol_text f-s-24">{{$t('《会员服务协议》')}}</text>{{$t('，确认开通该套餐。')}}</view>
+				<view class="btn" @click="sureOrder">{{$t('继续开通')}}</view>
 			</view>
 		</uni-popup>
 	</view>
@@ -289,7 +289,7 @@
 			}),
 			handlerOpen() {
 				uni.showLoading({
-					title: '正在提交中'
+					title: this.$t('正在提交中')
 				});
 				setTimeout(() => {
 					uni.navigateTo({
@@ -309,7 +309,7 @@
 		color: #AAAAAA;
 	}
 
-	/deep/.list .texts {
+	::v-deep .list .texts {
 		background-color: #fff;
 		border-radius: 0 0 14rpx 14rpx;
 	}
@@ -346,7 +346,7 @@
 		}
 	}
 
-	/deep/uni-checkbox .uni-checkbox-wrapper {
+	::v-deep uni-checkbox .uni-checkbox-wrapper {
 		vertical-align: inherit !important;
 	}
 
@@ -979,7 +979,7 @@
 		}
 	}
 
-	.recommend /deep/ .fw-500 {
+	.recommend ::v-deep  .fw-500 {
 		font-weight: bold;
 	}
 </style>

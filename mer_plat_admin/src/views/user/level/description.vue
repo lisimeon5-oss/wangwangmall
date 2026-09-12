@@ -1,9 +1,16 @@
 <template>
   <div class="divBox">
     <el-card class="box-card" shadow="never" :bordered="false">
-      <h3 class="title">等级规则说明</h3>
-      <Tinymce v-model="formValidate.rule" :key="keyIndex" class="mb20"></Tinymce>
-      <el-button type="primary" plain class="submission" size="small" @click="previewProtol">预览</el-button>
+      <h3 class="title">{{ $t('user.levelRuleDesc') }}</h3>
+      <div class="lang-name-switch mb20">
+        <el-radio-group v-model="activeLang" size="small">
+          <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+            {{ lang.label }}
+          </el-radio-button>
+        </el-radio-group>
+      </div>
+      <Tinymce :key="editorKey" v-model="currentRule" class="mb20"></Tinymce>
+      <el-button type="primary" plain class="submission" size="small" @click="previewProtol">{{ $t('user.preview') }}</el-button>
       <el-button
         type="primary"
         class="submission"
@@ -14,7 +21,7 @@
             handleSubmit('formValidate');
           }
         "
-        >提交</el-button
+        >{{ $t('common.submit') }}</el-button
       >
     </el-card>
     <div class="Box">
@@ -27,9 +34,9 @@
         class="addDia"
       >
         <div class="agreement">
-          <h3>等级规则说明</h3>
+          <h3>{{ $t('user.levelRuleDesc') }}</h3>
           <div class="content">
-            <div v-html="formValidate.rule"></div>
+            <div v-html="currentRule"></div>
           </div>
         </div>
       </el-dialog>
@@ -40,7 +47,10 @@
 <script>
 import Tinymce from '@/components/Tinymce/index';
 import { systemUserLevelRuleApi, systemUserLevelUpdateRuleApi } from '@/api/user';
-import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+
+import { resolveFormActiveLang } from '@/utils/localizedName';
 export default {
   name: 'description',
   components: { Tinymce },
@@ -49,23 +59,114 @@ export default {
       agreement: '',
       formValidate: {
         rule: '',
+        ruleJson: '',
       },
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      ruleJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
       keyIndex: Math.random(),
       fullscreenLoading: false,
       modals: false,
     };
   },
+  computed: {
+    editorKey() {
+      return `${this.keyIndex}-${this.activeLang}`;
+    },
+    currentRule: {
+      get() {
+        if (this.activeLang === this.defaultLangCode) {
+          return this.formValidate.rule || '';
+        }
+        return this.ruleJsonForm[this.activeLang] || '';
+      },
+      set(val) {
+        if (this.activeLang === this.defaultLangCode) {
+          this.formValidate.rule = val;
+        } else {
+          this.$set(this.ruleJsonForm, this.activeLang, val);
+        }
+      },
+    },
+  },
   mounted() {
+    this.getLanguageList();
     this.getInfo();
   },
   methods: {
+    emptyRuleJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.ruleJsonForm = this.parseRuleJson(this.formValidate.ruleJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.ruleJsonForm = this.parseRuleJson(this.formValidate.ruleJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
+    parseRuleJson(ruleJson) {
+      const form = this.emptyRuleJsonForm();
+      if (!ruleJson) return form;
+      try {
+        const obj = typeof ruleJson === 'string' ? JSON.parse(ruleJson) : ruleJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // 解析失败时保持为空
+      }
+      return form;
+    },
+    buildRuleJson() {
+      const obj = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code === this.defaultLangCode) return;
+        const value = this.ruleJsonForm[lang.code] || '';
+        if (value && value.replace(/<[^>]+>/g, '').trim()) obj[lang.code] = value;
+      });
+      return Object.keys(obj).length ? JSON.stringify(obj) : '';
+    },
+    isEmptyHtml(html) {
+      if (!html) return true;
+      return !String(html).replace(/<[^>]+>/g, '').trim();
+    },
     getInfo() {
       this.fullscreenLoading = true;
       systemUserLevelRuleApi()
         .then((res) => {
-          this.formValidate = {
-            rule: res,
-          };
+          if (typeof res === 'string') {
+            this.formValidate.rule = res;
+            this.formValidate.ruleJson = '';
+          } else {
+            this.formValidate.rule = (res && res.rule) || '';
+            this.formValidate.ruleJson = (res && res.ruleJson) || '';
+          }
+          this.ruleJsonForm = this.parseRuleJson(this.formValidate.ruleJson);
+          this.keyIndex = Math.random();
           this.fullscreenLoading = false;
         })
         .catch((res) => {
@@ -75,14 +176,17 @@ export default {
 
     // 提交
     handleSubmit() {
-      if (this.formValidate.rule === '' || !this.formValidate.rule) {
-        return this.$message.warning('请输入规则信息！');
+      if (this.isEmptyHtml(this.formValidate.rule)) {
+        return this.$message.warning(this.$t('user.pleaseEnterRuleInfo'));
       } else {
         this.fullscreenLoading = true;
-        systemUserLevelUpdateRuleApi(this.formValidate)
+        systemUserLevelUpdateRuleApi({
+          rule: this.formValidate.rule,
+          ruleJson: this.buildRuleJson(),
+        })
           .then(async (res) => {
             this.fullscreenLoading = false;
-            this.$message.success('提交成功');
+            this.$message.success(this.$t('user.submitSuccess'));
           })
           .catch((res) => {
             this.fullscreenLoading = false;
@@ -117,6 +221,13 @@ export default {
   font-size: 18px;
   width: 1000px;
   margin-bottom: 20px;
+}
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 .agreement {
   width: 350px;

@@ -1,5 +1,6 @@
 package com.zbkj.common.request;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -36,9 +37,12 @@ public class SystemUserLevelRequest implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "等级名称")
-    @NotBlank(message = "等级名称不能为空")
     @Length(max = 50, message = "等级名称不能超过50个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言等级名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言等级名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "达到多少升级经验")
     @NotNull(message = "等级经验不能为空")

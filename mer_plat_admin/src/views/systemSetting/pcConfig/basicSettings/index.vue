@@ -7,10 +7,10 @@ export default {
     return {
       fullscreenLoading: false,
       ruleValidate: {
-        goodStoreImage: [{ required: true, message: '请上传品牌好店广告图', trigger: 'change' }],
-        leftTopLogo: [{ required: true, message: '请上传左上角logo', trigger: 'change' }],
+        goodStoreImage: [{ required: true, message: this.$t('systemSetting.pleaseUploadBrandStoreAd'), trigger: 'change' }],
+        leftTopLogo: [{ required: true, message: this.$t('systemSetting.pleaseUploadTopLeftLogo'), trigger: 'change' }],
         goPhoneQrCodeTypeList: [
-          { type: 'array', required: true, message: '请选择手机体验购买二维码类型', trigger: 'change' },
+          { type: 'array', required: true, message: this.$t('systemSetting.pleaseSelectQrCodeType'), trigger: 'change' },
         ],
       },
       formValidate: {
@@ -51,7 +51,7 @@ export default {
           this.formValidate.goPhoneQrCodeType = this.formValidate.goPhoneQrCodeTypeList.join(',');
           pcBaseConfigEditApi(this.formValidate)
             .then((res) => {
-              this.$message.success('保存成功');
+              this.$message.success(this.$t('user.saveSuccess'));
               this.loadingBtn = false;
               this.getBaseConfig();
             })
@@ -85,7 +85,7 @@ export default {
         label-width="180px"
         @submit.native.prevent
       >
-        <el-form-item label="PC商城左上角logo(100*36)：" prop="leftTopLogo">
+        <el-form-item :label="$t('systemSetting.pcTopLeftLogoLabel')" prop="leftTopLogo">
           <div class="upLoadPicBox" @click="modalPicTap(false, 'leftTopLogo')">
             <div v-if="formValidate.leftTopLogo" class="pictrue"><img :src="formValidate.leftTopLogo" /></div>
             <div v-else class="upLoad">
@@ -93,7 +93,7 @@ export default {
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="品牌好店广告图(288*422)：" prop="goodStoreImage">
+        <el-form-item :label="$t('systemSetting.brandStoreAdImageLabel')" prop="goodStoreImage">
           <div class="upLoadPicBox" @click="modalPicTap(false, 'goodStoreImage')">
             <div v-if="formValidate.goodStoreImage" class="pictrue"><img :src="formValidate.goodStoreImage" /></div>
             <div v-else class="upLoad">
@@ -101,19 +101,19 @@ export default {
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="手机体验：">
+        <el-form-item :label="$t('systemSetting.phoneExperienceLabel')">
           <el-checkbox-group v-model="formValidate.goPhoneQrCodeTypeList">
-            <el-checkbox label="1">小程序</el-checkbox>
-            <el-checkbox label="2">公众号/H5</el-checkbox>
+            <el-checkbox label="1">{{ $t('common.miniProgram') }}</el-checkbox>
+            <el-checkbox label="2">{{ $t('systemSetting.officialAccountH5') }}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="商户入驻入口：">
+        <el-form-item :label="$t('systemSetting.merchantOnboardingEntryLabel')">
           <el-switch
             v-model="formValidate.merchantApplySwitch"
             active-value="1"
             inactive-value="0"
-            active-text="开启"
-            inactive-text="关闭"
+            :active-text="$t('common.open')"
+            :inactive-text="$t('common.close')"
           />
         </el-form-item>
         <el-form-item v-hasPermi="['platform:pc:shopping:base:config:edit']">
@@ -125,7 +125,7 @@ export default {
                 handleBaseConfigSave('formValidate');
               }
             "
-            >保存</el-button
+            >{{ $t('common.save') }}</el-button
           >
         </el-form-item>
       </el-form>

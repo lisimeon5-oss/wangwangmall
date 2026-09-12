@@ -1,14 +1,14 @@
 <template>
   <div class="page-container" v-if="configObj">
     <div class="bg-img">
-      <img :src="imgSrcList.length && imgSrcList[0].img" alt="" />
+      <img :src="imgSrcList.length && slideImg(imgSrcList[0])" alt="" />
       <div class="mask" :style="maskStyle"></div>
     </div>
     <div class="search-box">
       <img :src="logoUrl" alt="" v-if="configObj.logoConfig.isShow === 1 && logoUrl" mode="widthFix" />
       <div :style="contentStyle" class="box line1">
         <span
-          ><i class="el-icon-search" /><span>{{ hotWord }}</span></span
+          ><i class="el-icon-search" /><span>{{ displayHotWord }}</span></span
         >
       </div>
     </div>
@@ -23,7 +23,7 @@
           color: curIndex === index ? configObj.checkColor.color[0].item : textColor,
         }"
       >
-        {{ item.title }} <span :style="checkColor"></span>
+        {{ tabTitleText(item) }} <span :style="checkColor"></span>
       </div>
       <div class="category">
         <span :style="checkColor" class="iconfont icon-shouye_xidingfenlei"></span>
@@ -35,9 +35,9 @@
           <img
             class="img-left"
             :style="contentStyleBanner"
-            :src="imgSrcList.length > 1 && imgSrcList[1].img"
+            :src="slideImg(imgSrcList[1])"
             alt=""
-            v-if="imgSrcList.length > 1 && imgSrcList[1].img"
+            v-if="imgSrcList.length > 1 && slideImg(imgSrcList[1])"
           />
           <div :style="contentStyleBanner" class="empty-box empty-left" v-else>
             <span class="iconfont iconfont icontupian"></span>
@@ -47,9 +47,9 @@
           <img
             class="img-middle"
             :style="contentStyleBanner"
-            :src="imgSrcList.length && imgSrcList[0].img"
+            :src="slideImg(imgSrcList[0])"
             alt=""
-            v-if="imgSrcList.length && imgSrcList[0].img"
+            v-if="imgSrcList.length && slideImg(imgSrcList[0])"
           />
           <div :style="contentStyleBanner" class="empty-box empty-middle" v-else>
             <span class="iconfont iconfont icontupian"></span>
@@ -81,9 +81,9 @@
           <img
             class="img-right"
             :style="contentStyleBanner"
-            :src="imgSrcList.length > 2 && imgSrcList[2].img"
+            :src="slideImg(imgSrcList[2])"
             alt=""
-            v-if="imgSrcList.length > 2 && imgSrcList[2].img"
+            v-if="imgSrcList.length > 2 && slideImg(imgSrcList[2])"
           />
           <div :style="contentStyleBanner" class="empty-box empty-right" v-else>
             <span class="iconfont iconfont icontupian"></span>
@@ -105,9 +105,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapGetters } from 'vuex';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
+import { getLocalizedDiyVal, getLocalizedDiyTitle, getLocalizedDiyImg, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'home_comb',
-  cname: '头部组件',
+  ...diyCname('pagediy.headerComponent'),
   icon: 't-icon-zujian-zuhezujian',
   configName: 'c_home_comb',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -174,6 +176,15 @@ export default {
         { 'border-radius': this.configObj.contentStyleBanner.val ? this.configObj.contentStyleBanner.val + 'px' : '0' },
       ];
     },
+    displayHotWord() {
+      const data = this.configObj;
+      if (!data) return this.hotWord;
+      const locale = getUiLocale(this);
+      if (data.hotWords && data.hotWords.list && data.hotWords.list.length > 0) {
+        return getLocalizedDiyVal(data.hotWords.list[0], locale);
+      }
+      return getLocalizedDiyVal(data.placeWords, locale);
+    },
   },
   watch: {
     pageData: {
@@ -210,64 +221,66 @@ export default {
         name: 'homeComb',
         timestamp: this.num,
         setUp: {
-          cname: '头部组件',
+          cname: this.$t('pagediy.headerComponent'),
         },
         tabConfig: {
-          title: '选择组件',
-          tabTitle: '设置内容',
+          title: this.$t('pagediy.selectComponent'),
+          tabTitle: this.$t('pagediy.setContent'),
           tabVal: 0,
           type: 0,
           isShow: 1,
           list: [
             {
-              val: '搜索框',
+              val: this.$t('pagediy.searchBox'),
               icon: 'icon-zuhe-sousuokuang',
               count: 1,
             },
             {
-              val: '选项卡',
+              val: this.$t('pagediy.tabComponent'),
               icon: 'icon-zuhe-fenlei',
               count: 2,
             },
             {
-              val: '轮播图',
+              val: this.$t('pagediy.carousel'),
               icon: 'icon-zuhe-lunbotu',
               count: 3,
             },
           ],
         },
         hotWords: {
-          title: '搜索热词',
-          tabTitle: '搜索热词',
-          tips: '最多可设置20个热词，鼠标拖拽左侧圆点可调整热词顺序',
+          title: this.$t('pagediy.searchHotWords'),
+          tabTitle: this.$t('pagediy.searchHotWords'),
+          tips: this.$t('pagediy.searchHotWordsTip'),
           list: [
             {
               val: '兰蔻小黑瓶',
+              valJson: '',
             },
           ],
         },
         placeWords: {
-          title: '提示文字',
-          tabTitle: '提示文字设置',
-          value: '搜索商品名称',
+          title: this.$t('pagediy.hintText'),
+          tabTitle: this.$t('pagediy.hintTextSettings'),
+          value: this.$t('pagediy.searchProductName'),
+          val: this.$t('pagediy.searchProductName'),
           isShow: 1,
         },
         titleConfig: {
-          title: '切换时间',
+          title: this.$t('pagediy.switchTime'),
           val: 3,
-          place: '设置搜索热词显示时间',
+          place: this.$t('pagediy.setHotWordDisplayTime'),
           max: 100,
-          unit: '秒',
+          unit: this.$t('pagediy.second'),
           isShow: 1,
         },
         searConfig: {
-          title: '选择模板',
-          tabTitle: '布局设置',
+          title: this.$t('pagediy.selectTemplate'),
+          tabTitle: this.$t('pagediy.layoutSettings'),
           tabVal: 1,
           isShow: 1,
           list: [
             {
-              val: '通栏',
+              val: this.$t('pagediy.fullWidth'),
               icon: 'icon-tonglan',
               count: 1,
             },
@@ -280,37 +293,37 @@ export default {
         },
         logoConfig: {
           isShow: 1,
-          tabTitle: '设置logo',
-          title: '默认logo图',
-          tips: '建议上传大小：宽138px，高48px',
-          header: '设置logo',
+          tabTitle: this.$t('pagediy.setLogo'),
+          title: this.$t('pagediy.defaultLogoImg'),
+          tips: this.$t('pagediy.suggestLogoSize'),
+          header: this.$t('pagediy.setLogo'),
           url: localStorage.getItem('mediaDomain') + '/crmebimage/presets/shoplogo.png',
         },
         logoFixConfig: {
           isShow: 1,
-          tabTitle: '设置logo',
-          title: '吸顶logo图',
-          tips: '建议上传大小：宽138px，高48px',
-          header: '设置logo',
+          tabTitle: this.$t('pagediy.setLogo'),
+          title: this.$t('pagediy.stickyLogo'),
+          tips: this.$t('pagediy.suggestLogoSize'),
+          header: this.$t('pagediy.setLogo'),
           url: localStorage.getItem('mediaDomain') + '/crmebimage/presets/shoplogo.png',
         },
         textPosition: {
-          title: '文本位置',
+          title: this.$t('pagediy.textPosition'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '居左',
+              val: this.$t('pagediy.alignLeft'),
               style: 'left',
               icon: 'icon-juzuo',
             },
             {
-              val: '居中',
+              val: this.$t('pagediy.alignCenter'),
               style: 'center',
               icon: 'icon-juzhong',
             },
             {
-              val: '居右',
+              val: this.$t('pagediy.alignRight'),
               style: 'right',
               icon: 'icon-juyou',
             },
@@ -318,7 +331,7 @@ export default {
         },
         // 框体颜色
         borderColor: {
-          title: '框体颜色',
+          title: this.$t('pagediy.frameColor'),
           color: [
             {
               item: '#fff',
@@ -331,8 +344,8 @@ export default {
           ],
         },
         textColor: {
-          tabTitle: '样式设置',
-          title: '文字颜色',
+          tabTitle: this.$t('pagediy.styleSettings'),
+          title: this.$t('pagediy.textColor'),
           default: [
             {
               item: '#303133',
@@ -346,18 +359,20 @@ export default {
         },
         //分类设置
         listConfig: {
-          title: '鼠标拖拽左侧圆点可调整选项卡顺序',
-          tabTitle: '选项卡设置',
+          title: this.$t('pagediy.dragToReorderTabs'),
+          tabTitle: this.$t('pagediy.tabSettings'),
           max: 10,
           list: [
             {
               title: '精选',
+              titleJson: '',
               val: '',
               type: 0,
               url: '',
             },
             {
               title: '靓丽美妆',
+              titleJson: '',
               val: '',
               type: 0,
               url: '',
@@ -365,21 +380,21 @@ export default {
           ],
         },
         tabShowConfig: {
-          title: '选项卡',
+          title: this.$t('pagediy.tabComponent'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '显示',
+              val: this.$t('common.show'),
             },
             {
-              val: '隐藏',
+              val: this.$t('menu.hide'),
             },
           ],
         },
         fontColor: {
-          tabTitle: '样式设置',
-          title: '文字颜色',
+          tabTitle: this.$t('pagediy.styleSettings'),
+          title: this.$t('pagediy.textColor'),
           default: [
             {
               item: '#303133',
@@ -392,7 +407,7 @@ export default {
           ],
         },
         checkColor: {
-          title: '选中颜色',
+          title: this.$t('pagediy.selectedColor'),
           name: 'checkColor',
           color: [
             {
@@ -406,14 +421,14 @@ export default {
           ],
         },
         contentStyle: {
-          title: '内容圆角',
+          title: this.$t('pagediy.contentRadius'),
           name: 'contentStyle',
           val: 30,
           min: 0,
           max: 30,
         },
         contentStyleBanner: {
-          title: '内容圆角',
+          title: this.$t('pagediy.contentRadius'),
           name: 'contentStyleBanner',
           val: 7,
           min: 0,
@@ -421,25 +436,26 @@ export default {
         },
         // 轮播图 图片列表
         swiperConfig: {
-          tabTitle: '内容设置',
-          tips: '最多可添加10张图片，建议宽度750*332px；鼠标拖拽左侧圆点可调整图片顺序',
-          title: '最多可添加10张图片，建议宽度750*332px；鼠标拖拽左侧圆点可调整图片顺序',
+          tabTitle: this.$t('pagediy.contentSettings'),
+          tips: this.$t('pagediy.bannerImageTip'),
+          title: this.$t('pagediy.bannerImageTip'),
           maxList: 10,
           isSmall: true,
           list: [
             {
               img: '',
+              imgJson: '',
               info: [
                 {
-                  title: '标题',
+                  title: this.$t('content.title'),
                   value: '',
-                  tips: '选填，不超过10个字',
+                  tips: this.$t('pagediy.optionalMax10'),
                   max: 10,
                 },
                 {
-                  title: '链接',
+                  title: this.$t('pagediy.link'),
                   value: '',
-                  tips: '请选择链接',
+                  tips: this.$t('application.pleaseSelectLink'),
                   max: 100,
                 },
               ],
@@ -447,36 +463,36 @@ export default {
           ],
         },
         swiperStyleConfig: {
-          title: '选择风格',
+          title: this.$t('pagediy.selectStyle'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '样式1',
+              val: this.$t('marketing.style1'),
             },
             {
-              val: '样式2',
+              val: this.$t('marketing.style2'),
             },
           ],
         },
         //色调
         themeStyleConfig: {
-          title: '色调',
+          title: this.$t('pagediy.colorTone'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '跟随主题风格',
+              val: this.$t('pagediy.followTheme'),
             },
             {
-              val: '自定义',
+              val: this.$t('pagediy.customStyle'),
             },
           ],
         },
         // 指示器颜色
         docColor: {
           isShow: 0,
-          title: '指示器颜色',
+          title: this.$t('pagediy.indicatorColor'),
           name: 'docColor',
           color: [
             {
@@ -492,40 +508,40 @@ export default {
         // 轮播图点样式
         docConfig: {
           cname: 'swiper',
-          title: '指示器样式',
-          tabTitle: '样式设置',
+          title: this.$t('pagediy.indicatorStyle'),
+          tabTitle: this.$t('pagediy.styleSettings'),
           isShow: 1,
           tabVal: 0,
           list: [
             {
-              val: '圆形',
+              val: this.$t('pagediy.circle'),
               icon: 'icon-yuandian',
             },
             {
-              val: '直线',
+              val: this.$t('pagediy.straightLine'),
               icon: 'icon-xiantiao',
             },
             {
-              val: '无指示器',
+              val: this.$t('pagediy.noIndicator'),
               icon: 'icon-buxianshi',
             },
           ],
         },
         txtStyle: {
-          title: '指示器位置',
+          title: this.$t('pagediy.indicatorPosition'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '居左',
+              val: this.$t('pagediy.alignLeft'),
               icon: 'icon-juzuo',
             },
             {
-              val: '居中',
+              val: this.$t('pagediy.alignCenter'),
               icon: 'icon-juzhong',
             },
             {
-              val: '居右',
+              val: this.$t('pagediy.alignRight'),
               icon: 'icon-juyou',
             },
           ],
@@ -555,11 +571,17 @@ export default {
     });
   },
   methods: {
+    slideImg(item) {
+      return getLocalizedDiyImg(item, getUiLocale(this));
+    },
     getConfig(data) {},
+    tabTitleText(item) {
+      return getLocalizedDiyTitle(item, getUiLocale(this));
+    },
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
         this.list = data.listConfig.list;
         this.logoUrl = data.logoConfig.url
           ? data.logoConfig.url

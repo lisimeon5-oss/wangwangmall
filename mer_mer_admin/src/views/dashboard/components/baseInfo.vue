@@ -5,16 +5,16 @@
         <el-card :padding="12" :bordered="false" dis-hover shadow="never">
           <div class="acea-row row-between-wrapper">
             <div class="acea-row align-center">
-              <span class="main_tit">销售额</span>
+              <span class="main_tit">{{ $t('dashboard.salesAmount') }}</span>
             </div>
-            <el-tag type="primary">今日</el-tag>
+            <el-tag type="primary">{{ $t('dashboard.today') }}</el-tag>
           </div>
           <div class="content" v-if="viewData">
             <span class="content-number spBlock my15">{{ viewData.sales }}</span>
             <el-divider></el-divider>
             <div class="acea-row row-between-wrapper">
-              <span class="content-time">昨日数据</span>
-              <span class="content-time">{{ viewData.yesterdaySales }} 元</span>
+              <span class="content-time">{{ $t('dashboard.yesterday') }}</span>
+              <span class="content-time">{{ viewData.yesterdaySales }} {{ $t('dashboard.yuan') }}</span>
             </div>
           </div>
         </el-card>
@@ -23,16 +23,16 @@
         <el-card :bordered="false" dis-hover shadow="never" :padding="12">
           <div class="acea-row row-between-wrapper">
             <div class="acea-row align-center">
-              <span class="main_tit">订单量</span>
+              <span class="main_tit">{{ $t('dashboard.orderNum') }}</span>
             </div>
-            <el-tag type="primary">今日</el-tag>
+            <el-tag type="primary">{{ $t('dashboard.today') }}</el-tag>
           </div>
           <div class="content" v-if="viewData">
             <span class="content-number spBlock my15">{{ viewData.orderNum || 0 }}</span>
             <el-divider></el-divider>
             <div class="acea-row row-between-wrapper">
-              <span class="content-time">昨日数据</span>
-              <span class="content-time">{{ viewData.yesterdayOrderNum || 0 }}单</span>
+              <span class="content-time">{{ $t('dashboard.yesterday') }}</span>
+              <span class="content-time">{{ viewData.yesterdayOrderNum || 0 }}{{ $t('dashboard.single') }}</span>
             </div>
           </div>
         </el-card>
@@ -41,16 +41,16 @@
         <el-card :bordered="false" dis-hover shadow="never" :padding="12">
           <div class="acea-row row-between-wrapper">
             <div class="acea-row align-center">
-              <span class="main_tit">访客数</span>
+              <span class="main_tit">{{ $t('dashboard.visitorsNum') }}</span>
             </div>
-            <el-tag type="primary">今日</el-tag>
+            <el-tag type="primary">{{ $t('dashboard.today') }}</el-tag>
           </div>
           <div class="content" v-if="viewData">
             <span class="content-number spBlock my15">{{ viewData.visitorsNum || 0 }}</span>
             <el-divider></el-divider>
             <div class="acea-row row-between-wrapper">
-              <span class="content-time">昨日数据</span>
-              <span class="content-time">{{ viewData.yesterdayVisitorsNum || 0 }} 人</span>
+              <span class="content-time">{{ $t('dashboard.yesterday') }}</span>
+              <span class="content-time">{{ viewData.yesterdayVisitorsNum || 0 }} {{ $t('dashboard.people') }}</span>
             </div>
           </div>
         </el-card>
@@ -59,13 +59,13 @@
         <el-card :bordered="false" dis-hover shadow="never" :padding="12">
           <div class="acea-row row-between-wrapper">
             <div class="acea-row align-center">
-              <span class="main_tit">粉丝数</span>
+              <span class="main_tit">{{ $t('dashboard.fansNum') }}</span>
             </div>
           </div>
           <div class="container" v-if="viewData">
             <div class="con_left">
               <span class="content-number spBlock m-b-15">{{ viewData.followNum || 0 }}</span>
-              <span class="main_tit">关注量</span>
+              <span class="main_tit">{{ $t('dashboard.followNum') }}</span>
             </div>
           </div>
         </el-card>

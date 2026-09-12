@@ -44,13 +44,13 @@ export const objTitle = {
 //积分商品规格默认数据
 export const objTitlePoints = {
   price: {
-    title: '兑换金额（元）',
+    title: '兑换金额（铢）',
   },
   redeemIntegral: {
     title: '兑换积分',
   },
   cost: {
-    title: '划线价（元）',
+    title: '划线价（铢）',
   },
   stock: {
     title: '库存',

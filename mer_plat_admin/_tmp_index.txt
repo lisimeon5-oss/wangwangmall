@@ -1,0 +1,76 @@
+206:    return {
+207:      options: [
+208:        {
+209:          value: 0,
+210:          label: '全部',
+211:        },
+212:        {
+213:          value: 2,
+214:          label: '商城订单',
+215:        },
+216:        {
+217:          value: 1,
+218:          label: '视频号订单',
+219:        },
+220:      ],
+221:      RefuseVisible: false,
+222:      RefuseData: {},
+223:      orderNo: '',
+224:      refundVisible: false,
+225:      refundData: {},
+226:      dialogVisibleJI: false,
+227:      tableDataLog: {
+228:        data: [],
+229:        total: 0,
+230:      },
+231:      tableFromLog: {
+232:        page: 1,
+233:        limit: 10,
+234:        orderNo: 0,
+235:      },
+236:      LogLoading: false,
+237:      isCreate: 1,
+238:      editData: null,
+239:      dialogVisible: false,
+240:      tableData: {
+241:        data: [],
+242:        total: 0,
+243:      },
+244:      listLoading: true,
+245:      tableFrom: {
+246:        status: 'all',
+247:        dateLimit: '',
+248:        orderNo: '',
+249:        page: 1,
+250:        limit: 20,
+251:        merId: null,
+252:        type: '',
+253:        searchType: 'all',
+254:        content: '',
+255:      },
+256:      orderChartType: {},
+257:      timeVal: [],
+258:      fromList: this.$constants.fromList,
+259:      fromType: [
+260:        { value: '', text: '全部' },
+261:        { value: '0', text: '普通' },
+262:        { value: '1', text: '秒杀' },
+263:        { value: '2', text: '拼团' },
+264:      ],
+265:      selectionList: [],
+266:      ids: '',
+267:      orderids: '',
+268:      cardLists: [],
+269:      isWriteOff: isWriteOff(),
+270:      proType: 0,
+271:      active: false,
+272:      card_select_show: false,
+273:      checkAll: false,
+274:      checkedCities: ['订单编号', '商户名称', '用户昵称', '实际支付', '支付方式', '订单状态', '下单时间'],
+275:      columnData: ['订单编号', '商户名称', '用户昵称', '实际支付', '支付方式', '订单状态', '下单时间'],
+276:      isIndeterminate: true,
+277:    };
+278:  },
+279:  mounted() {
+280:    if (checkPermi(['platform:order:page:list'])) this.getList();
+281:    if (checkPermi(['platform:order:status:num'])) this.getOrderStatusNum();

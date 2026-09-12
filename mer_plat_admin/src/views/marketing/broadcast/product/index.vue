@@ -3,8 +3,8 @@
     <el-card :bordered="false" shadow="never" class="ivu-mt" :body-style="{ padding: 0 }">
       <div class="padding-add">
         <el-form size="small" label-position="right" inline @submit.native.prevent>
-          <el-form-item label="商户分类：" prop="categoryId">
-            <el-select v-model="tableForm.merchant_type" placeholder="请选择商户分类" clearable class="selWidth">
+          <el-form-item :label="$t('merchant.merchantCategoryLabel')" prop="categoryId">
+            <el-select v-model="tableForm.merchant_type" :placeholder="$t('merchant.pleaseSelectMerchantCategory')" clearable class="selWidth">
               <el-option
                 v-for="item in merchantClassify"
                 :key="item.id"
@@ -13,74 +13,74 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="商品搜索：">
+          <el-form-item :label="$t('product.productSearchLabel')">
             <el-input
               v-model="keywords"
               @keyup.enter.native="getList(1)"
-              placeholder="请输入直播商品名称/ID,商户名称,微信直播间id,微信审核单id"
+              :placeholder="$t('marketing.pleaseEnterLiveProductSearch')"
               class="selWidth"
               size="small"
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '0 20px 20px' }" shadow="never" :bordered="false">
       <el-tabs class="list-tabs" v-model="tableForm.reviewStatus" @tab-click="getList(1)">
-        <el-tab-pane label="商户创建" name="0" />
-        <el-tab-pane label="平台待审核" name="1" />
-        <el-tab-pane label="平台审核通过" name="2"></el-tab-pane>
-        <el-tab-pane label="平台审核失败" name="3"></el-tab-pane>
-        <el-tab-pane label="微信审核失败" name="4" />
-        <el-tab-pane label="微信审核成功" name="5" />
+        <el-tab-pane :label="$t('marketing.merchantCreated')" name="0" />
+        <el-tab-pane :label="$t('product.platformPendingAudit')" name="1" />
+        <el-tab-pane :label="$t('marketing.platformAuditPassed')" name="2"></el-tab-pane>
+        <el-tab-pane :label="$t('product.platformAuditFailed')" name="3"></el-tab-pane>
+        <el-tab-pane :label="$t('product.wechatAuditFailed')" name="4" />
+        <el-tab-pane :label="$t('product.wechatAuditSuccess')" name="5" />
       </el-tabs>
       <el-table v-loading="listLoading" :data="tableData.data" size="small" highlight-current-row class="mt5">
         <el-table-column label="ID" width="50" prop="id" />
-        <el-table-column label="直播商品ID" min-width="80">
+        <el-table-column :label="$t('marketing.liveProductId')" min-width="80">
           <template slot-scope="scope">
             <span>{{ scope.row.goodsId | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="商品名称" min-width="120" :show-overflow-tooltip="true">
+        <el-table-column :label="$t('product.productName')" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.name + '/' + scope.row.productId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="商品图" min-width="60">
+        <el-table-column :label="$t('product.productImage')" min-width="60">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.coverImgUrlLocal" :preview-src-list="[scope.row.coverImgUrlLocal]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="价格类型" min-width="80">
+        <el-table-column :label="$t('marketing.priceType')" min-width="80">
           <template slot-scope="scope">
             <span>{{ scope.row.priceType | priceTypeFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="价格" min-width="150">
+        <el-table-column :label="$t('marketing.price')" min-width="150">
           <template slot-scope="scope">
             <span v-if="scope.row.priceType === 1">{{ scope.row.price }}</span>
             <span v-else-if="scope.row.priceType === 1">{{ scope.row.price + '~' + scope.row.price2 }}</span>
             <span v-else>(原){{ scope.row.price }}，(折扣){{ scope.row.price2 }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="商户名称" min-width="120">
+        <el-table-column :label="$t('product.merchantName')" min-width="120">
           <template slot-scope="scope">
             <span>{{ scope.row.merName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="商户分类" min-width="80">
+        <el-table-column :label="$t('merchant.merchantCategory')" min-width="80">
           <template slot-scope="scope">
             <span class="widths">{{ scope.row.merType | merCategoryFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="sort" min-width="60" label="排序" />
-        <el-table-column label="审核状态" min-width="110">
+        <el-table-column prop="sort" min-width="60" :label="$t('product.sort')" />
+        <el-table-column :label="$t('product.auditStatus')" min-width="110">
           <template slot-scope="scope">
             <el-tooltip
               v-if="scope.row.reviewStatus === 3 || scope.row.reviewStatus === 5"
@@ -89,17 +89,17 @@
               :content="scope.row.reviewReason"
               placement="top"
             >
-              <el-tag class="notStartTag tag-background" v-if="scope.row.reviewStatus === 3">平台审核失败</el-tag>
-              <el-tag class="notStartTag tag-background" v-if="scope.row.reviewStatus === 5">微信审核失败</el-tag>
+              <el-tag class="notStartTag tag-background" v-if="scope.row.reviewStatus === 3">{{ $t('product.platformAuditFailed') }}</el-tag>
+              <el-tag class="notStartTag tag-background" v-if="scope.row.reviewStatus === 5">{{ $t('product.wechatAuditFailed') }}</el-tag>
             </el-tooltip>
             <div v-else>
-              <el-tag class="doingTag tag-background" v-if="scope.row.reviewStatus === 1">平台待审核</el-tag>
+              <el-tag class="doingTag tag-background" v-if="scope.row.reviewStatus === 1">{{ $t('product.platformPendingAudit') }}</el-tag>
               <el-tag class="endTag tag-background" v-if="scope.row.reviewStatus === 2">平台审核通过</el-tag>
-              <el-tag class="endTag tag-background" v-if="scope.row.reviewStatus === 4">微信审核成功</el-tag>
+              <el-tag class="endTag tag-background" v-if="scope.row.reviewStatus === 4">{{ $t('product.wechatAuditSuccess') }}</el-tag>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="150" fixed="right">
           <template slot-scope="scope">
             <template
               v-if="
@@ -107,12 +107,12 @@
                 checkPermi(['platform:mp:live:goods:review', 'platform:mp:live:goods:info'])
               "
             >
-              <a @click="toExamine(scope.row)">审核 </a>
+              <a @click="toExamine(scope.row)">{{ $t('finance.audit') }} </a>
               <el-divider direction="vertical"></el-divider>
             </template>
-            <a v-hasPermi="['platform:mp:live:goods:sort']" @click="handleSort(scope.row.id)">排序 </a>
+            <a v-hasPermi="['platform:mp:live:goods:sort']" @click="handleSort(scope.row.id)">{{ $t('product.sort') }} </a>
             <el-divider direction="vertical"></el-divider>
-            <a v-hasPermi="['platform:mp:live:goods:delete']" @click="handleDelete(scope.row.id)">删除 </a>
+            <a v-hasPermi="['platform:mp:live:goods:delete']" @click="handleDelete(scope.row.id)">{{ $t('common.delete') }} </a>
           </template>
         </el-table-column>
       </el-table>
@@ -158,7 +158,7 @@
                   }
                 "
                 style="margin-left: 0"
-                >{{ loadingBtn ? '提交中 ...' : '审核拒绝' }}
+                >{{ loadingBtn ? $t('finance.submitting') : $t('product.auditRejected') }}
               </el-button>
               <el-button
                 type="primary"
@@ -168,7 +168,7 @@
                     onSubmit(2);
                   }
                 "
-                >{{ loadingBtn ? '提交中 ...' : '审核通过' }}
+                >{{ loadingBtn ? $t('finance.submitting') : $t('finance.auditPassed') }}
               </el-button>
             </div>
           </div>
@@ -176,27 +176,27 @@
         <div class="detailSection divBox padBox">
           <ul class="list mt-16">
             <li class="item">
-              <div class="tips">商户名称：</div>
+              <div class="tips">{{ $t('product.merchantNameLabel') }}</div>
               <div class="value">{{ proInfo.merName }}</div>
             </li>
             <li class="item">
-              <div class="tips">商户分类：</div>
+              <div class="tips">{{ $t('merchant.merchantCategoryLabel') }}</div>
               <div class="value">{{ proInfo.merType | merCategoryFilter }}</div>
             </li>
             <li v-if="proInfo.priceType === 1" class="item">
-              <div class="tips">一口价：</div>
+              <div class="tips">{{ $t('marketing.fixedPriceLabel') }}</div>
               <div class="value">{{ proInfo.price }}</div>
             </li>
             <li v-else class="item">
-              <div class="tips">价格区间：</div>
+              <div class="tips">{{ $t('marketing.priceRangeLabel') }}</div>
               <div class="value">{{ proInfo.price + '~' + proInfo.price2 }}</div>
             </li>
             <li class="item">
-              <div class="tips">审核结果：</div>
+              <div class="tips">{{ $t('order.auditResult') }}</div>
               <div class="value">{{ proInfo.reviewStatus | liveReviewStatusFilter }}</div>
             </li>
             <li v-show="proInfo.reviewStatus === 3 || proInfo.reviewStatus === 5" class="item">
-              <div class="tips">审核失败原因：</div>
+              <div class="tips">{{ $t('community.auditFailReasonLabel') }}</div>
               <div class="value">{{ proInfo.reviewReason }}</div>
             </li>
           </ul>
@@ -268,7 +268,7 @@ export default {
     },
     //审核拒绝
     cancelForm() {
-      this.$modalPrompt('textarea', '拒绝原因').then((V) => {
+      this.$modalPrompt('textarea', this.$t('product.rejectReason')).then((V) => {
         this.ruleForm.reviewReason = V;
         this.submit();
       });
@@ -277,7 +277,7 @@ export default {
     onSubmit(type) {
       this.ruleForm.reviewStatus = type;
       if (type === 2) {
-        this.$modalSure('审核通过该直播商品吗？').then(() => {
+        this.$modalSure(this.$t('marketing.approveLiveProductConfirm')).then(() => {
           this.submit();
         });
       } else {
@@ -289,7 +289,7 @@ export default {
       this.ruleForm.id = this.id;
       liveGoodsReviewApi(this.ruleForm)
         .then((res) => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('product.operateSuccess'));
           this.dialogVisible = false;
           this.loadingBtn = false;
           this.getList();
@@ -309,7 +309,7 @@ export default {
     handleDelete(id, idx) {
       this.$modalSure('删除该商品吗？').then(() => {
         liveGoodsDelApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableForm);
           this.getList('');
         });

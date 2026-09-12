@@ -9,7 +9,7 @@
     >
       <div class="padding-add">
         <el-form size="small" inline @submit.native.prevent>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('product.timeSelectLabel')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -17,32 +17,32 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               style="width: 260px"
               @change="onchangeTime"
             />
           </el-form-item>
-          <el-form-item label="商户名称：" v-hasPermi="['platform:merchant:page:list']">
+          <el-form-item :label="$t('product.merchantNameLabel')" v-hasPermi="['platform:merchant:page:list']">
             <merchant-name @getMerId="getMerId" :mer-id-checked="tableFrom.merId"></merchant-name>
           </el-form-item>
-          <el-form-item label="审核状态：">
+          <el-form-item :label="$t('finance.auditStatusLabel')">
             <el-select
               v-model="tableFrom.auditStatus"
-              placeholder="请选择"
+              :placeholder="$t('el.select.placeholder')"
               class="selWidth"
               clearable
               @change="getList(1)"
             >
-              <el-option label="全部" value="" />
-              <el-option label="待审核" value="0" />
-              <el-option label="审核通过" value="1" />
-              <el-option label="审核失败" value="2" />
+              <el-option :label="$t('common.all')" value="" />
+              <el-option :label="$t('order.pendingAudit')" value="0" />
+              <el-option :label="$t('finance.auditPassed')" value="1" />
+              <el-option :label="$t('common.auditFailed')" value="2" />
             </el-select>
           </el-form-item>
-          <el-form-item label="到账状态：">
+          <el-form-item :label="$t('finance.accountStatusLabel')">
             <el-select
               v-model="tableFrom.accountStatus"
-              placeholder="请选择"
+              :placeholder="$t('el.select.placeholder')"
               class="selWidth"
               clearable
               @change="getList(1)"
@@ -50,10 +50,10 @@
               <el-option v-for="item in arrivalStatusList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="结算类型：">
+          <el-form-item :label="$t('finance.closingTypeLabel')">
             <el-select
               v-model="tableFrom.closingType"
-              placeholder="请选择"
+              :placeholder="$t('el.select.placeholder')"
               class="selWidth"
               clearable
               @change="getList(1)"
@@ -61,19 +61,19 @@
               <el-option v-for="item in closingTypeList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="结算单号：">
+          <el-form-item :label="$t('finance.closingNoLabel')">
             <el-input
               v-model.trim="tableFrom.closingNo"
               @keyup.enter.native="getList(1)"
-              placeholder="请输入结算单号"
+              :placeholder="$t('finance.pleaseEnterSettlementNo')"
               class="selWidth"
               size="small"
             >
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('common.reset') }}</el-button>
           </el-form-item>
           <br />
         </el-form>
@@ -89,46 +89,46 @@
         class="table"
       >
         <el-table-column prop="id" label="ID" min-width="60" />
-        <el-table-column prop="closingNo" label="结算单号" min-width="180" />
-        <el-table-column prop="merName" label="商户名称" min-width="160" :show-overflow-tooltip="true" />
-        <el-table-column prop="amount" label="金额" min-width="120" />
-        <el-table-column label="审核员姓名" min-width="120" :show-overflow-tooltip="true">
+        <el-table-column prop="closingNo" :label="$t('finance.closingNo')" min-width="180" />
+        <el-table-column prop="merName" :label="$t('product.merchantName')" min-width="160" :show-overflow-tooltip="true" />
+        <el-table-column prop="amount" :label="$t('finance.amount')" min-width="120" />
+        <el-table-column :label="$t('finance.auditorName')" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.auditName | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="结算类型" min-width="100">
+        <el-table-column :label="$t('finance.closingType')" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.closingType | closingTypeFilter }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="审核状态" min-width="120">
+        <el-table-column :label="$t('product.auditStatus')" min-width="120">
           <template slot-scope="scope">
             <span>{{
-              scope.row.auditStatus == 0 ? '待审核' : scope.row.auditStatus == 1 ? '审核通过' : '审核失败'
+              scope.row.auditStatus == 0 ? $t('order.pendingAudit') : scope.row.auditStatus == 1 ? $t('finance.auditPassed') : $t('common.auditFailed')
             }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="到账状态" min-width="120">
+        <el-table-column :label="$t('finance.accountStatus')" min-width="120">
           <template slot-scope="scope">
-            <span>{{ scope.row.accountStatus == 1 ? '已转账' : '未转账' }}</span>
+            <span>{{ scope.row.accountStatus == 1 ? $t('finance.transferred') : $t('finance.notTransferred') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="平台备注" min-width="150" :show-overflow-tooltip="true">
+        <el-table-column :label="$t('order.platformRemark')" min-width="150" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.platformMark | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="申请时间" min-width="150" :show-overflow-tooltip="true" />
-        <el-table-column label="操作" width="170" fixed="right">
+        <el-table-column prop="createTime" :label="$t('finance.applyTime')" min-width="150" :show-overflow-tooltip="true" />
+        <el-table-column :label="$t('common.operate')" width="170" fixed="right">
           <template slot-scope="scope">
             <a @click="closingDetail(scope.row.closingNo, 1)" v-hasPermi="['platform:finance:merchant:closing:detail']"
-              >转账详情</a
+              >{{ $t('finance.transferDetail') }}</a
             >
             <el-divider direction="vertical"></el-divider>
             <template v-if="scope.row.auditStatus === 0 && checkPermi(['platform:finance:merchant:closing:audit'])">
-              <a @click="closingDetail(scope.row.closingNo, 2)">审核</a>
+              <a @click="closingDetail(scope.row.closingNo, 2)">{{ $t('finance.audit') }}</a>
               <el-divider direction="vertical"></el-divider>
             </template>
             <template
@@ -138,10 +138,10 @@
                 checkPermi(['platform:finance:merchant:closing:proof'])
               "
             >
-              <a @click="closingDetail(scope.row.closingNo, 3)">转账</a>
+              <a @click="closingDetail(scope.row.closingNo, 3)">{{ $t('finance.transfer') }}</a>
               <el-divider direction="vertical"></el-divider>
             </template>
-            <a v-hasPermi="['platform:finance:merchant:closing:remark']" @click="onRemark(scope.row)">备注</a>
+            <a v-hasPermi="['platform:finance:merchant:closing:remark']" @click="onRemark(scope.row)">{{ $t('common.remark') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -159,13 +159,13 @@
       </div>
     </el-card>
     <!--转账凭证 审核 详情-->
-    <el-drawer direction="rtl" :visible.sync="dialogVisible" size="700px" @close="close('ruleForm')" title="结算详情">
+    <el-drawer direction="rtl" :visible.sync="dialogVisible" size="700px" @close="close('ruleForm')" :title="$t('finance.closingDetail')">
       <div class="detailHead">
         <div class="acea-row row-between headerBox">
           <div class="full">
             <div class="order_icon"><span class="iconfont icon-caiwuchazhang"></span></div>
             <div class="text">
-              <div class="title">结算详情</div>
+              <div class="title">{{ $t('finance.closingDetail') }}</div>
             </div>
           </div>
           <div v-if="isShow === 2 && closingData.auditStatus == 0" class="acea-row justify-content">
@@ -177,7 +177,7 @@
                 }
               "
               style="margin-left: 0"
-              >{{ loadingBtn ? '提交中 ...' : '审核拒绝' }}</el-button
+              >{{ loadingBtn ? $t('finance.submitting') : $t('product.auditRejected') }}</el-button
             >
             <el-button
               size="small"
@@ -187,49 +187,49 @@
                   onSubmit('success');
                 }
               "
-              >{{ loadingBtn ? '提交中 ...' : '审核通过' }}</el-button
+              >{{ loadingBtn ? $t('finance.submitting') : $t('finance.auditPassed') }}</el-button
             >
           </div>
         </div>
       </div>
       <div class="box-container detailSection" v-loading="loading">
         <div class="acea-row">
-          <div class="list sp100"><label class="name">商户名称：</label>{{ closingData.merName }}</div>
-          <div class="list sp100"><label class="name">商户流水金额：</label>{{ closingData.amount }}</div>
-          <div class="list sp100"><label class="name">商户余额：</label>{{ closingData.balance }}</div>
+          <div class="list sp100"><label class="name">{{ $t('product.merchantNameLabel') }}</label>{{ closingData.merName }}</div>
+          <div class="list sp100"><label class="name">{{ $t('finance.merchantFlowAmountLabel') }}</label>{{ closingData.amount }}</div>
+          <div class="list sp100"><label class="name">{{ $t('finance.merchantBalanceLabel') }}</label>{{ closingData.balance }}</div>
           <div class="list sp100">
-            <label class="name">商户收款方式：</label>{{ closingData.closingType | closingTypeFilter }}
+            <label class="name">{{ $t('finance.merchantCollectionMethodLabel') }}</label>{{ closingData.closingType | closingTypeFilter }}
           </div>
           <template v-if="closingData.closingType === 'bank'">
-            <div class="list sp100"><label class="name">开户银行：</label>{{ closingData.closingBank }}</div>
-            <div class="list sp100"><label class="name">银行账号：</label>{{ closingData.closingBankCard }}</div>
-            <div class="list sp100"><label class="name">开户户名：</label>{{ closingData.closingName }}</div>
+            <div class="list sp100"><label class="name">{{ $t('finance.bankNameLabel') }}</label>{{ closingData.closingBank }}</div>
+            <div class="list sp100"><label class="name">{{ $t('finance.bankAccountLabel') }}</label>{{ closingData.closingBankCard }}</div>
+            <div class="list sp100"><label class="name">{{ $t('finance.accountHolderLabel') }}</label>{{ closingData.closingName }}</div>
           </template>
           <div v-if="closingData.closingType === 'wechat'" class="list sp100">
-            <label class="name">微信号：</label>{{ closingData.wechatNo }}
+            <label class="name">{{ $t('finance.wechatNoLabel') }}</label>{{ closingData.wechatNo }}
           </div>
           <div v-if="closingData.closingType === 'alipay'" class="list sp100">
-            <label class="name">支付宝账号：</label>{{ closingData.alipayAccount }}
+            <label class="name">{{ $t('finance.alipayAccountLabel') }}</label>{{ closingData.alipayAccount }}
           </div>
           <div v-if="closingData.closingType === 'wechat' || closingData.closingType === 'alipay'" class="list sp100">
-            <label class="name">真实姓名：</label>{{ closingData.realName }}
+            <label class="name">{{ $t('finance.realNameLabel') }}</label>{{ closingData.realName }}
           </div>
           <div v-if="closingData.closingType !== 'bank'" class="list sp100 acea-row">
-            <label class="name">收款二维码：</label>
+            <label class="name">{{ $t('finance.collectionQrCodeLabel') }}</label>
             <div class="demo-image__preview">
               <el-image :src="closingData.paymentCode" :preview-src-list="[closingData.paymentCode]" />
             </div>
           </div>
 
           <div class="list sp100">
-            <label class="name">审核状态：</label
-            >{{ closingData.auditStatus == 0 ? '待审核' : closingData.auditStatus == 1 ? '已审核' : '审核失败' }}
+            <label class="name">{{ $t('finance.auditStatusLabel') }}</label
+            >{{ closingData.auditStatus == 0 ? $t('order.pendingAudit') : closingData.auditStatus == 1 ? $t('finance.audited') : $t('common.auditFailed') }}
           </div>
           <div v-if="closingData.auditStatus == 1" class="list sp100">
-            <label class="name">审核时间：</label>{{ closingData.auditTime | filterEmpty }}
+            <label class="name">{{ $t('finance.auditTimeLabel') }}</label>{{ closingData.auditTime | filterEmpty }}
           </div>
           <div v-if="closingData.closingProof" class="list sp100">
-            <label class="name">结算凭证：</label>
+            <label class="name">{{ $t('finance.closingVoucherLabel') }}</label>
             <div class="acea-row">
               <div v-for="(item, index) in JSON.parse(closingData.closingProof)" :key="index" class="pictrue">
                 <img @click="getPicture(item)" :src="item" />
@@ -237,20 +237,20 @@
             </div>
           </div>
           <div v-if="closingData.auditStatus == 1 && closingData.closingTime" class="list sp100">
-            <label class="name">结算时间：</label>{{ closingData.closingTime }}
+            <label class="name">{{ $t('finance.closingTimeLabel') }}</label>{{ closingData.closingTime }}
           </div>
           <div v-if="closingData.auditStatus == 2 && closingData.refusalReason" class="list sp100">
-            <label class="name">审核未通过原因：</label>{{ closingData.refusalReason }}
+            <label class="name">{{ $t('finance.rejectReasonLabel') }}</label>{{ closingData.refusalReason }}
           </div>
           <div class="list sp100">
-            <label class="name">平台备注：</label>{{ closingData.platformMark | filterEmpty }}
+            <label class="name">{{ $t('finance.platformRemarkLabel') }}</label>{{ closingData.platformMark | filterEmpty }}
           </div>
-          <div class="list sp100"><label class="name">商户备注：</label>{{ closingData.mark | filterEmpty }}</div>
+          <div class="list sp100"><label class="name">{{ $t('finance.merchantRemarkLabel') }}</label>{{ closingData.mark | filterEmpty }}</div>
         </div>
         <div v-if="isShow !== 1">
           <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
             <template v-if="isShow === 3 && closingData.auditStatus === 1 && closingData.accountStatus === 0">
-              <el-form-item label="转账凭证：" prop="closingProof">
+              <el-form-item :label="$t('finance.transferVoucherLabel')" prop="closingProof">
                 <div class="acea-row">
                   <div class="acea-row" v-if="ruleForm.closingProof.length > 0">
                     <div v-for="(item, index) in ruleForm.closingProof" :key="index" class="pictrue">
@@ -276,7 +276,7 @@
                 </div>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="submit">{{ loadingBtn ? '提交中 ...' : '确 定' }}</el-button>
+                <el-button type="primary" @click="submit">{{ loadingBtn ? $t('finance.submitting') : $t('finance.confirmSpaced') }}</el-button>
               </el-form-item>
             </template>
           </el-form>
@@ -321,23 +321,14 @@ export default {
       isShow: 0,
       loadingBtn: false,
       rules: {
-        auditStatus: [{ required: true, message: '请选择审核状态', trigger: 'change' }],
-        refusalReason: [{ required: true, message: '请填写拒绝原因', trigger: 'blur' }],
-        closingProof: [{ required: true, message: '请上传结算凭证', type: 'array', trigger: 'change' }],
+        auditStatus: [{ required: true, message: this.$t('product.pleaseSelectAuditStatus'), trigger: 'change' }],
+        refusalReason: [{ required: true, message: this.$t('product.pleaseEnterRejectReason'), trigger: 'blur' }],
+        closingProof: [{ required: true, message: this.$t('finance.pleaseUploadClosingVoucher'), type: 'array', trigger: 'change' }],
       },
       tableData: {
         data: [],
         total: 0,
       },
-      arrivalStatusList: [
-        { label: '已到账', value: 1 },
-        { label: '未到账', value: 0 },
-      ],
-      closingTypeList: [
-        { label: '银行卡', value: 'bank' },
-        { label: '微信', value: 'wechat' },
-        { label: '支付宝', value: 'alipay' },
-      ],
       listLoading: true,
       tableFrom: {
         dateLimit: '',
@@ -376,6 +367,21 @@ export default {
       closingNo: '',
     };
   },
+  computed: {
+    arrivalStatusList() {
+      return [
+        { label: this.$t('finance.arrived'), value: 1 },
+        { label: this.$t('finance.notArrived'), value: 0 },
+      ];
+    },
+    closingTypeList() {
+      return [
+        { label: this.$t('finance.bankCard'), value: 'bank' },
+        { label: this.$t('order.wechat'), value: 'wechat' },
+        { label: this.$t('order.alipay'), value: 'alipay' },
+      ];
+    },
+  },
   components: { merchantName },
   mounted() {
     if (checkPermi(['platform:finance:merchant:closing:page:list'])) this.getList(1);
@@ -387,14 +393,14 @@ export default {
       this.getList(1);
     },
     onRemark(row) {
-      this.$modalPrompt('textarea', '备注', row.platformMark).then((V) => {
+      this.$modalPrompt('textarea', this.$t('common.remark'), row.platformMark).then((V) => {
         merClosingRemarkApi({
           closingNo: row.closingNo,
           remark: V,
         }).then((res) => {
           this.$message({
             type: 'success',
-            message: '提交成功',
+            message: this.$t('user.submitSuccess'),
           });
           this.getList('');
         });
@@ -403,7 +409,7 @@ export default {
     // 审核提交
     onSubmit(type) {
       if (type === 'success') {
-        this.$modalSure('审核通过该结算吗？').then(() => {
+        this.$modalSure(this.$t('finance.approveSettlementConfirm')).then(() => {
           this.ruleForm.auditStatus = 1;
           this.submit();
         });
@@ -414,7 +420,7 @@ export default {
     },
     //审核拒绝
     cancelForm() {
-      this.$modalPrompt('textarea', '拒绝原因').then((V) => {
+      this.$modalPrompt('textarea', this.$t('product.rejectReason')).then((V) => {
         this.ruleForm.refusalReason = V;
         this.submit();
       });
@@ -432,7 +438,7 @@ export default {
             // return;
             closingAuditApi(data)
               .then((res) => {
-                this.$message.success('操作成功');
+                this.$message.success(this.$t('product.operateSuccess'));
                 this.dialogVisible = false;
                 this.getList(1);
                 this.close('ruleForm');
@@ -455,7 +461,7 @@ export default {
           if (valid) {
             transferProofApi(data)
               .then((res) => {
-                this.$message.success('操作成功');
+                this.$message.success(this.$t('product.operateSuccess'));
                 this.dialogVisible = false;
                 this.getList(1);
                 this.close('ruleForm');
@@ -477,14 +483,14 @@ export default {
       formData.append('multipart', param.file);
       let loading = this.$loading({
         lock: true,
-        text: '上传中，请稍候...',
+        text: this.$t('finance.uploading'),
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)',
       });
       fileImageApi(formData, data)
         .then((res) => {
           loading.close();
-          this.$message.success('上传成功');
+          this.$message.success(this.$t('finance.uploadSuccess'));
           this.ruleForm.closingProof.push(res.url);
         })
         .catch((res) => {
@@ -539,13 +545,13 @@ export default {
         .then((res) => {
           const h = this.$createElement;
           this.$msgbox({
-            title: '提示',
+            title: this.$t('common.tip'),
             message: h('p', null, [
-              h('span', null, '文件正在生成中，请稍后点击"'),
-              h('span', { style: 'color: teal' }, '导出记录'),
-              h('span', null, '"查看~ '),
+              h('span', null, this.$t('finance.fileGenerating')),
+              h('span', { style: 'color: teal' }, this.$t('finance.exportRecords')),
+              h('span', null, this.$t('finance.viewSuffix')),
             ]),
-            confirmButtonText: '我知道了',
+            confirmButtonText: this.$t('finance.iKnow'),
           }).then((action) => {});
         })
         .catch((res) => {

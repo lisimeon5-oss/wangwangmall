@@ -34,6 +34,9 @@ public class MerchantPlatformDetailResponse implements Serializable {
     @ApiModelProperty(value = "商户名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言商户名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "商户分类ID")
     private Integer categoryId;
 

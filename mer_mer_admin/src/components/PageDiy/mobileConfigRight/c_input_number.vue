@@ -3,13 +3,13 @@
   <div class="numbox borderPadding" v-if="configData && configData.isShow === 1">
     <div class="c_row-item">
       <div class="label labelwidth c_label">
-        <span>{{ configData.title || '商品数量' }}</span>
+        <span>{{ translateText(configData.title || '商品数量') }}</span>
       </div>
       <div class="slider-box ml22">
         <el-input-number
           size="small"
           v-model="configData.val"
-          placeholder="请输入数量"
+          :placeholder="translateText('请输入数量')"
           :step="1"
           :max="configData.max ? configData.max : 100"
           :min="configData.min ? configData.min : 1"

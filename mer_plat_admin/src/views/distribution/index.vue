@@ -9,7 +9,7 @@
     >
       <div class="padding-add">
         <el-form size="small" inline @submit.native.prevent>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('product.timeSelectLabel')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -17,17 +17,17 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               style="width: 260px"
               @change="onchangeTime"
             />
           </el-form-item>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('product.userSearchLabel')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -42,18 +42,18 @@
         highlight-current-row
       >
         <el-table-column prop="id" label="ID" width="60" />
-        <el-table-column label="头像" min-width="80">
+        <el-table-column :label="$t('user.avatar')" min-width="80">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.avatar" :preview-src-list="[scope.row.avatar]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="nickname" label="用户信息" min-width="130" :show-overflow-tooltip="true" />
+        <el-table-column prop="nickname" :label="$t('order.userInfo')" min-width="130" :show-overflow-tooltip="true" />
         <el-table-column
           sortable
           prop="spreadCount"
-          label="推广用户(一级)数量"
+          :label="$t('distribution.promotedUserCount')"
           :sort-method="
             (a, b) => {
               return a.spreadCount - b.spreadCount;
@@ -63,7 +63,7 @@
         />
         <el-table-column
           sortable
-          label="推广订单数量"
+          :label="$t('distribution.promotionOrderCount')"
           prop="spreadOrderNum"
           :sort-method="
             (a, b) => {
@@ -74,7 +74,7 @@
         />
         <el-table-column
           sortable
-          label="推广订单金额"
+          :label="$t('distribution.promotionOrderAmount')"
           min-width="120"
           :sort-method="
             (a, b) => {
@@ -85,7 +85,7 @@
         />
         <el-table-column
           sortable
-          label="佣金总金额"
+          :label="$t('distribution.totalCommission')"
           min-width="120"
           :sort-method="
             (a, b) => {
@@ -96,7 +96,7 @@
         />
         <el-table-column
           sortable
-          label="已提现金额"
+          :label="$t('distribution.withdrawnAmount')"
           min-width="120"
           :sort-method="
             (a, b) => {
@@ -107,7 +107,7 @@
         />
         <el-table-column
           sortable
-          label="已提现次数"
+          :label="$t('distribution.withdrawnCount')"
           min-width="120"
           :sort-method="
             (a, b) => {
@@ -118,7 +118,7 @@
         />
         <el-table-column
           sortable
-          label="未提现金额"
+          :label="$t('distribution.unwithdrawnAmount')"
           min-width="120"
           :sort-method="
             (a, b) => {
@@ -129,7 +129,7 @@
         />
         <el-table-column
           sortable
-          label="冻结中佣金"
+          :label="$t('distribution.frozenCommission')"
           min-width="120"
           :sort-method="
             (a, b) => {
@@ -138,28 +138,28 @@
           "
           prop="freezeBrokeragePrice"
         />
-        <el-table-column prop="promoterTime" label="成为推广员时间" min-width="150" />
-        <el-table-column prop="spreadNickname" label="上级推广人" min-width="150" />
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column prop="promoterTime" :label="$t('distribution.becomePromoterTime')" min-width="150" />
+        <el-table-column prop="spreadNickname" :label="$t('distribution.superiorPromoter')" min-width="150" />
+        <el-table-column :label="$t('common.operate')" width="200" fixed="right">
           <template slot-scope="scope">
-            <a @click="onSpread(scope.row.id, 'man', '推广人')" v-hasPermi="['platform:retail:store:sub:user:list']"
-              >推广人</a
+            <a @click="onSpread(scope.row.id, 'man', $t('distribution.promoter'))" v-hasPermi="['platform:retail:store:sub:user:list']"
+              >{{ $t('distribution.promoter') }}</a
             >
             <el-divider direction="vertical"></el-divider>
             <a
-              @click="onSpreadOrder(scope.row.id, 'order', '推广订单')"
+              @click="onSpreadOrder(scope.row.id, 'order', $t('distribution.promotionOrders'))"
               v-hasPermi="['platform:retail:store:promotion:order:list']"
-              >推广订单</a
+              >{{ $t('distribution.promotionOrders') }}</a
             >
             <template
               v-if="
                 scope.row.spreadNickname &&
-                scope.row.spreadNickname !== '无' &&
+                scope.row.spreadNickname !== $t('finance.none') &&
                 checkPermi(['platform:retail:store:clean:user:spread'])
               "
             >
               <el-divider direction="vertical"></el-divider>
-              <a @click="clearSpread(scope.row)">清除上级</a>
+              <a @click="clearSpread(scope.row)">{{ $t('distribution.clearSuperior') }}</a>
             </template>
           </template>
         </el-table-column>
@@ -179,10 +179,10 @@
     </el-card>
 
     <!--推广人、推广订单-->
-    <el-dialog :title="titleName + '列表'" :visible.sync="dialogVisible" width="900px" :before-close="handleClose">
+    <el-dialog :title="titleName + $t('distribution.list')" :visible.sync="dialogVisible" width="900px" :before-close="handleClose">
       <div class="container">
         <el-form size="small" inline @submit.native.prevent>
-          <el-form-item key="1" label="时间选择：">
+          <el-form-item key="1" :label="$t('product.timeSelectLabel')">
             <el-date-picker
               v-model="timeValSpread"
               value-format="yyyy-MM-dd"
@@ -190,22 +190,22 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               style="width: 260px"
               @change="onchangeTimeSpread"
             />
           </el-form-item>
-          <el-form-item label="用户类型：">
+          <el-form-item :label="$t('distribution.userTypeLabel')">
             <el-radio-group v-model="spreadFrom.type" size="small" @change="onChanges">
-              <el-radio-button label="0">全部</el-radio-button>
-              <el-radio-button label="1">一级推广人</el-radio-button>
-              <el-radio-button label="2">二级推广人</el-radio-button>
+              <el-radio-button label="0">{{ $t('el.table.clearFilter') }}</el-radio-button>
+              <el-radio-button label="1">{{ $t('distribution.firstPromoter') }}</el-radio-button>
+              <el-radio-button label="2">{{ $t('distribution.secondPromoter') }}</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="关键字：" label-width="72px">
+          <el-form-item :label="$t('distribution.keywordLabel')" label-width="72px">
             <el-input
               v-model.trim="keywords"
-              :placeholder="onName === 'order' ? '请输入订单号' : '请输入姓名、电话、用户ID'"
+              :placeholder="onName === 'order' ? $t('finance.pleaseEnterOrderNo') : $t('distribution.pleaseEnterNamePhoneId')"
               class="selWidth"
               size="small"
               @keyup.enter.native="onChanges"
@@ -213,8 +213,8 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="onChanges">查询</el-button>
-            <el-button size="small" @click="spreadReset()">重置</el-button>
+            <el-button type="primary" size="small" @click="onChanges">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="spreadReset()">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -229,21 +229,21 @@
         highlight-current-row
       >
         <el-table-column prop="id" label="ID" width="60" />
-        <el-table-column label="头像" min-width="80">
+        <el-table-column :label="$t('user.avatar')" min-width="80">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.avatar" :preview-src-list="[scope.row.avatar]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="nickname" label="用户信息" min-width="130" />
-        <el-table-column prop="is_promoter" label="是否推广员" min-width="120">
+        <el-table-column prop="nickname" :label="$t('order.userInfo')" min-width="130" />
+        <el-table-column prop="is_promoter" :label="$t('distribution.isPromoter')" min-width="120">
           <template slot-scope="scope">
             <span>{{ scope.row.isPromoter | filterYesOrNo }}</span>
           </template>
         </el-table-column>
-        <el-table-column sortable label="推广人数" min-width="120" prop="spreadCount" />
-        <el-table-column sortable label="订单数" min-width="120" prop="payCount" />
+        <el-table-column sortable :label="$t('distribution.promoterCount')" min-width="120" prop="spreadCount" />
+        <el-table-column sortable :label="$t('distribution.orderCount')" min-width="120" prop="payCount" />
       </el-table>
       <el-table
         v-if="onName === 'order'"
@@ -255,14 +255,14 @@
         class="table"
         highlight-current-row
       >
-        <el-table-column prop="orderNo" label="订单ID" min-width="120" />
-        <el-table-column label="用户信息" min-width="150">
+        <el-table-column prop="orderNo" :label="$t('distribution.orderId')" min-width="120" />
+        <el-table-column :label="$t('order.userInfo')" min-width="150">
           <template slot-scope="scope">
             <span>{{ scope.row.nickname }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="updateTime" label="时间" min-width="150" />
-        <el-table-column sortable label="返佣金额" min-width="120" prop="price" />
+        <el-table-column prop="updateTime" :label="$t('distribution.time')" min-width="150" />
+        <el-table-column sortable :label="$t('distribution.commissionAmount')" min-width="120" prop="price" />
       </el-table>
       <div class="block">
         <el-pagination
@@ -346,9 +346,9 @@ export default {
     },
     // 清除
     clearSpread(row) {
-      this.$modalSure('解除【' + row.nickname + '】的上级推广人吗').then(() => {
+      this.$modalSure(this.$t('distribution.releaseSuperiorConfirm', { name: row.nickname })).then(() => {
         spreadClearApi(row.id).then((res) => {
-          this.$message.success('清除成功');
+          this.$message.success(this.$t('user.clearSuccess'));
           this.getList(1);
         });
       });

@@ -19,6 +19,7 @@
 	// +----------------------------------------------------------------------
 	// | Author: CRMEB Team <admin@crmeb.com>
 	// +----------------------------------------------------------------------
+	import { getLocalizedDiyVal } from '@/utils/localizedName';
 	export default {
 		name: 'titles',
 		props: {
@@ -91,13 +92,19 @@
 					},
 				];
 			},
+			titleTxt() {
+				return getLocalizedDiyVal(this.dataConfig && this.dataConfig.titleConfig, this.i18nLocale);
+			},
+			titleFuTxt() {
+				return getLocalizedDiyVal(this.dataConfig && this.dataConfig.titleFuConfig, this.i18nLocale);
+			},
+			titleRightTxt() {
+				return getLocalizedDiyVal(this.dataConfig && this.dataConfig.titleRightConfig, this.i18nLocale);
+			},
 		},
 		data() {
 			return {
 				configObj: null,
-				titleTxt: '',
-				titleFuTxt: '',
-				titleRightTxt: '',
 				link: '',
 				txtPosition: '',
 				txtStyle: '',
@@ -119,9 +126,6 @@
 		methods: {
 			setConfig(data) {
 				this.configObj = this.data;
-				this.titleTxt = this.dataConfig.titleConfig.val;
-				this.titleFuTxt = this.dataConfig.titleFuConfig.val;
-				this.titleRightTxt = this.dataConfig.titleRightConfig.val;
 				this.link = this.dataConfig.linkConfig.val;
 				this.bgImgUrl = this.dataConfig.bgImg.url;
 				this.selectShow = this.dataConfig.selectShow.tabVal;

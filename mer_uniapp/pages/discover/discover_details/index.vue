@@ -1,7 +1,7 @@
 <template>
 	<view class="discover-details">
 		<!-- #ifdef MP || APP-PLUS-->
-		<!-- <nav-bar iconColor='#fff' navTitle='内容详情' :isBackgroundColor="false" ref="navBarRef" :isHeight="false">
+		<!-- <nav-bar iconColor='#fff' :navTitle="$t('内容详情')" :isBackgroundColor="false" ref="navBarRef" :isHeight="false">
 		</nav-bar> -->
 		<!--  #endif -->
 		<discover-details v-if="noteDetail && !loading" :noteRecommendList="noteDetail" type="detail"
@@ -13,7 +13,7 @@
 
 		<view class="commen_details borderPad" id="myElement">
 			<view v-if="noteDetail.platReplySwitch" class="commen_count" id="commen_count">
-				评论<span class="ml10">{{noteDetail.replyNum == 0 ? '' : noteDetail.replyNum}}</span></view>
+				{{$t('评论')}}<span class="ml10">{{noteDetail.replyNum == 0 ? '' : noteDetail.replyNum}}</span></view>
 			<view>
 				<discoverComment v-if="noteDetail" :noteId="noteId" :noteDetails="noteDetail" :isClickBtn="isClickBtn"
 					fromTo="pageView" :isShowCommentView="isShowCommentView" @closeModelComment="closeModelComment">
@@ -51,7 +51,7 @@
 				noteDetail: {}, //内容详情
 				content: '',
 				bottomVal: 0,
-				placeholder: "快来说点儿什么吧...",
+				placeholder: "",
 				loading: false,
 				isShowComment: false, //真实评论弹窗显示隐藏
 				noteId: 0,
@@ -140,12 +140,12 @@
 				if (replyStatus === 1) {
 					this.$set(this.noteDetail, 'replyStatus', 2)
 					this.$util.Tips({
-						title: '禁止成功'
+						title: this.$t('禁止成功')
 					});
 				} else {
 					this.$set(this.noteDetail, 'replyStatus', 1)
 					this.$util.Tips({
-						title: '开启成功'
+						title: this.$t('开启成功')
 					});
 				}
 			},
@@ -170,16 +170,16 @@
 </script>
 
 <style scoped lang="scss">
-	/deep/.container {
+	::v-deep .container {
 		padding-bottom: 0 !important;
 	}
 
 	.commen_details {
-		/deep/.container {
+		::v-deep .container {
 			height: auto !important;
 		}
 
-		/deep/.main_content {
+		::v-deep .main_content {
 			padding: 30rpx 0 !important;
 		}
 	}
@@ -192,13 +192,13 @@
 	}
 
 	.discover-details {
-		padding-bottom: calc(80rpx+ constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
+		padding-bottom: calc(80rpx + constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
 		padding-bottom: calc(80rpx + env(safe-area-inset-bottom));
 		background-color: #fff;
 	}
 
 	.details {
-		padding-bottom: calc(40rpx+ constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
+		padding-bottom: calc(40rpx + constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
 		padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
 	}
 

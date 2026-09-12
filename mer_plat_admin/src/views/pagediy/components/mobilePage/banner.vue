@@ -6,9 +6,9 @@
           <img
             class="img-left"
             :style="contentStyleLeft"
-            :src="imgSrcList.length > 1 && imgSrcList[1].img"
+            :src="slideImg(imgSrcList[1])"
             alt=""
-            v-if="imgSrcList.length > 1 && imgSrcList[1].img"
+            v-if="imgSrcList.length > 1 && slideImg(imgSrcList[1])"
           />
           <div :style="contentStyleLeft" class="empty-box empty-left" v-else></div>
         </div>
@@ -16,9 +16,9 @@
           <img
             class="img-middle"
             :style="contentStyleMiddle"
-            :src="imgSrcList.length && imgSrcList[0].img"
+            :src="slideImg(imgSrcList[0])"
             alt=""
-            v-if="imgSrcList.length && imgSrcList[0].img"
+            v-if="imgSrcList.length && slideImg(imgSrcList[0])"
           />
           <div :style="contentStyleMiddle" class="empty-box empty-middle" v-else>
             <span class="iconfont iconfont icontupian"></span>
@@ -50,9 +50,9 @@
           <img
             class="img-right"
             :style="contentStyleRight"
-            :src="imgSrcList.length > 2 && imgSrcList[2].img"
+            :src="slideImg(imgSrcList[2])"
             alt=""
-            v-if="imgSrcList.length > 2 && imgSrcList[2].img"
+            v-if="imgSrcList.length > 2 && slideImg(imgSrcList[2])"
           />
           <div :style="contentStyleRight" class="empty-box empty-right" v-else></div>
         </div>
@@ -72,9 +72,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapGetters } from 'vuex';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
+import { getLocalizedDiyImg, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'banner', // 组件名称
-  cname: '轮播图', // 标题名称
+  ...diyCname('pagediy.carousel'),
   icon: 't-icon-zujian-lunbotu',
   defaultName: 'swiperBg', // 外面匹配名称
   configName: 'c_banner', // 右侧配置名称
@@ -178,28 +180,29 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '轮播图',
+          cname: this.$t('pagediy.carousel'),
         },
         // 图片列表
         swiperConfig: {
-          tabTitle: '版块设置',
-          tips: '建议：图片尺寸750*332px；鼠标拖拽版块可调整图片顺序',
-          title: '建议：图片尺寸750*332px；鼠标拖拽版块可调整图片顺序',
+          tabTitle: this.$t('pagediy.sectionSettings'),
+          tips: this.$t('pagediy.carouselSectionTip'),
+          title: this.$t('pagediy.carouselSectionTip'),
           maxList: 1000,
           list: [
             {
               img: '',
+              imgJson: '',
               info: [
                 {
-                  title: '标题',
+                  title: this.$t('content.title'),
                   value: '今日推荐',
                   tips: '选填，不超过8个字',
                   max: 8,
                 },
                 {
-                  title: '链接',
+                  title: this.$t('pagediy.link'),
                   value: '',
-                  tips: '请选择链接',
+                  tips: this.$t('application.pleaseSelectLink'),
                   max: 100,
                 },
               ],
@@ -207,36 +210,36 @@ export default {
           ],
         },
         swiperStyleConfig: {
-          tabTitle: '展示设置',
-          title: '选择风格',
+          tabTitle: this.$t('pagediy.displaySettings'),
+          title: this.$t('pagediy.selectStyle'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '样式1',
+              val: this.$t('marketing.style1'),
             },
             {
-              val: '样式2',
+              val: this.$t('marketing.style2'),
             },
           ],
         },
         // 上间距
         upConfig: {
-          title: '上边距',
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          tabTitle: '边距设置',
-          title: '下边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
@@ -244,21 +247,21 @@ export default {
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 15,
         },
         // 页面间距
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 0,
           min: 0,
         },
         // 背景颜色
         bgColor: {
-          tabTitle: '颜色设置',
-          title: '背景颜色',
+          tabTitle: this.$t('pagediy.colorSettings'),
+          title: this.$t('pagediy.backgroundColor'),
           color: [
             {
               item: '#FFFFFF',
@@ -278,22 +281,22 @@ export default {
         },
         //色调
         themeStyleConfig: {
-          title: '色调',
+          title: this.$t('pagediy.colorTone'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '跟随主题风格',
+              val: this.$t('pagediy.followTheme'),
             },
             {
-              val: '自定义',
+              val: this.$t('pagediy.customStyle'),
             },
           ],
         },
         // 指示器颜色
         docColor: {
           isShow: 0,
-          title: '指示器颜色',
+          title: this.$t('pagediy.indicatorColor'),
           name: 'docColor',
           color: [
             {
@@ -309,47 +312,47 @@ export default {
         // 轮播图点样式
         docConfig: {
           cname: 'swiper',
-          title: '指示器样式',
-          tabTitle: '指示器设置',
+          title: this.$t('pagediy.indicatorStyle'),
+          tabTitle: this.$t('pagediy.indicatorSettings'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '圆形',
+              val: this.$t('pagediy.circle'),
               icon: 'icon-yuandian',
             },
             {
-              val: '直线',
+              val: this.$t('pagediy.straightLine'),
               icon: 'icon-xiantiao',
             },
             {
-              val: '无指示器',
+              val: this.$t('pagediy.noIndicator'),
               icon: 'icon-buxianshi',
             },
           ],
         },
         contentStyle: {
-          title: '内容圆角',
+          title: this.$t('pagediy.contentRadius'),
           name: 'contentStyle',
           val: 7,
           min: 0,
           max: 30,
         },
         txtStyle: {
-          title: '指示器位置',
+          title: this.$t('pagediy.indicatorPosition'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '居左',
+              val: this.$t('pagediy.alignLeft'),
               icon: 'icon-juzuo',
             },
             {
-              val: '居中',
+              val: this.$t('pagediy.alignCenter'),
               icon: 'icon-juzhong',
             },
             {
-              val: '居右',
+              val: this.$t('pagediy.alignRight'),
               icon: 'icon-juyou',
             },
           ],
@@ -374,10 +377,13 @@ export default {
   },
   methods: {
     onChange() {},
+    slideImg(item) {
+      return getLocalizedDiyImg(item, getUiLocale(this));
+    },
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
         this.imgSrcList = data.swiperConfig.list;
         this.docType = data.docConfig.tabVal;
         this.swiperType = data.swiperStyleConfig.tabVal;

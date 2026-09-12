@@ -37,14 +37,14 @@
               v-if="defaults.name !== 'pictureCube' && defaults.name !== 'swiperBg' && defaults.name !== 'homeComb'"
               class="info-item"
             >
-              <span>状态</span>
+              <span>{{ $t('common.status') }}</span>
               <div class="input-box">
                 <el-switch
                   v-model="item.status"
                   :active-value="true"
                   :inactive-value="false"
-                  active-text="显示"
-                  inactive-text="隐藏"
+                  :active-text="$t('common.show')"
+                  :inactive-text="$t('menu.hide')"
                   @change="onchangeIsShow(item.status)"
                 />
               </div>
@@ -54,20 +54,20 @@
             </div>
           </div>
           <div v-else class="info">
-            <div class="setHot-btn" @click="setHot">设置热区</div>
+            <div class="setHot-btn" @click="setHot">{{ $t('pagediy.setHotZone') }}</div>
           </div>
         </div>
       </draggable>
     </div>
     <template v-if="configData.list">
       <div class="add-btn" v-if="configData.list.length < configData.maxList">
-        <el-button class="button" icon="el-icon-plus" plain @click="addBox">添加版块</el-button>
+        <el-button class="button" icon="el-icon-plus" plain @click="addBox">{{ $t('pagediy.addSection') }}</el-button>
       </div>
     </template>
     <linkaddress ref="linkaddres" @linkUrl="linkUrl"></linkaddress>
     <!-- 设置热区弹出框 -->
     <el-dialog
-      title="热区设置"
+      :title="$t('pagediy.hotZoneSettings')"
       custom-class="uploadDialog"
       :visible.sync="setHotVisible"
       :before-close="handleClose"
@@ -186,7 +186,7 @@ export default {
 
     //模态框关闭
     handleClose(done) {
-      this.$modalSure('确认关闭？')
+      this.$modalSure(this.$t('upload.confirmClose'))
         .then((_) => {
           this.$refs.hotpot.areaData = [...this.$refs.hotpot.imgAreaData];
           done();
@@ -199,7 +199,7 @@ export default {
         this.setHotVisible = true;
       } else {
         this.$message({
-          message: '请先选择图片',
+          message: this.$t('upload.pleaseSelectImageFirst'),
           type: 'warning',
         });
       }

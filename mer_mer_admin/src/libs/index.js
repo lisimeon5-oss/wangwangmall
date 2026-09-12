@@ -22,6 +22,7 @@ export default {
     Vue.prototype.$modalSure = modalSure;
     Vue.prototype.$modalAttr = modalAttr;
     Vue.prototype.$modalParserFrom = modalParserFrom;
+    Vue.prototype.$createTimeOptions = timeOptions;
     Vue.prototype.$timeOptions = timeOptions;
     Vue.prototype.$constants = constants;
     Vue.prototype.$selfUtil = selfUtil;

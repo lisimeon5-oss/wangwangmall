@@ -2,8 +2,8 @@
 	<view :data-theme="theme">
 		<view class="CommissionRank">
 			<view class="header">
-				<view class="rank" v-if="ranking">您目前的排名<text class="num">{{ranking}}</text>名</view>
-				<view class="rank" v-else>您目前暂无排名</view>
+				<view class="rank" v-if="ranking">{{$t('您目前的排名')}}<text class="num">{{ranking}}</text>{{$t('名')}}</view>
+				<view class="rank" v-else>{{$t('您目前暂无排名')}}</view>
 			</view>
 			<view class="wrapper">
 				<view class="nav acea-row row-around">
@@ -26,14 +26,14 @@
 							</view>
 							<view class="text line1">{{item.nickname}}</view>
 						</view>
-						<view class="people font_color">￥{{item.brokeragePrice}}</view>
+						<view class="people font_color">฿{{item.brokeragePrice}}</view>
 					</view>
 				</view>
 				<view class='loadingicon acea-row row-center-wrapper'>
 					<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>
 				</view>
 				<view class='noCommodity' v-if="rankList.length == 0 && isShow">
-					<emptyPage title="暂无排行～" mTop="30%" :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
+					<emptyPage :title="$t('暂无排行～')" mTop="30%" :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
 				</view>
 			</view>
 		</view>

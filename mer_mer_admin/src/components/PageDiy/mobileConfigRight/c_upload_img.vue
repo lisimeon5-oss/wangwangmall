@@ -1,18 +1,27 @@
 <template>
   <!--上传图片-->
-  <div class="upload_img acea-row row-between borderPadding" v-if="configData && configData.isShow === 1">
-    <div>
-      <div class="header">{{ configData.title }}</div>
-      <div class="title">{{ configData.tips }}</div>
+  <div v-if="configData && configData.isShow === 1">
+    <div class="lang-name-switch" v-if="isIconI18n && !isVideoMediaI18n">
+      <el-radio-group v-model="activeLang" size="mini">
+        <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+          {{ lang.label }}
+        </el-radio-button>
+      </el-radio-group>
     </div>
-    <div class="box" @click="modalPicTap">
-      <img :src="configData.url" alt="" v-if="configData.url" />
-      <div class="upload-box" v-else><span class="iconfont icon-tianjia1" /></div>
-      <span
-        class="iconfont-diy iconfont icon-tianjia1"
-        @click.stop="bindDelete"
-        v-if="configData.url && configData.type"
-      ></span>
+    <div class="upload_img acea-row row-between borderPadding">
+      <div>
+        <div class="header">{{ diyUiText(configData.title) }}</div>
+        <div class="title">{{ diyUiText(configData.tips) }}</div>
+      </div>
+      <div class="box" @click="modalPicTap">
+        <img :src="displayUrl" alt="" v-if="displayUrl" />
+        <div class="upload-box" v-else><span class="iconfont icon-tianjia1" /></div>
+        <span
+          class="iconfont-diy iconfont icon-tianjia1"
+          @click.stop="bindDelete"
+          v-if="displayUrl && configData.type"
+        ></span>
+      </div>
     </div>
   </div>
 </template>
@@ -28,12 +37,39 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState } from 'vuex';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { parseLangJsonMap, resolveFormActiveLang } from '@/utils/localizedName';
+import { diyUiText } from '@/utils/diyCname';
 export default {
   name: 'c_upload_img',
   computed: {
     ...mapState({
       tabVal: (state) => state.admin.mobildConfig.searchConfig.data.tabVal,
     }),
+    isVideoMediaI18n() {
+      const name = this.defaults && this.defaults.name;
+      if (name === 'group') return this.configNme === 'logoConfig';
+      return name === 'video' || name === 'seckill';
+    },
+    isIconI18n() {
+      const name = this.defaults && this.defaults.name;
+      if (name === 'group') return this.configNme === 'logoConfig';
+      return (
+        name === 'homeMerchant' || name === 'news' || name === 'video' || name === 'seckill'
+      );
+    },
+    mediaLang() {
+      if (this.isVideoMediaI18n && this.configObj && this.configObj.diyMediaLang) {
+        return this.configObj.diyMediaLang;
+      }
+      return this.activeLang;
+    },
+    displayUrl() {
+      if (!this.configData) return '';
+      if (!this.isIconI18n || this.mediaLang === this.defaultLangCode) return this.configData.url || '';
+      return parseLangJsonMap(this.configData.urlJson)[this.mediaLang] || '';
+    },
   },
   props: {
     configObj: {
@@ -74,6 +110,10 @@ export default {
         xs: 12,
       },
       activeIndex: 0,
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      langLoaded: false,
     };
   },
   watch: {
@@ -81,6 +121,10 @@ export default {
       handler(nVal, oVal) {
         this.defaults = nVal;
         this.configData = nVal[this.configNme];
+        if (this.isIconI18n && !this.langLoaded) {
+          this.langLoaded = true;
+          this.getLanguageList();
+        }
       },
       immediate: true,
       deep: true,
@@ -91,15 +135,48 @@ export default {
     this.configData = this.configObj[this.configNme];
   },
   methods: {
+    diyUiText,
+    setItemUrl(url) {
+      if (!this.isIconI18n || this.mediaLang === this.defaultLangCode) {
+        this.$set(this.configData, 'url', url);
+        return;
+      }
+      const map = parseLangJsonMap(this.configData.urlJson);
+      if (url) map[this.mediaLang] = url;
+      else delete map[this.mediaLang];
+      this.$set(this.configData, 'urlJson', Object.keys(map).length ? JSON.stringify(map) : '');
+    },
     bindDelete() {
-      this.configData.url = '';
+      this.setItemUrl('');
+    },
+    getLanguageList() {
+      if (!this.isIconI18n) return;
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.activeLang = resolveFormActiveLang(this);
+        });
     },
     // 点击图文封面
     modalPicTap() {
       const _this = this;
       this.$modalUpload(function (img) {
         if (!img) return;
-        _this.configData.url = img[0].sattDir;
+        _this.setItemUrl(img[0].sattDir);
       });
     },
   },
@@ -107,6 +184,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.lang-name-switch {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 0 20px;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
 .header {
   font-size: 12px;
   color: #999;

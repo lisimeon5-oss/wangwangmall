@@ -1,6 +1,7 @@
 package com.zbkj.common.result;
 
 import com.zbkj.common.exception.CrmebException;
+import com.zbkj.common.utils.I18nMessageUtil;
 import com.zbkj.common.vo.MyRecord;
 
 import java.io.Serializable;
@@ -156,7 +157,7 @@ public class CommonResult<T> implements Serializable {
     }
 
     public String getMessage() {
-        return message;
+        return I18nMessageUtil.translate(message);
     }
 
     public CommonResult<T> setMessage(String message) {
@@ -164,8 +165,10 @@ public class CommonResult<T> implements Serializable {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     public T getData() {
-        return data;
+        Object translated = I18nMessageUtil.translateData(data);
+        return (T) translated;
     }
 
     public void setData(T data) {

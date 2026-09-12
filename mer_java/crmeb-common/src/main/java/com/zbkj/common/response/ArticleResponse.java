@@ -39,6 +39,9 @@ public class ArticleResponse implements Serializable {
     @ApiModelProperty(value = "文章标题")
     private String title;
 
+    @ApiModelProperty(value = "多语言文章标题(JSON)")
+    private String titleJson;
+
     @ApiModelProperty(value = "文章作者")
     private String author;
 
@@ -66,4 +69,7 @@ public class ArticleResponse implements Serializable {
 
     @ApiModelProperty(value = "文章简介")
     private String synopsis;
+
+    @ApiModelProperty(value = "多语言文章简介(JSON)")
+    private String synopsisJson;
 }

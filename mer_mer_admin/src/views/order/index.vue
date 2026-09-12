@@ -9,10 +9,10 @@
     >
       <div class="padding-add">
         <el-form inline label-position="right" @submit.native.prevent>
-          <el-form-item label="订单编号：" label-width="66px">
+          <el-form-item :label="$t('order.orderNoLabel')" label-width="66px">
             <el-input
               v-model.trim="tableFrom.orderNo"
-              placeholder="请输入订单号"
+              :placeholder="$t('finance.pleaseEnterOrderNo')"
               class="form_content_width"
               size="small"
               @keyup.enter.native="handleSearchList"
@@ -20,19 +20,19 @@
             >
             </el-input>
           </el-form-item>
-          <el-form-item label="订单类型：">
+          <el-form-item :label="$t('order.orderType')">
             <el-select
               v-model="tableFrom.type"
               clearable
               size="small"
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="form_content_width"
               @change="handleSearchList"
             >
               <el-option v-for="(item, i) in fromType" :key="i" :label="item.text" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('order.timeSelect')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -40,17 +40,17 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('order.customTime')"
               @change="onchangeTime"
               class="form_content_width"
             />
           </el-form-item>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('order.userSearch')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="handleSearchList">查询</el-button>
-            <el-button size="small" @click="handleReset">重置</el-button>
+            <el-button type="primary" size="small" @click="handleSearchList">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="handleReset">{{ $t('common.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -63,20 +63,20 @@
       v-if="checkPermi(['merchant:order:status:num', 'merchant:order:page:list'])"
     >
       <el-tabs class="list-tabs" v-model="tableFrom.status" @tab-click="handleSearchList">
-        <el-tab-pane name="all" :label="`全部(${orderChartType.all || 0})`"></el-tab-pane>
-        <el-tab-pane name="notShipped" :label="`待发货(${orderChartType.notShipped || 0})`"></el-tab-pane>
-        <el-tab-pane name="spike" :label="`待收货(${orderChartType.spike || 0})`"></el-tab-pane>
-        <el-tab-pane name="awaitVerification" :label="`待核销(${orderChartType.verification || 0})`"></el-tab-pane>
-        <el-tab-pane name="receiving" :label="`已收货(${orderChartType.receiving || 0})`"></el-tab-pane>
-        <el-tab-pane name="complete" :label="`已完成(${orderChartType.complete || 0})`"></el-tab-pane>
-        <el-tab-pane name="refunded" :label="`已退款(${orderChartType.refunded || 0})`"></el-tab-pane>
-        <el-tab-pane name="deleted" :label="`已删除(${orderChartType.deleted || 0})`"></el-tab-pane>
+        <el-tab-pane name="all" :label="`${$t('common.all')}(${orderChartType.all || 0})`"></el-tab-pane>
+        <el-tab-pane name="notShipped" :label="`${$t('order.notShipped')}(${orderChartType.notShipped || 0})`"></el-tab-pane>
+        <el-tab-pane name="spike" :label="`${$t('order.waitingReceipt')}(${orderChartType.spike || 0})`"></el-tab-pane>
+        <el-tab-pane name="awaitVerification" :label="`${$t('order.awaitingVerification')}(${orderChartType.verification || 0})`"></el-tab-pane>
+        <el-tab-pane name="receiving" :label="`${$t('order.received')}(${orderChartType.receiving || 0})`"></el-tab-pane>
+        <el-tab-pane name="complete" :label="`${$t('order.completed')}(${orderChartType.complete || 0})`"></el-tab-pane>
+        <el-tab-pane name="refunded" :label="`${$t('order.refunded')}(${orderChartType.refunded || 0})`"></el-tab-pane>
+        <el-tab-pane name="deleted" :label="`${$t('order.deleted')}(${orderChartType.deleted || 0})`"></el-tab-pane>
       </el-tabs>
       <div class="mt5">
         <el-button size="small" type="primary" @click="onWriteOff" v-hasPermi="['merchant:order:verification']"
-          >核销订单</el-button
+          >{{ $t('order.writeOffOrder') }}</el-button
         >
-        <el-button size="small" @click="exports" v-hasPermi="['merchant:export:order:excel']">导出</el-button>
+        <el-button size="small" @click="exports" v-hasPermi="['merchant:export:order:excel']">{{ $t('common.export') }}</el-button>
       </div>
       <el-table
         v-loading="listLoading"
@@ -90,11 +90,11 @@
           }
         "
       >
-        <el-table-column label="订单号" min-width="220" v-if="checkedCities.includes('订单号')">
+        <el-table-column :label="$t('common.orderNo')" min-width="220" v-if="checkedCities.includes('orderNo')">
           <template slot-scope="scope">
             <div class="acea-row">
-              <font v-show="scope.row.type === 1" class="mr5">[秒杀]</font>
-              <font v-show="scope.row.type === 2" class="mr5">[拼团]</font>
+              <font v-show="scope.row.type === 1" class="mr5">[{{ $t('order.spike') }}]</font>
+              <font v-show="scope.row.type === 2" class="mr5">[{{ $t('order.groupBuy') }}]</font>
               <span style="display: block" v-text="scope.row.orderNo" />
             </div>
             <div class="flex">
@@ -102,29 +102,29 @@
                 scope.row.refundStatus | orderRefundStatusFilter
               }}</span>
               <span v-show="scope.row.refundStatus == 2" class="colorPrompt">{{
-                `（已退款 ${scope.row.refundNum} / 购买 ${scope.row.totalNum}）`
+                $t('order.refundedDetail', { refundNum: scope.row.refundNum, totalNum: scope.row.totalNum })
               }}</span>
             </div>
-            <span v-show="scope.row.isUserDel" class="colorPrompt" style="display: block">用户已删除</span>
+            <span v-show="scope.row.isUserDel" class="colorPrompt" style="display: block">{{ $t('order.userDeleted') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="用户昵称" min-width="150" v-if="checkedCities.includes('用户昵称')">
+        <el-table-column :label="$t('order.nickName')" min-width="150" v-if="checkedCities.includes('nickName')">
           <template slot-scope="scope">
             <span :class="scope.row.isLogoff == true ? 'colorPrompt' : ''">{{ scope.row.nickName }}</span>
             <span :class="scope.row.isLogoff == true ? 'colorPrompt' : ''" v-if="scope.row.isLogoff == true">|</span>
-            <span v-if="scope.row.isLogoff == true" class="colorPrompt">(已注销)</span>
+            <span v-if="scope.row.isLogoff == true" class="colorPrompt">{{ $t('order.loggedOff') }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="payPrice" label="实际支付" min-width="80" v-if="checkedCities.includes('实际支付')" />
-        <el-table-column label="支付方式" min-width="80" v-if="checkedCities.includes('支付方式')">
+        <el-table-column prop="payPrice" :label="$t('order.payPrice')" min-width="80" v-if="checkedCities.includes('payPrice')" />
+        <el-table-column :label="$t('order.payType')" min-width="80" v-if="checkedCities.includes('payType')">
           <template slot-scope="scope">
             <span>{{ scope.row.payType | payTypeFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="订单状态" min-width="100" v-if="checkedCities.includes('订单状态')">
+        <el-table-column :label="$t('order.orderStatus')" min-width="100" v-if="checkedCities.includes('orderStatus')">
           <template slot-scope="scope">
             <span class="textE93323 tag-background notStartTag tag-padding" v-if="scope.row.refundStatus === 3"
-              >已退款</span
+              >{{ $t('order.refunded') }}</span
             >
             <span
               :class="scope.row.status < 5 ? 'doingTag' : 'endTag'"
@@ -135,20 +135,20 @@
               >{{ scope.row.status | orderStatusFilter }}</span
             >
             <span class="textE93323 tag-background notStartTag tag-padding" v-else>{{
-              scope.row.groupBuyRecordStatus == 0 ? '拼团中' : '拼团失败'
+              scope.row.groupBuyRecordStatus == 0 ? $t('order.groupBuying') : $t('order.groupBuyFailed')
             }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="备注" min-width="150">
+        <el-table-column :label="$t('common.remark')" min-width="150">
           <template slot-scope="scope">
             <span>{{ scope.row.merchantRemark | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="下单时间" min-width="150" v-if="checkedCities.includes('下单时间')" />
+        <el-table-column prop="createTime" :label="$t('order.orderTime')" min-width="150" v-if="checkedCities.includes('orderTime')" />
         <el-table-column width="180" fixed="right">
           <template slot="header">
             <p>
-              <span style="padding-right: 5px">操作</span>
+              <span style="padding-right: 5px">{{ $t('common.operate') }}</span>
               <i class="el-icon-setting" @click="handleAddItem"></i>
             </p>
           </template>
@@ -156,7 +156,7 @@
             <a
               @click="onOrderDetails(scope.row.orderNo)"
               v-if="checkPermi(['merchant:order:info']) && scope.row.groupBuyRecordStatus != 0"
-              >详情
+              >{{ $t('common.detail') }}
             </a>
             <el-divider direction="vertical" v-if="scope.row.groupBuyRecordStatus != 0"></el-divider>
             <template
@@ -167,11 +167,11 @@
                 scope.row.groupBuyRecordStatus != 0
               "
             >
-              <a @click="sendOrder(scope.row)">发货 </a>
+              <a @click="sendOrder(scope.row)">{{ $t('order.ship') }} </a>
               <el-divider direction="vertical"></el-divider>
             </template>
             <el-dropdown trigger="click" v-if="scope.row.groupBuyRecordStatus != 0">
-              <span class="el-dropdown-link"> 更多<i class="el-icon-arrow-down el-icon--right" /> </span>
+              <span class="el-dropdown-link"> {{ $t('order.more') }}<i class="el-icon-arrow-down el-icon--right" /> </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
                   @click.native="onDirectRefund(scope.row)"
@@ -180,7 +180,7 @@
                     !scope.row.userRefundSign &&
                     checkPermi(['merchant:order:direct:refund'])
                   "
-                  >直接退款
+                  >{{ $t('order.directRefund') }}
                 </el-dropdown-item>
                 <!-- 打印小票订单状态  待发货/待核销/待收货/已收货/已核销/已完成/已退款 原始订单状态
        订单状态（0：待支付，1：待发货,2：部分发货， 3：待核销，4：待收货,5：已收货,6：已完成，9：已取消）-->
@@ -191,15 +191,15 @@
                     merPrintStatus !== 2 &&
                     checkPermi(['merchant:order:print'])
                   "
-                  >打印小票
+                  >{{ $t('order.printReceipt') }}
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="onOrderMark(scope.row)" v-if="checkPermi(['merchant:order:mark'])"
-                  >订单备注
+                  >{{ $t('order.orderRemark') }}
                 </el-dropdown-item>
                 <el-dropdown-item
                   v-if="scope.row.isUserDel === 1 && checkPermi(['merchant:order:delete'])"
                   @click.native="handleDelete(scope.row, scope.$index)"
-                  >删除订单
+                  >{{ $t('order.deleteOrder') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -222,13 +222,13 @@
         <template>
           <div class="cell_ht">
             <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-              >全选
+              >{{ $t('common.selectAll') }}
             </el-checkbox>
-            <el-button size="small" type="text" @click="checkSave()">保存</el-button>
+            <el-button size="small" type="text" @click="checkSave()">{{ $t('common.save') }}</el-button>
           </div>
           <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
             <el-checkbox v-for="item in columnData" :label="item" :key="item" class="check_cell">{{
-              item
+              columnLabel(item)
             }}</el-checkbox>
           </el-checkbox-group>
         </template>
@@ -236,11 +236,11 @@
     </el-card>
 
     <!--记录-->
-    <el-dialog title="操作记录" :visible.sync="dialogVisibleJI" width="700px">
+    <el-dialog :title="$t('order.operationLog')" :visible.sync="dialogVisibleJI" width="700px">
       <el-table v-loading="LogLoading" border :data="tableDataLog.data" style="width: 100%">
         <el-table-column prop="oid" label="ID" min-width="80" />
-        <el-table-column prop="changeMessage" label="操作记录" min-width="280" />
-        <el-table-column prop="createTime" label="操作时间" min-width="280" />
+        <el-table-column prop="changeMessage" :label="$t('order.operationLog')" min-width="280" />
+        <el-table-column prop="createTime" :label="$t('order.operationTime')" min-width="280" />
       </el-table>
       <div class="block">
         <el-pagination
@@ -352,12 +352,6 @@ export default {
       orderChartType: {},
       timeVal: [],
       fromList: this.$constants.fromList,
-      fromType: [
-        { value: '', text: '全部' },
-        { value: '0', text: '普通' },
-        { value: '1', text: '秒杀' },
-        { value: '2', text: '拼团' },
-      ],
       selectionList: [],
       ids: '',
       orderids: '',
@@ -367,8 +361,8 @@ export default {
       active: false,
       card_select_show: false,
       checkAll: false,
-      checkedCities: ['订单号', '用户昵称', '实际支付', '支付方式', '订单状态', '下单时间'],
-      columnData: ['订单号', '用户昵称', '实际支付', '支付方式', '订单状态', '下单时间'],
+      checkedCities: ['orderNo', 'nickName', 'payPrice', 'payType', 'orderStatus', 'orderTime'],
+      columnData: ['orderNo', 'nickName', 'payPrice', 'payType', 'orderStatus', 'orderTime'],
       isIndeterminate: true,
       orderDatalist: null,
       merPrintStatus: Cookies.get('merPrint'), // 商家小票打印开关状态
@@ -381,8 +375,43 @@ export default {
     if (checkPermi(['merchant:order:page:list'])) this.getList();
     if (checkPermi(['merchant:order:status:num'])) this.getOrderStatusNum();
   },
+  computed: {
+    fromType() {
+      this.$i18n.locale;
+      return [
+        { value: '', text: this.$t('common.all') },
+        { value: '0', text: this.$t('order.normal') },
+        { value: '1', text: this.$t('order.spike') },
+        { value: '2', text: this.$t('order.groupBuy') },
+      ];
+    },
+  },
   methods: {
     checkPermi,
+    columnLabel(key) {
+      const labels = {
+        orderNo: this.$t('common.orderNo'),
+        nickName: this.$t('order.nickName'),
+        payPrice: this.$t('order.payPrice'),
+        payType: this.$t('order.payType'),
+        orderStatus: this.$t('order.orderStatus'),
+        orderTime: this.$t('order.orderTime'),
+      };
+      return labels[key] || key;
+    },
+    normalizeCheckedColumns(saved) {
+      if (!Array.isArray(saved) || !saved.length) return this.columnData.slice();
+      const aliases = {
+        订单号: 'orderNo',
+        用户昵称: 'nickName',
+        实际支付: 'payPrice',
+        支付方式: 'payType',
+        订单状态: 'orderStatus',
+        下单时间: 'orderTime',
+      };
+      const mapped = saved.map((item) => (this.columnData.includes(item) ? item : aliases[item])).filter(Boolean);
+      return mapped.length ? Array.from(new Set(mapped)) : this.columnData.slice();
+    },
     //直接退款
     onDirectRefund(row) {
       this.orderNo = row.orderNo;
@@ -400,9 +429,9 @@ export default {
     },
     // 核销订单
     onWriteOff(row) {
-      this.$modalPrompt('text', '核销订单', null, '核销码').then((V) => {
+      this.$modalPrompt('text', this.$t('order.writeOffOrder'), null, this.$t('order.writeOffCode')).then((V) => {
         writeUpdateApi({ verifyCode: V }).then(() => {
-          this.$message.success('核销成功');
+          this.$message.success(this.$t('order.writeOffSuccess'));
           this.handleSearchList();
         });
       });
@@ -433,18 +462,18 @@ export default {
     // 发送
     sendOrder(row) {
       if (row.isLogoff) {
-        this.$modalSure('当前用户已注销，有责发货！').then(() => {
+        this.$modalSure(this.$t('order.userCancelledShipping')).then(() => {
           this.onSend(row);
         });
       } else {
-        if (row.refundStatus == 1) return this.$message.error('请先处理售后，再进行发货/核销操作');
+        if (row.refundStatus == 1) return this.$message.error(this.$t('order.handleAfterSalesFirst'));
         this.onSend(row);
       }
     },
     handlePrintReceipt(row) {
-      this.$modalSure('确认打印小票').then(() => {
+      this.$modalSure(this.$t('order.confirmPrintReceipt')).then(() => {
         orderPrintReceiptApi(row.orderNo).then((data) => {
-          this.$message.success('小票打印成功');
+          this.$message.success(this.$t('order.receiptPrintSuccess'));
         });
       });
     },
@@ -461,15 +490,15 @@ export default {
       if (row.isDel) {
         this.$modalSure().then(() => {
           orderDeleteApi({ orderNo: row.orderNo }).then(() => {
-            this.$message.success('删除成功');
+            this.$message.success(this.$t('common.deleteSuccess'));
             handleDeleteTable(this.tableData.data.length, this.tableFrom);
             this.getList();
             this.getOrderStatusNum();
           });
         });
       } else {
-        this.$confirm('您选择的的订单存在用户未删除的订单，无法删除用户未删除的订单！', '提示', {
-          confirmButtonText: '确定',
+        this.$confirm(this.$t('order.cannotDeleteUserOrders'), this.$t('common.tip'), {
+          confirmButtonText: this.$t('common.confirmPrefix'),
           type: 'error',
         });
       }
@@ -521,9 +550,9 @@ export default {
     },
     // 备注
     onOrderMark(row) {
-      this.$modalPrompt('textarea', '备注', row.merchantRemark, '订单备注').then((V) => {
+      this.$modalPrompt('textarea', this.$t('common.remark'), row.merchantRemark, this.$t('order.orderRemark')).then((V) => {
         orderMarkApi({ remark: V, orderNo: row.orderNo }).then(() => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('order.operationSuccess'));
           this.getList();
         });
       });
@@ -559,9 +588,9 @@ export default {
           this.tableData.data = res.list || [];
           this.tableData.total = res.total;
           this.listLoading = false;
-          this.checkedCities = this.$cache.local.has('order_stroge')
-            ? this.$cache.local.getJSON('order_stroge')
-            : this.checkedCities;
+          this.checkedCities = this.normalizeCheckedColumns(
+            this.$cache.local.has('order_stroge') ? this.$cache.local.getJSON('order_stroge') : this.checkedCities,
+          );
         })
         .catch(() => {
           this.listLoading = false;
@@ -604,7 +633,7 @@ export default {
       }
     },
     handleCheckAllChange(val) {
-      this.checkedCities = val ? this.columnData : [];
+      this.checkedCities = val ? this.columnData.slice() : [];
       this.isIndeterminate = false;
     },
     handleCheckedCitiesChange(value) {
@@ -614,7 +643,7 @@ export default {
     },
     checkSave() {
       this.$set(this, 'card_select_show', false);
-      this.$modal.loading('正在保存到本地，请稍候...');
+      this.$modal.loading(this.$t('order.savingToLocal'));
       this.$cache.local.setJSON('order_stroge', this.checkedCities);
       setTimeout(this.$modal.closeLoading(), 1000);
     },
@@ -622,7 +651,7 @@ export default {
     onOrderPrint(data) {
       orderPrint(data.orderNo)
         .then((res) => {
-          this.$modal.msgSuccess('打印成功');
+          this.$modal.msgSuccess(this.$t('order.printSuccess'));
         })
         .catch((error) => {
           this.$modal.msgError(error.message);

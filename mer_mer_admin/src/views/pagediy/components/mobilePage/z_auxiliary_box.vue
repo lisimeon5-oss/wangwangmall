@@ -15,9 +15,10 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapMutations } from 'vuex';
+import { diyCname } from '@/utils/diyCname';
 export default {
   name: 'z_auxiliary_box',
-  cname: '辅助空白',
+  ...diyCname('pagediy.blankSpace'),
   configName: 'c_auxiliary_box',
   icon: 't-icon-zujian-fuzhukongbai',
   type: 2, // 0 基础组件 1 营销组件 2工具组件
@@ -73,11 +74,11 @@ export default {
         name: 'blankPage',
         timestamp: this.num,
         setUp: {
-          cname: '辅助空白',
+          cname: this.$t('pagediy.blankSpace'),
         },
         bgColor: {
-          title: '背景颜色',
-          tabTitle: '颜色设置',
+          title: this.$t('pagediy.backgroundColor'),
+          tabTitle: this.$t('pagediy.colorSettings'),
           name: 'bgColor',
           color: [
             {
@@ -97,21 +98,22 @@ export default {
           ],
         },
         heightConfig: {
-          title: '空白高度',
-          tabTitle: '高度设置',
+          title: this.$t('pagediy.blankHeight'),
+          tabTitle: this.$t('pagediy.heightSettings'),
           val: 10,
           min: 1,
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
+          tabTitle: this.$t('pagediy.marginSettings'),
           val: 0,
           min: 0,
           max: 30,
         },
         // 页面间距
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },

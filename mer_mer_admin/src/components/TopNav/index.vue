@@ -7,7 +7,7 @@
     </template>
     <!-- 顶部菜单超出数量折叠 -->
     <el-submenu :style="{ '--theme': theme }" index="more" v-if="topMenus.length > visibleNumber">
-      <template slot="title">更多菜单</template>
+      <template slot="title">{{ translateText('更多菜单') }}</template>
       <template v-for="(item, index) in topMenus">
         <el-menu-item :index="item.path" :key="index" v-if="index >= visibleNumber">
           <i :class="'el-icon-' + item.extra" v-if="navIcon" />{{ item.name }}

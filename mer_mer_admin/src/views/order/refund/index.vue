@@ -9,10 +9,10 @@
     >
       <div class="padding-add">
         <el-form size="small" inline label-position="right" @submit.native.prevent>
-          <el-form-item label="退款单号：">
+          <el-form-item :label="$t('order.refundOrderNoLabel')">
             <el-input
               v-model.trim="tableFrom.refundOrderNo"
-              placeholder="请输入退款单号"
+              :placeholder="$t('order.pleaseEnterRefundOrderNo')"
               class="form_content_width"
               size="small"
               clearable
@@ -20,17 +20,17 @@
             >
             </el-input>
           </el-form-item>
-          <el-form-item label="订单编号：" label-width="66px">
+          <el-form-item :label="$t('order.orderNoLabel')" label-width="66px">
             <el-input
               v-model.trim="tableFrom.orderNo"
-              placeholder="请输入订单号"
+              :placeholder="$t('finance.pleaseEnterOrderNo')"
               class="form_content_width"
               size="small"
               clearable
             >
             </el-input>
           </el-form-item>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('order.timeSelect')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -39,19 +39,19 @@
               type="daterange"
               placement="bottom-end"
               range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
+              :start-placeholder="$t('finance.startDate')"
+              :end-placeholder="$t('finance.endDate')"
               class="form_content_width"
               @change="onchangeTime"
             />
           </el-form-item>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('order.userSearch')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
-          <el-form-item label="退货物流：" label-width="66px">
+          <el-form-item :label="$t('order.returnLogistics')" label-width="66px">
             <el-input
               v-model.trim="tableFrom.trackingNumber"
-              placeholder="请输入退货物流单号"
+              :placeholder="$t('order.pleaseEnterTrackingNo')"
               class="selWidth"
               size="small"
               clearable
@@ -59,22 +59,22 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="handleSearchList">查询</el-button>
-            <el-button size="small" @click="handleReset">重置</el-button>
+            <el-button type="primary" size="small" @click="handleSearchList">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="handleReset">{{ $t('common.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '0 20px 20px' }" shadow="never" :bordered="false">
       <el-tabs class="list-tabs" v-model="tableFrom.refundStatus" @tab-click="handleSearchList">
-        <el-tab-pane name="9" :label="`全部(${orderChartType.all || 0})`"></el-tab-pane>
-        <el-tab-pane name="0" :label="`待审核(${orderChartType.await || 0})`"></el-tab-pane>
-        <el-tab-pane name="2" :label="`退款中(${orderChartType.refunding || 0})`"></el-tab-pane>
-        <el-tab-pane name="4" :label="`用户退货(${orderChartType.awaitReturning || 0})`"></el-tab-pane>
-        <el-tab-pane name="5" :label="`商家待收货(${orderChartType.awaitReceiving || 0})`"></el-tab-pane>
-        <el-tab-pane name="6" :label="`已撤销(${orderChartType.revoke || 0})`"></el-tab-pane>
-        <el-tab-pane name="1" :label="`审核未通过(${orderChartType.reject || 0})`"></el-tab-pane>
-        <el-tab-pane name="3" :label="`已退款(${orderChartType.refunded || 0})`"></el-tab-pane>
+        <el-tab-pane name="9" :label="`${$t('common.all')}(${orderChartType.all || 0})`"></el-tab-pane>
+        <el-tab-pane name="0" :label="`${$t('order.pendingAudit')}(${orderChartType.await || 0})`"></el-tab-pane>
+        <el-tab-pane name="2" :label="`${$t('order.refunding')}(${orderChartType.refunding || 0})`"></el-tab-pane>
+        <el-tab-pane name="4" :label="`${$t('order.userReturning')}(${orderChartType.awaitReturning || 0})`"></el-tab-pane>
+        <el-tab-pane name="5" :label="`${$t('order.merchantAwaitingReceipt')}(${orderChartType.awaitReceiving || 0})`"></el-tab-pane>
+        <el-tab-pane name="6" :label="`${$t('order.revoked')}(${orderChartType.revoke || 0})`"></el-tab-pane>
+        <el-tab-pane name="1" :label="`${$t('order.auditRejected')}(${orderChartType.reject || 0})`"></el-tab-pane>
+        <el-tab-pane name="3" :label="`${$t('order.refunded')}(${orderChartType.refunded || 0})`"></el-tab-pane>
       </el-tabs>
       <el-table
         v-loading="listLoading"
@@ -88,7 +88,7 @@
           }
         "
       >
-        <el-table-column label="退款单号" min-width="185" v-if="checkedCities.includes('退款单号')">
+        <el-table-column :label="$t('order.refundOrderNo')" min-width="185" v-if="checkedCities.includes('refundOrderNo')">
           <template slot-scope="scope">
             <div class="acea-row">
               <span v-show="scope.row.type === 1" class="iconfont icon-shipinhao mr5" style="color: #f6ae02"></span>
@@ -96,48 +96,48 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="orderNo" label="订单号" min-width="180" v-if="checkedCities.includes('订单号')" />
+        <el-table-column prop="orderNo" :label="$t('common.orderNo')" min-width="180" v-if="checkedCities.includes('orderNo')" />
         <el-table-column
           prop="userNickName"
-          label="用户昵称"
+          :label="$t('order.nickName')"
           min-width="180"
-          v-if="checkedCities.includes('用户昵称')"
+          v-if="checkedCities.includes('nickName')"
         />
         <el-table-column
           prop="refundPrice"
-          label="退款金额"
+          :label="$t('order.refundPrice')"
           min-width="100"
-          v-if="checkedCities.includes('退款金额')"
+          v-if="checkedCities.includes('refundPrice')"
         />
-        <el-table-column label="退款状态" min-width="100" v-if="checkedCities.includes('退款状态')">
+        <el-table-column :label="$t('order.refundStatus')" min-width="100" v-if="checkedCities.includes('refundStatus')">
           <template slot-scope="scope">
             <span :class="tagClass[scope.row.refundStatus]" class="tag-padding">{{
               scope.row.refundStatus | refundStatusFilter
             }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="售后类型" min-width="100" v-if="checkedCities.includes('售后类型')">
+        <el-table-column :label="$t('order.afterSalesType')" min-width="100" v-if="checkedCities.includes('afterSalesType')">
           <template slot-scope="scope">
-            <span>{{ scope.row.afterSalesType === 1 ? '仅退款' : '退货退款' }}</span>
+            <span>{{ scope.row.afterSalesType === 1 ? $t('order.onlyRefund') : $t('order.returnRefund') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="退货类型" min-width="100" v-if="checkedCities.includes('退货类型')">
+        <el-table-column :label="$t('order.returnType')" min-width="100" v-if="checkedCities.includes('returnType')">
           <template slot-scope="scope">
             <span>{{
-              scope.row.returnGoodsType === 0 ? '不退货' : scope.row.returnGoodsType === 1 ? '快递退回' : '到店退货'
+              scope.row.returnGoodsType === 0 ? $t('order.noReturn') : scope.row.returnGoodsType === 1 ? $t('order.expressReturn') : $t('order.storeReturn')
             }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="强制退款" min-width="100" v-if="checkedCities.includes('强制退款')">
+        <el-table-column :label="$t('order.compulsoryRefund')" min-width="100" v-if="checkedCities.includes('compulsoryRefund')">
           <template slot-scope="scope">
-            <span>{{ scope.row.isCompulsoryRefund ? '是' : '不是' }}</span>
+            <span>{{ scope.row.isCompulsoryRefund ? $t('common.yes') : $t('order.notYes') }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" min-width="150" v-if="checkedCities.includes('创建时间')" />
+        <el-table-column prop="createTime" :label="$t('order.createTime')" min-width="150" v-if="checkedCities.includes('createTime')" />
         <el-table-column width="190" fixed="right">
           <template slot="header">
             <p>
-              <span style="padding-right: 5px">操作</span>
+              <span style="padding-right: 5px">{{ $t('common.operate') }}</span>
               <i class="el-icon-setting" @click="handleAddItem"></i>
             </p>
           </template>
@@ -150,17 +150,17 @@
                 checkPermi(['merchant:refund:order:detail'])
               "
               @click="onOrderDetails(scope.row)"
-              >详情</a
+              >{{ $t('common.detail') }}</a
             >
             <template v-if="scope.row.refundStatus === 0 && checkPermi(['merchant:refund:order:audit'])">
-              <a @click="handleApprovedReview(scope.row)">同意</a>
+              <a @click="handleApprovedReview(scope.row)">{{ $t('order.agree') }}</a>
               <el-divider direction="vertical"></el-divider>
             </template>
             <template v-if="scope.row.refundStatus === 0 && checkPermi(['merchant:refund:order:audit'])">
-              <a @click="handleOrderRefuse(scope.row)">拒绝</a>
+              <a @click="handleOrderRefuse(scope.row)">{{ $t('order.reject') }}</a>
             </template>
             <template v-if="scope.row.refundStatus === 5 && checkPermi(['merchant:refund:order:receiving:reject'])">
-              <a @click="handleRefuseReceipt(scope.row)">拒绝</a>
+              <a @click="handleRefuseReceipt(scope.row)">{{ $t('order.reject') }}</a>
             </template>
             <template v-if="scope.row.refundStatus === 5 && checkPermi(['merchant:refund:order:receiving'])">
               <el-divider direction="vertical"></el-divider>
@@ -170,22 +170,22 @@
                     handleConfirmReceipt(scope.row.refundOrderNo);
                   }
                 "
-                >确认收货</a
+                >{{ $t('order.confirmReceipt') }}</a
               >
             </template>
             <el-divider direction="vertical"></el-divider>
             <el-dropdown trigger="click" v-if="scope.row.refundStatus === 0 || scope.row.refundStatus === 5">
-              <span class="el-dropdown-link"> 更多<i class="el-icon-arrow-down el-icon--right" /> </span>
+              <span class="el-dropdown-link"> {{ $t('order.more') }}<i class="el-icon-arrow-down el-icon--right" /> </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
                   v-if="checkPermi(['merchant:refund:order:detail'])"
                   @click.native="onOrderDetails(scope.row)"
-                  >详情
+                  >{{ $t('common.detail') }}
                 </el-dropdown-item>
                 <el-dropdown-item
                   @click.native="onOrderMark(scope.row)"
                   v-if="checkPermi(['merchant:refund:order:mark'])"
-                  >备注
+                  >{{ $t('common.remark') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -196,7 +196,7 @@
                 scope.row.refundStatus !== 0 &&
                 scope.row.refundStatus !== 5
               "
-              >备注</a
+              >{{ $t('common.remark') }}</a
             >
           </template>
         </el-table-column>
@@ -219,12 +219,12 @@
       <template>
         <div class="cell_ht">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-            >全选
+            >{{ $t('common.selectAll') }}
           </el-checkbox>
-          <el-button type="text" @click="checkSave()">保存</el-button>
+          <el-button type="text" @click="checkSave()">{{ $t('common.save') }}</el-button>
         </div>
         <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-          <el-checkbox v-for="item in columnData" :label="item" :key="item" class="check_cell">{{ item }}</el-checkbox>
+          <el-checkbox v-for="item in columnData" :label="item" :key="item" class="check_cell">{{ columnLabel(item) }}</el-checkbox>
         </el-checkbox-group>
       </template>
     </div>
@@ -240,7 +240,7 @@
 
     <!-- 同意退款,退货退款-->
     <el-dialog
-      title="同意退款"
+      :title="$t('order.agreeRefund')"
       :visible.sync="dialogVisibleAgreeToReturn"
       width="900px"
       :before-close="handleCloseAgreeToReturn"
@@ -275,9 +275,9 @@ import {
   orderPrint,
   orderAuditApi,
   refundOrderReceivingRejectApi,
+  orderExcelApi,
 } from '@/api/order';
 import { isWriteOff } from '@/utils';
-import { orderExcelApi } from '@/api/product';
 import { checkPermi } from '@/utils/permission';
 import RefundOrderDetail from '../components/refundOrderDetail.vue';
 import { refundStatusFilter } from '@/filters';
@@ -336,26 +336,26 @@ export default {
       card_select_show: false,
       checkAll: false,
       checkedCities: [
-        '退款单号',
-        '订单号',
-        '用户昵称',
-        '退款金额',
-        '退款状态',
-        '售后类型',
-        '退货类型',
-        '强制退款',
-        '创建时间',
+        'refundOrderNo',
+        'orderNo',
+        'nickName',
+        'refundPrice',
+        'refundStatus',
+        'afterSalesType',
+        'returnType',
+        'compulsoryRefund',
+        'createTime',
       ],
       columnData: [
-        '退款单号',
-        '订单号',
-        '用户昵称',
-        '退款金额',
-        '退款状态',
-        '售后类型',
-        '退货类型',
-        '强制退款',
-        '创建时间',
+        'refundOrderNo',
+        'orderNo',
+        'nickName',
+        'refundPrice',
+        'refundStatus',
+        'afterSalesType',
+        'returnType',
+        'compulsoryRefund',
+        'createTime',
       ],
       isIndeterminate: true,
       dialogVisibleAgreeToReturn: false,
@@ -370,6 +370,36 @@ export default {
   },
   methods: {
     checkPermi,
+    columnLabel(key) {
+      const labels = {
+        refundOrderNo: this.$t('order.refundOrderNo'),
+        orderNo: this.$t('common.orderNo'),
+        nickName: this.$t('order.nickName'),
+        refundPrice: this.$t('order.refundPrice'),
+        refundStatus: this.$t('order.refundStatus'),
+        afterSalesType: this.$t('order.afterSalesType'),
+        returnType: this.$t('order.returnType'),
+        compulsoryRefund: this.$t('order.compulsoryRefund'),
+        createTime: this.$t('order.createTime'),
+      };
+      return labels[key] || key;
+    },
+    normalizeCheckedColumns(saved) {
+      if (!Array.isArray(saved) || !saved.length) return this.columnData.slice();
+      const aliases = {
+        退款单号: 'refundOrderNo',
+        订单号: 'orderNo',
+        用户昵称: 'nickName',
+        退款金额: 'refundPrice',
+        退款状态: 'refundStatus',
+        售后类型: 'afterSalesType',
+        退货类型: 'returnType',
+        强制退款: 'compulsoryRefund',
+        创建时间: 'createTime',
+      };
+      const mapped = saved.map((item) => (this.columnData.includes(item) ? item : aliases[item])).filter(Boolean);
+      return mapped.length ? Array.from(new Set(mapped)) : this.columnData.slice();
+    },
     //商家确认收货
     handleConfirmReceipt(refundOrderNo) {
       onConfirmReceipt(refundOrderNo).then(() => {
@@ -402,18 +432,18 @@ export default {
     },
     //审核拒绝
     handleOrderRefuse(row) {
-      this.$modalPrompt('textarea', '拒绝退款原因', null).then((V) => {
+      this.$modalPrompt('textarea', this.$t('order.rejectRefundReason'), null).then((V) => {
         orderAuditApi({ auditType: 'refuse', reason: V, refundOrderNo: row.refundOrderNo }).then(() => {
-          this.$message.success('审核成功');
+          this.$message.success(this.$t('common.auditSuccess'));
           this.handleSearchList();
         });
       });
     },
     //拒绝收货
     handleRefuseReceipt(row) {
-      this.$modalPrompt('textarea', '拒绝收货原因', null).then((V) => {
+      this.$modalPrompt('textarea', this.$t('order.rejectReceiptReason'), null).then((V) => {
         refundOrderReceivingRejectApi({ reason: V, refundOrderNo: row.refundOrderNo }).then(() => {
-          this.$message.success('拒绝收货成功');
+          this.$message.success(this.$t('order.rejectReceiptSuccess'));
           this.handleSearchList();
         });
       });
@@ -448,9 +478,9 @@ export default {
     },
     // 备注
     onOrderMark(row) {
-      this.$modalPrompt('textarea', '备注', row.merRemark, '退款单备注').then((V) => {
+      this.$modalPrompt('textarea', this.$t('common.remark'), row.merRemark, this.$t('order.refundOrderRemark')).then((V) => {
         refundMarkApi({ remark: V, refundOrderNo: row.refundOrderNo }).then(() => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('order.operationSuccess'));
           this.getList();
         });
       });
@@ -483,9 +513,11 @@ export default {
           this.tableData.data = res.list || [];
           this.tableData.total = res.total;
           this.listLoading = false;
-          this.checkedCities = this.$cache.local.has('order_refund_stroge')
-            ? this.$cache.local.getJSON('order_refund_stroge')
-            : this.checkedCities;
+          this.checkedCities = this.normalizeCheckedColumns(
+            this.$cache.local.has('order_refund_stroge')
+              ? this.$cache.local.getJSON('order_refund_stroge')
+              : this.checkedCities,
+          );
         })
         .catch(() => {
           this.listLoading = false;
@@ -528,7 +560,7 @@ export default {
       }
     },
     handleCheckAllChange(val) {
-      this.checkedCities = val ? this.columnData : [];
+      this.checkedCities = val ? this.columnData.slice() : [];
       this.isIndeterminate = false;
     },
     handleCheckedCitiesChange(value) {
@@ -538,7 +570,7 @@ export default {
     },
     checkSave() {
       this.$set(this, 'card_select_show', false);
-      this.$modal.loading('正在保存到本地，请稍候...');
+      this.$modal.loading(this.$t('order.savingToLocal'));
       this.$cache.local.setJSON('order_refund_stroge', this.checkedCities);
       setTimeout(this.$modal.closeLoading(), 1000);
     },
@@ -546,7 +578,7 @@ export default {
     onOrderPrint(data) {
       orderPrint(data.orderNo)
         .then((res) => {
-          this.$modal.msgSuccess('打印成功');
+          this.$modal.msgSuccess(this.$t('order.printSuccess'));
         })
         .catch((error) => {
           this.$modal.msgError(error.message);

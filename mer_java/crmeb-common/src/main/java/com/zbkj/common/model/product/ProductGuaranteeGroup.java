@@ -1,6 +1,7 @@
 package com.zbkj.common.model.product;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -37,6 +38,10 @@ public class ProductGuaranteeGroup implements Serializable {
 
     @ApiModelProperty(value = "组合名称")
     private String name;
+
+    @ApiModelProperty(value = "多语言组合名称(JSON)")
+    @TableField("name_json")
+    private String nameJson;
 
     @ApiModelProperty(value = "是否删除")
     private Boolean isDel;

@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="修改配送信息"
+    :title="$t('order.modifyDeliveryInfo')"
     :visible.sync="visible"
     width="540px"
     :before-close="handleClose"
@@ -10,14 +10,14 @@
       <SendFrom :formItem="formItem" :isShowBtn="false"></SendFrom>
     </el-form>
     <div slot="footer">
-      <el-button size="mini" @click="handleClose">取消</el-button>
+      <el-button size="mini" @click="handleClose">{{ $t('common.cancel') }}</el-button>
       <el-button
         :loading="loadingBtn"
         size="smalll"
         type="primary"
         @click="handleSubmit('formItem')"
         v-hasPermi="['merchant:order:invoice:update']"
-        >提交</el-button
+        >{{ $t('common.submit') }}</el-button
       >
     </div>
   </el-dialog>
@@ -27,7 +27,7 @@
 import { useLogistics } from '@/hooks/use-order';
 import { Debounce } from '@/utils/validate';
 import { orderInvoiceUpdateApi } from '@/api/order';
-import { postRules } from '@/views/order/default';
+import { getPostRules } from '@/views/order/default';
 import SendFrom from './sendFrom';
 
 export default {
@@ -53,10 +53,15 @@ export default {
         expressNumber: '',
         id: 0,
       },
-      rules: postRules,
       logistics: [],
       loadingBtn: false,
     };
+  },
+  computed: {
+    rules() {
+      this.$i18n.locale;
+      return getPostRules(this);
+    },
   },
   watch: {
     visible: {
@@ -118,25 +123,25 @@ export default {
           };
           if (this.formItem.expressRecordType == '2') {
             if (!this.formItem.toAddr) {
-              this.$message.warning('请填写寄件人地址');
+              this.$message.warning(this.$t('order.pleaseEnterSenderAddress'));
               return;
             }
             if (!this.formItem.toTel) {
-              this.$message.warning('请填写寄件人电话');
+              this.$message.warning(this.$t('order.pleaseEnterSenderPhone'));
               return;
             }
             if (!this.formItem.toName) {
-              this.$message.warning('请填写寄件人姓名');
+              this.$message.warning(this.$t('order.pleaseEnterSenderName'));
               return;
             }
             if (!this.formItem.expressTempId) {
-              this.$message.warning('请选择电子面单');
+              this.$message.warning(this.$t('order.pleaseSelectElectronicWaybill'));
               return;
             }
           }
           orderInvoiceUpdateApi(data)
             .then((res) => {
-              this.$message.success('修改发货单配送信息成功');
+              this.$message.success(this.$t('order.modifyDeliverySuccess'));
               this.handleSubmitSuccess();
             })
             .catch((res) => {

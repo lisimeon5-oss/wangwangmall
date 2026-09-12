@@ -6,7 +6,7 @@
 				<view class="iconfont icon-xiangzuo" @click="goback()"></view>
 				<!-- #endif -->
 				<view class='input acea-row row-middle'><text class='iconfont icon-sousuo'></text>
-					<input placeholder='搜索商品名称' placeholder-class='placeholder' confirm-type='search' name="search"
+					<input :placeholder="$t('搜索商品名称')" placeholder-class='placeholder' confirm-type='search' name="search"
 						v-model="keyword" @confirm="searchSubmit" maxlength="20"></input>
 				</view>
 				<!-- <view v-if="tabIndex===1" class='iconfont icon-yangshi1' @click='Changswitch'></view> -->
@@ -16,13 +16,13 @@
 			<view class='titleBox acea-row row-middle skeleton-rect'>
 				<view class="acea-row row-middle flex-1">
 					<view>
-						<text class='font1'>¥</text>
+						<text class='font1'>฿</text>
 						<text class='font2'>{{money}}</text>
 					</view>
-					<text class='font3'>满{{minPrice}}元可用</text>
+					<text class='font3'>{{$t('满')}}{{minPrice}}{{$t('铢可用')}}</text>
 				</view>
 				<view v-show="type==='1'" class="_right" @click="receiveCoupon">
-					<view class="_btn acea-row row-center row-middle">{{isUserReceive ? '已领取' : '领取'}}</view>
+					<view class="_btn acea-row row-center row-middle">{{isUserReceive ? $t('已领取') : $t('领取')}}</view>
 				</view>
 				<view class="roll left-roll"></view>
 				<view class="roll right-roll"></view>
@@ -38,17 +38,17 @@
 								</easy-loadimage>
 								<span class="pictrue_log_class"
 									:class="is_switch === true ? 'pictrue_log_big' : 'pictrue_log'"
-									v-if="item.activityH5 && item.activityH5.type === '1'">秒杀</span>
+									v-if="item.activityH5 && item.activityH5.type === '1'">{{$t('秒杀')}}</span>
 								<span class="pictrue_log_class"
 									:class="is_switch === true ? 'pictrue_log_big' : 'pictrue_log'"
-									v-if="item.activityH5 && item.activityH5.type === '2'">砍价</span>
+									v-if="item.activityH5 && item.activityH5.type === '2'">{{$t('砍价')}}</span>
 								<span class="pictrue_log_class"
 									:class="is_switch === true ? 'pictrue_log_big' : 'pictrue_log'"
-									v-if="item.activityH5 && item.activityH5.type === '3'">拼团</span>
+									v-if="item.activityH5 && item.activityH5.type === '3'">{{$t('拼团')}}</span>
 							</view>
 							<view class='text' :class='is_switch==true?"":"on"'>
 								<view class='name line2'>{{item.name}}</view>
-								<view class='x-money' :class='is_switch==true?"":"on"'>￥<text
+								<view class='x-money' :class='is_switch==true?"":"on"'>฿<text
 										class='num'>{{item.price}}</text></view>
 								<view v-if="item.merTypeId">
 									<text
@@ -56,15 +56,15 @@
 								</view>		
 									<view class='vip acea-row row-between-wrapper' :class='is_switch==true?"":"on"'>
 										<view class='vip-money' v-if="item.vip_price && item.vip_price > 0">
-											￥{{item.vip_price}}
+											฿{{item.vip_price}}
 											<image src='../static/images/vip.png'></image>
 										</view>
-										<view>已售{{item.sales}}{{item.unitName}}</view>
+										<view>{{$t('已售')}}{{item.sales}}{{$t(item.unitName || '')}}</view>
 									</view>
 									<view class="company">
 										<text class='name line1'>{{item.merName}}</text>
 										<view class="flex" @click.stop="goStore(item.merId)">
-											进店
+											{{$t('进店')}}
 											<text class="iconfont icon-xiangyou"></text>
 										</view>
 									</view>
@@ -82,7 +82,7 @@
 					</view>
 					<view class='loadingicon acea-row row-center-wrapper'>
 						<text class='loading iconfont icon-jiazai'
-							:hidden='loading==false'></text>{{productList.length>0?loadTitle:''}}
+							:hidden='loading==false'></text>{{productList.length>0?$t(loadTitle):''}}
 					</view>
 				</view>
 			</view>
@@ -91,7 +91,7 @@
 				<view class='pictrue'>
 					<image :src="urlDomain+'crmebimage/presets/noSearch.png'"></image>
 				</view>
-				<text class="text-ccc">{{tabIndex===1?'暂无商品':'暂无店铺'}}</text>
+				<text class="text-ccc">{{tabIndex===1? $t('暂无商品') : $t('暂无店铺')}}</text>
 			</view>
 		</view>
 </template>
@@ -192,7 +192,7 @@
 				couponReceiveApi(this.where.couponId).then(res => {
 					this.isUserReceive = true;
 					uni.showToast({
-						title: '领取成功',
+						title: this.$t('领取成功'),
 						icon: 'none'
 					})
 				}).catch(err => {
@@ -376,7 +376,7 @@
 	.proList {
 		margin-top: 20rpx;
 
-		/deep/.texts {
+		::v-deep .texts {
 			padding: 20rpx 20rpx 20rpx 25rpx !important;
 		}
 	}
@@ -388,7 +388,7 @@
 	}
 
 	.merBox {
-		/deep/.tui-drawer-container {
+		::v-deep .tui-drawer-container {
 			width: 635rpx;
 		}
 	}
@@ -725,7 +725,7 @@
 		// width: 100%;
 	}
 
-	.productList .list .item .pictrue /deep/.easy-loadimage {
+	.productList .list .item .pictrue ::v-deep .easy-loadimage {
 		width: 240rpx;
 		height: 240rpx;
 		border-radius: 14rpx;

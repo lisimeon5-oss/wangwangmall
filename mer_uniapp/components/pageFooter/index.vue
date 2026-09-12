@@ -8,12 +8,12 @@
 						@click="goRouter(item)">
 						<block v-if="item.link.split('?')[0] == activeRouter">
 							<image :src="item.checked"></image>
-							<view v-if="isSmallPage" class="txtchecked" :style="[checkColor]">{{item.name}}</view>
-							<view v-else class="txt">{{item.name}}</view>
+							<view v-if="isSmallPage" class="txtchecked" :style="[checkColor]">{{menuName(item)}}</view>
+							<view v-else class="txt">{{menuName(item)}}</view>
 						</block>
 						<block v-else>
 							<image :src="item.unchecked"></image>
-							<view class="unchecked" :style="[isSmallPage?fontColor:'']">{{item.name}}</view>
+							<view class="unchecked" :style="[isSmallPage?fontColor:'']">{{menuName(item)}}</view>
 						</block>
 					</view>
 				</view>
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+	import { getLocalizedName } from '@/utils/localizedName';
 	import {
 		mapState,
 		mapGetters
@@ -73,10 +74,18 @@
 			checkColor() {
 				if (this.dataConfig) {
 					return {
-						color: this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.checkColor.color[0].item:this.themeColor
+						color: this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.checkColor.color[0].item:this.themeColor
 					};
 				}
 			},
+		},
+		watch: {
+			i18nLocale() {
+				if (this.activeRouter === '/pages/activity/small_page/index') {
+					return;
+				}
+				this.navigationInfo();
+			}
 		},
 		created() {
 			let routes = getCurrentPages(); //获取当前打开过的页面路由数组
@@ -100,6 +109,9 @@
 			}
 		},
 		methods: {
+			menuName(item) {
+				return getLocalizedName(item, this.i18nLocale);
+			},
 			navigationInfo() {
 				getBottomNavigationApi().then(res => {
 					let data = res.data;
@@ -144,7 +156,7 @@
 		bottom: 0;
 		left: 0;
 		width: 100%;
-		height: calc(98rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(98rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(98rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 		// display: flex;
 		// justify-content: center;
@@ -154,7 +166,12 @@
 
 	.unchecked {
 		color: #333;
-		font-size: 24rpx;
+		font-size: 20rpx;
+		max-width: 140rpx;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		text-align: center;
 	}
 
 	.page-footer {
@@ -165,7 +182,7 @@
 		align-items: center;
 		justify-content: space-around;
 		width: 100%;
-		height: calc(98rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(98rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(98rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 		box-sizing: border-box;
 		border-top: solid 1rpx #F3F3F3;
@@ -210,11 +227,21 @@
 		}
 
 		.txtchecked {
-			font-size: 24rpx;
+			font-size: 20rpx;
+			max-width: 140rpx;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			text-align: center;
 		}
 
 		.foot-item .txt {
-			font-size: 24rpx;
+			font-size: 20rpx;
+			max-width: 140rpx;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			text-align: center;
 			@include main-color(theme);
 		}
 	}

@@ -1,6 +1,6 @@
 <template>
   <div class="mobile-page" v-if="configObj">
-    <div class="box" :style="boxStyle" v-html="richText"></div>
+    <div class="box" :style="boxStyle" v-html="richTextDisplay"></div>
   </div>
 </template>
 
@@ -15,9 +15,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapMutations } from 'vuex';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
+import { getFormLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'z_ueditor',
-  cname: '富文本',
+  ...diyCname('pagediy.richText'),
   configName: 'c_ueditor_box',
   icon: 't-icon-zujian-fuwenben',
   type: 2, // 0 基础组件 1 营销组件 2工具组件
@@ -42,6 +44,13 @@ export default {
         },
         { margin: this.configObj.mbConfig.val + 'px' + ' ' + this.configObj.lrConfig.val + 'px' + ' ' + 0 },
       ];
+    },
+    previewLang() {
+      return (this.configObj && this.configObj.diyMediaLang) || getUiLocale(this);
+    },
+    richTextDisplay() {
+      if (!this.configObj || !this.configObj.richText) return '';
+      return getFormLocalizedText(this.configObj.richText.val, this.configObj.richText.valJson, this.previewLang);
     },
   },
   watch: {
@@ -74,12 +83,12 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '富文本',
+          cname: this.$t('pagediy.richText'),
         },
         // 背景颜色
         bgColor: {
-          title: '背景颜色',
-          tabTitle: '颜色设置',
+          title: this.$t('pagediy.backgroundColor'),
+          tabTitle: this.$t('pagediy.colorSettings'),
           color: [
             {
               item: '#FFFFFF',
@@ -98,31 +107,31 @@ export default {
           ],
         },
         lrConfig: {
-          title: '左右边距',
-          tabTitle: '边距设置',
+          title: this.$t('pagediy.leftRightMargin'),
+          tabTitle: this.$t('pagediy.marginSettings'),
           val: 12,
           min: 0,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         richText: {
-          tabTitle: '富文本内容',
+          tabTitle: this.$t('pagediy.richTextContent'),
           val: '',
+          valJson: '',
         },
       },
       pageData: {},
-      richText: '',
       configObj: null,
     };
   },
@@ -138,8 +147,7 @@ export default {
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
-        this.richText = data.richText.val;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
       }
     },
   },

@@ -19,7 +19,7 @@
                       ? 'on'
                       : ''
                   " v-for="(item, index) in navList" :key="index" @tap="tap(index)">
-									{{ item }}
+									{{ $t(item) }}
 								</view>
 								<view style="width: 10rpx;height: 2px;" @click="listenerActionSheet"></view>
 							</view>
@@ -36,7 +36,7 @@
 				<view class="dialog_nav_item" :class="item.after" v-for="(item, index) in selectNavList" :key="index"
 					@click="linkPage(item.url)">
 					<text class="iconfont" :class="item.icon"></text>
-					<text class="pl-20">{{ item.name }}</text>
+					<text class="pl-20">{{ $t(item.name) }}</text>
 				</view>
 			</view>
 			<!-- 商品详情 -->
@@ -79,12 +79,12 @@
 											class="flex-y-center font-color-red">
 											<span class="semiBold font-color-red fs-40">{{
                         productPrice.redeemIntegral
-                      }}</span><span class="f-s-36 font-color-red ml-4">积分</span>
+                      }}</span><span class="f-s-36 font-color-red ml-4">{{$t('积分')}}</span>
 											<view v-show="productPrice.price > 0" class="ml-4">
 												+
 												<span class="semiBold ml-4 fs-40">{{
                           productPrice.price
-                        }}</span><span class="f-s-36 font-color-red ml-4">元</span>
+                        }}</span><span class="f-s-36 font-color-red ml-4">{{$t('元')}}</span>
 											</view>
 										</view>
 										<!-- 其他商品价格 -->
@@ -106,11 +106,11 @@
 										<view class="flex-1 acea-row row-middle">
 											<span v-for="(item, index) in couponList" class="coupon_label">{{
                           item.minPrice === 0
-                            ? "无门槛减" + item.money
-                            : "满" + item.minPrice + "减" + item.money
+                            ? $t('无门槛减') + item.money
+                            : $t('满') + item.minPrice + $t('减') + item.money
                         }}</span>
 										</view>
-										<view class="coupon_more" @click="couponTap">领券<text
+										<view class="coupon_more" @click="couponTap">{{$t('领券')}}<text
 												class="iconfont icon-you"></text>
 										</view>
 									</view>
@@ -142,11 +142,11 @@
 										<view class="flex-1 acea-row row-middle">
 											<span v-for="(item, index) in couponList" class="coupon_label">{{
                           item.minPrice === 0
-                            ? "无门槛减" + item.money
-                            : "满" + item.minPrice + "减" + item.money
+                            ? $t('无门槛减') + item.money
+                            : $t('满') + item.minPrice + $t('减') + item.money
                         }}</span>
 										</view>
-										<view class="coupon_more" @click="couponTap">领券<text
+										<view class="coupon_more" @click="couponTap">{{$t('领券')}}<text
 												class="iconfont icon-you"></text>
 										</view>
 									</view>
@@ -170,13 +170,9 @@
 									<view class="tui-skeleton-rect" v-if="
                       marketingType === ProductMarketingTypeEnum.Groupbuying
                     ">
-										划线价￥{{ attr.productSelect.otPrice || 0 }}</view>
+										{{$t('划线价')}}฿{{ attr.productSelect.otPrice || 0 }}</view>
 									<view class="tui-skeleton-rect" v-else>
-										{{
-                      productType === ProductTypeEnum.Integral
-                        ? "划线价:"
-                        : "划线价:"
-                    }}￥{{
+										{{$t('划线价')}}:฿{{
                       productType === ProductTypeEnum.Integral
                         ? attr.productSelect.cost
                         : attr.productSelect.otPrice || 0
@@ -186,17 +182,17 @@
 									<view class="tui-skeleton-rect" v-if="
                       marketingType === ProductMarketingTypeEnum.Groupbuying
                     ">
-										库存:{{ attr.productSelect.stock>0?attr.productSelect.groupStock:0}}{{ productInfo.unitName || "" }}
+										{{$t('库存')}}:{{ attr.productSelect.stock>0?attr.productSelect.groupStock:0}}{{ $t(productInfo.unitName || "") }}
 									</view>
 									<!-- 普通库存 -->
 									<view class="tui-skeleton-rect" v-else>
-										库存:{{ attr.productSelect.stock || 0}}{{ productInfo.unitName || "" }}
+										{{$t('库存')}}:{{ attr.productSelect.stock || 0}}{{ $t(productInfo.unitName || "") }}
 									</view>
 									<!-- 拼团销量 -->
 									<view class="tui-skeleton-rect" v-if="
                       marketingType === ProductMarketingTypeEnum.Groupbuying
                     ">
-										{{`销量:${groupBuyActivityResponse.sales}`}}{{ productInfo.unitName || "" }}
+										{{$t('销量')}}:{{groupBuyActivityResponse.sales}}{{ $t(productInfo.unitName || "") }}
 									</view>
 									<!-- 其他销量 -->
 									<view class="tui-skeleton-rect" v-if="
@@ -204,18 +200,18 @@
                     ">
 										{{
                       productType === ProductTypeEnum.Integral
-                        ? "已兑换:"
-                        : "销量:"
+                        ? $t('已兑换') + ':'
+                        : $t('销量') + ':'
                     }}{{
                       Math.floor(productInfo.sales) +
                         Math.floor(productInfo.ficti) || 0
-                    }}{{ productInfo.unitName || "" }}
+                    }}{{ $t(productInfo.unitName || "") }}
 									</view>
 								</view>
 
 								<view class="coupon acea-row row-between-wrapper" v-if="activityH5.length">
 									<view class="line1 acea-row">
-										<text class="activityName tui-skeleton-rect">活&nbsp;&nbsp;&nbsp;动：</text>
+										<text class="activityName tui-skeleton-rect">{{$t('活动')}}：</text>
 										<view v-for="(item, index) in activityH5" :key="index" @click="goActivity(item)"
 											class="activityBox">
 											<view v-if="item.type === '1'" class="tui-skeleton-rect" :class="
@@ -228,7 +224,7 @@
                             : ''
                         ">
 												<text class="iconfonts iconfont icon-miaosha1"></text>
-												<text class="activity_title"> 参与秒杀</text>
+												<text class="activity_title"> {{$t('参与秒杀')}}</text>
 											</view>
 											<view class="tui-skeleton-rect" :class="
                           index == 0
@@ -240,7 +236,7 @@
                             : ''
                         " v-if="item.type === '2'">
 												<text class="iconfonts iconfont icon-kanjia"></text>
-												<text class="activity_title"> 参与砍价</text>
+												<text class="activity_title"> {{$t('参与砍价')}}</text>
 											</view>
 										</view>
 									</view>
@@ -249,7 +245,7 @@
 							<!-- 规格、保障服务 -->
 							<view class="attribute mb20 borRadius14 tui-skeleton-rect">
 								<view class="acea-row row-between-wrapper" @click="selecAttr">
-									<view class="line1 text-666">{{ attrTxt }}：
+									<view class="line1 text-666">{{ $t(attrTxt) }}：
 										<text class="atterTxt text-333">{{ attrValue }}</text>
 									</view>
 									<view class="iconfont icon-jiantou"></view>
@@ -260,12 +256,12 @@
 										<image :src="item" v-for="(item, index) in skuImage" :key="index"
 											class="attrImg"></image>
 									</view>
-									<view class="switchTxt">共{{ skuArr.length }}种规格可选</view>
+									<view class="switchTxt">{{$t('共')}}{{ skuArr.length }}{{$t('种规格可选')}}</view>
 								</view>
 								<view v-if="guaranteeList.length > 0" class="acea-row row-between-wrapper"
 									@click="assureDrawer = true" style="margin-top: 45rpx">
 									<view class="line1 tui-skeleton-fillet">
-										<text class="text-666 fw-bold">保&nbsp;&nbsp;&nbsp;障：</text>
+										<text class="text-666 fw-bold">{{$t('保&nbsp;&nbsp;&nbsp;障')}}：</text>
 										<text class="text-333 tui-skeleton-fillet"
 											v-for="(item, index) in guaranteeList" :key="index">{{ item.name }} ·
 										</text>
@@ -292,12 +288,12 @@
                     ? 'border-bottom-left-radius:14rpx;border-bottom-right-radius:14rpx;'
                     : ''
                 ">
-								<view>用户评价<i>({{ replyCount }})</i></view>
+								<view>{{$t('用户评价')}}<i>({{ replyCount }})</i></view>
 								<navigator class="praise" hover-class="none" :url="
                     '/pages/goods/goods_comment_list/index?productId=' +
                     (Number(masterProductId) > 0 ? masterProductId : id)
                   ">
-									<i>好评</i>&nbsp;<text :class="
+									<i>{{$t('好评')}}</i>&nbsp;<text :class="
                       (marketingType === ProductMarketingTypeEnum.Groupbuying||productType === ProductTypeEnum.Integral)
                         ? 'groupColor'
                         : 'font_color'
@@ -323,11 +319,11 @@
 									<view class="item" v-for="(val, indexw) in merchantInfo.proList" :key="indexw"
 										@click="goDetail(val.id)">
 										<view class="pictrue relative">
-											<view v-show="val.stock===0" class="sellOut">已售罄</view>
+											<view v-show="val.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 											<easy-loadimage mode="widthFix" :image-src="val.image"></easy-loadimage>
 										</view>
 										<view class="name line1">{{ val.name }}</view>
-										<view class="money theme_price">¥{{ val.price }}</view>
+										<view class="money theme_price">฿{{ val.price }}</view>
 									</view>
 								</view>
 							</view>
@@ -338,16 +334,16 @@
 					<view class="product-intro detailText" id="past2">
 						<view class="title">
 							<image src="../static/images/xzuo.png"></image>
-							<span class="sp">产品详情</span>
+							<span class="sp">{{$t('产品详情')}}</span>
 							<image src="../static/images/xyou.png"></image>
 						</view>
 						<view class="conter borRadius14">
 							<view class="borRadius14">
 								<!-- #ifdef MP || APP-PLUS -->
-								<mp-html :content="description" :tag-style="tagStyle" />
+								<mp-html :content="localizedDescription" :tag-style="tagStyle" />
 								<!-- #endif -->
 								<!-- #ifdef H5 -->
-								<view v-html="description" class="w-100-p111-"></view>
+								<view v-html="localizedDescription" class="w-100-p111-"></view>
 								<!-- #endif -->
 							</view>
 						</view>
@@ -361,24 +357,24 @@
 				<button hover-class="none" class="item tui-skeleton-rect" @click="kefuClick"
 					v-if="chatConfig.telephone_service_switch === 'true'">
 					<view class="iconfont icon-kefu"></view>
-					<view>客服</view>
+					<view>{{$t('客服')}}</view>
 				</button>
 				<button open-type="contact" hover-class="none" class="item tui-skeleton-rect" v-else>
 					<view class="iconfont icon-kefu"></view>
-					<view>客服</view>
+					<view>{{$t('客服')}}</view>
 				</button>
 				<!-- #endif -->
 				<!-- #ifndef MP -->
 				<view class="item tui-skeleton-rect" @click="kefuClick">
 					<view class="iconfont icon-kefu"></view>
-					<view>客服</view>
+					<view>{{$t('客服')}}</view>
 				</view>
 				<!-- #endif -->
 				<navigator v-show="productType !== ProductTypeEnum.Integral"
 					:url="`/pages/merchant/home/index?merId=${productInfo.merId}`" hover-class="none">
 					<view class="item tui-skeleton-rect">
 						<view class="iconfont icon-dianpu1"></view>
-						<view>店铺</view>
+						<view>{{$t('店铺')}}</view>
 					</view>
 				</navigator>
 				<navigator v-show="productType !== ProductTypeEnum.Integral" open-type="switchTab"
@@ -389,7 +385,7 @@
                 CartCount
               }}</text>
 					</view>
-					<view>购物车</view>
+					<view>{{$t('购物车')}}</view>
 				</navigator>
 				<!-- 普通商品 -->
 				<block v-if="marketingType === ProductMarketingTypeEnum.Normal">
@@ -398,7 +394,7 @@
 							<button class="longBnts bg-color-hui" form-type="submit" :class="
                   productType == ProductTypeEnum.Integral ? 'w-640rpx' : ''
                 ">
-								已售罄
+								{{$t('已售罄')}}
 							</button>
 						</form>
 					</view>
@@ -407,13 +403,13 @@
 						<block v-if="productType === ProductTypeEnum.Normal">
 							<form v-show="productInfo.systemFormId == 0" @submit="joinCart" report-submit="true">
 								<button class="joinCart bnts" form-type="submit">
-									加入购物车
+									{{$t('加入购物车')}}
 								</button>
 							</form>
 							<form @submit="goBuy" report-submit="true">
 								<button :class="productInfo.systemFormId == 0 ? 'bnts' : 'longBnts'" class="buy"
 									form-type="submit">
-									立即购买
+									{{$t('立即购买')}}
 								</button>
 							</form>
 						</block>
@@ -425,7 +421,7 @@
                       ? 'bg-color-hui'
                       : 'bg-red'
                   " :disabled="productPrice.redeemIntegral > integral" form-type="submit">
-									立即兑换
+									{{$t('立即兑换')}}
 								</button>
 							</form>
 						</block>
@@ -433,7 +429,7 @@
 						<view v-else class="bnt bntVideo acea-row">
 							<form @submit="goBuy" report-submit="true">
 								<button class="buy bg-color longBnts" form-type="submit">
-									立即购买
+									{{$t('立即购买')}}
 								</button>
 							</form>
 						</view>
@@ -450,7 +446,7 @@
 						<button class="longBnts bg-color-hui" :class="
                 productType === ProductTypeEnum.Integral ? 'w-640rpx' : ''
               " form-type="submit">
-							已售罄
+							{{$t('已售罄')}}
 						</button>
 					</form>
 				</view>
@@ -461,7 +457,7 @@
           ">
 					<form report-submit="true">
 						<button class="longBnts bg-color-hui" form-type="submit">
-							超出限购数量
+							{{$t('超出限购数量')}}
 						</button>
 					</form>
 				</view>
@@ -472,11 +468,11 @@
             attr.productSelect.stock > 0
           " class="bnt acea-row">
 					<form @submit="goDetail(masterProductId)" report-submit="true">
-						<button class="joinCart bnts" form-type="submit">直接购买</button>
+						<button class="joinCart bnts" form-type="submit">{{$t('直接购买')}}</button>
 					</form>
 					<form report-submit="true">
 						<button class="bg-color-hui bnts" form-type="submit">
-							{{ seckillStatus === 0 ? "活动已结束" : "活动未开始" }}
+							{{ seckillStatus === 0 ? $t('活动已结束') : $t('活动未开始') }}
 						</button>
 					</form>
 				</view>
@@ -489,7 +485,7 @@
           " class="bnt bntVideo acea-row">
 					<form @submit="goBuy" report-submit="true">
 						<button class="buy bg-color longBnts" form-type="submit">
-							立即购买
+							{{$t('立即购买')}}
 						</button>
 					</form>
 				</view>
@@ -505,11 +501,11 @@
             )
           ">
 					<form @submit="toAloneBuy" report-submit="true" v-if="productInfo.isShow">
-						<button class="joinCart bnts groupJoin" form-type="submit">单独购买</button>
+						<button class="joinCart bnts groupJoin" form-type="submit">{{$t('单独购买')}}</button>
 					</form>
 					<form @submit="goBuy" report-submit="true">
 						<button :class="productInfo.isShow?'group-buy':'group-buy2'" class=" bnts"
-							form-type="submit">立即开团</button>
+							form-type="submit">{{$t('立即开团')}}</button>
 					</form>
 				</view>
 				<view class="bnt acea-row tui-skeleton-rect" v-if="
@@ -519,7 +515,7 @@
             groupBuyActivityResponse.buyLimitCount != 0
           ">
 					<form @submit="goBuy" report-submit="true">
-						<button class="spredGroupStyle" form-type="submit">立即参团</button>
+						<button class="spredGroupStyle" form-type="submit">{{$t('立即参团')}}</button>
 					</form>
 				</view>
 			</view>
@@ -541,7 +537,7 @@
 						<view class="pictrue">
 							<image src="../static/images/weixin.png"></image>
 						</view>
-						<view class="">分享给好友</view>
+						<view class="">{{$t('分享给好友')}}</view>
 					</button>
 					<!-- #endif -->
 					<!-- #ifdef MP -->
@@ -549,17 +545,17 @@
 						<view class="pictrue">
 							<image src="../static/images/weixin.png"></image>
 						</view>
-						<view class="">分享给好友</view>
+						<view class="">{{$t('分享给好友')}}</view>
 					</button>
 					<!-- #endif -->
 					<!-- #ifdef APP-PLUS -->
 					<view class="item" @click="appShare('WXSceneSession')">
 						<view class="iconfont icon-weixin3"></view>
-						<view class="">微信好友</view>
+						<view class="">{{$t('微信好友')}}</view>
 					</view>
 					<view class="item" @click="appShare('WXSenceTimeline')">
 						<view class="iconfont icon-pengyouquan"></view>
-						<view class="">微信朋友圈</view>
+						<view class="">{{$t('微信朋友圈')}}</view>
 					</view>
 					<!-- #endif -->
 					<!-- #ifdef H5 || MP -->
@@ -567,7 +563,7 @@
 						<view class="pictrue">
 							<image src="../static/images/changan.png"></image>
 						</view>
-						<view class="">预览发图</view>
+						<view class="">{{$t('预览发图')}}</view>
 					</view>
 					<!-- #endif -->
 					<!-- #ifdef MP  -->
@@ -575,11 +571,11 @@
 						<view class="pictrue">
 							<image src="../static/images/haibao.png"></image>
 						</view>
-						<view class="">保存海报</view>
+						<view class="">{{$t('保存海报')}}</view>
 					</button>
 					<!-- #endif -->
 				</view>
-				<view class="generateClose acea-row row-center-wrapper" @click="posterImageClose">取消</view>
+				<view class="generateClose acea-row row-center-wrapper" @click="posterImageClose">{{$t('取消')}}</view>
 			</view>
 			<!-- 查看规格商品图 -->
 			<cus-previewImg ref="cusPreviewImg" :list="skuArr" @changeSwitch="changeSwitch"
@@ -602,7 +598,7 @@
 			<!-- 保障服务弹窗 -->
 			<tui-drawer mode="bottom" :visible="assureDrawer" @close="closeAssure">
 				<view class="ensure">
-					<view @click="closeAssure" class="title">保障服务<text class="iconfont icon-guanbi5"></text></view>
+					<view @click="closeAssure" class="title">{{$t('保障服务')}}<text class="iconfont icon-guanbi5"></text></view>
 					<view class="list">
 						<view class="item acea-row" v-for="(item, index) in guaranteeList" :key="index">
 							<view class="pictrue">
@@ -619,7 +615,7 @@
 					</view>
 					<view class="activityBtn"
 						:class="(marketingType === ProductMarketingTypeEnum.Groupbuying||productType === ProductTypeEnum.Integral)?'bg-red':'bnt'"
-						@click="assureDrawer = false">完成</view>
+						@click="assureDrawer = false">{{$t('完成')}}</view>
 				</view>
 			</tui-drawer>
 		</view>
@@ -636,6 +632,7 @@
 	// +----------------------------------------------------------------------
 	// | Author: CRMEB Team <admin@crmeb.com>
 	// +----------------------------------------------------------------------
+	import { getLocalizedHtml } from '@/utils/localizedName';
 	import uQRCode from "@/js_sdk/Sansnn-uQRCode/uqrcode.js";
 	import {
 		HTTP_H5_URL
@@ -932,6 +929,10 @@
 		},
 		computed: {
 			...mapGetters(["isLogin", "uid", "chatUrl", "globalData"]),
+			localizedDescription() {
+				const p = this.productInfo || {};
+				return getLocalizedHtml(p.content, p.contentJson, this.i18nLocale);
+			},
 			shareStyle(){
 				return {
 					top: this.homeTopApp + 'px',
@@ -950,6 +951,9 @@
 				if (!nVal && this.isPink) {
 					this.groupRecordId = 0;
 				}
+			},
+			i18nLocale() {
+				if (this.id) this.getGoodsDetails();
 			},
 		},
 		created() {
@@ -1009,7 +1013,7 @@
 			if (!options.scene && !options.id) {
 				this.showSkeleton = false;
 				this.$util.Tips({
-					title: "缺少参数无法查看商品",
+					title: this.$t('缺少参数无法查看商品'),
 				}, {
 					url: "/pages/index/index",
 				});
@@ -1167,7 +1171,7 @@
 					},
 					fail: function(err) {
 						uni.showToast({
-							title: "分享失败",
+							title: this.$t('分享失败'),
 							icon: "none",
 							duration: 2000,
 						});
@@ -1378,7 +1382,7 @@
 				this.$set(this, "selectSku", productSelect);
 				if (!productSelect) {
 					this.$util.Tips({
-						title: '重新选择',
+						title: this.$t('重新选择'),
 						success: () => {
 							this.noGoods = true;
 							this.attr.productSelect.stock = 0;
@@ -1723,14 +1727,14 @@
 						}).then((res) => {
 							that.$set(that, "userCollect", !that.userCollect);
 							that.$util.Tips({
-								title: "取消收藏",
+								title: this.$t('取消收藏'),
 							});
 						});
 					} else {
 						collectAdd(id).then((res) => {
 							that.$set(that, "userCollect", !that.userCollect);
 							that.$util.Tips({
-								title: "收藏成功",
+								title: this.$t('收藏成功'),
 							});
 						});
 					}
@@ -1797,7 +1801,7 @@
 					that.isOpen === true
 				)
 					return that.$util.Tips({
-						title: "产品库存不足，请选择其它",
+						title: this.$t('产品库存不足，请选择其它'),
 					});
 				if (num === 1) {
 					let q = {
@@ -1808,11 +1812,11 @@
 							that.attr.productSelect.unique : that.productInfo.id,
 					};
 					postCartAdd(q)
-						.then(function(res) {
+						.then((res) => {
 							that.isOpen = false;
 							that.attr.cartAttr = false;
 							that.$util.Tips({
-								title: "添加购物车成功",
+								title: that.$t('添加购物车成功'),
 								success: () => {
 									that.getCartCount(true);
 								},
@@ -1869,12 +1873,12 @@
 				) {
 					this.isOpen = false;
 					return this.$util.Tips({
-						title: "超出限购数量",
+						title: this.$t('超出限购数量'),
 					});
 				}
 				if (this.attr.productSelect.cart_num < 1) {
 					uni.showToast({
-						title: "单次可购买商品数量范围为 1~99",
+						title: this.$t('单次可购买商品数量范围为 1~99'),
 						icon: "none",
 					});
 				} else {
@@ -2020,7 +2024,7 @@
 					complete: () => {},
 					fail: (res) => {
 						this.$util.Tips({
-							title: "海报二维码生成失败！",
+							title: this.$t('海报二维码生成失败！'),
 						});
 					},
 				});
@@ -2069,7 +2073,7 @@
 			goPoster: function() {
 				let that = this;
 				uni.showLoading({
-					title: "海报生成中",
+					title: this.$t('海报生成中'),
 					mask: true,
 				});
 				that.posters = false;
@@ -2086,7 +2090,7 @@
 					if (!that.imgTop) {
 						uni.hideLoading();
 						that.$util.Tips({
-							title: "无法生成商品海报！",
+							title: this.$t('无法生成商品海报！'),
 						});
 						return;
 					}
@@ -2138,7 +2142,7 @@
 					});
 				} else {
 					this.$util.Tips({
-						title: "您的海报尚未生成",
+						title: this.$t('您的海报尚未生成'),
 					});
 				}
 			},
@@ -2159,13 +2163,13 @@
 										success: function(res) {
 											that.posterImageClose();
 											that.$util.Tips({
-												title: "保存成功",
+												title: this.$t('保存成功'),
 												icon: "success",
 											});
 										},
 										fail: function(res) {
 											that.$util.Tips({
-												title: "保存失败",
+												title: this.$t('保存失败'),
 											});
 										},
 									});
@@ -2177,13 +2181,13 @@
 								success: function(res) {
 									that.posterImageClose();
 									that.$util.Tips({
-										title: "保存成功",
+										title: this.$t('保存成功'),
 										icon: "success",
 									});
 								},
 								fail: function(res) {
 									that.$util.Tips({
-										title: "保存失败",
+										title: this.$t('保存失败'),
 									});
 								},
 							});
@@ -2413,6 +2417,8 @@
 
 	.mtop {
 		margin-top: -162rpx;
+		position: relative;
+		z-index: 2;
 	}
 
 	.lineWidth {
@@ -2421,16 +2427,16 @@
 
 	.superior {
 
-		/deep/.name,
-		/deep/.icon-jiantou {
+		::v-deep .name,
+		::v-deep .icon-jiantou {
 			color: #333 !important;
 		}
 
-		/deep/.store {
+		::v-deep .store {
 			padding: 0 !important;
 		}
 
-		/deep/image,
+		::v-deep image,
 		.easy-loadimage,
 		image,
 		uni-image {
@@ -2449,7 +2455,7 @@
 		width: 100%;
 		background-color: #fff;
 		padding-bottom: 22rpx;
-		padding-bottom: calc(22rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		padding-bottom: calc(22rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		padding-bottom: calc(22rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 
 		.title {
@@ -2482,7 +2488,7 @@
 					border-radius: 50%;
 					margin-right: 30rpx;
 
-					/deep/image,
+					::v-deep image,
 					.easy-loadimage,
 					image,
 					uni-image {
@@ -2527,7 +2533,7 @@
 		transform: translate3d(0, 0, 0);
 	}
 
-	/deep/ .tui-drawer-container_bottom {
+	::v-deep  .tui-drawer-container_bottom {
 		border-radius: 16rpx 16rpx 0 0;
 	}
 
@@ -2902,7 +2908,7 @@
 				border-radius: 50%;
 				margin: 0 auto 6rpx auto;
 
-				/deep/image,
+				::v-deep image,
 				.easy-loadimage,
 				image,
 				uni-image {
@@ -2947,7 +2953,7 @@
 		z-index: 277;
 		border-top: 1rpx solid #f0f0f0;
 		height: 100rpx;
-		height: calc(100rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(100rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(100rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 	}
 
@@ -3113,7 +3119,7 @@
 						border-radius: 6rpx;
 						overflow: hidden;
 
-						/deep/image,
+						::v-deep image,
 						.easy-loadimage,
 						image,
 						uni-image {

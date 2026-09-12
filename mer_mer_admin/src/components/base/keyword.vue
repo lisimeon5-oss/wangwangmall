@@ -15,7 +15,7 @@
       size="small"
       class="arrbox_ip"
       maxlength="32"
-      placeholder="输入后回车"
+      :placeholder="$t('common.inputThenEnter')"
       @change="addlabel"
       show-word-limit
       :disabled="isDisabled"

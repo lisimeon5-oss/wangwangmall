@@ -28,8 +28,14 @@ public class GroupBuyActivityRecordAdminListResponse implements Serializable {
     @ApiModelProperty(value = "拼团活动名称")
     private String groupName;
 
+    @ApiModelProperty(value = "多语言拼团活动名称(JSON)")
+    private String groupNameJson;
+
     @ApiModelProperty(value = "当前拼团商家信息")
     private String merName;
+
+    @ApiModelProperty(value = "多语言商户名称(JSON)")
+    private String merNameJson;
 
     @ApiModelProperty(value = "团长 用户ID ")
     private Integer groupLeaderUid;
@@ -42,6 +48,9 @@ public class GroupBuyActivityRecordAdminListResponse implements Serializable {
 
     @ApiModelProperty(value = "拼团商品名称")
     private String productName;
+
+    @ApiModelProperty(value = "多语言商品名称(JSON)")
+    private String productNameJson;
 
     @ApiModelProperty(value = "拼团开始时间")
     private Date createTime;

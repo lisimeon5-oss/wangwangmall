@@ -8,15 +8,17 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 
+import i18n from '@/i18n';
+
 /**
  * 审核状态
  */
 export function auditStatusFilter(status) {
   const statusMap = {
-    0: '无需审核',
-    1: '待审核',
-    2: '审核成功',
-    3: '审核拒绝',
+    0: i18n.t('product.noAudit'),
+    1: i18n.t('order.pendingAudit'),
+    2: i18n.t('common.auditSuccess'),
+    3: i18n.t('product.auditRejected'),
   };
   return statusMap[status];
 }
@@ -26,13 +28,13 @@ export function auditStatusFilter(status) {
  */
 export function editStatusFilter(status) {
   const statusMap = {
-    '-1': '违规/风控系统下',
-    '-2': '平台下架',
-    '-3': '商家下架',
-    1: '未审核',
-    2: '审核中',
-    3: '审核失败',
-    4: '审核成功',
+    '-1': i18n.t('product.violationOffShelf'),
+    '-2': i18n.t('product.platformOffShelf'),
+    '-3': i18n.t('product.merchantOffShelf'),
+    1: i18n.t('product.notAudited'),
+    2: i18n.t('common.auditing'),
+    3: i18n.t('common.auditFailed'),
+    4: i18n.t('common.auditSuccess'),
   };
   return statusMap[status];
 }
@@ -42,10 +44,10 @@ export function editStatusFilter(status) {
  */
 export function platformStatusFilter(status) {
   const statusMap = {
-    1: '未审核',
-    2: '审核中',
-    3: '审核失败',
-    4: '审核成功',
+    1: i18n.t('product.notAudited'),
+    2: i18n.t('common.auditing'),
+    3: i18n.t('common.auditFailed'),
+    4: i18n.t('common.auditSuccess'),
   };
   return statusMap[status];
 }
@@ -55,10 +57,10 @@ export function platformStatusFilter(status) {
  */
 export function videoStatusFilter(status) {
   const statusMap = {
-    0: '初始值',
-    5: '上架',
-    11: '自主下架',
-    13: '违规下架/风控系统下架',
+    0: i18n.t('product.initialValue'),
+    5: i18n.t('product.onShelf'),
+    11: i18n.t('product.selfOffShelf'),
+    13: i18n.t('product.violationSystemOffShelf'),
   };
   return statusMap[status];
 }
@@ -68,10 +70,10 @@ export function videoStatusFilter(status) {
  */
 export function productQualificationTypeFilter(status) {
   const statusMap = {
-    0: '不需要',
-    1: '必填',
-    2: '选填',
-    null: '无要求',
+    0: i18n.t('product.notRequired'),
+    1: i18n.t('product.required'),
+    2: i18n.t('product.optional'),
+    null: i18n.t('product.noRequirement'),
   };
   return statusMap[status];
 }
@@ -81,12 +83,12 @@ export function productQualificationTypeFilter(status) {
  */
 export function liveReviewStatusFilter(status) {
   const statusMap = {
-    0: '商户创建/撤回',
-    1: '平台待审核/商户重新提交审核',
-    2: '平台审核通过/微信审核中',
-    3: '平台审核失败',
-    4: '微信审核成功',
-    5: '微信审核失败',
+    0: i18n.t('product.merchantCreateWithdraw'),
+    1: i18n.t('product.platformPendingReAudit'),
+    2: i18n.t('product.platformApprovedWechatAuditing'),
+    3: i18n.t('product.platformAuditFailed'),
+    4: i18n.t('product.wechatAuditSuccess'),
+    5: i18n.t('product.wechatAuditFailed'),
   };
   return statusMap[status];
 }
@@ -96,13 +98,13 @@ export function liveReviewStatusFilter(status) {
  */
 export function broadcastStatusFilter(status) {
   const statusMap = {
-    101: '直播中',
-    102: '未开始',
-    103: '已结束',
-    104: '禁播',
-    105: '暂停',
-    106: '异常',
-    107: '已过期',
+    101: i18n.t('product.liveStreaming'),
+    102: i18n.t('common.notStarted'),
+    103: i18n.t('common.ended'),
+    104: i18n.t('product.banned'),
+    105: i18n.t('product.paused'),
+    106: i18n.t('product.abnormal'),
+    107: i18n.t('product.expiredOver'),
   };
   return statusMap[status];
 }
@@ -112,10 +114,10 @@ export function broadcastStatusFilter(status) {
  */
 export function roomReviewStatusFilter(status) {
   const statusMap = {
-    0: '平台待审核',
-    1: '平台审核失败',
-    2: '微信审核失败',
-    3: '微信审核成功',
+    0: i18n.t('product.platformPendingAudit'),
+    1: i18n.t('product.platformAuditFailed'),
+    2: i18n.t('product.wechatAuditFailed'),
+    3: i18n.t('product.wechatAuditSuccess'),
   };
   return statusMap[status];
 }
@@ -125,8 +127,8 @@ export function roomReviewStatusFilter(status) {
  */
 export function roomShowFilter(status) {
   const statusMap = {
-    1: '开启',
-    0: '关闭',
+    1: i18n.t('common.open'),
+    0: i18n.t('common.close'),
   };
   return statusMap[status];
 }
@@ -136,9 +138,9 @@ export function roomShowFilter(status) {
  */
 export function priceTypeFilter(status) {
   const statusMap = {
-    1: '一口价',
-    2: '价格区间',
-    3: '折扣价',
+    1: i18n.t('product.fixedPrice'),
+    2: i18n.t('product.priceRange'),
+    3: i18n.t('product.discountPrice'),
   };
   return statusMap[status];
 }
@@ -148,12 +150,12 @@ export function priceTypeFilter(status) {
  */
 export function productTpyeFilter(status) {
   const statusMap = {
-    0: '普通商品',
-    1: '积分商品',
-    2: '虚拟商品',
-    4: '视频号',
-    5: '云盘商品',
-    6: '卡密商品',
+    0: i18n.t('product.normalProduct'),
+    1: i18n.t('product.integralProduct'),
+    2: i18n.t('product.virtualProduct'),
+    4: i18n.t('product.videoProduct'),
+    5: i18n.t('product.cloudProduct'),
+    6: i18n.t('product.cardKeyProduct'),
   };
   return statusMap[status];
 }

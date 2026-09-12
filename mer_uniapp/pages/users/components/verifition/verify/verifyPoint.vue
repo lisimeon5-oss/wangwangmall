@@ -146,7 +146,7 @@
                                 if (res.repCode == '0000') {
                                               this.barAreaColor = '#4cae4c';
                                               this.barAreaBorderColor = '#5cb85c';
-                                              this.text = '验证成功';
+                                              this.text = this.$t('验证成功');
                                               this.bindingClick = false;
                                               if (this.mode == 'pop') {
                                                 setTimeout(() => {
@@ -165,7 +165,7 @@
                                               this.$parent.$emit('error', this);
                                               this.barAreaColor = '#d9534f';
                                               this.barAreaBorderColor = '#d9534f';
-                                              this.text = '验证失败';
+                                              this.text = this.$t('验证失败');
                                               setTimeout(() => {
                                                 this.refresh();
                                     }, 700);
@@ -222,7 +222,7 @@
 					          this.backToken = data.repData.token;
 					          this.secretKey = data.repData.secretKey;
 					          this.poinTextList = data.repData.wordList;
-					          this.text = '请依次点击【' + this.poinTextList.join(',') + '】';
+					          this.text = this.$t('请依次点击【') + this.poinTextList.join(',') + this.$t('】');
 					        } else {
 					          this.text = data.repMsg;
 					        }

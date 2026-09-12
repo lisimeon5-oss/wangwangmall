@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form ref="editPram" :rules="rules" :model="editPram" label-width="90px">
-      <el-form-item label="关联用户：" prop="uid">
+      <el-form-item :label="$t('user.relatedUserLabel')" prop="uid">
         <div class="upLoadPicBox" @click="userVisible = true">
           <div v-if="editPram.userAvatar" class="pictrue">
             <img :src="editPram.userAvatar" />
@@ -10,10 +10,10 @@
             <i class="el-icon-camera cameraIconfont" />
           </div>
           <div class="nick">{{ editPram.nickname }}</div>
-          <div class="from-tips">员工必须在商城关注店铺</div>
+          <div class="from-tips">{{ $t('user.staffMustFollowStore') }}</div>
         </div>
       </el-form-item>
-      <el-form-item label="员工头像：" prop="avatar">
+      <el-form-item :label="$t('user.staffAvatarLabel')" prop="avatar">
         <div class="upLoadPicBox" @click="modalPicTap('1')">
           <div v-if="editPram.avatar" class="pictrue">
             <img :src="editPram.avatar" />
@@ -21,36 +21,36 @@
           <div v-else class="upLoad">
             <i class="el-icon-camera cameraIconfont" />
           </div>
-          <div class="from-tips">用于移动端商家管理工作台展示，建议：80*80PX，大小不超过5KB。</div>
+          <div class="from-tips">{{ $t('user.staffAvatarTip') }}</div>
         </div>
       </el-form-item>
-      <el-form-item label="员工姓名：" prop="name">
-        <el-input v-model="editPram.name" placeholder="请输入员工姓名" />
+      <el-form-item :label="$t('user.staffNameLabel')" prop="name">
+        <el-input v-model="editPram.name" :placeholder="$t('user.pleaseEnterStaffName')" />
       </el-form-item>
-      <el-form-item label="手机号：" prop="phone">
-        <el-input v-model="editPram.phone" placeholder="请输入手机号" />
+      <el-form-item :label="$t('user.phoneLabel')" prop="phone">
+        <el-input v-model="editPram.phone" :placeholder="$t('user.pleaseEnterPhone')" />
       </el-form-item>
-      <el-form-item label="管理权限：" prop="role">
+      <el-form-item :label="$t('user.managementPermissionLabel')" prop="role">
         <el-checkbox-group v-model="editPram.role">
-          <el-checkbox label="1">订单管理</el-checkbox>
-          <el-checkbox label="2">商品管理</el-checkbox>
-          <el-checkbox label="3">售后管理</el-checkbox>
-          <el-checkbox label="5">订单核销</el-checkbox>
-          <el-checkbox label="6">销量/用户统计</el-checkbox>
+          <el-checkbox label="1">{{ $t('user.orderManagement') }}</el-checkbox>
+          <el-checkbox label="2">{{ $t('user.productManagement') }}</el-checkbox>
+          <el-checkbox label="3">{{ $t('user.afterSalesManagement') }}</el-checkbox>
+          <el-checkbox label="5">{{ $t('user.orderVerification') }}</el-checkbox>
+          <el-checkbox label="6">{{ $t('user.salesUserStatistics') }}</el-checkbox>
         </el-checkbox-group>
-        <div class="from-tips">管理权限控制该员工能够进行的操作限制。</div>
+        <div class="from-tips">{{ $t('user.managementPermissionTip') }}</div>
       </el-form-item>
-      <el-form-item label="状态：" prop="status">
+      <el-form-item :label="$t('user.statusColon')" prop="status">
         <el-switch v-model="editPram.status" :active-value="1" :inactive-value="0" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer-inner">
-      <el-button @click="handlerClose()">取消</el-button>
-      <el-button type="primary" @click="handlerSubmit('editPram')">确定</el-button>
+      <el-button @click="handlerClose()">{{ $t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="handlerSubmit('editPram')">{{ $t('common.confirm') }}</el-button>
     </div>
     <!-- 关联用户弹窗 -->
     <el-dialog
-      title="关联用户列表"
+      :title="$t('user.relatedUserList')"
       :visible.sync="userVisible"
       width="900px"
       :append-to-body="true"
@@ -85,10 +85,10 @@ export default {
         userAvatar: null,
       },
       rules: {
-        avatar: [{ required: true, message: '请设置头像', trigger: 'change' }],
-        role: [{ required: true, message: '请设置管理权限', trigger: 'change' }],
-        uid: [{ required: true, message: '请关联用户', trigger: 'change' }],
-        name: [{ required: true, message: '请输入姓名', trigger: 'change' }],
+        avatar: [{ required: true, message: this.$t('user.pleaseSetAvatar'), trigger: 'change' }],
+        role: [{ required: true, message: this.$t('user.pleaseSetManagementPermission'), trigger: 'change' }],
+        uid: [{ required: true, message: this.$t('user.pleaseRelateUser'), trigger: 'change' }],
+        name: [{ required: true, message: this.$t('user.pleaseEnterName'), trigger: 'change' }],
         phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
       },
     };

@@ -9,17 +9,17 @@
     >
       <div class="padding-add">
         <el-form size="small" inline @submit.native.prevent>
-          <el-form-item label="商品搜索：">
+          <el-form-item :label="$t('product.productSearch')">
             <el-input
               v-model="keywords"
-              placeholder="可搜索微信号/昵称"
+              :placeholder="$t('marketing.searchWechatOrNickname')"
               class="selWidth"
               @keyup.enter.native="getList(1)"
             >
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -32,23 +32,22 @@
         type="primary"
         @click="handleEdit(0)"
       >
-        <i class="add">+</i> 添加助手
-      </el-button>
+        <i class="add">+</i>{{ $t('marketing.addAssistant') }}</el-button>
       <el-table v-loading="listLoading" :data="tableData.data" style="width: 100%" size="small">
         <el-table-column prop="id" label="ID" min-width="150" />
-        <el-table-column prop="wechatNickname" label="微信昵称" min-width="150" />
-        <el-table-column prop="wechat" label="微信号" min-width="150" />
-        <el-table-column prop="createTime" label="创建时间" min-width="200" />
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column prop="wechatNickname" :label="$t('marketing.wechatNickname')" min-width="150" />
+        <el-table-column prop="wechat" :label="$t('marketing.wechatId')" min-width="150" />
+        <el-table-column prop="createTime" :label="$t('product.createTime')" min-width="200" />
+        <el-table-column :label="$t('common.operate')" width="100" fixed="right">
           <template slot-scope="scope">
             <a
               v-hasPermi="['merchant:mp:live:assistant:edit', 'merchant:mp:live:assistant:info']"
               @click="handleEdit(1, scope.row)"
-              >编辑</a
+              >{{ $t('common.edit') }}</a
             >
             <el-divider direction="vertical"></el-divider>
             <a v-hasPermi="['merchant:mp:live:assistant:delete']" @click="handleDelete(scope.row.id, scope.$index)"
-              >删除</a
+              >{{ $t('common.delete') }}</a
             >
           </template>
         </el-table-column>
@@ -115,7 +114,7 @@ export default {
       const _this = this;
       this.id = editDate ? editDate.id : 0;
       this.$modalParserFrom(
-        isCreate === 0 ? '新建小助手' : '编辑小助手',
+        isCreate === 0 ? this.$t('marketing.newAssistant') : this.$t('marketing.editAssistantTitle'),
         'liveAssistant',
         isCreate,
         isCreate === 0
@@ -143,7 +142,7 @@ export default {
       !this.id
         ? liveAssistantSaveApi(data)
             .then((res) => {
-              this.$message.success('操作成功');
+              this.$message.success(this.$t('product.operateSuccess'));
               this.$msgbox.close();
               this.getList();
             })
@@ -152,7 +151,7 @@ export default {
             })
         : liveAssistantUpdateApi(data)
             .then((res) => {
-              this.$message.success('操作成功');
+              this.$message.success(this.$t('product.operateSuccess'));
               this.$msgbox.close();
               this.getList();
             })
@@ -185,9 +184,9 @@ export default {
     },
     // 删除
     handleDelete(id, idx) {
-      this.$modalSure('删除该直播助手吗？').then(() => {
+      this.$modalSure(this.$t('marketing.deleteLiveAssistantConfirm')).then(() => {
         liveAssistantDelApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableForm);
           this.getList('');
         });

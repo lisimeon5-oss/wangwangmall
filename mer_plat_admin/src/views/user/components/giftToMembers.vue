@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :close-on-click-modal="false"
-    title="赠送会员"
+    :title="$t('user.giftMember')"
     :visible.sync="dialogVisibleMember"
     width="540px"
     :before-close="handleResetForm"
@@ -14,22 +14,22 @@
       @submit.native.prevent
       label-width="80px"
     >
-      <el-form-item label="会员卡：" required prop="cardId">
+      <el-form-item :label="$t('user.memberCardLabel')" required prop="cardId">
         <el-select
           v-model="formValidate.cardId"
-          placeholder="请选择系统会员卡"
+          :placeholder="$t('user.pleaseSelectSystemCard')"
           filterable
           clearable
           style="width: 100%"
         >
           <el-option v-for="item in tableDataMember" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
-        <div class="from-tips">平台赠送的会员卡，不进行会员卡设置的余额赠送</div>
+        <div class="from-tips">{{ $t('user.giftCardTip') }}</div>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="handleResetForm">取 消</el-button>
-      <el-button type="primary" @click="handleSure" :loading="loadingBtn">确 定</el-button>
+      <el-button @click="handleResetForm">{{ $t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="handleSure" :loading="loadingBtn">{{ $t('common.confirmPrefix') }}</el-button>
     </span>
   </el-dialog>
 </template>
@@ -64,7 +64,7 @@ export default {
       },
       loadingBtn: false,
       rules: {
-        cardId: [{ required: true, message: '请选择系统会员卡', trigger: 'change' }],
+        cardId: [{ required: true, message: this.$t('user.pleaseSelectSystemCard'), trigger: 'change' }],
       },
     };
   },
@@ -84,7 +84,7 @@ export default {
           this.formValidate.ids;
           giftPaidMemberApi(this.formValidate)
             .then(async (res) => {
-              this.$message.success('赠送成功');
+              this.$message.success(this.$t('user.giftSuccess'));
               this.$emit('handlerSuccessSubmit');
               this.loadingBtn = false;
             })

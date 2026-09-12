@@ -11,20 +11,20 @@
 						<text class="name_store">{{ merchantAPPInfo.name }}</text>
 						<text v-if="store.typeId"
 							class="merType ml8 bg-color">{{ store.typeId | merchantTypeFilter }}</text>
-						<text v-else-if="store.isSelf" class="merType bg-color ml8">自营</text>
+						<text v-else-if="store.isSelf" class="merType bg-color ml8">{{$t('自营')}}</text>
 					</view>
 					<view class="fans">
-						{{ store.followerNum < 10000 ? store.followerNum + '人关注' : (store.followerNum / 10000).toFixed(2) + '万' + '人关注' }}
+						{{ store.followerNum < 10000 ? store.followerNum + $t('人关注') : (store.followerNum / 10000).toFixed(2) + $t('万') + $t('人关注') }}
 					</view>
 				</view>
 				<button hover-class="none" class="merCollect" :class="store.isCollect ? 'care' : ''"
 					@click="followToggle">
 					<text v-show="!store.isCollect" class="iconfont icon-guanzhu"></text>
-					{{ store.isCollect ? '已关注' : '关注' }}
+					{{ store.isCollect ? $t('已关注') : $t('关注') }}
 				</button>
 			</view>
 			<view class="section wrap">
-				<view class="name">店铺评级</view>
+				<view class="name">{{$t('店铺评级')}}</view>
 				<view class="score-wrap">
 					<view class="score">
 						<view class='starsList'>
@@ -42,35 +42,35 @@
 			</view>
 
 			<view class="section wrap" @click="popupShow = true">
-				<view class="name">店铺资质</view>
+				<view class="name">{{$t('店铺资质')}}</view>
 				<view><text class="iconfont icon-zizhizhengjian"></text></view>
 			</view>
 
 			<view class="section wrap" @click="call">
-				<view class="name">联系客服</view>
+				<view class="name">{{$t('联系客服')}}</view>
 				<view><text class="iconfont icon-kefu-mendian"></text></view>
 			</view>
 			<view class="section info">
 				<view class="item very">
-					<view class="name">店铺简介</view>
+					<view class="name">{{$t('店铺简介')}}</view>
 					<view class="value">{{ store.intro }}</view>
 				</view>
 				<view class="item very">
 					<view class="acea-row" style="flex: 1;">
-						<view class="name">店铺地址</view>
+						<view class="name">{{$t('店铺地址')}}</view>
 						<view class="value">{{ store.addressDetail }}</view>
 					</view>
 					<view v-if="store.latitude && store.longitude " class="iconfont icon-dingwei font-color"
 						@click="showMaoLocation(store.latitude, store.longitude)"></view>
 				</view>
 				<view class="item">
-					<view class="name">开店时间</view>
+					<view class="name">{{$t('开店时间')}}</view>
 					<view class="value">{{ store.createTime | dateFormat }}</view>
 				</view>
 			</view>
 			<view :class="{ mask: popupShow }" @click="popupShow = false"></view>
 			<view :class="{ 'popup-active': popupShow }" class="popup-qrcode">
-				<view class="name">资质图片</view>
+				<view class="name">{{$t('资质图片')}}</view>
 				<template v-for="(item,index) in qualificationPicture">
 					<image :src="item" @click='getpreviewImage(index)'></image>
 				</template>
@@ -142,7 +142,7 @@
 			showMaoLocation(lat, long) {
 				if (!lat || !long)
 					return this.$util.Tips({
-						title: '请设置允许商城访问您的位置！'
+						title: this.$t('请设置允许商城访问您的位置！')
 					});
 				//#ifdef H5
 				if (this.$wechat.isWeixin() === true) {

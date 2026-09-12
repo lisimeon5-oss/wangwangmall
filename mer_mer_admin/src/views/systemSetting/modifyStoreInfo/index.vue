@@ -2,68 +2,96 @@
   <div class="divBox relative">
     <el-card :bordered="false" shadow="never" class="ivu-mt" :body-style="{ padding: '0 20px 20px' }">
       <el-tabs v-model="loginType" class="list-tabs">
-        <el-tab-pane :label="item.name" :name="item.type.toString()" v-for="(item, index) in headeNum" :key="index" />
+        <el-tab-pane :label="item.name" :name="item.type.toString()" v-for="(item, index) in headerTabs" :key="index" />
       </el-tabs>
       <div v-if="loginType === '1'" class="information">
-        <div class="basic-information" v-loading="loading">
-          <div><span class="tips">商户名称：</span>{{ merData.name }}</div>
-          <div><span class="tips">商户登录帐号：</span>{{ merData.phone }}</div>
-          <div><span class="tips">商户负责人姓名：</span>{{ merData.realName }}</div>
-          <div><span class="tips">商户分类：</span>{{ merData.merCategory }}</div>
-          <div><span class="tips">商户类别：</span>{{ merData.isSelf | selfTypeFilter }}</div>
-
-          <div><span class="tips">店铺类型：</span>{{ merData.merType }}</div>
-          <div><span class="tips">商户手续费：</span>{{ merData.handlingFee }}%</div>
-          <div><span class="tips">添加商品：</span>{{ merData.productSwitch ? '需平台审核' : '平台免审核' }}</div>
-          <div>
-            <span class="tips">商户星级：</span
-            ><el-rate v-model="merData.starLevel" disabled text-color="#ff9900"> </el-rate>
+        <div class="merchant-info-table" v-loading="loading">
+          <div class="merchant-info-row">
+            <div class="merchant-info-label">{{ $t('systemSetting.merchantNameLabel') }}</div>
+            <div class="merchant-info-value">{{ displayMerchantName }}</div>
           </div>
-          <div><span class="tips">商户入驻时间：</span>{{ merData.createTime }}</div>
-          <div v-if="merData.qualificationPicture">
-            <span class="tips">商户资质：</span>
-            <div class="acea-row">
+          <div class="merchant-info-row">
+            <div class="merchant-info-label">{{ $t('systemSetting.merchantLoginAccountLabel') }}</div>
+            <div class="merchant-info-value">{{ merData.phone }}</div>
+          </div>
+          <div class="merchant-info-row">
+            <div class="merchant-info-label">{{ $t('systemSetting.merchantManagerNameLabel') }}</div>
+            <div class="merchant-info-value">{{ merData.realName }}</div>
+          </div>
+          <div class="merchant-info-row">
+            <div class="merchant-info-label">{{ $t('systemSetting.merchantCategoryLabel') }}</div>
+            <div class="merchant-info-value">{{ displayMerCategory }}</div>
+          </div>
+          <div class="merchant-info-row">
+            <div class="merchant-info-label">{{ $t('systemSetting.merchantTypeLabel') }}</div>
+            <div class="merchant-info-value">{{ merData.isSelf | selfTypeFilter }}</div>
+          </div>
+          <div class="merchant-info-row">
+            <div class="merchant-info-label">{{ $t('systemSetting.storeTypeLabel') }}</div>
+            <div class="merchant-info-value">{{ displayMerType }}</div>
+          </div>
+          <div class="merchant-info-row">
+            <div class="merchant-info-label">{{ $t('systemSetting.merchantFeeLabel') }}</div>
+            <div class="merchant-info-value">{{ merData.handlingFee }}%</div>
+          </div>
+          <div class="merchant-info-row">
+            <div class="merchant-info-label">{{ $t('systemSetting.addProductLabel') }}</div>
+            <div class="merchant-info-value">{{ merData.productSwitch ? $t('systemSetting.platformReviewRequired') : $t('systemSetting.platformReviewExempt') }}</div>
+          </div>
+          <div class="merchant-info-row">
+            <div class="merchant-info-label">{{ $t('systemSetting.merchantRatingLabel') }}</div>
+            <div class="merchant-info-value"><el-rate v-model="merData.starLevel" disabled text-color="#ff9900"></el-rate></div>
+          </div>
+          <div class="merchant-info-row">
+            <div class="merchant-info-label">{{ $t('systemSetting.merchantJoinTimeLabel') }}</div>
+            <div class="merchant-info-value">{{ merData.createTime }}</div>
+          </div>
+          <div class="merchant-info-row" v-if="merData.qualificationPicture">
+            <div class="merchant-info-label">{{ $t('systemSetting.merchantQualificationLabel') }}</div>
+            <div class="merchant-info-value acea-row">
               <div v-for="(item, index) in JSON.parse(merData.qualificationPicture)" :key="index" class="pictrue">
-                <el-image :src="item" :preview-src-list="[item]"> </el-image>
+                <el-image :src="item" :preview-src-list="[item]" fit="cover"> </el-image>
               </div>
             </div>
           </div>
-          <div v-hasPermi="['merchant:switch:update']">
-            <span class="tips">开启商户：</span>
-            <el-switch
-              v-model="merData.isSwitch"
-              :active-value="true"
-              :inactive-value="false"
-              active-text="开启"
-              inactive-text="关闭"
-              @change="changeSwitch"
-            >
-            </el-switch>
+          <div class="merchant-info-row" v-hasPermi="['merchant:switch:update']">
+            <div class="merchant-info-label">{{ $t('systemSetting.enableMerchantLabel') }}</div>
+            <div class="merchant-info-value">
+              <el-switch
+                v-model="merData.isSwitch"
+                :active-value="true"
+                :inactive-value="false"
+                :active-text="$t('common.open')"
+                :inactive-text="$t('common.close')"
+                @change="changeSwitch"
+              >
+              </el-switch>
+            </div>
           </div>
         </div>
       </div>
       <div v-if="loginType === '2'" class="business-msg">
         <div class="form-data">
-          <el-form :model="merInfoForm" :rules="rules" ref="merInfoForm" label-width="140px" class="demo-ruleForm">
-            <el-form-item label="商户主头像：" prop="avatar">
+          <el-form :model="merInfoForm" :rules="rules" ref="merInfoForm" label-width="200px" class="demo-ruleForm">
+            <el-form-item :label="$t('systemSetting.merchantAvatarLabel')" prop="avatar">
               <div class="upLoadPicBox acea-row" @click="modalPicTap('1', 'avatar')">
                 <div v-if="merInfoForm.avatar" class="pictrue"><img :src="merInfoForm.avatar" /></div>
                 <div v-else class="upLoad">
                   <i class="el-icon-camera cameraIconfont" />
                 </div>
-                <div class="from-tips">请上传小于500kb的图片（90*90 px）</div>
+                <div class="from-tips">{{ $t('systemSetting.uploadImageUnder500kb90') }}</div>
               </div>
             </el-form-item>
-            <el-form-item label="H5商户背景图：" prop="backImage">
+            <el-form-item :label="$t('systemSetting.h5MerchantBackgroundLabel')" prop="backImage">
               <div class="upLoadPicBox acea-row" @click="modalPicTap('1', 'backImage')">
                 <div v-if="merInfoForm.backImage" class="pictrue"><img :src="merInfoForm.backImage" /></div>
                 <div v-else class="upLoad">
                   <i class="el-icon-camera cameraIconfont" />
                 </div>
-                <div class="from-tips">请上传小于500kb的图片（375*180 px）</div>
+                <div class="from-tips">{{ $t('systemSetting.uploadImageUnder500kb375') }}</div>
               </div>
             </el-form-item>
-            <el-form-item label="H5商户街背景图：" prop="streetBackImage">
+            <el-form-item :label="$t('systemSetting.h5MerchantStreetBackgroundLabel')" prop="streetBackImage">
               <div class="upLoadPicBox acea-row" @click="modalPicTap('1', 'streetBackImage')">
                 <div v-if="merInfoForm.streetBackImage" class="pictrue">
                   <img :src="merInfoForm.streetBackImage" />
@@ -71,10 +99,10 @@
                 <div v-else class="upLoad">
                   <i class="el-icon-camera cameraIconfont" />
                 </div>
-                <div class="from-tips">请上传小于500kb的图片（355*78 px）</div>
+                <div class="from-tips">{{ $t('systemSetting.uploadImageUnder500kb355') }}</div>
               </div>
             </el-form-item>
-            <el-form-item label="H5商户封面图：" prop="coverImage">
+            <el-form-item :label="$t('systemSetting.h5MerchantCoverLabel')" prop="coverImage">
               <div class="upLoadPicBox acea-row" @click="modalPicTap('1', 'coverImage')">
                 <div v-if="merInfoForm.coverImage" class="pictrue">
                   <img :src="merInfoForm.coverImage" />
@@ -82,10 +110,10 @@
                 <div v-else class="upLoad">
                   <i class="el-icon-camera cameraIconfont" />
                 </div>
-                <div class="from-tips">请上传小于500kb的图片（350*350 px）</div>
+                <div class="from-tips">{{ $t('systemSetting.uploadImageUnder500kb350') }}</div>
               </div>
             </el-form-item>
-            <el-form-item label="H5商户logo（横）：" prop="rectangleLogo">
+            <el-form-item :label="$t('systemSetting.h5MerchantHorizontalLogoLabel')" prop="rectangleLogo">
               <div class="upLoadPicBox acea-row" @click="modalPicTap('1', 'rectangleLogo')">
                 <div v-if="merInfoForm.rectangleLogo" class="pictrue">
                   <img :src="merInfoForm.rectangleLogo" />
@@ -93,66 +121,92 @@
                 <div v-else class="upLoad">
                   <i class="el-icon-camera cameraIconfont" />
                 </div>
-                <div class="from-tips">请上传小于500kb的图片（300*88 px）</div>
+                <div class="from-tips">{{ $t('systemSetting.uploadImageUnder500kb300') }}</div>
               </div>
             </el-form-item>
-            <el-form-item label="商户简介：" prop="intro">
-              <el-input type="textarea" v-model.trim="merInfoForm.intro" maxlength="200" class="width100"></el-input>
+            <el-form-item :label="$t('systemSetting.merchantIntroLabel')" prop="intro" :rules="merchantIntroRules">
+              <div class="lang-name-switch width100">
+                <el-radio-group v-model="activeLang" size="small">
+                  <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                    {{ lang.label }}
+                  </el-radio-button>
+                </el-radio-group>
+                <el-input
+                  v-if="activeLang === defaultLangCode"
+                  type="textarea"
+                  v-model.trim="merInfoForm.intro"
+                  maxlength="200"
+                  :rows="3"
+                  show-word-limit
+                  :placeholder="$t('systemSetting.pleaseEnterMerchantIntro')"
+                  class="lang-name-input"
+                />
+                <el-input
+                  v-else
+                  type="textarea"
+                  v-model.trim="introJsonForm[activeLang]"
+                  maxlength="200"
+                  :rows="3"
+                  show-word-limit
+                  :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+                  class="lang-name-input"
+                />
+              </div>
             </el-form-item>
-            <el-form-item label="商户关键字：" prop="labelarr">
+            <el-form-item :label="$t('systemSetting.merchantKeywordsLabel')" prop="labelarr">
               <keyword @getLabelarr="getLabelarr" :labelarr="labelarr" class="width100"></keyword>
             </el-form-item>
-            <el-form-item label="客服类型：" prop="serviceType">
-              <el-select v-model="merInfoForm.serviceType" placeholder="请选择" class="width100">
+            <el-form-item :label="$t('systemSetting.customerServiceTypeLabel')" prop="serviceType">
+              <el-select v-model="merInfoForm.serviceType" :placeholder="$t('common.pleaseSelect')" class="width100">
                 <el-option v-for="item in serviceList" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-if="merInfoForm.serviceType === 'H5'" label="H5链接：" prop="serviceLink">
+            <el-form-item v-if="merInfoForm.serviceType === 'H5'" :label="$t('systemSetting.h5LinkLabel')" prop="serviceLink">
               <el-input v-model.trim="merInfoForm.serviceLink" class="width100"></el-input>
             </el-form-item>
-            <el-form-item v-if="merInfoForm.serviceType === 'phone'" label="电话：" prop="servicePhone">
+            <el-form-item v-if="merInfoForm.serviceType === 'phone'" :label="$t('systemSetting.phoneLabel')" prop="servicePhone">
               <el-input v-model.trim="merInfoForm.servicePhone" class="width100"></el-input>
             </el-form-item>
-            <el-form-item label="警戒库存：" prop="alertStock">
+            <el-form-item :label="$t('systemSetting.alertStockLabel')" prop="alertStock">
               <el-input-number
                 v-model.trim="merInfoForm.alertStock"
                 :min="1"
                 :max="9999"
-                label="警戒库存"
+                :label="$t('systemSetting.alertStock')"
               ></el-input-number>
             </el-form-item>
-            <el-form-item label="自提开关：" prop="alertStock">
+            <el-form-item :label="$t('systemSetting.pickupSwitchLabel')" prop="alertStock">
               <el-switch
                 v-model="merInfoForm.isTakeTheir"
                 :active-value="true"
                 :inactive-value="false"
-                active-text="开启"
-                inactive-text="关闭"
+                :active-text="$t('common.open')"
+                :inactive-text="$t('common.close')"
               >
               </el-switch>
             </el-form-item>
-            <el-form-item label="小票打印开关：" prop="receiptPrintingSwitch">
+            <el-form-item :label="$t('systemSetting.receiptPrintingSwitchLabel')" prop="receiptPrintingSwitch">
               <el-radio-group v-model="merInfoForm.receiptPrintingSwitch">
                 <!--                  小票打印开关：0关闭，1=手动打印，2=自动打印，3=自动和手动-->
-                <el-radio :label="0">关闭</el-radio>
-                <el-radio :label="1">手动打印</el-radio>
-                <el-radio :label="2">自动打印</el-radio>
-                <el-radio :label="3">自动和手动</el-radio>
+                <el-radio :label="0">{{ $t('common.close') }}</el-radio>
+                <el-radio :label="1">{{ $t('systemSetting.manualPrint') }}</el-radio>
+                <el-radio :label="2">{{ $t('systemSetting.autoPrint') }}</el-radio>
+                <el-radio :label="3">{{ $t('systemSetting.autoAndManualPrint') }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="电子面单开关：" prop="electrPrintingSwitch">
+            <el-form-item :label="$t('systemSetting.electronicWaybillSwitchLabel')" prop="electrPrintingSwitch">
               <el-radio-group v-model="merInfoForm.electrPrintingSwitch">
-                <el-radio :label="0">关闭</el-radio>
-                <el-radio :label="1">开启</el-radio>
+                <el-radio :label="0">{{ $t('common.close') }}</el-radio>
+                <el-radio :label="1">{{ $t('common.open') }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="商户地址：" prop="addressDetail">
+            <el-form-item :label="$t('systemSetting.merchantAddressLabel')" prop="addressDetail">
               <el-input
                 class="width100"
                 v-model="merInfoForm.addressDetail"
-                enter-button="查找位置"
-                placeholder="请查找位置"
+                :enter-button="$t('systemSetting.findLocation')"
+                :placeholder="$t('systemSetting.pleaseFindLocation')"
                 readonly
               >
                 <!--<el-button-->
@@ -164,19 +218,19 @@
               <iframe id="mapPage" width="100%" height="500px" frameborder="0" :src="keyUrl" />
             </el-form-item>
             <el-form-item v-if="checkPermi(['merchant:config:info:edit'])">
-              <el-button type="primary" @click="handlerSubmit('merInfoForm')">确定</el-button>
+              <el-button type="primary" @click="handlerSubmit('merInfoForm')">{{ $t('common.confirm') }}</el-button>
             </el-form-item>
           </el-form>
         </div>
       </div>
       <div v-if="loginType === '3'" class="business-msg">
         <div class="form-data">
-          <el-form ref="settlementForm" :model="settlementForm" label-width="100px">
-            <el-form-item label="结算类型：" label-width="120px">
+          <el-form ref="settlementForm" :model="settlementForm" label-width="160px">
+            <el-form-item :label="$t('systemSetting.settlementTypeLabel')" label-width="160px">
               <el-radio-group v-model="settlementForm.settlementType">
-                <el-radio label="bank">银行卡</el-radio>
-                <el-radio label="wechat">微信</el-radio>
-                <el-radio label="alipay">支付宝</el-radio>
+                <el-radio label="bank">{{ $t('systemSetting.bankCard') }}</el-radio>
+                <el-radio label="wechat">{{ $t('systemSetting.wechat') }}</el-radio>
+                <el-radio label="alipay">{{ $t('systemSetting.alipay') }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-form>
@@ -215,13 +269,24 @@ import {
 } from '@/api/merchant';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
 import { Debounce } from '@/utils/validate';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import {
+  getLocalizedName,
+  getLocalizedText,
+  getUiLocale,
+  resolveFormActiveLang,
+  hasI18nNameContent,
+  buildI18nNameJson,
+  pickI18nSubmitName,
+} from '@/utils/localizedName';
 import Cookies from 'js-cookie';
 export default {
   name: 'Information',
   data() {
     var checkPhone = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入客服电话'));
+        callback(new Error(this.$t('systemSetting.pleaseEnterCustomerServicePhone')));
       } else {
         let regPone = null;
         const mobile = /^1(3|4|5|6|7|8|9)\d{9}$/; // 最新16手机正则
@@ -233,14 +298,14 @@ export default {
           regPone = mobile;
         }
         if (!regPone.test(value)) {
-          return callback(new Error("请填写客服电话(座机格式'区号-座机号码')"));
+          return callback(new Error(this.$t('systemSetting.customerServicePhoneFormat')));
         }
         callback();
       }
     };
     const validateVal = (rule, value, callback) => {
       if (this.labelarr.length === 0) {
-        callback(new Error('请输入后回车'));
+        callback(new Error(this.$t('common.inputThenEnter')));
       } else {
         callback();
       }
@@ -249,17 +314,19 @@ export default {
       formConf: { fields: [] },
       isCreate: 0,
       loginType: '1',
-      headeNum: [
-        { type: '1', name: '商户信息' },
-        { type: '2', name: '店铺信息' },
-        { type: '3', name: '结算信息' },
-      ],
       merData: {}, // 默认数据
       submitLoading: false, // 提交loading
       editData: {},
       transferData: {},
       keyNum: 0,
       loading: false,
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      introJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
       merInfoForm: {
         avatar: '',
         backImage: '',
@@ -281,29 +348,28 @@ export default {
         txMapKey: '',
       },
       rules: {
-        intro: [{ required: true, message: '请输入商户简介', trigger: 'blur' }],
-        avatar: [{ required: true, message: '请上传商户主头像', trigger: 'change' }],
-        backImage: [{ required: true, message: '请上传H5商户背景图', trigger: 'change' }],
-        streetBackImage: [{ required: true, message: '请上传H5商户街背景图', trigger: 'change' }],
-        coverImage: [{ required: true, message: '请上传商户封面图', trigger: 'change' }],
-        rectangleLogo: [{ required: true, message: '请上传商户logo（横）', trigger: 'change' }],
+        avatar: [{ required: true, message: this.$t('systemSetting.pleaseUploadMerchantAvatar'), trigger: 'change' }],
+        backImage: [{ required: true, message: this.$t('systemSetting.pleaseUploadH5MerchantBackground'), trigger: 'change' }],
+        streetBackImage: [{ required: true, message: this.$t('systemSetting.pleaseUploadH5MerchantStreetBackground'), trigger: 'change' }],
+        coverImage: [{ required: true, message: this.$t('systemSetting.pleaseUploadMerchantCover'), trigger: 'change' }],
+        rectangleLogo: [{ required: true, message: this.$t('systemSetting.pleaseUploadHorizontalLogo'), trigger: 'change' }],
         labelarr: [{ required: true, validator: validateVal, trigger: 'blur' }],
-        alertStock: [{ required: true, message: '请输入警戒库存', trigger: 'blur' }],
-        serviceType: [{ required: true, message: '请选择客服类型', trigger: 'change' }],
-        serviceLink: [{ required: true, message: '请输入H5链接', trigger: 'blur' }],
+        alertStock: [{ required: true, message: this.$t('systemSetting.pleaseEnterAlertStock'), trigger: 'blur' }],
+        serviceType: [{ required: true, message: this.$t('systemSetting.pleaseSelectCustomerServiceType'), trigger: 'change' }],
+        serviceLink: [{ required: true, message: this.$t('systemSetting.pleaseEnterH5Link'), trigger: 'blur' }],
         servicePhone: [{ required: true, validator: checkPhone, trigger: 'blur' }],
-        addressDetail: [{ required: true, message: '请选择商户地址', trigger: 'blur' }],
+        addressDetail: [{ required: true, message: this.$t('systemSetting.pleaseSelectMerchantAddress'), trigger: 'blur' }],
       },
       keyUrl: '',
       labelarr: [],
       serviceList: [
         {
           value: 'H5',
-          label: 'H5链接',
+          label: this.$t('systemSetting.h5Link'),
         },
         {
           value: 'phone',
-          label: '电话',
+          label: this.$t('systemSetting.phone'),
         },
       ],
       settlementForm: {
@@ -312,7 +378,47 @@ export default {
       formId: '结算信息-银行卡',
     };
   },
+  computed: {
+    headerTabs() {
+      return [
+        { type: '1', name: this.$t('systemSetting.merchantInfo') },
+        { type: '2', name: this.$t('systemSetting.storeInfo') },
+        { type: '3', name: this.$t('systemSetting.settlementInfo') },
+      ];
+    },
+    displayMerchantName() {
+      this.$i18n.locale;
+      return getLocalizedName(this.merData, getUiLocale(this));
+    },
+    displayMerCategory() {
+      this.$i18n.locale;
+      return getLocalizedText(this.merData.merCategory, this.merData.merCategoryJson, getUiLocale(this));
+    },
+    displayMerType() {
+      this.$i18n.locale;
+      return getLocalizedText(this.merData.merType, this.merData.merTypeJson, getUiLocale(this));
+    },
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    merchantIntroRules() {
+      this.$i18n.locale;
+      return [
+        {
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(this.merInfoForm.intro, this.introJsonForm)) callback();
+            else callback(new Error(this.$t('systemSetting.pleaseEnterMerchantIntro')));
+          },
+          trigger: ['blur', 'change'],
+        },
+      ];
+    },
+  },
   watch: {
+    '$i18n.locale'() {
+      this.activeLang = resolveFormActiveLang(this);
+    },
     'settlementForm.settlementType': {
       handler: function (val) {
         switch (val) {
@@ -336,6 +442,7 @@ export default {
     if (checkPermi(['merchant:config:info'])) this.getConfigInfo();
     if (checkPermi(['merchant:settlement:info'])) this.getMerchantTransfer();
     if (checkPermi(['merchant:base:info'])) this.getInfo();
+    this.getLanguageList();
   },
   mounted: function () {
     let that = this;
@@ -393,12 +500,12 @@ export default {
       this.merInfoForm.longitude = data.latlng.lng;
     },
     changeSwitch() {
-      const changeSwitch = this.merData.isSwitch ? '开启' : '关闭';
-      this.$modalSure(`${changeSwitch}该商户吗`)
+      const changeSwitch = this.merData.isSwitch ? this.$t('common.open') : this.$t('common.close');
+      this.$modalSure(this.$t('systemSetting.changeMerchantStatusConfirm', { action: changeSwitch }))
         .then(() => {
           merchantSwitchApi()
             .then((res) => {
-              this.$modal.msgSuccess('修改成功');
+              this.$modal.msgSuccess(this.$t('user.modifySuccess'));
             })
             .catch(() => {
               this.merData.isSwitch = !this.merData.isSwitch;
@@ -412,8 +519,13 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.merInfoForm.keywords = this.labelarr.join(',');
-          merchantUpdateApi(this.merInfoForm).then((res) => {
-            this.$message.success('操作成功');
+          const payload = {
+            ...this.merInfoForm,
+            intro: pickI18nSubmitName(this.merInfoForm.intro, this.introJsonForm),
+            introJson: this.buildIntroJson(),
+          };
+          merchantUpdateApi(payload).then((res) => {
+            this.$message.success(this.$t('user.operationSuccess'));
             Cookies.set('merPrint', this.merInfoForm.receiptPrintingSwitch); // 打印机标识
             Cookies.set('merElectPrint', this.merInfoForm.electrPrintingSwitch); // 电子面单打印开关
             this.getConfigInfo();
@@ -439,11 +551,11 @@ export default {
           wechatQrcodeUrl: formValue.wechatQrcodeUrl,
           realName: formValue.realName,
         }).then((res) => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('user.operationSuccess'));
           this.getMerchantTransfer();
         });
       } else {
-        this.$message.warning('暂无操作权限');
+        this.$message.warning(this.$t('user.noPermission'));
       }
     }),
     // 获取商户信息
@@ -465,8 +577,56 @@ export default {
         this.merInfoForm = res;
         this.keyUrl = `https://apis.map.qq.com/tools/locpicker?type=1&key=${this.merInfoForm.txMapKey}&referer=myapp`;
         localStorage.setItem('JavaMerchantConfigInfo', JSON.stringify(res));
-        this.labelarr = res.keywords.split(',') || [];
+        this.labelarr = (res.keywords && res.keywords.split(',')) || [];
+        this.introJsonForm = this.parseIntroJson(res.introJson);
+        this.activeLang = resolveFormActiveLang(this);
       });
+    },
+    emptyIntroJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    parseIntroJson(introJson) {
+      const form = this.emptyIntroJsonForm();
+      if (!introJson) return form;
+      try {
+        const obj = typeof introJson === 'string' ? JSON.parse(introJson) : introJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // ignore
+      }
+      return form;
+    },
+    buildIntroJson() {
+      return buildI18nNameJson(this.langOptions, this.introJsonForm, this.defaultLangCode, this.merInfoForm.intro);
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.introJsonForm = this.parseIntroJson(this.merInfoForm && this.merInfoForm.introJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.introJsonForm = this.parseIntroJson(this.merInfoForm && this.merInfoForm.introJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
     },
     // 获取转账信息
     getMerchantTransfer() {
@@ -480,6 +640,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.lang-name-input {
+  margin-top: 10px;
+}
+
 .width100 {
   width: 700px;
 }
@@ -511,9 +682,9 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 25px 0 0 50px;
+  align-items: flex-start;
+  padding: 25px 0 0 20px;
 
-  /*align-items: center;*/
   h2 {
     text-align: center;
     color: #303133;
@@ -545,25 +716,36 @@ export default {
     margin-top: 30px;
   }
 
-  .basic-information {
+  .merchant-info-table {
+    display: table;
+    width: max-content;
+    max-width: 100%;
+    align-self: flex-start;
+    border-collapse: separate;
+    border-spacing: 0 14px;
     font-size: 13px;
     color: #303133;
-    font-weight: 400;
-    text-rendering: optimizeLegibility;
+  }
 
-    .tips {
-      color: #606266;
-      width: 110px;
-      text-align: right;
-    }
+  .merchant-info-row {
+    display: table-row;
+  }
 
-    > div {
-      margin-bottom: 16px;
-      flex-wrap: nowrap;
-      display: flex;
-      align-items: center;
-      white-space: nowrap;
-    }
+  .merchant-info-label {
+    display: table-cell;
+    padding-right: 20px;
+    text-align: right;
+    vertical-align: top;
+    white-space: nowrap;
+    color: #606266;
+    line-height: 22px;
+  }
+
+  .merchant-info-value {
+    display: table-cell;
+    vertical-align: top;
+    line-height: 22px;
+    word-break: break-all;
   }
 
   .trip {

@@ -88,7 +88,7 @@ public class UploadServiceImpl implements UploadService {
         try {
             fileResultVo = commonUpload(multipartFile, model, pid, UploadConstants.UPLOAD_FILE_KEYWORD, ownerId);
         } catch (IOException e) {
-            logger.error("图片上传IO异常，{}", e.getMessage());
+            logger.error("图片上传IO异常，{}", e.getMessage(), e);
             throw new CrmebException("图片上传 IO异常");
         }
         return fileResultVo;
@@ -109,7 +109,7 @@ public class UploadServiceImpl implements UploadService {
         try {
             fileResultVo = commonUpload(multipartFile, model, pid, UploadConstants.UPLOAD_FILE_KEYWORD, ownerId);
         } catch (IOException e) {
-            logger.error("图片上传IO异常，{}", e.getMessage());
+            logger.error("图片上传IO异常，{}", e.getMessage(), e);
             throw new CrmebException("图片上传 IO异常");
         }
         return fileResultVo;
@@ -349,13 +349,23 @@ public class UploadServiceImpl implements UploadService {
      */
     private String uploadValidate(String fileName, float fileSize, String fileType, String contentType) {
         // 文件后缀名
-        String extName = FilenameUtils.getExtension(fileName).toLowerCase();
-        if (StrUtil.isEmpty(extName)) {
-            if (StrUtil.isNotBlank(contentType)) {
-                extName = contentType.split("/")[1];
-            } else {
-                throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "文件类型未定义，无法上传...");
+        String extName = FilenameUtils.getExtension(fileName == null ? "" : fileName).toLowerCase();
+        if (StrUtil.isEmpty(extName) || "blob".equalsIgnoreCase(fileName) || "image".equals(extName)) {
+            if (StrUtil.isNotBlank(contentType) && contentType.contains("/")) {
+                extName = contentType.substring(contentType.indexOf('/') + 1).toLowerCase();
+                if (extName.contains(";")) {
+                    extName = extName.substring(0, extName.indexOf(';'));
+                }
             }
+        }
+        if ("jpeg".equals(extName) || "jfif".equals(extName) || "pjpeg".equals(extName)) {
+            extName = "jpg";
+        }
+        if ("x-png".equals(extName)) {
+            extName = "png";
+        }
+        if (StrUtil.isEmpty(extName)) {
+            throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "文件类型未定义，无法上传...");
         }
 
         String extStr = systemConfigService.getValueByKey(fileType.equals(UploadConstants.UPLOAD_AFTER_FILE_KEYWORD) ? SysConfigConstants.UPLOAD_FILE_EXT_STR_CONFIG_KEY : SysConfigConstants.UPLOAD_IMAGE_EXT_STR_CONFIG_KEY);
@@ -401,7 +411,7 @@ public class UploadServiceImpl implements UploadService {
         float fileSize = (float) multipartFile.getSize() / 1024 / 1024;
         // 文件后缀名
         String extName = uploadValidate(fileName, fileSize, fileType, multipartFile.getContentType());
-        if (fileName.length() > 99) {
+        if (fileName != null && fileName.length() > 99) {
             fileName = StrUtil.subPre(fileName, 90).concat(".").concat(extName);
         }
 
@@ -418,8 +428,11 @@ public class UploadServiceImpl implements UploadService {
         String webPath = type + modelPath + CrmebDateUtil.nowDate("yyyy/MM/dd") + "/";
         // 文件分隔符转化为当前系统的格式
         String destPath = FilenameUtils.separatorsToSystem(rootPath + webPath) + newFileName;
-        // 创建文件
-        File file = UploadUtil.createFile(destPath);
+        File file = new File(destPath);
+        File dir = file.getParentFile();
+        if (dir != null && !dir.exists() && !dir.mkdirs()) {
+            throw new CrmebException("文件目录创建失败...");
+        }
 
         // 拼装返回的数据
         FileResultVo resultFile = new FileResultVo();
@@ -428,7 +441,9 @@ public class UploadServiceImpl implements UploadService {
         resultFile.setExtName(extName);
         resultFile.setUrl(webPath + newFileName);
         resultFile.setType(multipartFile.getContentType());
-        if (fileType.equals(UploadConstants.UPLOAD_FILE_KEYWORD)) {
+        if (resultFile.getType() == null) {
+            resultFile.setType(extName);
+        } else if (fileType.equals(UploadConstants.UPLOAD_FILE_KEYWORD)) {
             resultFile.setType(resultFile.getType().replace("image/", ""));
         } else {
             resultFile.setType(resultFile.getType().replace("file/", ""));
@@ -447,15 +462,14 @@ public class UploadServiceImpl implements UploadService {
         String uploadType = systemConfigService.getValueByKeyException(SysConfigConstants.CONFIG_UPLOAD_TYPE);
         Integer uploadTypeInt = Integer.parseInt(uploadType);
         if (uploadTypeInt.equals(1)) {
-            // 保存文件
-            multipartFile.transferTo(file);
+            writeMultipartFile(multipartFile, file);
             systemAttachmentService.save(systemAttachment);
             return resultFile;
         }
         CloudVo cloudVo = new CloudVo();
         // 判断是否保存本地
         String fileIsSave = systemConfigService.getValueByKeyException(SysConfigConstants.CONFIG_FILE_IS_SAVE);
-        multipartFile.transferTo(file);
+        writeMultipartFile(multipartFile, file);
         switch (uploadTypeInt) {
             case 2:
                 systemAttachment.setImageType(2);
@@ -547,6 +561,18 @@ public class UploadServiceImpl implements UploadService {
             file.delete();
         }
         return resultFile;
+    }
+
+    private void writeMultipartFile(MultipartFile multipartFile, File dest) throws IOException {
+        try (java.io.InputStream in = multipartFile.getInputStream();
+             FileOutputStream out = new FileOutputStream(dest)) {
+            byte[] buf = new byte[8192];
+            int n;
+            while ((n = in.read(buf)) > 0) {
+                out.write(buf, 0, n);
+            }
+            out.flush();
+        }
     }
 }
 

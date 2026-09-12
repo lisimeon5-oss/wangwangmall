@@ -7,7 +7,7 @@
 					<view class='listn borRadius14'>
 						<view class='itemn acea-row row-between-wrapper' v-for="(item,index) in signList" :key="index">
 							<view>
-								<view class='name line1'>{{item.mark}}</view>
+								<view class='name line1'>{{$t(item.mark)}}</view>
 								<view>{{item.date}}</view>
 							</view>
 						</view>
@@ -15,13 +15,13 @@
 				</view>
 			</view>
 			<view class='loadingicon acea-row row-center-wrapper'>
-				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{loadtitle}}
+				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{$t(loadtitle)}}
 			</view>
 		</view>
 		<view class='noCommodity' v-if="!signList.length">
 			<view class='pictrue text-center'>
 				<image :src="urlDomain+'crmebimage/presets/noqiandao.png'"></image>
-				<view class="default_txt">暂无签到记录哦~</view>
+				<view class="default_txt">{{$t('暂无签到记录哦~')}}</view>
 			</view>
 		</view>
 	</view>
@@ -102,7 +102,7 @@
 					that.$set(that, 'signList', that.signList);
 					that.loadend = loadend;
 					that.loading = false;
-					that.loadtitle = loadend ? "哼??~我也是有底线的~" : "加载更多"
+					that.loadtitle = loadend ? '我是有底线的' : '加载更多'
 				}).catch(err => {
 					that.loading = false;
 					that.loadtitle = '加载更多';

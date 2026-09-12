@@ -2,40 +2,47 @@
   <div class="divBox">
     <pages-header
       ref="pageHeader"
-      :title="$route.params.id ? '编辑文章' : '添加文章'"
+      :title="$route.params.id ? $t('content.editArticle') : $t('content.addArticle')"
       backUrl="/marketing/content/articleManager"
     ></pages-header>
     <el-card class="box-card mt14" shadow="never" :bordered="false" :body-style="{ padding: '40px 50px' }">
       <div class="components-container">
-        <el-form ref="pram" label-width="81px" :model="pram" size="small">
-          <el-form-item
-            label="标题："
-            prop="title"
-            :rules="[{ required: true, message: '请填写标题', trigger: ['blur', 'change'] }]"
-          >
-            <el-input v-model.trim="pram.title" class="from-ipt-width" placeholder="标题" maxlength="100" />
+        <el-form :key="'article-form-' + ($i18n.locale || '')" ref="pram" label-width="110px" :model="pram" :rules="rules" size="small">
+          <el-form-item :label="$t('common.language')">
+            <div class="lang-name-switch">
+              <el-radio-group v-model="activeLang" size="small">
+                <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                  {{ lang.label }}
+                </el-radio-button>
+              </el-radio-group>
+            </div>
           </el-form-item>
-          <el-form-item
-            label="作者："
-            prop="author"
-            :rules="[{ required: true, message: '请填作者', trigger: ['blur', 'change'] }]"
-          >
-            <el-input v-model.trim="pram.author" class="from-ipt-width" placeholder="作者" maxlength="20" />
+          <el-form-item :label="$t('content.titleLabel')" prop="title">
+            <el-input
+              v-if="activeLang === defaultLangCode"
+              v-model.trim="pram.title"
+              class="from-ipt-width"
+              :placeholder="$t('content.title')"
+              maxlength="100"
+            />
+            <el-input
+              v-else
+              v-model.trim="titleJsonForm[activeLang]"
+              class="from-ipt-width"
+              :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+              maxlength="100"
+            />
           </el-form-item>
-          <el-form-item
-            label="文章分类："
-            :rules="[{ required: true, message: '请选择分类', trigger: ['blur', 'change'] }]"
-          >
-            <el-select v-model.trim="pram.cid" placeholder="请选择" class="from-ipt-width">
-              <el-option v-for="item in categoryTreeData" :key="item.id" :label="item.name" :value="item.id">
+          <el-form-item :label="$t('content.authorLabel')" prop="author">
+            <el-input v-model.trim="pram.author" class="from-ipt-width" :placeholder="$t('content.author')" maxlength="20" />
+          </el-form-item>
+          <el-form-item :label="$t('content.articleCategoryLabel')" prop="cid">
+            <el-select v-model.trim="pram.cid" :placeholder="$t('el.select.placeholder')" class="from-ipt-width">
+              <el-option v-for="item in categoryTreeData" :key="item.id" :label="localizedCategoryName(item)" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item
-            label="图文封面："
-            prop="cover"
-            :rules="[{ required: true, message: '请上传图文封面', trigger: 'change' }]"
-          >
+          <el-form-item :label="$t('content.coverLabel')" prop="cover">
             <div class="upLoadPicBox" @click="modalPicTap(false)">
               <div v-if="pram.cover" class="pictrue"><img :src="pram.cover" /></div>
               <div v-else class="upLoad">
@@ -43,36 +50,40 @@
               </div>
             </div>
           </el-form-item>
-          <el-form-item
-            label="文章简介："
-            prop="synopsis"
-            :rules="[{ required: true, message: '请填写文章简介', trigger: ['blur', 'change'] }]"
-          >
+          <el-form-item :label="$t('content.articleIntroLabel')" prop="synopsis">
             <el-input
+              v-if="activeLang === defaultLangCode"
               v-model.trim="pram.synopsis"
               maxlength="100"
               type="textarea"
               :rows="2"
               resize="none"
               class="from-ipt-width"
-              placeholder="文章简介"
+              :placeholder="$t('content.articleIntro')"
+            />
+            <el-input
+              v-else
+              v-model.trim="synopsisJsonForm[activeLang]"
+              maxlength="100"
+              type="textarea"
+              :rows="2"
+              resize="none"
+              class="from-ipt-width"
+              :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
             />
           </el-form-item>
-          <el-form-item
-            label="文章内容："
-            prop="content"
-            :rules="[{ required: true, message: '请填写文章内容', trigger: ['blur', 'change'] }]"
-          >
-            <Tinymce v-model.trim="pram.content"></Tinymce>
+          <el-form-item :label="$t('content.articleContentLabel')" prop="content">
+            <Tinymce v-if="activeLang === defaultLangCode" :key="'content-' + defaultLangCode" v-model="pram.content"></Tinymce>
+            <Tinymce v-else :key="'content-' + activeLang" v-model="contentJsonForm[activeLang]"></Tinymce>
           </el-form-item>
-          <el-form-item label="排序：">
-            <el-input-number v-model.trim="pram.sort" :min="0" :max="10" label="排序"></el-input-number>
+          <el-form-item :label="$t('product.sortLabel')">
+            <el-input-number v-model.trim="pram.sort" :min="0" :max="10" :label="$t('product.sort')"></el-input-number>
           </el-form-item>
-          <el-form-item label="是否Banner：">
-            <el-switch v-model.trim="pram.isBanner" active-text="是" inactive-text="否" />
+          <el-form-item :label="$t('content.isBannerLabel')">
+            <el-switch v-model.trim="pram.isBanner" :active-text="$t('common.yes')" :inactive-text="$t('common.no')" />
           </el-form-item>
-          <el-form-item label="是否热门：">
-            <el-switch v-model.trim="pram.isHot" active-text="是" inactive-text="否" />
+          <el-form-item :label="$t('content.isHotLabel')">
+            <el-switch v-model.trim="pram.isHot" :active-text="$t('common.yes')" :inactive-text="$t('common.no')" />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -80,7 +91,7 @@
               :loading="loading"
               @click="handerSubmit('pram')"
               v-hasPermi="['platform:article:update', 'platform:article:save']"
-              >保存</el-button
+              >{{ $t('common.save') }}</el-button
             >
           </el-form-item>
         </el-form>
@@ -90,19 +101,19 @@
 </template>
 
 <script>
-// +---------------------------------------------------------------------
-// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
-// +---------------------------------------------------------------------
-// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
-// +---------------------------------------------------------------------
-// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
-// +---------------------------------------------------------------------
-// | Author: CRMEB Team <admin@crmeb.com>
-// +---------------------------------------------------------------------
 import Tinymce from '@/components/Tinymce/index';
 import * as articleApi from '@/api/article.js';
 import { getToken } from '@/utils/auth';
 import { Debounce } from '@/utils/validate';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import {
+  getLocalizedName,
+  getUiLocale,
+  resolveFormActiveLang,
+  hasI18nNameContent,
+  buildI18nNameJson,
+} from '@/utils/localizedName';
 export default {
   components: { Tinymce },
   data() {
@@ -121,7 +132,7 @@ export default {
       pram: {
         author: null,
         cid: null,
-        content: '', //<span>My Document\'s Title</span>
+        content: '',
         cover: '',
         isBanner: false,
         isHot: null,
@@ -130,18 +141,70 @@ export default {
         sort: 0,
         synopsis: null,
         title: null,
+        titleJson: '',
+        synopsisJson: '',
+        contentJson: '',
         id: null,
-        // mediaId: null
       },
       editData: {},
       myHeaders: { 'X-Token': getToken() },
       editorContentLaebl: '',
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      titleJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
+      synopsisJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
+      contentJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
     };
+  },
+  computed: {
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    rules() {
+      return {
+        title: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(this.pram.title, this.titleJsonForm)) callback();
+            else callback(new Error(this.$t('content.pleaseFillTitle')));
+          },
+          trigger: ['blur', 'change'],
+        }],
+        author: [{ required: true, message: this.$t('content.pleaseFillAuthor'), trigger: ['blur', 'change'] }],
+        cid: [{ required: true, message: this.$t('content.pleaseSelectCategory'), trigger: ['blur', 'change'] }],
+        cover: [{ required: true, message: this.$t('content.pleaseUploadCover'), trigger: 'change' }],
+        synopsis: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(this.pram.synopsis, this.synopsisJsonForm)) callback();
+            else callback(new Error(this.$t('content.pleaseFillArticleIntro')));
+          },
+          trigger: ['blur', 'change'],
+        }],
+        content: [{
+          validator: (rule, value, callback) => {
+            if (this.hasI18nHtml(this.pram.content, this.contentJsonForm)) callback();
+            else callback(new Error(this.$t('content.pleaseFillArticleContent')));
+          },
+          trigger: ['blur', 'change'],
+        }],
+      };
+    },
   },
   created() {
     this.tempRoute = Object.assign({}, this.$route);
   },
   mounted() {
+    this.getLanguageList();
     if (localStorage.getItem('articleClass')) {
       this.categoryTreeData = JSON.parse(localStorage.getItem('articleClass'));
     } else {
@@ -153,6 +216,66 @@ export default {
     }
   },
   methods: {
+    localizedCategoryName(row) {
+      return getLocalizedName(row, getUiLocale(this));
+    },
+    htmlHasText(html) {
+      return String(html || '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .trim().length > 0;
+    },
+    hasI18nHtml(defaultHtml, form) {
+      if (this.htmlHasText(defaultHtml)) return true;
+      return Object.keys(form || {}).some((key) => this.htmlHasText(form[key]));
+    },
+    emptyLangForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    parseLangJson(json) {
+      const form = this.emptyLangForm();
+      if (!json) return form;
+      try {
+        const obj = typeof json === 'string' ? JSON.parse(json) : json;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // ignore
+      }
+      return form;
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.titleJsonForm = this.parseLangJson(this.pram.titleJson);
+          this.synopsisJsonForm = this.parseLangJson(this.pram.synopsisJson);
+          this.contentJsonForm = this.parseLangJson(this.pram.contentJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.titleJsonForm = this.parseLangJson(this.pram.titleJson);
+          this.synopsisJsonForm = this.parseLangJson(this.pram.synopsisJson);
+          this.contentJsonForm = this.parseLangJson(this.pram.contentJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     getInfo() {
       articleApi.InfoArticle(this.$route.params.id).then((data) => {
         this.editData = data;
@@ -172,11 +295,27 @@ export default {
     },
     hadlerInitEditData() {
       if (!this.$route.params.id) return;
-      const { author, cid, content, cover, isBanner, isHot, shareSynopsis, shareTitle, sort, synopsis, title, id } =
-        this.editData;
+      const {
+        author,
+        cid,
+        content,
+        contentJson,
+        cover,
+        isBanner,
+        isHot,
+        shareSynopsis,
+        shareTitle,
+        sort,
+        synopsis,
+        synopsisJson,
+        title,
+        titleJson,
+        id,
+      } = this.editData;
       this.pram.author = author;
       this.pram.cid = Number.parseInt(cid);
       this.pram.content = content;
+      this.pram.contentJson = contentJson || '';
       this.pram.cover = cover;
       this.pram.isBanner = isBanner;
       this.pram.isHot = isHot;
@@ -184,8 +323,14 @@ export default {
       this.pram.shareTitle = shareTitle;
       this.pram.sort = sort;
       this.pram.synopsis = synopsis;
+      this.pram.synopsisJson = synopsisJson || '';
       this.pram.title = title;
+      this.pram.titleJson = titleJson || '';
       this.pram.id = id;
+      this.titleJsonForm = this.parseLangJson(titleJson);
+      this.synopsisJsonForm = this.parseLangJson(synopsisJson);
+      this.contentJsonForm = this.parseLangJson(contentJson);
+      this.activeLang = resolveFormActiveLang(this);
     },
     handlerGetCategoryTreeData() {
       articleApi.articleCategoryListApi().then((data) => {
@@ -195,6 +340,22 @@ export default {
         });
         localStorage.setItem('articleClass', JSON.stringify(list));
       });
+    },
+    buildPayload() {
+      const titleJson = buildI18nNameJson(this.langOptions, this.titleJsonForm, this.defaultLangCode, this.pram.title);
+      const synopsisJson = buildI18nNameJson(this.langOptions, this.synopsisJsonForm, this.defaultLangCode, this.pram.synopsis);
+      const contentJson = buildI18nNameJson(this.langOptions, this.contentJsonForm, this.defaultLangCode, this.pram.content);
+      return {
+        ...this.pram,
+        title: this.pram.title,
+        titleJson,
+        synopsis: this.pram.synopsis,
+        synopsisJson,
+        content: this.pram.content,
+        contentJson,
+        shareTitle: this.pram.title,
+        shareSynopsis: this.pram.synopsis,
+      };
     },
     handerSubmit: Debounce(function (form) {
       this.$refs[form].validate((valid) => {
@@ -208,12 +369,10 @@ export default {
     }),
     handlerUpdate() {
       this.loading = true;
-      this.pram.shareTitle = this.pram.title;
-      this.pram.shareSynopsis = this.pram.synopsis;
       articleApi
-        .UpdateArticle(this.pram)
+        .UpdateArticle(this.buildPayload())
         .then((data) => {
-          this.$message.success('编辑文章成功');
+          this.$message.success(this.$t('content.editArticleSuccess'));
           this.loading = false;
           this.$router.push({ path: '/marketing/content/articleManager' });
         })
@@ -223,13 +382,10 @@ export default {
     },
     handlerSave() {
       this.loading = true;
-      //this.pram.cid = Array.isArray(this.pram.cid) ? this.pram.cid[0] : this.pram.cid
-      this.pram.shareTitle = this.pram.title;
-      this.pram.shareSynopsis = this.pram.synopsis;
       articleApi
-        .AddArticle(this.pram)
+        .AddArticle(this.buildPayload())
         .then((data) => {
-          this.$message.success('新增文章成功');
+          this.$message.success(this.$t('content.addArticleSuccess'));
           this.loading = false;
           this.$router.push({ path: '/marketing/content/articleManager' });
         })
@@ -238,7 +394,7 @@ export default {
         });
     },
     setTagsViewTitle() {
-      const title = '编辑文章';
+      const title = this.$t('content.editArticle');
       const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.$route.params.id}` });
       this.$store.dispatch('tagsView/updateVisitedView', route);
     },
@@ -246,4 +402,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+</style>

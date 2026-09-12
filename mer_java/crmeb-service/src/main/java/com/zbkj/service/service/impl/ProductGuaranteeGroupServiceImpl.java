@@ -14,6 +14,7 @@ import com.zbkj.common.response.ProductGuaranteeGroupListResponse;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.ProductResultCode;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.service.dao.ProductGuaranteeGroupDao;
 import com.zbkj.service.service.MerchantProductGuaranteeGroupService;
@@ -62,7 +63,8 @@ public class ProductGuaranteeGroupServiceImpl extends ServiceImpl<ProductGuarant
         List<Integer> gidList = CrmebUtil.stringToArray(gids);
         ProductGuaranteeGroup productGuaranteeGroup = new ProductGuaranteeGroup();
         productGuaranteeGroup.setMerId(systemAdmin.getMerId());
-        productGuaranteeGroup.setName(request.getName());
+        productGuaranteeGroup.setName(I18nJsonUtil.emptyToBlank(request.getName()));
+        productGuaranteeGroup.setNameJson(request.getNameJson());
         productGuaranteeGroup.setIsDel(false);
 
         List<MerchantProductGuaranteeGroup> mpGroupList = gidList.stream().map(gid -> {
@@ -72,7 +74,7 @@ public class ProductGuaranteeGroupServiceImpl extends ServiceImpl<ProductGuarant
             return group;
         }).collect(Collectors.toList());
         return transactionTemplate.execute(e -> {
-            save(productGuaranteeGroup);
+            dao.insertWithNameJson(productGuaranteeGroup);
             mpGroupList.forEach(mp -> mp.setGroupId(productGuaranteeGroup.getId()));
             merchantProductGuaranteeGroupService.saveBatch(mpGroupList);
             return Boolean.TRUE;
@@ -122,10 +124,10 @@ public class ProductGuaranteeGroupServiceImpl extends ServiceImpl<ProductGuarant
             return group;
         }).collect(Collectors.toList());
         return transactionTemplate.execute(e -> {
-            if (!guaranteeGroup.getName().equals(request.getName())) {
-                guaranteeGroup.setName(request.getName());
-                updateById(guaranteeGroup);
-            }
+            dao.updateNameFields(
+                    guaranteeGroup.getId(),
+                    I18nJsonUtil.emptyToBlank(request.getName()),
+                    request.getNameJson());
             merchantProductGuaranteeGroupService.deleteByGroupId(guaranteeGroup.getId());
             merchantProductGuaranteeGroupService.saveBatch(mpGroupList);
             return Boolean.TRUE;

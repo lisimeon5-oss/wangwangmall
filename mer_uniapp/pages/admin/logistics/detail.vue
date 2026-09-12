@@ -4,19 +4,19 @@
 			<view class="w-full abs-lb white_jianbian"></view>
 		</view>
 		<!-- #ifdef MP -->
-		<NavBar titleText="发货记录" :iconColor="iconColor" :textColor="iconColor" :isScrolling="isScrolling" showBack></NavBar>
+		<NavBar :titleText="$t('发货记录')" :iconColor="iconColor" :textColor="iconColor" :isScrolling="isScrolling" showBack></NavBar>
 		<!-- #endif -->
 		<view class="relative px-20 z-20 express_box">
 			<view class="h-66 b-r-16rpx light px-24 flex-between-center fs-22">
 				<text>{{orderInfo.expName}} {{orderInfo.number}}</text>
-				<text class="inline-block copy_btn fs-22 text--w111-333" @tap="copyOrderId">复制单号</text>
+				<text class="inline-block copy_btn fs-22 text--w111-333" @tap="copyOrderId">{{$t('复制单号')}}</text>
 			</view>
 		</view>
 		<view class="px-20 mt-20 relative">
 			<view class="bg--w111-fff rd-16rpx pt-32 pr-24 pl-24 pb-32">
 				<view class="flex-between-center">
 					<view class="fs-32 fw-500 text--w111-333">
-						<text>物流详情</text>
+						<text>{{$t('物流详情')}}</text>
 					</view>
 				</view>
 				<view class="logisticsCon mt-50 relative" v-if="expressList.length">
@@ -30,11 +30,11 @@
 						</view>
 					</view>
 					<view class="more-text fs-24" @tap="checkShowMore">
-						<text>{{showMore ? '收起' : '查看更多物流信息'}}</text>
+						<text>{{showMore ? $t('收起') : $t('查看更多物流信息')}}</text>
 						<text class="iconfont fs-24 pl-8" :class="showMore ? 'icon-ic_uparrow' : 'icon-ic_downarrow'"></text>
 					</view>
 				</view>
-				<emptyPage title="暂无物流信息" :imgSrc="urlDomain+'crmebimage/presets/nowuliu.png'" v-else></emptyPage>
+				<emptyPage :title="$t('暂无物流信息')" :imgSrc="urlDomain+'crmebimage/presets/nowuliu.png'" v-else></emptyPage>
 			</view>
 			<view class="safe-area-inset-bottom"></view>
 		</view>
@@ -122,7 +122,7 @@
 				const clipboard = new ClipboardJS(".copy-data");
 				clipboard.on("success", () => {
 					this.$util.Tips({
-						title: '复制成功'
+						title: this.$t('复制成功')
 					});
 				});
 			});
@@ -201,9 +201,9 @@
 
 <style scoped lang="scss">
 	.safe-area-inset-bottom {
-		height: calc(100rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(100rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(100rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
-		padding-bottom: calc(0rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		padding-bottom: calc(0rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		padding-bottom: calc(0rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 	}
 

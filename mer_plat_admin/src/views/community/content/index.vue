@@ -9,10 +9,10 @@
     >
       <div class="padding-add">
         <el-form inline size="small" label-position="right" @submit.native.prevent>
-          <el-form-item label="审核状态：" v-if="tabActive === '10'">
+          <el-form-item :label="$t('finance.auditStatusLabel')" v-if="tabActive === '10'">
             <el-select
               v-model="tableFrom.auditStatus"
-              placeholder="请选择"
+              :placeholder="$t('el.select.placeholder')"
               class="filter-item selWidth"
               clearable
               @change="getList(1)"
@@ -20,31 +20,32 @@
               <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('product.userSearchLabel')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
-          <el-form-item label="分类名称：" style="display: inline-block">
+          <el-form-item :label="$t('category.categoryNameLabel')" style="display: inline-block">
             <el-select
               v-model="tableFrom.categoryId"
               clearable
               filterable
-              placeholder="请选择分类名称"
+              :placeholder="$t('community.pleaseSelectCategoryName')"
               class="selWidth"
+              :key="'cate-filter-' + ($i18n.locale || '')"
               @change="getList(1)"
             >
               <el-option
                 v-for="item in cateSelect"
                 :key="item.id"
-                :label="item.name"
+                :label="getLocalizedTopicName(item)"
                 :value="item.id"
                 :disabled="item.isShow === 0"
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="内容标题：" label-width="66px">
-            <el-input v-model="title" @keyup.enter.native="getList(1)" placeholder="请输入内容标题" class="selWidth" />
+          <el-form-item :label="$t('community.contentTitleLabel')" label-width="66px">
+            <el-input v-model="title" @keyup.enter.native="getList(1)" :placeholder="$t('community.pleaseEnterContentTitle')" class="selWidth" />
           </el-form-item>
-          <el-form-item label="话题名称：" style="display: inline-block">
+          <el-form-item :label="$t('community.topicNameLabel')" style="display: inline-block">
             <el-select
               @change="getList(1)"
               class="selWidth"
@@ -56,33 +57,33 @@
               remote
               :multiple="multiple"
               :remote-method="remoteMethod"
-              placeholder="请选择话题"
+              :placeholder="$t('community.pleaseSelectTopic')"
             >
-              <el-option v-for="user in topicSelect" :key="user.id" :label="user.name" :value="user.id"> </el-option>
+              <el-option v-for="user in topicSelect" :key="user.id" :label="getLocalizedTopicName(user)" :value="user.id"> </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="图文类型：">
+          <el-form-item :label="$t('community.imageTextTypeLabel')">
             <el-select
               v-model="tableFrom.type"
-              placeholder="请选择图文类型"
+              :placeholder="$t('community.pleaseSelectImageTextType')"
               class="filter-item selWidth"
               clearable
               @change="getList(1)"
             >
-              <el-option label="图文" value="1" />
-              <el-option label="短视频" value="2" />
+              <el-option :label="$t('community.imageText')" value="1" />
+              <el-option :label="$t('community.shortVideo')" value="2" />
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '0 20px 20px' }" shadow="never" :bordered="false">
-      <el-tabs class="list-tabs" v-model="tabActive" @tab-click="handleClick">
-        <el-tab-pane v-for="(item, index) in headeNum" :key="index" :name="item.type" :label="item.title" />
+      <el-tabs :key="'community-content-tabs-' + ($i18n.locale || '')" class="list-tabs" v-model="tabActive" @tab-click="handleClick">
+        <el-tab-pane v-for="(item, index) in headeNum" :key="item.type" :name="item.type" :label="item.title" />
       </el-tabs>
       <el-button
         v-hasPermi="['platform:community:note:category:batch:update']"
@@ -90,7 +91,7 @@
         size="small"
         type="primary"
         class="mt5"
-        >批量移动</el-button
+        >{{ $t('community.batchMove') }}</el-button
       >
       <el-table
         v-loading="listLoading"
@@ -103,65 +104,69 @@
       >
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="ID" prop="id" width="60" />
-        <el-table-column label="内容标题" min-width="160" :show-overflow-tooltip="true">
+        <el-table-column :label="$t('community.contentTitle')" min-width="160" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <div>{{ scope.row.title | filterEmpty }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="内容作者" prop="authorName" min-width="140" />
-        <el-table-column label="内容类型" min-width="70">
+        <el-table-column :label="$t('community.contentAuthor')" prop="authorName" min-width="140" />
+        <el-table-column :label="$t('community.contentType')" min-width="70">
           <template slot-scope="scope">
-            <div>{{ scope.row.type === 1 ? '图文' : '视频' }}</div>
+            <div>{{ scope.row.type === 1 ? $t('community.imageText') : $t('community.video') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="封面" min-width="50px">
+        <el-table-column :label="$t('community.cover')" min-width="50px">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.cover" class="mr5 imgStyle" :preview-src-list="[scope.row.cover]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="推荐级别" min-width="130">
+        <el-table-column :label="$t('community.recommendLevel')" min-width="130">
           <template slot-scope="scope">
             <el-rate disabled v-model="scope.row.star"> </el-rate>
           </template>
         </el-table-column>
-        <el-table-column prop="likeNum" label="点赞数" min-width="100" />
-        <el-table-column prop="replyNum" label="评论数" min-width="100" />
-        <el-table-column prop="categoryName" label="分类" min-width="100" />
-        <el-table-column label="话题" min-width="130" :show-overflow-tooltip="true">
+        <el-table-column prop="likeNum" :label="$t('community.likesCount')" min-width="100" />
+        <el-table-column prop="replyNum" :label="$t('community.commentCount')" min-width="100" />
+        <el-table-column :label="$t('community.category')" min-width="100">
           <template slot-scope="scope">
-            <div v-if="!scope.row.topicList">无</div>
+            {{ getLocalizedCategoryName(scope.row) }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('community.topic')" min-width="130" :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            <div v-if="!scope.row.topicList">{{ $t('finance.none') }}</div>
             <div v-for="(item, i) in scope.row.topicList" :key="i">{{ item }}<br /></div>
           </template>
         </el-table-column>
-        <el-table-column label="评论" min-width="90">
+        <el-table-column :label="$t('community.comment')" min-width="90">
           <template slot-scope="scope">
             <div>{{ scope.row.replyStatus | communityReplyStatusFilter }}</div>
           </template>
         </el-table-column>
-        <el-table-column v-if="tabActive === '10'" label="审核状态" min-width="100">
+        <el-table-column v-if="tabActive === '10'" :label="$t('product.auditStatus')" min-width="100">
           <template slot-scope="scope">
-            <el-tag class="doingTag tag-background" v-if="scope.row.auditStatus === 0">待审核</el-tag>
-            <el-tag class="endTag tag-background" v-if="scope.row.auditStatus === 1">审核成功</el-tag>
-            <el-tag class="notStartTag tag-background" v-if="scope.row.auditStatus === 2">审核失败</el-tag>
-            <el-tag type="danger" v-if="scope.row.auditStatus === 3">平台关闭</el-tag>
+            <el-tag class="doingTag tag-background" v-if="scope.row.auditStatus === 0">{{ $t('dashboard.awaitAudit') }}</el-tag>
+            <el-tag class="endTag tag-background" v-if="scope.row.auditStatus === 1">{{ $t('common.auditSuccess') }}</el-tag>
+            <el-tag class="notStartTag tag-background" v-if="scope.row.auditStatus === 2">{{ $t('common.auditFailed') }}</el-tag>
+            <el-tag type="danger" v-if="scope.row.auditStatus === 3">{{ $t('common.platformClosed') }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
           v-if="tabActive === '10'"
           prop="refusal"
-          label="拒绝原因"
+          :label="$t('product.rejectReason')"
           min-width="120"
           :show-overflow-tooltip="true"
         >
           <template slot-scope="scope">
-            <div v-if="Number(scope.row.auditStatus) > 1">拒绝原因{{ scope.row.refusal }}</div>
-            <div v-else>无</div>
+            <div v-if="Number(scope.row.auditStatus) > 1">{{ $t('product.rejectReason') }}：{{ scope.row.refusal }}</div>
+            <div v-else>{{ $t('finance.none') }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="发布时间" min-width="150" />
-        <el-table-column label="操作" width="240" fixed="right">
+        <el-table-column prop="createTime" :label="$t('community.publishTime')" min-width="150" />
+        <el-table-column :label="$t('common.operate')" width="240" fixed="right">
           <template slot-scope="scope">
             <template
               v-if="
@@ -169,37 +174,37 @@
                 checkPermi(['platform:community:note:detail', 'platform:community:note:audit'])
               "
             >
-              <a @click="onAudit(scope.row.id, true)">审核</a>
+              <a @click="onAudit(scope.row.id, true)">{{ $t('finance.audit') }}</a>
               <el-divider direction="vertical"></el-divider>
             </template>
             <template v-if="checkPermi(['platform:community:note:repley:force:off:switch'])">
-              <a @click="onReplyOff(scope.row)">{{ scope.row.replyStatus !== 3 ? '关闭评论' : '取消关闭评论' }}</a>
+              <a @click="onReplyOff(scope.row)">{{ scope.row.replyStatus !== 3 ? $t('community.closeComments') : $t('community.cancelCloseComments') }}</a>
               <el-divider direction="vertical"></el-divider>
             </template>
             <template v-if="scope.row.auditStatus == 1 && checkPermi(['platform:community:note:forced:down'])">
-              <a @click="onOff(scope.row.id)">强制下架</a>
+              <a @click="onOff(scope.row.id)">{{ $t('product.forceOff') }}</a>
               <el-divider direction="vertical"></el-divider>
             </template>
             <el-dropdown trigger="click">
-              <span class="el-dropdown-link"> 更多<i class="el-icon-arrow-down el-icon--right" /> </span>
+              <span class="el-dropdown-link"> {{ $t('user.more') }}<i class="el-icon-arrow-down el-icon--right" /> </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
                   @click.native="onAudit(scope.row.id, false)"
                   v-if="checkPermi(['platform:community:note:detail'])"
                 >
-                  详情
+                  {{ $t('common.detail') }}
                 </el-dropdown-item>
                 <el-dropdown-item
                   @click.native="handleDelete(scope.row.id, scope.$index)"
                   v-if="checkPermi(['platform:community:note:delete'])"
                 >
-                  删除
+                  {{ $t('common.delete') }}
                 </el-dropdown-item>
                 <el-dropdown-item
                   @click.native="onEdit(scope.row)"
                   v-if="scope.row.auditStatus == 1 && checkPermi(['platform:community:note:star:update'])"
                 >
-                  编辑星级
+                  {{ $t('community.editStar') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -235,10 +240,10 @@
             <div class="full">
               <div class="order_icon"><span class="iconfont icon-shipinico"></span></div>
               <div class="text">
-                <div class="title">{{ isExamine ? '内容审核' : '内容详情' }}</div>
+                <div class="title">{{ isExamine ? $t('community.contentAudit') : $t('community.contentDetail') }}</div>
                 <div>
                   <span class="mr20"
-                    >审核状态：<span class="color-warning">{{
+                    >{{ $t('finance.auditStatusLabel') }}<span class="color-warning">{{
                       formValidate.auditStatus | communityAuditStatusFilter
                     }}</span></span
                   >
@@ -254,7 +259,7 @@
                   }
                 "
                 style="margin-left: 0"
-                >{{ loadingBtn ? '提交中 ...' : '审核拒绝' }}</el-button
+                >{{ loadingBtn ? $t('finance.submitting') : $t('product.auditRejected') }}</el-button
               >
               <el-button
                 type="primary"
@@ -264,36 +269,36 @@
                     onAuditStatus(1);
                   }
                 "
-                >{{ loadingBtn ? '提交中 ...' : '审核通过' }}</el-button
+                >{{ loadingBtn ? $t('finance.submitting') : $t('finance.auditPassed') }}</el-button
               >
             </div>
           </div>
         </div>
         <el-tabs type="border-card" v-model="currentTab">
           <!-- 商品信息-->
-          <el-tab-pane label="基础信息" name="0">
+          <el-tab-pane :label="$t('community.basicInfo')" name="0">
             <div class="detailSection">
               <ul class="list mt-16">
                 <li class="item">
-                  <div class="tips">文章标题：</div>
+                  <div class="tips">{{ $t('content.articleTitleLabel') }}</div>
                   <div class="value">
                     {{ formValidate.title | filterEmpty }}
                   </div>
                 </li>
                 <li class="item">
-                  <div class="tips">作者：</div>
+                  <div class="tips">{{ $t('content.authorLabel') }}</div>
                   <div class="value">
                     {{ formValidate.authorName | filterEmpty }}
                   </div>
                 </li>
                 <li class="item">
-                  <div class="tips">作者ID：</div>
+                  <div class="tips">{{ $t('community.authorIdLabel') }}</div>
                   <div class="value">
                     {{ formValidate.authorId | filterEmpty }}
                   </div>
                 </li>
                 <li class="item">
-                  <div class="tips">发布时间：</div>
+                  <div class="tips">{{ $t('community.publishTimeLabel') }}</div>
                   <div class="value">
                     {{ formValidate.createTime }}
                   </div>
@@ -301,13 +306,13 @@
               </ul>
               <div class="list" style="display: block">
                 <div class="item">
-                  <div class="tips">文章内容：</div>
+                  <div class="tips">{{ $t('content.articleContentLabel') }}</div>
                   <div class="value">
                     {{ formValidate.content | filterEmpty }}
                   </div>
                 </div>
                 <div class="item row-middle">
-                  <div class="tips">封面图：</div>
+                  <div class="tips">{{ $t('community.coverLabel') }}</div>
                   <div class="upLoadPicBox">
                     <el-image
                       class="pictrue"
@@ -318,16 +323,16 @@
                 </div>
                 <div class="item" v-if="formValidate.type === 2 && formValidate.video">
                   <div class="acea-row row-middle">
-                    <div class="tips">短视频：</div>
+                    <div class="tips">{{ $t('community.shortVideoLabel') }}</div>
                     <div class="upLoadPicBox">
                       <video class="pictrue" :src="formValidate.video" controls="controls">
-                        您的浏览器不支持 video 标签。
+                        {{ $t('community.browserNotSupportVideo') }}
                       </video>
                     </div>
                   </div>
                 </div>
                 <div class="item" v-if="formValidate.type === 1 && formValidate.image">
-                  <div class="tips">图片：</div>
+                  <div class="tips">{{ $t('community.imageLabel') }}</div>
                   <div
                     v-for="(item, index) in formValidate.image.split(',')"
                     :key="index"
@@ -338,13 +343,13 @@
                   </div>
                 </div>
                 <div class="item" v-if="formValidate.auditStatus === 2 || formValidate.auditStatus === 3">
-                  <div class="tips">{{ formValidate.auditStatus === 2 ? '拒绝原因：' : '关闭原因：' }}</div>
+                  <div class="tips">{{ formValidate.auditStatus === 2 ? $t('order.rejectReason') : $t('community.closeReasonLabel') }}</div>
                   <div class="value">
                     {{ formValidate.refusal }}
                   </div>
                 </div>
                 <div class="item" v-if="formValidate.operateTime">
-                  <div class="tips">{{ formValidate.auditStatus === 3 ? '关闭时间：' : '审核时间：' }}</div>
+                  <div class="tips">{{ formValidate.auditStatus === 3 ? $t('community.closeTimeLabel') : $t('finance.auditTimeLabel') }}</div>
                   <div class="value">
                     {{ formValidate.operateTime }}
                   </div>
@@ -352,7 +357,7 @@
               </div>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="关联商品" name="1">
+          <el-tab-pane :label="$t('community.relatedProducts')" name="1">
             <el-table
               class="mt20"
               ref="tableList"
@@ -363,7 +368,7 @@
               style="width: 100%"
             >
               <el-table-column prop="id" label="ID" min-width="45" />
-              <el-table-column min-width="180" label="商品信息">
+              <el-table-column min-width="180" :label="$t('product.productInfo')">
                 <template slot-scope="scope">
                   <div class="acea-row row-middle">
                     <div class="demo-image__preview mr10 acea-row">
@@ -373,10 +378,10 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="price" label="售价" width="120" />
+              <el-table-column prop="price" :label="$t('user.salePricePlaceholder')" width="120" />
             </el-table>
           </el-tab-pane>
-          <el-tab-pane label="评论列表" name="2">
+          <el-tab-pane :label="$t('community.commentList')" name="2">
             <el-table
               ref="tableList"
               row-key="id"
@@ -393,18 +398,18 @@
                   <span>{{ scope.row.nickname + '/' + scope.row.id }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="content" label="评论内容" width="150" :show-overflow-tooltip="true" />
-              <el-table-column prop="countReply" label="评论数" min-width="100" />
-              <el-table-column prop="countStart" label="点赞数" min-width="100" />
-              <el-table-column label="评论时间" min-width="150" prop="createTime" />
-              <el-table-column label="操作" width="120" fixed="right">
+              <el-table-column prop="content" :label="$t('community.commentContent')" width="150" :show-overflow-tooltip="true" />
+              <el-table-column prop="countReply" :label="$t('community.commentCount')" min-width="100" />
+              <el-table-column prop="countStart" :label="$t('community.likesCount')" min-width="100" />
+              <el-table-column :label="$t('community.commentTime')" min-width="150" prop="createTime" />
+              <el-table-column :label="$t('common.operate')" width="120" fixed="right">
                 <template slot-scope="scope">
                   <el-button
                     type="text"
                     size="small"
                     @click="handleReplyDelete(scope.row.id, scope.$index)"
                     v-hasPermi="['platform:product:reply:delete']"
-                    >删除</el-button
+                    >{{ $t('common.delete') }}</el-button
                   >
                 </template>
               </el-table-column>
@@ -430,11 +435,11 @@
       </div>
     </el-drawer>
     <!--编辑星级-->
-    <el-dialog :visible.sync="visible" title="编辑星级" destroy-on-close :close-on-click-modal="false" width="540px">
+    <el-dialog :visible.sync="visible" :title="$t('community.editStar')" destroy-on-close :close-on-click-modal="false" width="540px">
       <el-rate v-model="star"></el-rate>
       <span slot="footer">
         <div class="dialog-btn-top">
-          <el-button @click="visible = false">取消</el-button>
+          <el-button @click="visible = false">{{ $t('el.messagebox.cancel') }}</el-button>
           <el-button
             type="primary"
             v-debounceClick="
@@ -442,7 +447,7 @@
                 submitForm();
               }
             "
-            >确 定</el-button
+            >{{ $t('finance.confirmSpaced') }}</el-button
           >
         </div>
       </span>
@@ -450,23 +455,30 @@
     <!--编辑分类-->
     <el-dialog
       :visible.sync="visibleCategory"
-      title="编辑分类"
+      :title="$t('merchant.editCategory')"
       destroy-on-close
       :close-on-click-modal="false"
       width="540px"
     >
-      <el-select v-model="categoryId" clearable filterable placeholder="请选择" class="selectStyle">
+      <el-select
+        v-model="categoryId"
+        clearable
+        filterable
+        :placeholder="$t('el.select.placeholder')"
+        class="selectStyle"
+        :key="'cate-edit-' + ($i18n.locale || '')"
+      >
         <el-option
           v-for="item in cateSelect"
           :key="item.id"
-          :label="item.name"
+          :label="getLocalizedTopicName(item)"
           :value="item.id"
           :disabled="item.isShow === 0"
         />
       </el-select>
       <span slot="footer">
         <div class="dialog-btn-top">
-          <el-button @click="visibleCategory = false">取消</el-button>
+          <el-button @click="visibleCategory = false">{{ $t('el.messagebox.cancel') }}</el-button>
           <el-button
             type="primary"
             v-debounceClick="
@@ -474,7 +486,7 @@
                 submitFormCategory();
               }
             "
-            >确 定</el-button
+            >{{ $t('finance.confirmSpaced') }}</el-button
           >
         </div>
       </span>
@@ -494,6 +506,7 @@
 // +----------------------------------------------------------------------
 import * as community from '@/api/community';
 import { checkPermi } from '@/utils/permission';
+import { getLocalizedName } from '@/utils/localizedName';
 import { filterEmpty } from '@/filters';
 import { handleDeleteTable } from '@/libs/public'; // 权限判断函数
 export default {
@@ -550,16 +563,6 @@ export default {
         searchType: 'all',
       },
       title: '',
-      statusList: [
-        { label: '待审核', value: 0 },
-        { label: '已通过', value: 1 },
-        { label: '已拒绝', value: 2 },
-        { label: '平台关闭', value: 3 },
-      ],
-      headeNum: [
-        { title: '待审核', type: '0' },
-        { title: '全部', type: '10' }, //全部无值，此处为了做选中样式，赋值10，10代表全部状态
-      ],
       cateSelect: [],
       topicSelect: [],
       dialogVisible: false,
@@ -567,10 +570,6 @@ export default {
       loadingAudit: false,
       isExamine: false, // 是否是审核
       community_id: '',
-      rules: {
-        status: [{ required: true, message: '请选择审核状态', trigger: 'change' }],
-        refusal: [{ required: true, message: '请填写拒绝原因', trigger: 'blur' }],
-      },
       //强制下架
       ruleForm: {
         id: 0,
@@ -604,6 +603,28 @@ export default {
       noteIdList: [], //笔记列表id
     };
   },
+  computed: {
+    headeNum() {
+      return [
+        { title: this.$t('dashboard.awaitAudit'), type: '0' },
+        { title: this.$t('el.table.clearFilter'), type: '10' },
+      ];
+    },
+    statusList() {
+      return [
+        { label: this.$t('dashboard.awaitAudit'), value: 0 },
+        { label: this.$t('common.approved'), value: 1 },
+        { label: this.$t('common.rejected'), value: 2 },
+        { label: this.$t('common.platformClosed'), value: 3 },
+      ];
+    },
+    rules() {
+      return {
+        status: [{ required: true, message: this.$t('product.pleaseSelectAuditStatus'), trigger: 'change' }],
+        refusal: [{ required: true, message: this.$t('product.pleaseEnterRejectReason'), trigger: 'blur' }],
+      };
+    },
+  },
   mounted() {
     if (checkPermi(['platform:community:note:page:list'])) this.getList(1);
     this.getCateSelect();
@@ -612,9 +633,27 @@ export default {
   methods: {
     filterEmpty,
     checkPermi,
+    getLocalizedTopicName(row) {
+      const locale =
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn';
+      return getLocalizedName(row, locale);
+    },
+    getLocalizedCategoryName(row) {
+      if (!row) return '';
+      const cate = (this.cateSelect || []).find((c) => Number(c.id) === Number(row.categoryId));
+      if (cate) return this.getLocalizedTopicName(cate);
+      return this.getLocalizedTopicName({
+        name: row.categoryName,
+        nameJson: row.categoryNameJson,
+      });
+    },
     //审核拒绝
     cancelForm() {
-      this.$modalPrompt('textarea', '拒绝原因').then((V) => {
+      this.$modalPrompt('textarea', this.$t('product.rejectReason')).then((V) => {
         this.auditStatusFrom.refusalReason = V;
         this.onAuditSubmit();
       });
@@ -623,7 +662,7 @@ export default {
     onAuditStatus(type) {
       this.auditStatusFrom.auditStatus = type;
       if (type === 1) {
-        this.$modalSure('审核通过该内容吗？').then(() => {
+        this.$modalSure(this.$t('community.approveContentConfirm')).then(() => {
           this.onAuditSubmit();
         });
       } else {
@@ -636,7 +675,7 @@ export default {
       community
         .communityNoteAuditApi(this.auditStatusFrom)
         .then((res) => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('product.operateSuccess'));
           this.dialogVisible = false;
           this.loadingBtn = false;
           this.getList();
@@ -648,7 +687,7 @@ export default {
     //编辑星级
     submitForm() {
       community.communityStarUpdateApi({ id: this.id, star: this.star }).then((res) => {
-        this.$message.success('编辑成功');
+        this.$message.success(this.$t('product.editSuccess'));
         this.visible = false;
         this.getList();
       });
@@ -683,9 +722,9 @@ export default {
     },
     //评论删除
     handleReplyDelete(id) {
-      this.$modalSure('删除该评论').then(() => {
+      this.$modalSure(this.$t('community.deleteComment')).then(() => {
         community.communityReplyDelApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           this.getReplyNoteList(this.community_id);
         });
       });
@@ -728,19 +767,19 @@ export default {
     },
     //批量移动
     categoryBatch() {
-      if (this.noteIdList.length === 0) return this.$message.warning('请至少选择一个内容');
+      if (this.noteIdList.length === 0) return this.$message.warning(this.$t('community.pleaseSelectAtLeastOneContent'));
       this.visibleCategory = true;
     },
     //批量移动提交
     submitFormCategory() {
-      if (this.categoryId === 0) return this.$message.warning('请选择要移动到的分类');
+      if (this.categoryId === 0) return this.$message.warning(this.$t('community.pleaseSelectTargetCategory'));
       community
         .communitycCategoryBatchApi({
           categoryId: this.categoryId,
           noteIdList: this.noteIdList,
         })
         .then((res) => {
-          this.$message.success('移动成功');
+          this.$message.success(this.$t('community.moveSuccess'));
           this.visibleCategory = false;
           this.getList();
         });
@@ -891,7 +930,7 @@ export default {
     },
     // 强制下架
     onOff(id) {
-      this.$modalPrompt('textarea', '强制下架原因').then((V) => {
+      this.$modalPrompt('textarea', this.$t('community.forceOffReason')).then((V) => {
         this.ruleForm.reason = V;
         this.submit(id);
       });
@@ -899,7 +938,7 @@ export default {
     submit(id) {
       this.ruleForm.id = id;
       community.communityNoteForcedDownApi(this.ruleForm).then((res) => {
-        this.$message.success('下架成功');
+        this.$message.success(this.$t('user.offShelfSuccess'));
         this.getList();
       });
     },
@@ -919,20 +958,20 @@ export default {
     onReplyOff(row) {
       this.$modalSure(
         row.replyStatus !== 3
-          ? '关闭评论吗？关闭之后该内容将无法评论'
-          : '取消强制关闭评论吗？取消后评论将变成用户关闭状态',
+          ? this.$t('community.closeCommentsConfirm')
+          : this.$t('community.cancelCloseCommentsConfirm'),
       ).then(() => {
         community.communityNoteReplyOffApi(row.id).then(() => {
-          this.$message.success('关闭成功');
+          this.$message.success(this.$t('merchant.closeSuccess'));
           this.getList();
         });
       });
     },
     // 删除
     handleDelete(id) {
-      this.$modalSure('删除该内容吗').then(() => {
+      this.$modalSure(this.$t('community.deleteContentConfirm')).then(() => {
         community.communityNoteDelApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableFrom);
           this.getList();
         });
@@ -941,7 +980,7 @@ export default {
     onchangeIsShow(row) {
       community.communityNoteReplyOffApi(row.replyStatus).then(() => {
         this.getList('');
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('product.operateSuccess'));
       });
     },
   },

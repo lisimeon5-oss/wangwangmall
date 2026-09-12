@@ -1,18 +1,18 @@
 <template>
 	<view class="acea-row items-baseline">
 		<view :class="priceColor.color?'':'x-money'" class="mr-12 acea-row items-baseline relative" :style="svipPriceStyle.topStyle?[svipPriceStyle.topStyle,priceColor]:[priceColor]">
-			<view>￥</view>
+			<view>฿</view>
 			<view v-if="productPrice.groupPrice" class='tui-skeleton-rect semiBold' :style="[svipIconStyle.price]">{{productPrice.groupPrice}}</view>
 			<view v-else class='tui-skeleton-rect semiBold' :style="[svipIconStyle.price]">{{userIsPaidMember && productPrice.isPaidMember?productPrice.vipPrice:productPrice.price}}</view>
 		</view>
 		
 		<view v-if="userIsPaidMember && productPrice.isPaidMember&&!productPrice.groupPrice" class="svip-icon hidden acea-row row-middle" :style="[svipIconStyle.svipBox]">
-			<view :style="[svipIconStyle.svipPrice]">SVIP会员价</view>
+			<view :style="[svipIconStyle.svipPrice]">{{$t('SVIP会员价')}}</view>
 		</view>
 		
 		<view v-if="!userIsPaidMember && paidMemberPriceDisplay==='all' && productPrice.isPaidMember&&!productPrice.groupPrice" class="svip-price hidden acea-row row-middle" :style="[svipPriceStyle.svipBox]">
 			<view class="icon pl-10 acea-row row-middle" :style="[svipPriceStyle.icon]">SVIP</view>
-			<view class="price ml-6 semiBold" :style="[svipPriceStyle.svipPrice]">¥{{productPrice.vipPrice}}</view>
+			<view class="price ml-6 semiBold" :style="[svipPriceStyle.svipPrice]">฿{{productPrice.vipPrice}}</view>
 		</view>
 	</view>
 </template>

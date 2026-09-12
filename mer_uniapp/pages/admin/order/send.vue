@@ -3,29 +3,29 @@
 		<view class="title" v-if="info.userRefundSign" @click="skipList(info.orderNo)">
 			<view class="acea-row row-middle">
 				<text class="iconfont icon-shuoming2"></text>
-				<view>该订单存在处理中售后，请点击查看</view>
+				<view>{{$t('该订单存在处理中售后，请点击查看')}}</view>
 			</view>
 			<text class="iconfont icon-xiangyou"></text>
 		</view>
 		<view class="list">
 			<view>
-				<text>订单编号：</text><text>{{info.orderNo}}</text>
+				<text>{{$t('订单编号：')}}</text><text>{{info.orderNo}}</text>
 			</view>
 			<view v-if="sendIndex!=4">
-				<text>配送方式：</text>
+				<text>{{$t('配送方式：')}}</text>
 				<picker :disabled="type==2" mode="selector" :range="sendTypeArray" @change="sendPickerChange">
 					<view>{{ sendTypeArray[sendIndex] }}<text v-if="type!=2" class="iconfont icon-xiangyou"></text>
 					</view>
 				</picker>
 			</view>
 			<view v-if="sendIndex==4">
-				<text>配送方式：</text>
+				<text>{{$t('配送方式：')}}</text>
 				<view class="">
-					虚拟发货
+					{{$t('虚拟发货')}}
 				</view>
 			</view>
 			<view v-if="sendIndex==0&&templateShow=='1'">
-				<text>发货类型：</text>
+				<text>{{$t('发货类型：')}}</text>
 				<picker mode="selector"  :range="expressSendType" @change="expressSendTypeChange">
 					<view>{{ (expressSendType.length&&expressSendType[expressSendTypeIndex])||'' }}<text
 							class="iconfont icon-xiangyou"></text></view>
@@ -33,19 +33,19 @@
 				</text>
 			</view>
 			<view v-if="sendIndex==0&&expressSendTypeIndex==1">
-				<text>寄件人姓名：</text><input v-model="saveData.toName" class="input-text textarea-small" type="text"
-					placeholder-class="placeholderInput" placeholder="此处填写寄件人姓名" />
+				<text>{{$t('寄件人姓名：')}}</text><input v-model="saveData.toName" class="input-text textarea-small" type="text"
+					placeholder-class="placeholderInput" :placeholder="$t('此处填写寄件人姓名')" />
 			</view>
 			<view v-if="sendIndex==0&&expressSendTypeIndex==1">
-				<text>寄件人电话：</text><input v-model="saveData.toTel" class="input-text textarea-small" type="text"
-					placeholder-class="placeholderInput" placeholder="此处填写寄件人电话" />
+				<text>{{$t('寄件人电话：')}}</text><input v-model="saveData.toTel" class="input-text textarea-small" type="text"
+					placeholder-class="placeholderInput" :placeholder="$t('此处填写寄件人电话')" />
 			</view>
 			<view v-if="sendIndex==0&&expressSendTypeIndex==1">
-				<text>寄件人地址：</text><input v-model="saveData.toAddr" class="input-text textarea-small" type="text"
-					placeholder-class="placeholderInput" placeholder="此处填写寄件人地址" />
+				<text>{{$t('寄件人地址：')}}</text><input v-model="saveData.toAddr" class="input-text textarea-small" type="text"
+					placeholder-class="placeholderInput" :placeholder="$t('此处填写寄件人地址')" />
 			</view>
 			<view v-if="sendIndex==0">
-				<text>快递公司：</text>
+				<text>{{$t('快递公司：')}}</text>
 				<picker mode="selector" range-key='name' :range="expressArray" @change="bindPickerChange">
 					<view>{{ (expressArray.length&&expressArray[index].name)||'' }}<text
 							class="iconfont icon-xiangyou"></text></view>
@@ -53,28 +53,28 @@
 				</text>
 			</view>
 			<view v-if="sendIndex==0&&expressSendTypeIndex==1">
-				<text>电子面单：</text>
+				<text>{{$t('电子面单：')}}</text>
 				<picker mode="selector" range-key='title' :range="templateArray" @change="templateChange">
 					<view>{{ (templateArray.length&&templateArray[templateIndex].title)||'' }}<text
-							class="iconfont icon-xiangyou"></text><text v-if="templateArray.length" @click.stop="preview" class="preview">预览</text>
+							class="iconfont icon-xiangyou"></text><text v-if="templateArray.length" @click.stop="preview" class="preview">{{$t('预览')}}</text>
 					</view>
 				</picker>
 				</text>
 			</view>
 			<view v-if="sendIndex==0&&expressSendTypeIndex==0">
-				<text>快递单号：</text>
+				<text>{{$t('快递单号：')}}</text>
 				<view class="acea-row row-middle">
 					<input v-model="saveData.expressNumber" class="input-text" type="text" maxlength="40"
-						placeholder-class="placeholderInput" placeholder="请输入"></input>
+						placeholder-class="placeholderInput" :placeholder="$t('请输入')"></input>
 					<text @click="scanCode" class="iconfont icon-ic_Scan"></text>
 				</view>
 			</view>
 			<view v-if="sendIndex==1">
-				<text>发货备注：</text><textarea v-model="saveData.deliveryMark" class="input-text textarea" type="text"
-					placeholder-class="placeholderInput" placeholder="此处填写发货备注" />
+				<text>{{$t('发货备注：')}}</text><textarea v-model="saveData.deliveryMark" class="input-text textarea" type="text"
+					placeholder-class="placeholderInput" :placeholder="$t('此处填写发货备注')" />
 			</view>
 			<view v-if="sendIndex==2">
-				<text>配送人员：</text>
+				<text>{{$t('配送人员：')}}</text>
 				<picker mode="selector" range-key='personnelName' :range="deliveryPersonnelList"
 					@change="deliveryPersonneChange">
 					<view>
@@ -84,17 +84,17 @@
 				</text>
 			</view>
 			<view v-if="sendIndex==2">
-				<text>手机号：</text><input v-model="saveData.carrierPhone" disabled="true" class="input-text" type="text"
-					placeholder-class="placeholderInput" placeholder="请输入手机号" />
+				<text>{{$t('手机号：')}}</text><input v-model="saveData.carrierPhone" disabled="true" class="input-text" type="text"
+					placeholder-class="placeholderInput" :placeholder="$t('请输入手机号')" />
 			</view>
 			<view v-if="sendIndex==4">
-				<text>发货备注：</text><textarea v-model="saveData.deliveryMark" class="input-text textarea" type="text"
-					placeholder-class="placeholderInput" placeholder="此处填写发货备注" />
+				<text>{{$t('发货备注：')}}</text><textarea v-model="saveData.deliveryMark" class="input-text textarea" type="text"
+					placeholder-class="placeholderInput" :placeholder="$t('此处填写发货备注')" />
 			</view>
 		</view>
 		<view class="split-wrapper" v-if="info.totalNum>1&&type==1&&sendIndex!=4">
 			<view class="split-switch acea-row row-between-wrapper">
-				<view>分单发货</view>
+				<view>{{$t('分单发货')}}</view>
 				<view class="switch" :class="{ on: curGoods }" @click="changeGoods"></view>
 			</view>
 			<splitOrder :select_all="false" :splitGoods="splitGoods" @getList="getList" v-if="curGoods"></splitOrder>
@@ -102,10 +102,10 @@
 		<view class="height-add"></view>
 		<view class="confirm-wrapper">
 			<view class="confirm-wrapper-num">
-				<text v-if="type==1">共{{num}}件</text>
+				<text v-if="type==1">{{$t('共')}}{{num}}{{$t('件')}}</text>
 			</view>
-			<view v-if="type==1" class="confirm" @click="saveInfo">确认发货</view>
-			<view v-else class="confirm" @click="updateInfo">确认修改</view>
+			<view v-if="type==1" class="confirm" @click="saveInfo">{{$t('确认发货')}}</view>
+			<view v-else class="confirm" @click="updateInfo">{{$t('确认修改')}}</view>
 		</view>
 	</view>
 </template>
@@ -290,7 +290,7 @@
 					})
 				} else {
 					return self.$util.Tips({
-						title: '扫码仅支持小程序/公众号/APP',
+						title: this.$t('扫码仅支持小程序/公众号/APP'),
 						endtime: 2000,
 					});
 				}
@@ -310,7 +310,7 @@
 						flag == '1' && (this.saveData.expressCode = this.expressArray[0].code)
 					} else {
 						return this.$util.Tips({
-							title: '请先配置物流公司～',
+							title: this.$t('请先配置物流公司～'),
 							endtime: 2000,
 						});
 					}
@@ -406,12 +406,12 @@
 					// 提交校验
 					if (!this.saveData.toAddr || !this.saveData.toName || !this.saveData.toTel) {
 						return this.$util.Tips({
-							title: '请将信息填写完整'
+							title: this.$t('请将信息填写完整')
 						})
 					}
 					if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(this.saveData.toTel)) {
 						return this.$util.Tips({
-							title: '请输入正确寄件人电话'
+							title: this.$t('请输入正确寄件人电话')
 						})
 					}
 				}
@@ -419,11 +419,11 @@
 					// 提交校验
 					if (!this.saveData.expressNumber) {
 						return this.$util.Tips({
-							title: '请输入快递单号'
+							title: this.$t('请输入快递单号')
 						})
 					} else if (!this.saveData.detailList.length) {
 						return this.$util.Tips({
-							title: '请先选择商品'
+							title: this.$t('请先选择商品')
 						})
 					}
 				}
@@ -431,11 +431,11 @@
 					// 提交校验
 					if (!this.saveData.deliveryMark) {
 						// return this.$util.Tips({
-						// 	title: '请输入商家备注'
+						// 	title: this.$t('请输入商家备注')
 						// })
 					} else if (!this.saveData.detailList.length) {
 						return this.$util.Tips({
-							title: '请先选择商品'
+							title: this.$t('请先选择商品')
 						})
 					}
 				}
@@ -443,15 +443,15 @@
 					// 提交校验
 					if (!this.saveData.deliveryCarrier) {
 						return this.$util.Tips({
-							title: '请输入配送人姓名'
+							title: this.$t('请输入配送人姓名')
 						})
 					} else if (!this.saveData.detailList.length) {
 						return this.$util.Tips({
-							title: '请先选择商品'
+							title: this.$t('请先选择商品')
 						})
 					} else if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(this.saveData.carrierPhone)) {
 						return this.$util.Tips({
-							title: '请输入正确手机号码'
+							title: this.$t('请输入正确手机号码')
 						})
 					}
 				}
@@ -469,7 +469,7 @@
 				employeeOrderSend(this.saveData).then(res => {
 					if (res.code == 200) {
 						this.$util.Tips({
-							title: '操作成功'
+							title: this.$t('操作成功')
 						})
 						setTimeout(() => {
 							uni.navigateBack({
@@ -494,7 +494,7 @@
 			updateInfo() {
 				employeeOrderInvoiceUpdate(this.saveData).then(res => {
 					this.$util.Tips({
-						title: '操作成功',
+						title: this.$t('操作成功'),
 						endtime: 1000,
 					})
 					setTimeout(() => {
@@ -509,13 +509,13 @@
 </script>
 
 <style scoped lang="scss">
-	/deep/.uni-checkbox-input.uni-checkbox-input-checked {
+	::v-deep .uni-checkbox-input.uni-checkbox-input-checked {
 		border: 1px solid #2A7EFB !important;
 		background-color: #2A7EFB !important;
 		color: #FFF !important;
 	}
 
-	/deep/.wx-checkbox-input.wx-checkbox-input-checked {
+	::v-deep .wx-checkbox-input.wx-checkbox-input-checked {
 		border: 1px solid #2A7EFB !important;
 		background-color: #2A7EFB !important;
 		color: #FFF !important;
@@ -760,7 +760,7 @@
 		white-space: normal;
 	}
 
-	/deep/.split-switch .switch::after {
+	::v-deep .split-switch .switch::after {
 		top: 4rpx;
 	}
 

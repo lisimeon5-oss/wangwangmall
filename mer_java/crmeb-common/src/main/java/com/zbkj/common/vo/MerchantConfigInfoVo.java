@@ -2,11 +2,15 @@ package com.zbkj.common.vo;
 
 import com.zbkj.common.annotation.StringContains;
 import com.zbkj.common.constants.RegularConstants;
+import com.zbkj.common.jackson.FlexibleJsonStringDeserializer;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
@@ -70,9 +74,14 @@ public class MerchantConfigInfoVo implements Serializable {
     @NotBlank(message = "商户街背景图不能为空")
     private String streetBackImage;
 
-    @ApiModelProperty(value = "商户简介", required = true)
-    @NotBlank(message = "商户简介不能为空")
+    @ApiModelProperty(value = "商户简介")
+    @Length(max = 200, message = "商户简介不能超过200个字符")
     private String intro;
+
+    @ApiModelProperty(value = "多语言商户简介(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言商户简介不能为空")
+    @JsonDeserialize(using = FlexibleJsonStringDeserializer.class)
+    private String introJson;
 
     @ApiModelProperty(value = "警戒库存", required = true)
     @NotNull(message = "警戒库存不能为空")

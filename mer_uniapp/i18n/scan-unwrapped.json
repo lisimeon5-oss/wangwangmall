@@ -1,0 +1,798 @@
+{
+  "byKind": {
+    "data-loadTitle": 29,
+    "data-title": 56,
+    "data-name": 40,
+    "data-label": 21,
+    "data-text": 8,
+    "data-navTitle": 3
+  },
+  "hits": [
+    {
+      "file": "components/discoverComment/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "components/discoverComment/index.vue",
+      "kind": "data-title",
+      "t": "删除中..."
+    },
+    {
+      "file": "components/homeIndex/cateNav.vue",
+      "kind": "data-title",
+      "t": "首页"
+    },
+    {
+      "file": "components/homeIndex/homeComb.vue",
+      "kind": "data-title",
+      "t": "首页"
+    },
+    {
+      "file": "components/navBar.vue",
+      "kind": "data-name",
+      "t": "首页"
+    },
+    {
+      "file": "components/navBar.vue",
+      "kind": "data-name",
+      "t": "搜索"
+    },
+    {
+      "file": "components/navBar.vue",
+      "kind": "data-name",
+      "t": "个人中心"
+    },
+    {
+      "file": "pages/activity/goods_group/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/activity/goods_group/index.vue",
+      "kind": "data-title",
+      "t": "拼团列表"
+    },
+    {
+      "file": "pages/activity/goods_points/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/activity/goods_seckill/index.vue",
+      "kind": "data-title",
+      "t": "秒杀列表"
+    },
+    {
+      "file": "pages/activity/liveBroadcast/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/activity/mer-good-seckill/index.vue",
+      "kind": "data-title",
+      "t": "秒杀列表"
+    },
+    {
+      "file": "pages/activity/points_mall/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/activity/points_mall/index.vue",
+      "kind": "data-title",
+      "t": "积分兑好物"
+    },
+    {
+      "file": "pages/activity/status/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/activity/status/index.vue",
+      "kind": "data-title",
+      "t": "海报生成中"
+    },
+    {
+      "file": "pages/activity/vip_paid/index.vue",
+      "kind": "data-title",
+      "t": "正在提交中"
+    },
+    {
+      "file": "pages/activity/vip_paid_benefits/index.vue",
+      "kind": "data-title",
+      "t": "正在加载…"
+    },
+    {
+      "file": "pages/address/user_address/index.vue",
+      "kind": "data-title",
+      "t": "保存中"
+    },
+    {
+      "file": "pages/address/user_address_list/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/admin/after_sale/index.vue",
+      "kind": "data-label",
+      "t": "全部"
+    },
+    {
+      "file": "pages/admin/after_sale/index.vue",
+      "kind": "data-label",
+      "t": "近1个月"
+    },
+    {
+      "file": "pages/admin/after_sale/index.vue",
+      "kind": "data-label",
+      "t": "近3个月"
+    },
+    {
+      "file": "pages/admin/after_sale/index.vue",
+      "kind": "data-label",
+      "t": "近6个月"
+    },
+    {
+      "file": "pages/admin/components/footerPage/index.vue",
+      "kind": "data-text",
+      "t": "工作台"
+    },
+    {
+      "file": "pages/admin/components/footerPage/index.vue",
+      "kind": "data-text",
+      "t": "订单"
+    },
+    {
+      "file": "pages/admin/components/footerPage/index.vue",
+      "kind": "data-text",
+      "t": "售后"
+    },
+    {
+      "file": "pages/admin/components/footerPage/index.vue",
+      "kind": "data-text",
+      "t": "商品"
+    },
+    {
+      "file": "pages/admin/components/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue",
+      "kind": "data-name",
+      "t": "默认分组"
+    },
+    {
+      "file": "pages/admin/components/uCharts/order_ucharts.vue",
+      "kind": "data-name",
+      "t": "销售额"
+    },
+    {
+      "file": "pages/admin/goods/components/label/index.vue",
+      "kind": "data-text",
+      "t": "普通商品"
+    },
+    {
+      "file": "pages/admin/goods/components/label/index.vue",
+      "kind": "data-text",
+      "t": "虚拟商品"
+    },
+    {
+      "file": "pages/admin/goods/components/label/index.vue",
+      "kind": "data-text",
+      "t": "云盘商品"
+    },
+    {
+      "file": "pages/admin/goods/components/label/index.vue",
+      "kind": "data-text",
+      "t": "卡密商品"
+    },
+    {
+      "file": "pages/admin/goods/index.vue",
+      "kind": "data-name",
+      "t": "出售中"
+    },
+    {
+      "file": "pages/admin/goods/index.vue",
+      "kind": "data-name",
+      "t": "仓库中"
+    },
+    {
+      "file": "pages/admin/goods/index.vue",
+      "kind": "data-name",
+      "t": "已售罄"
+    },
+    {
+      "file": "pages/admin/goods/index.vue",
+      "kind": "data-name",
+      "t": "库存警告"
+    },
+    {
+      "file": "pages/admin/goods/index.vue",
+      "kind": "data-name",
+      "t": "待提审"
+    },
+    {
+      "file": "pages/admin/goods/index.vue",
+      "kind": "data-name",
+      "t": "审核中"
+    },
+    {
+      "file": "pages/admin/goods/index.vue",
+      "kind": "data-name",
+      "t": "审核未通过"
+    },
+    {
+      "file": "pages/admin/goods/index.vue",
+      "kind": "data-name",
+      "t": "回收站"
+    },
+    {
+      "file": "pages/admin/goods/index.vue",
+      "kind": "data-name",
+      "t": "修改价格/库存"
+    },
+    {
+      "file": "pages/admin/goods/index.vue",
+      "kind": "data-name",
+      "t": "商品分类"
+    },
+    {
+      "file": "pages/admin/goods/index.vue",
+      "kind": "data-name",
+      "t": "商品标签"
+    },
+    {
+      "file": "pages/admin/goods/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/admin/order/detail.vue",
+      "kind": "data-title",
+      "t": "标题"
+    },
+    {
+      "file": "pages/admin/order/index.vue",
+      "kind": "data-label",
+      "t": "全部"
+    },
+    {
+      "file": "pages/admin/order/index.vue",
+      "kind": "data-label",
+      "t": "近1个月"
+    },
+    {
+      "file": "pages/admin/order/index.vue",
+      "kind": "data-label",
+      "t": "近3个月"
+    },
+    {
+      "file": "pages/admin/order/index.vue",
+      "kind": "data-label",
+      "t": "近6个月"
+    },
+    {
+      "file": "pages/admin/order/index.vue",
+      "kind": "data-label",
+      "t": "全部订单"
+    },
+    {
+      "file": "pages/admin/order/index.vue",
+      "kind": "data-label",
+      "t": "普通订单"
+    },
+    {
+      "file": "pages/admin/order/index.vue",
+      "kind": "data-label",
+      "t": "秒杀订单"
+    },
+    {
+      "file": "pages/admin/order/index.vue",
+      "kind": "data-label",
+      "t": "拼团订单"
+    },
+    {
+      "file": "pages/admin/skipRefund/index.vue",
+      "kind": "data-label",
+      "t": "全部"
+    },
+    {
+      "file": "pages/admin/skipRefund/index.vue",
+      "kind": "data-label",
+      "t": "近1个月"
+    },
+    {
+      "file": "pages/admin/skipRefund/index.vue",
+      "kind": "data-label",
+      "t": "近3个月"
+    },
+    {
+      "file": "pages/admin/skipRefund/index.vue",
+      "kind": "data-label",
+      "t": "近6个月"
+    },
+    {
+      "file": "pages/admin/skipRefund/index.vue",
+      "kind": "data-label",
+      "t": "全部"
+    },
+    {
+      "file": "pages/admin/skipRefund/index.vue",
+      "kind": "data-label",
+      "t": "仅退款"
+    },
+    {
+      "file": "pages/admin/skipRefund/index.vue",
+      "kind": "data-label",
+      "t": "退货退款"
+    },
+    {
+      "file": "pages/admin/skipRefund/index.vue",
+      "kind": "data-label",
+      "t": "否"
+    },
+    {
+      "file": "pages/admin/skipRefund/index.vue",
+      "kind": "data-label",
+      "t": "是"
+    },
+    {
+      "file": "pages/discover/components/associatedProduct.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/discover/discover_details/index.vue",
+      "kind": "data-title",
+      "t": "内容详情"
+    },
+    {
+      "file": "pages/discover/discover_recommend/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/discover/discover_search_list/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/discover/discover_user/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/discover/discover_video/routineVideo/index.vue",
+      "kind": "data-navTitle",
+      "t": "短视频"
+    },
+    {
+      "file": "pages/discover/discover_video/routineVideo/index.vue",
+      "kind": "data-title",
+      "t": "短视频"
+    },
+    {
+      "file": "pages/discover/discover_video/routineVideo/index.vue",
+      "kind": "data-title",
+      "t": "海报生成中"
+    },
+    {
+      "file": "pages/discover_index/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/discover_index/index.vue",
+      "kind": "data-name",
+      "t": "推荐"
+    },
+    {
+      "file": "pages/goods/agreement_info/index.vue",
+      "kind": "data-title",
+      "t": "注销中"
+    },
+    {
+      "file": "pages/goods/agreement_info/index.vue",
+      "kind": "data-title",
+      "t": "关于我们协议"
+    },
+    {
+      "file": "pages/goods/agreement_info/index.vue",
+      "kind": "data-title",
+      "t": "平台资质证明"
+    },
+    {
+      "file": "pages/goods/agreement_info/index.vue",
+      "kind": "data-title",
+      "t": "商户入驻协议"
+    },
+    {
+      "file": "pages/goods/agreement_info/index.vue",
+      "kind": "data-title",
+      "t": "用户注销协议"
+    },
+    {
+      "file": "pages/goods/agreement_info/index.vue",
+      "kind": "data-title",
+      "t": "用户注销声明"
+    },
+    {
+      "file": "pages/goods/agreement_info/index.vue",
+      "kind": "data-title",
+      "t": "用户注册协议"
+    },
+    {
+      "file": "pages/goods/agreement_info/index.vue",
+      "kind": "data-title",
+      "t": "平台规则"
+    },
+    {
+      "file": "pages/goods/agreement_info/index.vue",
+      "kind": "data-title",
+      "t": "优惠券协议"
+    },
+    {
+      "file": "pages/goods/agreement_info/index.vue",
+      "kind": "data-title",
+      "t": "会员服务协议"
+    },
+    {
+      "file": "pages/goods/agreement_info/index.vue",
+      "kind": "data-title",
+      "t": "用户隐私协议"
+    },
+    {
+      "file": "pages/goods/agreement_rules/index.vue",
+      "kind": "data-title",
+      "t": "用户协议"
+    },
+    {
+      "file": "pages/goods/agreement_rules/index.vue",
+      "kind": "data-title",
+      "t": "隐私政策"
+    },
+    {
+      "file": "pages/goods/agreement_rules/index.vue",
+      "kind": "data-title",
+      "t": "商户入驻协议"
+    },
+    {
+      "file": "pages/goods/agreement_rules/index.vue",
+      "kind": "data-title",
+      "t": "关于我们"
+    },
+    {
+      "file": "pages/goods/agreement_rules/index.vue",
+      "kind": "data-title",
+      "t": "资质证照"
+    },
+    {
+      "file": "pages/goods/agreement_rules/index.vue",
+      "kind": "data-title",
+      "t": "平台规则"
+    },
+    {
+      "file": "pages/goods/agreement_rules/index.vue",
+      "kind": "data-title",
+      "t": "优惠券协议"
+    },
+    {
+      "file": "pages/goods/agreement_rules/index.vue",
+      "kind": "data-title",
+      "t": "注销提示"
+    },
+    {
+      "file": "pages/goods/agreement_rules/index.vue",
+      "kind": "data-title",
+      "t": "注销声明"
+    },
+    {
+      "file": "pages/goods/alipay_invoke/index.vue",
+      "kind": "data-title",
+      "t": "正在支付中"
+    },
+    {
+      "file": "pages/goods/alipay_return/alipay_return.vue",
+      "kind": "data-title",
+      "t": "支付成功"
+    },
+    {
+      "file": "pages/goods/alipay_return/alipay_return.vue",
+      "kind": "data-title",
+      "t": "支付失败"
+    },
+    {
+      "file": "pages/goods/components/checkDelivery/index.vue",
+      "kind": "data-title",
+      "t": "商家配送"
+    },
+    {
+      "file": "pages/goods/components/checkDelivery/index.vue",
+      "kind": "data-title",
+      "t": "到店自提"
+    },
+    {
+      "file": "pages/goods/components/uni-datetime-picker/components/uni-datetime-picker/time-picker.vue",
+      "kind": "data-title",
+      "t": "日期和时间"
+    },
+    {
+      "file": "pages/goods/coupon_goods_list/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/goods/evaluation_list/index.vue",
+      "kind": "data-loadTitle",
+      "t": "显示更多"
+    },
+    {
+      "file": "pages/goods/evaluation_list/index.vue",
+      "kind": "data-title",
+      "t": "评价列表"
+    },
+    {
+      "file": "pages/goods/exp_record/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/goods/goods_comment_con/index.vue",
+      "kind": "data-name",
+      "t": "商品质量"
+    },
+    {
+      "file": "pages/goods/goods_comment_con/index.vue",
+      "kind": "data-name",
+      "t": "服务态度"
+    },
+    {
+      "file": "pages/goods/goods_comment_con/index.vue",
+      "kind": "data-title",
+      "t": "正在发布评论……"
+    },
+    {
+      "file": "pages/goods/goods_comment_list/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/goods/goods_details/index.vue",
+      "kind": "data-name",
+      "t": "首页"
+    },
+    {
+      "file": "pages/goods/goods_details/index.vue",
+      "kind": "data-name",
+      "t": "搜索"
+    },
+    {
+      "file": "pages/goods/goods_details/index.vue",
+      "kind": "data-name",
+      "t": "购物车"
+    },
+    {
+      "file": "pages/goods/goods_details/index.vue",
+      "kind": "data-name",
+      "t": "我的收藏"
+    },
+    {
+      "file": "pages/goods/goods_details/index.vue",
+      "kind": "data-name",
+      "t": "个人中心"
+    },
+    {
+      "file": "pages/goods/goods_details/index.vue",
+      "kind": "data-title",
+      "t": "海报生成中"
+    },
+    {
+      "file": "pages/goods/goods_list/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/goods/goods_search/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/goods/news_list/index.vue",
+      "kind": "data-title",
+      "t": "占位占位"
+    },
+    {
+      "file": "pages/goods/news_list/index.vue",
+      "kind": "data-name",
+      "t": "占位"
+    },
+    {
+      "file": "pages/goods/news_list/index.vue",
+      "kind": "data-name",
+      "t": "占位"
+    },
+    {
+      "file": "pages/goods/news_list/index.vue",
+      "kind": "data-name",
+      "t": "占位"
+    },
+    {
+      "file": "pages/goods/news_list/index.vue",
+      "kind": "data-name",
+      "t": "热门"
+    },
+    {
+      "file": "pages/goods/order_confirm/index.vue",
+      "kind": "data-navTitle",
+      "t": "提交订单"
+    },
+    {
+      "file": "pages/goods/order_confirm/index.vue",
+      "kind": "data-title",
+      "t": "订单提交中"
+    },
+    {
+      "file": "pages/goods/order_list/index.vue",
+      "kind": "data-navTitle",
+      "t": "我的订单"
+    },
+    {
+      "file": "pages/goods/order_list/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/goods/order_list/index.vue",
+      "kind": "data-title",
+      "t": "海报生成中"
+    },
+    {
+      "file": "pages/goods/order_list/index.vue",
+      "kind": "data-title",
+      "t": "正在取消中"
+    },
+    {
+      "file": "pages/goods/user_goods_collection/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/goods/user_grade/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/goods/user_merchant_collection/index.vue",
+      "kind": "data-title",
+      "t": "店铺收藏"
+    },
+    {
+      "file": "pages/goods/user_return_list/index.vue",
+      "kind": "data-loadTitle",
+      "t": "显示更多"
+    },
+    {
+      "file": "pages/merchant/components/coupon/index.vue",
+      "kind": "data-name",
+      "t": "商家券"
+    },
+    {
+      "file": "pages/merchant/components/coupon/index.vue",
+      "kind": "data-name",
+      "t": "商品券"
+    },
+    {
+      "file": "pages/merchant/components/couponAndClassify/index.vue",
+      "kind": "data-name",
+      "t": "商家券"
+    },
+    {
+      "file": "pages/merchant/components/couponAndClassify/index.vue",
+      "kind": "data-name",
+      "t": "商品券"
+    },
+    {
+      "file": "pages/merchant/components/couponAndClassify/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/merchant/coupon/index.vue",
+      "kind": "data-name",
+      "t": "商家券"
+    },
+    {
+      "file": "pages/merchant/coupon/index.vue",
+      "kind": "data-name",
+      "t": "商品券"
+    },
+    {
+      "file": "pages/merchant/home/index.vue",
+      "kind": "data-name",
+      "t": "首页"
+    },
+    {
+      "file": "pages/merchant/home/index.vue",
+      "kind": "data-name",
+      "t": "分类"
+    },
+    {
+      "file": "pages/merchant/home/index.vue",
+      "kind": "data-name",
+      "t": "领券"
+    },
+    {
+      "file": "pages/merchant/merchant_street/index.vue",
+      "kind": "data-title",
+      "t": "店铺街"
+    },
+    {
+      "file": "pages/merchant/user_integral/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/merchant/user_sgin_list/index.vue",
+      "kind": "data-title",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/order_addcart/order_addcart.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/users/commission_rank/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/users/user_bill/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/users/user_coupon/index.vue",
+      "kind": "data-loadTitle",
+      "t": "加载更多"
+    },
+    {
+      "file": "pages/users/user_info/index.vue",
+      "kind": "data-name",
+      "t": "未知"
+    },
+    {
+      "file": "pages/users/user_info/index.vue",
+      "kind": "data-name",
+      "t": "男"
+    },
+    {
+      "file": "pages/users/user_info/index.vue",
+      "kind": "data-name",
+      "t": "女"
+    },
+    {
+      "file": "pages/users/user_money/index.vue",
+      "kind": "data-title",
+      "t": "查询中..."
+    },
+    {
+      "file": "pages/users/user_spread_code/index.vue",
+      "kind": "data-title",
+      "t": "海报生成中"
+    },
+    {
+      "file": "pages/users/user_spread_money/index.vue",
+      "kind": "data-title",
+      "t": "结算记录"
+    },
+    {
+      "file": "pages/users/user_spread_money/index.vue",
+      "kind": "data-title",
+      "t": "佣金记录"
+    },
+    {
+      "file": "pages/users/wechat_login/index.vue",
+      "kind": "data-title",
+      "t": "正在登录中"
+    }
+  ],
+  "uniqText": []
+}

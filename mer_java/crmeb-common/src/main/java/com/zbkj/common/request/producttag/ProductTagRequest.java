@@ -3,6 +3,7 @@ package com.zbkj.common.request.producttag;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -23,9 +24,12 @@ public class ProductTagRequest {
     private Integer id;
 
     @ApiModelProperty(value = "标签名称")
-    @NotEmpty(message = "标签名称 不能为空")
-    @Length(min = 1, max = 4, message = "标签名称长度1-4个字符")
+    @Length(max = 4, message = "标签名称长度不能超过4个字符")
     private String tagName;
+
+    @ApiModelProperty(value = "多语言标签名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言标签名称不能为空")
+    private String tagNameJson;
 
     @ApiModelProperty(value = "标签说明")
     @Length(min = 0, max = 50, message = "标签说明不能大于50个字")

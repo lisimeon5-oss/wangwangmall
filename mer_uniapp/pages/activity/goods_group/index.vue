@@ -3,7 +3,7 @@
 		<view class="activity_header"
 			:style="{'background-image':`url(${urlDomain+'crmebimage/presets/group_list_bg.png'})`}">
 			<view class='cart_nav'>
-				<nav-bar navTitle="拼团列表" iconColor='#fff' :backgroundColor="backgroundColor"
+				<nav-bar :navTitle="$t('拼团列表')" iconColor='#fff' :backgroundColor="backgroundColor"
 					:isBackgroundColor="isBackgroundColor" ref="navBarRef"></nav-bar>
 			</view>
 		</view>
@@ -12,7 +12,7 @@
 				<view class="group-bottom acea-row row-between" @click="toGroupDeatil(item)">
 					<view class="group-bottom-left">
 						<view class="img acea-row row-center row-middle relative">
-							<view v-show="item.quota===0" class="sellOut">已售罄</view>
+							<view v-show="item.quota===0" class="sellOut">{{$t('已售罄')}}</view>
 							<easy-loadimage :image-src="item.imageUrl" width="240rpx" height="240rpx"
 								:radius="10"></easy-loadimage>
 							<!-- <image :src="item.imageUrl" mode=""></image> -->
@@ -24,25 +24,25 @@
 								{{item.productName}}
 							</view>
 							<view class="pink acea-row">
-								<view class="people">{{item.buyCount}}人团</view>
-								<view class="groupNum">已拼{{item.latestBuyCount}}份</view>
+								<view class="people">{{item.buyCount}}{{$t('人团')}}</view>
+								<view class="groupNum">{{$t('已拼')}}{{item.latestBuyCount}}{{$t('份')}}</view>
 							</view>
 						</view>
 						<view class="right-bottom acea-row  row-between">
 							<view class="price">
-								<view class="pinkNum"><text class="pinkNum-title">拼团价</text>
+								<view class="pinkNum"><text class="pinkNum-title">{{$t('拼团价')}}</text>
 									<priceStyle :price="item.activePrice"></priceStyle>
 								</view>
-								<view class="num regular num-icon">￥{{item.price}}</view>
+								<view class="num regular num-icon">฿{{item.price}}</view>
 							</view>
 							<view class="btnBox">
-								<view class="btn">参与拼团</view>
+								<view class="btn">{{$t('参与拼团')}}</view>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
-			<emptyPage :mTop="'30%'" v-if="groupGood.length==0" title="暂无拼团商品，去看看其他商品吧~～"
+			<emptyPage :mTop="'30%'" v-if="groupGood.length==0" :title="$t('暂无拼团商品，去看看其他商品吧~～')"
 				:imgSrc="urlDomain+'crmebimage/presets/noActivity.png'"></emptyPage>
 		</view>
 	</view>

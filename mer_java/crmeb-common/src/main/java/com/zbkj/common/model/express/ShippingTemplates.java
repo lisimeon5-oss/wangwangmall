@@ -39,6 +39,9 @@ public class ShippingTemplates implements Serializable {
     @ApiModelProperty(value = "模板名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言模板名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "计费方式 0（未选择），1(按件数), 2(按重量)，3(按体积)")
     private Integer type;
 

@@ -1,106 +1,77 @@
 // +----------------------------------------------------------------------
 // | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
-// +----------------------------------------------------------------------
-// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
-// +----------------------------------------------------------------------
-// | Author: CRMEB Team <admin@crmeb.com>
-// +----------------------------------------------------------------------
+import i18n from '@/i18n';
 
-//订单过滤器
-
-/**
- * @description 支付状态
- */
 export function paidFilter(status) {
   const statusMap = {
-    true: '已支付',
-    false: '未支付',
+    true: i18n.t('order.paid'),
+    false: i18n.t('order.unpaid'),
   };
   return statusMap[status];
 }
 
-/**
- * @description 订单状态
- * 2,已收货，待评价
- */
 export function orderStatusFilter(status) {
   const statusMap = {
-    0: '待付款',
-    1: '待发货',
-    2: '部分发货',
-    3: '待核销',
-    4: '待收货',
-    5: '已收货',
-    6: '已完成',
-    9: '已取消',
+    0: i18n.t('order.pendingPayment'),
+    1: i18n.t('order.pendingShipment'),
+    2: i18n.t('order.partialShipment'),
+    3: i18n.t('order.awaitingVerification'),
+    4: i18n.t('order.waitingReceipt'),
+    5: i18n.t('order.received'),
+    6: i18n.t('order.completed'),
+    9: i18n.t('common.cancelled'),
   };
   return statusMap[status];
 }
 
-/**
- * @description 订单中的退款状态
- */
 export function orderRefundStatusFilter(status) {
   const statusMap = {
-    0: '未退款',
-    1: '申请退款中',
-    2: '部分退款',
-    3: '已退款',
+    0: i18n.t('order.notRefunded'),
+    1: i18n.t('order.refundApplying'),
+    2: i18n.t('order.partialRefund'),
+    3: i18n.t('order.refunded'),
   };
   return statusMap[status];
 }
 
-/**
- * @description 退款单退款状态
- *
- */
 export function refundStatusFilter(status) {
   const statusMap = {
-    0: '待审核',
-    1: '商家拒绝',
-    2: '退款中',
-    3: '退款成功',
-    4: '用户退货',
-    5: '商家待收货',
-    6: '已撤销',
+    0: i18n.t('order.pendingAudit'),
+    1: i18n.t('order.merchantRejected'),
+    2: i18n.t('order.refunding'),
+    3: i18n.t('order.refundSuccess'),
+    4: i18n.t('order.userReturning'),
+    5: i18n.t('order.merchantAwaitingReceipt'),
+    6: i18n.t('order.revoked'),
   };
   return statusMap[status];
 }
 
-/**
- * @description 支付方式
- */
 export function payTypeFilter(status) {
   const statusMap = {
-    weixin: '微信',
-    alipay: '支付宝',
-    yue: '余额',
+    weixin: i18n.t('order.wechat'),
+    alipay: i18n.t('order.alipay'),
+    yue: i18n.t('order.balance'),
+    '': '-',
   };
   return statusMap[status];
 }
 
-/**
- * @description 订单类型
- */
 export function orderTypeFilter(status) {
   const statusMap = {
-    0: '普通订单',
-    1: '秒杀订单',
-    2: '拼团订单',
+    0: i18n.t('order.normalOrder'),
+    1: i18n.t('order.spikeOrder'),
+    2: i18n.t('order.groupBuyOrder'),
   };
   return statusMap[status];
 }
 
-/**
- * @description 订单类型
- */
 export function shippingTypeFilter(status) {
   const statusMap = {
-    1: '商家配送',
-    2: '门店自提',
-    3: '虚拟发货',
+    1: i18n.t('order.merchantDelivery'),
+    2: i18n.t('order.storePickup'),
+    3: i18n.t('order.virtualShipment'),
   };
   return statusMap[status];
 }

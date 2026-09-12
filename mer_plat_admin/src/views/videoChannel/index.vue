@@ -14,7 +14,8 @@
 // +---------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +---------------------------------------------------------------------
-export default {};
+export default {
+  name: 'VideoChannelLayout',
+};
 </script>
 
-<style lang="sass" scoped></style>

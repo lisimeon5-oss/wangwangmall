@@ -9,50 +9,50 @@
     >
       <div class="padding-add">
         <el-form inline size="small" label-position="right" @submit.native.prevent>
-          <el-form-item label="优惠券名：">
+          <el-form-item :label="$t('marketing.couponNameColon')">
             <el-input
               v-model.trim="name"
               @keyup.enter.native="getList(1)"
-              placeholder="请输入优惠券名称"
+              :placeholder="$t('user.pleaseEnterCouponName')"
               class="selWidth"
               clearable
             />
           </el-form-item>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('product.userSearchLabel')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
-          <el-form-item label="使用状态：">
+          <el-form-item :label="$t('marketing.useStatusLabel')">
             <el-select
               v-model="tableFrom.status"
-              placeholder="请选择使用状态"
+              :placeholder="$t('marketing.pleaseSelectUseStatus')"
               @change="getList(1)"
               clearable
               class="selWidth"
             >
-              <el-option label="已使用" :value="1"></el-option>
-              <el-option label="未使用" :value="0"></el-option>
-              <el-option label="已失效" :value="2"></el-option>
+              <el-option :label="$t('marketing.used')" :value="1"></el-option>
+              <el-option :label="$t('marketing.unused')" :value="0"></el-option>
+              <el-option :label="$t('marketing.invalidated')" :value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '20px' }" :bordered="false" shadow="never">
       <el-table v-loading="listLoading" :data="tableData.data" style="width: 100%" size="small">
-        <el-table-column prop="id" label="优惠券ID" min-width="80" />
-        <el-table-column prop="name" label="优惠券名称" min-width="150" :show-overflow-tooltip="true" />
-        <el-table-column prop="user" label="用户信息" min-width="140">
+        <el-table-column prop="id" :label="$t('marketing.couponId')" min-width="80" />
+        <el-table-column prop="name" :label="$t('user.couponNameCol')" min-width="150" :show-overflow-tooltip="true" />
+        <el-table-column prop="user" :label="$t('order.userInfo')" min-width="140">
           <template slot-scope="scope">
             <div>{{ scope.row.nickname }}/{{ scope.row.uid }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="money" label="面值" min-width="90" />
-        <el-table-column prop="minPrice" label="最低消费额" min-width="120" />
-        <el-table-column prop="startTime" label="使用有效期" min-width="150">
+        <el-table-column prop="money" :label="$t('marketing.faceValueCol')" min-width="90" />
+        <el-table-column prop="minPrice" :label="$t('marketing.minConsumption')" min-width="120" />
+        <el-table-column prop="startTime" :label="$t('marketing.useValidity')" min-width="150">
           <template slot-scope="scope">
             <div v-if="scope.row.startTime">
               {{ scope.row.startTime }} -<br />
@@ -61,29 +61,29 @@
             <div v-else>-</div>
           </template>
         </el-table-column>
-        <el-table-column prop="category" label="使用范围" min-width="90">
+        <el-table-column prop="category" :label="$t('product.usageScope')" min-width="90">
           <template slot-scope="scope">
             <span>{{ scope.row.category | couponCategory }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="receiveType" label="领取方式" min-width="100">
+        <el-table-column prop="receiveType" :label="$t('user.receiveMethod')" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.receiveType | receiveType }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="领取时间" min-width="150">
+        <el-table-column :label="$t('marketing.receiveTime')" min-width="150">
           <template slot-scope="scope">
             <span>{{ scope.row.createTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="stock" label="使用状态" min-width="90">
+        <el-table-column prop="stock" :label="$t('marketing.useStatus')" min-width="90">
           <template slot-scope="scope">
-            <el-tag class="endTag tag-background" v-if="scope.row.status == 1">已使用</el-tag>
-            <el-tag class="doingTag tag-background" v-else-if="scope.row.status == 0">未使用</el-tag>
-            <el-tag class="notStartTag tag-background" v-else>已失效</el-tag>
+            <el-tag class="endTag tag-background" v-if="scope.row.status == 1">{{ $t('marketing.used') }}</el-tag>
+            <el-tag class="doingTag tag-background" v-else-if="scope.row.status == 0">{{ $t('marketing.unused') }}</el-tag>
+            <el-tag class="notStartTag tag-background" v-else>{{ $t('marketing.invalidated') }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="使用时间" min-width="150">
+        <el-table-column :label="$t('marketing.useTime')" min-width="150">
           <template slot-scope="scope">
             <span>{{ scope.row.useTime | filterEmpty }}</span>
           </template>
@@ -143,16 +143,6 @@ export default {
       timeVal: [],
       cardLists: [],
     };
-  },
-  filters: {
-    receiveType(val) {
-      const typeObj = {
-        1: '用户领取',
-        2: '商品赠送券',
-        3: '平台活动使用',
-      };
-      return typeObj[val];
-    },
   },
   mounted() {
     if (checkPermi(['platform:coupon:user:page:list'])) this.getList('');

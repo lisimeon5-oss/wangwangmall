@@ -3,20 +3,20 @@
 		<view class="header">
 			<view class="name color28 mb20"><text class="iconfont icon-huati mr20"></text>{{topicDetails.name?topicDetails.name:''}}</view>
 			<view class="noteNum">
-				{{ (topicDetails.noteNum && topicDetails.noteNum<10000) ? topicDetails.noteNum+'篇内容' : topicDetails.noteNum &&(topicDetails.noteNum/10000).toFixed(2)+'万篇内容'}}
+				{{ (topicDetails.noteNum && topicDetails.noteNum<10000) ? topicDetails.noteNum+$t('篇内容') : topicDetails.noteNum &&(topicDetails.noteNum/10000).toFixed(2)+$t('万篇内容')}}
 			</view>
 		</view>
 		<view class="borderPad">
 			<view class="acea-row row-center-wrapper tab">
-				<view :class="params.type == 'hot'? 'on' : ''" class="nav-item" @click="onChange('hot')">最热</view>
-				<view :class="params.type == 'new'? 'on' : ''" class="nav-item" @click="onChange('new')">最新</view>
+				<view :class="params.type == 'hot'? 'on' : ''" class="nav-item" @click="onChange('hot')">{{$t('最热')}}</view>
+				<view :class="params.type == 'new'? 'on' : ''" class="nav-item" @click="onChange('new')">{{$t('最新')}}</view>
 			</view>
 		</view>
 		<view class="borderPad">
 			<WaterfallsFlow v-if="noteTopicList.length" :wfList="noteTopicList" :fromType="1">
 			</WaterfallsFlow>
 		</view>
-		<view class="publish" @click="publish"><text class="iconfont icon-fabu2"></text>立即发布</view>
+		<view class="publish" @click="publish"><text class="iconfont icon-fabu2"></text>{{$t('立即发布')}}</view>
 	</view>
 </template>
 

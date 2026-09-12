@@ -2,4 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zbkj.service.dao.ProductGuaranteeGroupDao">
 
+    <insert id="insertWithNameJson" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO eb_product_guarantee_group
+            (mer_id, name, name_json, is_del, create_time, update_time)
+        VALUES
+            (#{merId}, #{name}, #{nameJson}, #{isDel}, NOW(), NOW())
+    </insert>
+
+    <update id="updateNameFields">
+        UPDATE eb_product_guarantee_group
+        SET name = #{name},
+            name_json = #{nameJson},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
 </mapper>

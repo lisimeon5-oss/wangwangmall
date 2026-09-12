@@ -10,12 +10,12 @@
 			<view class="icon" @click="home" v-else>
 				<image class="img" src="../static/images/home.png"></image>
 			</view>
-			账户登录
+			{{$t('账户登录')}}
 		</view>
 		<!-- #endif -->
 		<view class="appBox">
-			<view class="phone_name">绑定手机号</view>
-			<view class="phone_tips">登录注册需绑定手机号</view>
+			<view class="phone_name">{{$t('绑定手机号')}}</view>
+			<view class="phone_tips">{{$t('登录注册需绑定手机号')}}</view>
 			<mobileLogin :isUp="isUp" :isShow="isShow" :platform="platform" :isPos="isPos" :appleShow="appleShow"
 				:authKey="authKey" @wechatPhone="wechatPhone" :wxCode="wxCode"></mobileLogin>
 		</view>
@@ -110,7 +110,7 @@
 					}
 					this.isUp = false
 					uni.showToast({
-						title: '登录成功',
+						title: this.$t('登录成功'),
 						icon: 'none'
 					})
 					setTimeout(res => {
@@ -124,10 +124,10 @@
 			async code() {
 				let that = this;
 				if (!that.account) return that.$util.Tips({
-					title: '请填写手机号码'
+					title: this.$t('请填写手机号码')
 				});
 				if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(that.account)) return that.$util.Tips({
-					title: '请输入正确的手机号码'
+					title: this.$t('请输入正确的手机号码')
 				});
 				await registerVerify(that.account).then(res => {
 					that.$util.Tips({

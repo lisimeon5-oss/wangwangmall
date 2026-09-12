@@ -80,7 +80,7 @@
 					<view class="pictrues acea-row row-center-wrapper">
 						<text class="iconfont icon-gengduo2"></text>
 					</view>
-					<view class="text">更多</view>
+					<view class="text">{{$t('更多')}}</view>
 				</view>
 			</view>
 		</view>
@@ -91,7 +91,7 @@
 			<view class='pictrue'>
 				<image :src="urlDomain+'crmebimage/presets/noShopper.png'"></image>
 			</view>
-			<text class="text-ccc">暂无商品</text>
+			<text class="text-ccc">{{$t('暂无商品')}}</text>
 		</view>
 		<!-- <view v-if="bottomNavigationIsCustom" class="footerBottom"></view> -->
 	</view>
@@ -237,7 +237,7 @@
 				let that = this;
 				that.styleConfig = [];
 				uni.showLoading({
-					title: '加载中...'
+					title: this.$t('加载中...')
 				});
 				getDiy(id).then(res => {
 					uni.setNavigationBarTitle({
@@ -296,7 +296,7 @@
 						this.sortList = [];
 						this.categoryId = 0;
 						this.$util.Tips({
-							title: "请在平台端选择商品分类！确保加载商品分类数据。"
+							title: this.$t('请在平台端选择商品分类！确保加载商品分类数据。')
 						});
 						return;
 					} else {
@@ -315,7 +315,7 @@
 					this.categoryId = 0;
 					if (!item.val) {
 						return this.$util.Tips({
-							title: "请在平台端选择微页面链接！确保加载微页面数据。"
+							title: this.$t('请在平台端选择微页面链接！确保加载微页面数据。')
 						});
 					} else {
 						this.styleConfig = [];
@@ -341,7 +341,7 @@
 
 <style lang="scss" scoped>
 	.smallBox {
-		padding-bottom: calc(130rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		padding-bottom: calc(130rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		padding-bottom: calc(130rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 	}
 
@@ -390,7 +390,7 @@
 					overflow: hidden;
 				}
 
-				/deep/ .easy-loadimage,
+				::v-deep  .easy-loadimage,
 				uni-image,
 				.easy-loadimage {
 					width: 90rpx;

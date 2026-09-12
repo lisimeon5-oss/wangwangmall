@@ -2,6 +2,7 @@ package com.zbkj.service.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zbkj.common.model.product.ProductGuaranteeGroup;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 商品保障服务组合表 Mapper 接口
@@ -17,4 +18,7 @@ import com.zbkj.common.model.product.ProductGuaranteeGroup;
  */
 public interface ProductGuaranteeGroupDao extends BaseMapper<ProductGuaranteeGroup> {
 
+    int insertWithNameJson(ProductGuaranteeGroup group);
+
+    int updateNameFields(@Param("id") Integer id, @Param("name") String name, @Param("nameJson") String nameJson);
 }

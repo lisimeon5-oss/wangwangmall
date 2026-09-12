@@ -259,11 +259,12 @@ const marketingRouter = {
     {
       path: 'videoChannel',
       name: 'VideoChannel',
+      component: () => import('@/views/videoChannel'),
+      redirect: '/marketing/videoChannel/draftList',
       meta: {
         title: '视频号',
         noCache: true,
       },
-      component: () => import('@/views/videoChannel'),
       children: [
         {
           path: 'list',
@@ -274,8 +275,8 @@ const marketingRouter = {
         {
           path: 'draftList',
           component: () => import('@/views/videoChannel/draftList/index'),
-          name: 'draftList',
-          meta: { title: '草稿列表', icon: '', noCache: true },
+          name: 'MarketingVideoDraftList',
+          meta: { title: '待审核列表', icon: '', noCache: true },
         },
         {
           path: 'apply',

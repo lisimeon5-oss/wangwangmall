@@ -1,0 +1,50 @@
+{
+  "code": 200,
+  "message": null,
+  "data": [
+    {
+      "id": 8,
+      "name": "一年质保",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2024/10/11/b2541cb26b4d42ca8eb54b1f1176bf11dmvxq3tlyf.png",
+      "content": "签收后的1年内,因产品质量问题可享受维修服务",
+      "sort": 1,
+      "isShow": true,
+      "isDel": false,
+      "createTime": "2022-11-02 15:54:02",
+      "updateTime": "2024-10-11 17:34:08"
+    },
+    {
+      "id": 3,
+      "name": "极速退款",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2024/10/11/97daeb793ee24fbc841f509fd54734121ejpwd6g75.png",
+      "content": "用户发起退款，2小时内处理，立即到账。",
+      "sort": 0,
+      "isShow": true,
+      "isDel": false,
+      "createTime": "2022-08-16 15:22:27",
+      "updateTime": "2024-10-11 17:35:38"
+    },
+    {
+      "id": 4,
+      "name": "24小时内发货",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2024/10/11/6ee1dddb249c4da9aa31b9f52debb098g7og0gp1s2.png",
+      "content": "承诺下单后24小时内发货",
+      "sort": 0,
+      "isShow": true,
+      "isDel": false,
+      "createTime": "2022-08-16 15:22:45",
+      "updateTime": "2024-10-11 17:35:51"
+    },
+    {
+      "id": 7,
+      "name": "大粽子条款",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2024/10/11/bc856b9af18648589733b63c72610cd2cjl1ta6u7m.png",
+      "content": "大粽子条款 描述",
+      "sort": 0,
+      "isShow": true,
+      "isDel": false,
+      "createTime": "2022-10-21 10:19:48",
+      "updateTime": "2024-10-11 17:36:03"
+    }
+  ]
+}

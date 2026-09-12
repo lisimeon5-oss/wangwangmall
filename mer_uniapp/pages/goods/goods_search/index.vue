@@ -6,26 +6,26 @@
 				<view class='input acea-row row-between-wrapper'>
 					<text class='iconfont icon-sousuo2'></text>
 					<input type='text' :value='searchValue'
-					:focus="focus" placeholder='点击搜索商品'
+					:focus="focus" :placeholder="$t('点击搜索商品')"
 					confirm-type='search' @confirm="searchBut"
 					placeholder-class='placeholder' @input="setValue"
 					maxlength="20"></input>
 				</view>
-				<view class='bnt' @tap='searchBut'>搜索</view>
+				<view class='bnt' @tap='searchBut'>{{$t('搜索')}}</view>
 				<!-- #endif -->
 				<!-- #ifdef MP -->
 				<searchBox :searchValue="searchValue" class="searchBox"  @searchChange="searchBut"></searchBox>
 				<!-- #endif -->
 			</view>
 			<!-- #ifdef MP -->
-			<view class='title' :style="{'margin-top':searchTop+60+'px'}">热门搜索</view>
+			<view class='title' :style="{'margin-top':searchTop+60+'px'}">{{$t('热门搜索')}}</view>
 			<!-- #endif -->
 			<!-- #ifndef MP -->
-			<view class='title'>热门搜索</view>
+			<view class='title'>{{$t('热门搜索')}}</view>
 			<!-- #endif -->
 			<view class='list acea-row'>
 				<block v-for="(item,index) in hotSearchList" :key="index">
-					<view class='item' @tap='setHotSearchValue(item.title)'>{{item.title}}</view>
+					<view class='item' @tap='setHotSearchValue(hotSearchTitle(item))'>{{hotSearchTitle(item)}}</view>
 				</block>
 			</view>
 			<view class='line'></view>
@@ -47,6 +47,7 @@
 	import {
 		getSearchKeyword,
 	} from '@/api/product.js';
+	import { getLocalizedDiyTitle } from '@/utils/localizedName.js';
 	import recommend from "@/components/base/recommend.vue";
 	// #ifdef MP
 	import searchBox from "@/components/searchBox.vue";
@@ -93,6 +94,9 @@
 			if(e.searchVal) this.searchValue = e.searchVal;
 		},
 		methods: {
+			hotSearchTitle(item) {
+				return getLocalizedDiyTitle(item, this.i18nLocale);
+			},
 			getRoutineHotSearch: function() {
 				let that = this;
 				getSearchKeyword().then(res => {
@@ -124,7 +128,7 @@
 					})
 				} else {
 					return this.$util.Tips({
-						title: '请输入要搜索的商品',
+						title: this.$t('请输入要搜索的商品'),
 						icon: 'none',
 						duration: 1000,
 						mask: true,

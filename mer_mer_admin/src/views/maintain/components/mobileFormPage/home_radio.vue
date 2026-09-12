@@ -24,7 +24,7 @@
 import { mapState } from 'vuex';
 export default {
   name: 'home_radio',
-  cname: '单选框',
+  cname: 'maintain.radio',
   icon: 'icon-biaodanzujian-danxuankuang',
   configName: 'c_home_radio',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -68,22 +68,22 @@ export default {
         name: 'radios',
         timestamp: this.num,
         titleConfig: {
-          title: '标题',
-          val: '单选框',
-          place: '请输入标题',
+          title: this.$t('formGenerator.title'),
+          val: this.$t('maintain.radio'),
+          place: this.$t('formGenerator.pleaseEnterTitle'),
           max: 10,
           type: 'form',
           isShow: 1,
         },
         wordsConfig: {
-          title: '选项',
+          title: this.$t('formGenerator.options'),
           list: [
-            { val: '选项一', show: true },
-            { val: '选项二', show: false },
+            { val: this.$t('formGenerator.optionOne'), show: true },
+            { val: this.$t('formGenerator.optionTwo'), show: false },
           ],
         },
         titleShow: {
-          title: '是否必填',
+          title: this.$t('formGenerator.required'),
           val: false,
           type: 'form',
           isShow: 1,

@@ -1,0 +1,132 @@
+==========================================================================================
+CONTEXT for labelarr
+  hits: 6
+","):["1"],systemFormId:a.systemFormId?a.systemFormId:null,refundSwitch:"add"!==e||a.refundSwitch}),this.htmlKey++,this.labelarr=a.keyword?a.keyword.split(","):[],this.formValidate.categoryId&&(this.getbrandList(),this.brandList.push({name:"其他",id:0})),this.formValidate.couponIds&&this.formValidate.couponIds.length&&Object(i["O"])().then((function(t){var e=r.formValidate.coupon
+--------------------------------------------------
+_b({},"el-col",t.grid2,!1),[a("el-form-item",{attrs:{label:"商品关键字："}},[a("keyword",{staticClass:"from-ipt-width",attrs:{labelarr:t.labelarr,isDisabled:t.isDisabled},on:{getLabelarr:t.getLabelarr}}),a("div",{staticClass:"from-tips"},[t._v("用户可以根据关键字进行商品搜索")])],1)],1),a("el-col",t._b({},"el-col",t.grid2,!1),[a("el-form-item",{attrs:{label:"商品简介：",prop:"intro"}},[a("el-input",{sta
+--------------------------------------------------
+ol",t.grid2,!1),[a("el-form-item",{attrs:{label:"商品关键字："}},[a("keyword",{staticClass:"from-ipt-width",attrs:{labelarr:t.labelarr,isDisabled:t.isDisabled},on:{getLabelarr:t.getLabelarr}}),a("div",{staticClass:"from-tips"},[t._v("用户可以根据关键字进行商品搜索")])],1)],1),a("el-col",t._b({},"el-col",t.grid2,!1),[a("el-form-item",{attrs:{label:"商品简介：",prop:"intro"}},[a("el-input",{staticClass:"f
+--------------------------------------------------
+rontDomain:localStorage.getItem("frontDomain"),htmlKey:0,formThead:Object.assign({},b["b"]),form:2,url:"",copyConfig:{},labelarr:[],isDisabled:"1"===this.$route.params.isDisabled,isCopy:"1"===this.$route.params.isCopy,props2:{children:"childList",label:"name",value:"id",multiple:!0,emitPath:!1,checkStrictly:!0},props1:{children:"childList",label:"name",value:"id",multiple:!1,em
+--------------------------------------------------
+==========================================================================================
+CONTEXT for JSON.stringify
+  hits: 8
+n(){var t=this;Object(n["j"])().then((function(e){if(t.carMyValidateForm.cdkeyInfo.id){var r=e.some((function(e){return JSON.stringify(e).id===JSON.stringify(t.carMyValidateForm.cdkeyInfo).id}));r||e.push(t.carMyValidateForm.cdkeyInfo)}t.cdkeyLibraryList=e}))},handleChange:function(t){this.carMyValidateForm.cdkeyInfo=t},submitForm:function(t){var e=this;this.$refs[t].validate((
+--------------------------------------------------
+["j"])().then((function(e){if(t.carMyValidateForm.cdkeyInfo.id){var r=e.some((function(e){return JSON.stringify(e).id===JSON.stringify(t.carMyValidateForm.cdkeyInfo).id}));r||e.push(t.carMyValidateForm.cdkeyInfo)}t.cdkeyLibraryList=e}))},handleChange:function(t){this.carMyValidateForm.cdkeyInfo=t},submitForm:function(t){var e=this;this.$refs[t].validate((function(t){if(!t)retur
+--------------------------------------------------
+p((function(t){return{value:t.value,detail:t.detail.map((function(t){return t.value}))}})),r={id:0,ruleName:a,ruleValue:JSON.stringify(i)};Object(o["a"])(r).then((function(e){t.$message.success("提交成功"),t.productGetRule(),t.clear(),t.loading=!1,t.loadingBtn=!1})).catch((function(){t.loading=!1,t.loadingBtn=!1}))})).catch((function(){}))},handleSelImg:function(t){var e=this;this.
+--------------------------------------------------
+},handlerSubSuccessCloudDisk:function(t){this.cloudDisk=t,this[this.carMytabName][this.carMytabIndex].expand=JSON.parse(JSON.stringify(t)),this.$refs.cloudDiskRef.cloudDiskShow=!1},handlerChangeCdkeyIdSubSuccess:function(t){this[this.carMytabName][this.carMytabIndex].cdkeyLibraryName=t.name,this[this.carMytabName][this.carMytabIndex].cdkeyId=t.id,this[this.carMytabName][this.ca
+--------------------------------------------------
+==========================================================================================
+CONTEXT for deliveryMethodList.join
+  hits: 1
+ord:this.labelarr.join(","),sliderImage:JSON.stringify(this.formValidate.sliderImages),deliveryMethod:this.formValidate.deliveryMethodList.join(","),systemFormId:this.formValidate.systemFormId?this.formValidate.systemFormId:0,attrValueList:this.formValidate.specType?e:this.OneattrValue,tempId:0!=this.formValidate.type?0:this.formValidate.tempId});return n},automaticListing:func
+--------------------------------------------------
+==========================================================================================
+CONTEXT for cateIds.join
+  hits: 1
+(e){t.$set(e,"attrValue",JSON.stringify({"规格":"默认"}))}));var n=nt(nt({},this.formValidate),{},{cateId:this.formValidate.cateIds.join(","),keyword:this.labelarr.join(","),sliderImage:JSON.stringify(this.formValidate.sliderImages),deliveryMethod:this.formValidate.deliveryMethodList.join(","),systemFormId:this.formValidate.systemFormId?this.formValidate.systemFormId:0,attrValueLis
+--------------------------------------------------
+==========================================================================================
+CONTEXT for attrValue:
+  hits: 3
+t.oneFormBatch,isDisabled:t.isDisabled,formThead:t.formThead,manyTabDate:t.manyTabDate,ManyAttrValue:t.ManyAttrValue,OneattrValue:t.OneattrValue,manyTabTit:t.manyTabTit},on:{changeManyAttrValue:t.changeManyAttrValue,handleBatchDel:t.handleBatchDel,changeIsEditVal:t.changeIsEditVal,changeDefault:t.changeDefault},model:{value:t.formValidate,callback:function(e){t.formValidate=e},
+--------------------------------------------------
+ult:function(){return{}}},manyTabTit:{type:Object,default:function(){return{}}},isDisabled:{type:Boolean,default:!1},OneattrValue:{type:Array,default:function(){return[]}},ManyAttrValue:{type:Array,default:function(){return[]}},oneFormBatch:{type:Array,default:function(){return[]}}},watch:{formValidate:{handler:function(t){this.$emit("input",t)},deep:!0}},mounted:function(){thi
+--------------------------------------------------
+hildList",label:"name",value:"id",multiple:!1,emitPath:!1},tabs:[],fullscreenLoading:!1,props:{multiple:!0},active:0,OneattrValue:[Object.assign({},b["a"].attrValueList[0])],ManyAttrValue:[Object.assign({},b["a"].attrValueList[0])],manyTabTit:{},manyTabDate:{},grid2:{xl:24,lg:24,md:24,sm:24,xs:24},isBtn:!1,manyFormValidate:[],currentTab:"1",isChoice:"",grid:{xl:24,lg:24,md:24,s
+--------------------------------------------------
+==========================================================================================
+CONTEXT for ManyAttrValue
+  hits: 90
+.attr_arr=t.sku.split(","),t.brokerage=t.brokerage||0,t.brokerageTwo=t.brokerageTwo||0,t.vipPrice=t.vipPrice||0})),this.ManyAttrValue=[].concat(o(this.oneFormBatch),o(a.attrValueList))):this.formValidate.attrList.length&&(this.oneFormBatch[0].image=this.$selfUtil.setDomain(a.image)):this.OneattrValue=a.attrValueList},modalPicTap:function(t,e,r,i){var a=this;a.isDisabled||this.$
+--------------------------------------------------
+idate.sliderImages.push(t.sattDir)}))}"1"===t&&"dan"===e&&(a.OneattrValue[0].image=i[0].sattDir),"1"===t&&"duo"===e&&(a.ManyAttrValue[r].image=i[0].sattDir),"1"===t&&"pi"===e&&(a.oneFormBatch[0].image=i[0].sattDir)}}),t,"content")},handleDragStart:function(t,e){this.isDisabled||(this.dragging=e)},handleDragEnd:function(t,e){this.isDisabled||(this.dragging=null)},handleDragOver:
+--------------------------------------------------
+b === '2'"}],attrs:{oneFormBatch:t.oneFormBatch,isDisabled:t.isDisabled,formThead:t.formThead,manyTabDate:t.manyTabDate,ManyAttrValue:t.ManyAttrValue,OneattrValue:t.OneattrValue,manyTabTit:t.manyTabTit},on:{changeManyAttrValue:t.changeManyAttrValue,handleBatchDel:t.handleBatchDel,changeIsEditVal:t.changeIsEditVal,changeDefault:t.changeDefault},model:{value:t.formValidate,callba
+--------------------------------------------------
+rs:{oneFormBatch:t.oneFormBatch,isDisabled:t.isDisabled,formThead:t.formThead,manyTabDate:t.manyTabDate,ManyAttrValue:t.ManyAttrValue,OneattrValue:t.OneattrValue,manyTabTit:t.manyTabTit},on:{changeManyAttrValue:t.changeManyAttrValue,handleBatchDel:t.handleBatchDel,changeIsEditVal:t.changeIsEditVal,changeDefault:t.changeDefault},model:{value:t.formValidate,callback:function(e){t
+--------------------------------------------------
+==========================================================================================
+CONTEXT for OneattrValue
+  hits: 19
+attrValueList))):this.formValidate.attrList.length&&(this.oneFormBatch[0].image=this.$selfUtil.setDomain(a.image)):this.OneattrValue=a.attrValueList},modalPicTap:function(t,e,r,i){var a=this;a.isDisabled||this.$modalUpload((function(i){if(i){if("1"!==t||e||(a.formValidate.image=i[0].sattDir,a.OneattrValue[0].image=i[0].sattDir),"2"===t&&!e){if(i.length>10)return this.$message.w
+--------------------------------------------------
+,r,i){var a=this;a.isDisabled||this.$modalUpload((function(i){if(i){if("1"!==t||e||(a.formValidate.image=i[0].sattDir,a.OneattrValue[0].image=i[0].sattDir),"2"===t&&!e){if(i.length>10)return this.$message.warning("最多选择10张图片！");if(i.length+a.formValidate.sliderImages.length>10)return this.$message.warning("最多选择10张图片！");i.map((function(t){a.formValidate.sliderImages.push(t.sattDi
+--------------------------------------------------
+$message.warning("最多选择10张图片！");i.map((function(t){a.formValidate.sliderImages.push(t.sattDir)}))}"1"===t&&"dan"===e&&(a.OneattrValue[0].image=i[0].sattDir),"1"===t&&"duo"===e&&(a.ManyAttrValue[r].image=i[0].sattDir),"1"===t&&"pi"===e&&(a.oneFormBatch[0].image=i[0].sattDir)}}),t,"content")},handleDragStart:function(t,e){this.isDisabled||(this.dragging=e)},handleDragEnd:function(
+--------------------------------------------------
+ch:t.oneFormBatch,isDisabled:t.isDisabled,formThead:t.formThead,manyTabDate:t.manyTabDate,ManyAttrValue:t.ManyAttrValue,OneattrValue:t.OneattrValue,manyTabTit:t.manyTabTit},on:{changeManyAttrValue:t.changeManyAttrValue,handleBatchDel:t.handleBatchDel,changeIsEditVal:t.changeIsEditVal,changeDefault:t.changeDefault},model:{value:t.formValidate,callback:function(e){t.formValidate=
+--------------------------------------------------
+==========================================================================================
+CONTEXT for OneAttrValue
+  hits: 0
+==========================================================================================
+CONTEXT for generateAttr
+  hits: 9
+mage?1:0}})),this.createBnt=!0,this.formValidate.attrValueList.length?this.generateHeader(this.formValidate.attrs):this.generateAttr(this.formValidate.attrs))},methods:{handleShowPop:function(t){this.$refs["inputRef_"+t][0].focus()},handleRemove2:function(t,e,a){t.splice(e,1),this.delAttrTable(a)},handleAddRole:function(){var t={value:this.formDynamic.attrsName,add_pic:0,detail
+--------------------------------------------------
+hangeAttrValue],delete t.attrValueShow[a.changeAttrValue],delete t[a.changeAttrValue])})),this.changeAttrValue=e)):this.generateAttr(this.formValidate.attrs)},attrDetailChangeValue:function(t,e){var a=this;if(this.ManyAttrValue.length){var i=this.formValidate.attrs[e].value;this.ManyAttrValue.map((function(e,r){if(r>0&&Object.keys(e.attrValueShow).includes(i)&&e.attrValueShow[i
+--------------------------------------------------
+=e.attr_arr.findIndex((function(t){return t===a.changeAttrValue}));e.attr_arr[n]=t}})),this.changeAttrValue=t}else this.generateAttr(this.formValidate.attrs,1);this.$nextTick((function(){a.$emit("changeManyAttrValue",D(a.ManyAttrValue))}))},changeCurrentIndex:function(t){this.currentIndex=t},addOneAttr:function(t,e){this.generateAttr(this.formValidate.attrs,e)},handleFocus:func
+--------------------------------------------------
+anyAttrValue",D(a.ManyAttrValue))}))},changeCurrentIndex:function(t){this.currentIndex=t},addOneAttr:function(t,e){this.generateAttr(this.formValidate.attrs,e)},handleFocus:function(t){this.changeAttrValue=t},handleBlur:function(){this.changeAttrValue=""},onMoveSpec:function(){this.generateAttr(this.formValidate.attrs)},handleRemoveImg:function(t){t.image=""},objectSpanMethod:f
+--------------------------------------------------
+==========================================================================================
+CONTEXT for productSave
+  hits: 0
+==========================================================================================
+CONTEXT for save(
+  hits: 2
+otEl:lt,name:"sort",toEl:lt,fromEl:ct,originalEvent:t}),it({sortable:this,name:"sort",toEl:lt,originalEvent:t})),yt&&yt.save()):vt!==pt&&vt>=0&&(it({sortable:this,name:"update",toEl:lt,originalEvent:t}),it({sortable:this,name:"sort",toEl:lt,originalEvent:t})),Zt.active&&(null!=vt&&-1!==vt||(vt=pt,mt=gt),it({sortable:this,name:"end",toEl:lt,originalEvent:t}),this.save())))),this
+--------------------------------------------------
+inalEvent:t})),Zt.active&&(null!=vt&&-1!==vt||(vt=pt,mt=gt),it({sortable:this,name:"end",toEl:lt,originalEvent:t}),this.save())))),this._nulling()},_nulling:function(){rt("nulling",this),ct=at=lt=st=ut=dt=ft=ht=wt=xt=Ot=vt=mt=pt=gt=Ct=Tt=yt=bt=Zt.dragged=Zt.ghost=Zt.clone=Zt.active=null,Ft.forEach((function(t){t.checked=!0})),Ft.length=St=Et=0},handleEvent:function(t){switch(t.
+--------------------------------------------------
+==========================================================================================
+CONTEXT for .save
+  hits: 2
+ootEl:lt,name:"sort",toEl:lt,fromEl:ct,originalEvent:t}),it({sortable:this,name:"sort",toEl:lt,originalEvent:t})),yt&&yt.save()):vt!==pt&&vt>=0&&(it({sortable:this,name:"update",toEl:lt,originalEvent:t}),it({sortable:this,name:"sort",toEl:lt,originalEvent:t})),Zt.active&&(null!=vt&&-1!==vt||(vt=pt,mt=gt),it({sortable:this,name:"end",toEl:lt,originalEvent:t}),this.save())))),thi
+--------------------------------------------------
+ginalEvent:t})),Zt.active&&(null!=vt&&-1!==vt||(vt=pt,mt=gt),it({sortable:this,name:"end",toEl:lt,originalEvent:t}),this.save())))),this._nulling()},_nulling:function(){rt("nulling",this),ct=at=lt=st=ut=dt=ft=ht=wt=xt=Ot=vt=mt=pt=gt=Ct=Tt=yt=bt=Zt.dragged=Zt.ghost=Zt.clone=Zt.active=null,Ft.forEach((function(t){t.checked=!0})),Ft.length=St=Et=0},handleEvent:function(t){switch(t
+--------------------------------------------------
+==========================================================================================
+CONTEXT for attrValueList
+  hits: 14
+s:[],sliderImage:"",name:"",intro:"",keyword:"",cateIds:[],cateId:null,unitName:"",sort:0,isShow:!1,tempId:"",header:[],attrValueList:[{image:"",brokerage:0,brokerageTwo:0,price:.01,vipPrice:.01,cost:.01,otPrice:.01,stock:0,barCode:"",itemNumber:"",weight:0,volume:0,cdkeyId:null,cdkeyLibraryName:"",expand:"",isShow:!0}],attrList:[],attrs:[],selectRule:"",isSub:!1,isPaidMember:!
+--------------------------------------------------
+SON.parse(a.sliderImage),cateIds:a.cateId?a.cateId.split(","):[],sort:a.sort?a.sort:0,attrList:a.attrList?a.attrList:[],attrValueList:a.attrValueList?a.attrValueList:[],isSub:!!a.isSub&&a.isSub,content:a.content?this.$selfUtil.replaceImgSrcHttps(a.content):"",id:a.id?a.id:0,coupons:a.coupons?a.coupons:[],couponIds:a.couponIds?a.couponIds:[],type:a.type?a.type:Number(this.$route
+--------------------------------------------------
+erImage),cateIds:a.cateId?a.cateId.split(","):[],sort:a.sort?a.sort:0,attrList:a.attrList?a.attrList:[],attrValueList:a.attrValueList?a.attrValueList:[],isSub:!!a.isSub&&a.isSub,content:a.content?this.$selfUtil.replaceImgSrcHttps(a.content):"",id:a.id?a.id:0,coupons:a.coupons?a.coupons:[],couponIds:a.couponIds?a.couponIds:[],type:a.type?a.type:Number(this.$route.params.productT
+--------------------------------------------------
+:a.cateId?a.cateId.split(","):[],sort:a.sort?a.sort:0,attrList:a.attrList?a.attrList:[],attrValueList:a.attrValueList?a.attrValueList:[],isSub:!!a.isSub&&a.isSub,content:a.content?this.$selfUtil.replaceImgSrcHttps(a.content):"",id:a.id?a.id:0,coupons:a.coupons?a.coupons:[],couponIds:a.couponIds?a.couponIds:[],type:a.type?a.type:Number(this.$route.params.productType),guaranteeId
+--------------------------------------------------
+==========================================================================================
+CONTEXT for attrList
+  hits: 10
+1,otPrice:.01,stock:0,barCode:"",itemNumber:"",weight:0,volume:0,cdkeyId:null,cdkeyLibraryName:"",expand:"",isShow:!0}],attrList:[],attrs:[],selectRule:"",isSub:!1,isPaidMember:!1,content:"",specType:!1,id:void 0,couponIds:[],coupons:[],categoryId:0,guaranteeIds:"",guaranteeIdsList:null,brandId:"",type:0,isAutoSubmitAudit:!1,isAutoUp:!1,deliveryMethodList:["1"],deliveryMethod:"
+--------------------------------------------------
+.setDomain(a.image),sliderImages:JSON.parse(a.sliderImage),cateIds:a.cateId?a.cateId.split(","):[],sort:a.sort?a.sort:0,attrList:a.attrList?a.attrList:[],attrValueList:a.attrValueList?a.attrValueList:[],isSub:!!a.isSub&&a.isSub,content:a.content?this.$selfUtil.replaceImgSrcHttps(a.content):"",id:a.id?a.id:0,coupons:a.coupons?a.coupons:[],couponIds:a.couponIds?a.couponIds:[],typ
+--------------------------------------------------
+a.image),sliderImages:JSON.parse(a.sliderImage),cateIds:a.cateId?a.cateId.split(","):[],sort:a.sort?a.sort:0,attrList:a.attrList?a.attrList:[],attrValueList:a.attrValueList?a.attrValueList:[],isSub:!!a.isSub&&a.isSub,content:a.content?this.$selfUtil.replaceImgSrcHttps(a.content):"",id:a.id?a.id:0,coupons:a.coupons?a.coupons:[],couponIds:a.couponIds?a.couponIds:[],type:a.type?a.
+--------------------------------------------------
+iderImages:JSON.parse(a.sliderImage),cateIds:a.cateId?a.cateId.split(","):[],sort:a.sort?a.sort:0,attrList:a.attrList?a.attrList:[],attrValueList:a.attrValueList?a.attrValueList:[],isSub:!!a.isSub&&a.isSub,content:a.content?this.$selfUtil.replaceImgSrcHttps(a.content):"",id:a.id?a.id:0,coupons:a.coupons?a.coupons:[],couponIds:a.couponIds?a.couponIds:[],type:a.type?a.type:Number
+--------------------------------------------------
+==========================================================================================
+CONTEXT for sku:
+  hits: 1
+&&Object(p["a"])(c.attr_arr,i)?Object.assign(r,{price:c.price,cost:c.cost,otPrice:c.otPrice,stock:c.stock,image:c.image,sku:c.sku||"",weight:c.weight||"",isDefault:c.isDefault||0,volume:c.volume||0,barCode:c.barCode||"",itemNumber:c.itemNumber||"",brokerage:c.brokerage,brokerageTwo:c.brokerageTwo,vipPrice:c.vipPrice}):l>0&&c.attr_arr.length&&t[o].add_pic&&i.includes(e)&&t[o].de
+--------------------------------------------------
+==========================================================================================
+CONTEXT for specType
+  hits: 17
+d:null,cdkeyLibraryName:"",expand:"",isShow:!0}],attrList:[],attrs:[],selectRule:"",isSub:!1,isPaidMember:!1,content:"",specType:!1,id:void 0,couponIds:[],coupons:[],categoryId:0,guaranteeIds:"",guaranteeIdsList:null,brandId:"",type:0,isAutoSubmitAudit:!1,isAutoUp:!1,deliveryMethodList:["1"],deliveryMethod:"",systemFormId:null,refundSwitch:!0},a={price:{title:"售价（元）"},vipPrice:
+--------------------------------------------------
+mages[0])&&(this.$set(this,"videoLink",this.formValidate.sliderImages[0]),this.formValidate.sliderImages.splice(0,1)),a.specType?a.attrValueList?(a.attrValueList.forEach((function(t){t.image=r.$selfUtil.setDomain(t.image),t.attrValueShow=JSON.parse(t.attrValue),t.attr_arr=t.sku.split(","),t.brokerage=t.brokerage||0,t.brokerageTwo=t.brokerageTwo||0,t.vipPrice=t.vipPrice||0})),th
+--------------------------------------------------
+el:!0}},[t._v("是")]),a("el-radio",{attrs:{label:!1}},[t._v("否")])],1)],1),a("el-form-item",{attrs:{label:"规格类型：",props:"specType"}},[a("el-radio-group",{attrs:{disabled:t.isDisabled},on:{change:function(e){return t.onChangeSpec(t.formValidate.specType)}},model:{value:t.formValidate.specType,callback:function(e){t.$set(t.formValidate,"specType",e)},expression:"formValidate.specT
+--------------------------------------------------
+cType"}},[a("el-radio-group",{attrs:{disabled:t.isDisabled},on:{change:function(e){return t.onChangeSpec(t.formValidate.specType)}},model:{value:t.formValidate.specType,callback:function(e){t.$set(t.formValidate,"specType",e)},expression:"formValidate.specType"}},[a("el-radio",{staticClass:"radio",attrs:{label:!1}},[t._v("单规格")]),a("el-radio",{attrs:{label:!0}},[t._v("多规格")])],
+--------------------------------------------------

@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- #ifdef MP || APP-PLUS -->
-		<NavBar titleText="订单详情" :iconColor="iconColor" :textColor="iconColor" :isScrolling="isScrolling" showBack>
+		<NavBar :titleText="$t('订单详情')" :iconColor="iconColor" :textColor="iconColor" :isScrolling="isScrolling" showBack>
 		</NavBar>
 		<!-- #endif -->
 		<view class="headerBg">
@@ -11,18 +11,18 @@
 		</view>
 		<view class="order-detail pos-order-details">
 			<view class="header">
-				<view class="state">{{ info.refundStatus != 3?orderStatus[info.status]:'已退款' }}</view>
-				<view v-if="[1,2].includes(info.status)&&info.refundStatus != 3" class="data">用户已下单，请及时发货哦～</view>
-				<view v-if="info.refundStatus != 3&&info.status == 4" class="data">货物正在运输中，等待用户确认收货！</view>
-				<view v-if="info.refundStatus != 3&&info.status == 3" class="data">用户已下单，您可以联系用户到店自提！</view>
-				<view v-if="info.refundStatus != 3&&info.status == 5" class="data">用户已经确认收货啦，您可以联系用户索要好评呦！</view>
-				<view v-if="info.refundStatus != 3&&info.status == 6" class="data">订单已经完成，您可以申请货款提现啦～</view>
-				<view v-if="info.refundStatus == 3" class="data">此订单退款已原路返回！</view>
+				<view class="state">{{ info.refundStatus != 3?orderStatus[info.status]:$t('已退款') }}</view>
+				<view v-if="[1,2].includes(info.status)&&info.refundStatus != 3" class="data">{{$t('用户已下单，请及时发货哦')}}～</view>
+				<view v-if="info.refundStatus != 3&&info.status == 4" class="data">{{$t('货物正在运输中，等待用户确认收货！')}}</view>
+				<view v-if="info.refundStatus != 3&&info.status == 3" class="data">{{$t('用户已下单，您可以联系用户到店自提！')}}</view>
+				<view v-if="info.refundStatus != 3&&info.status == 5" class="data">{{$t('用户已经确认收货啦，您可以联系用户索要好评呦！')}}</view>
+				<view v-if="info.refundStatus != 3&&info.status == 6" class="data">{{$t('订单已经完成')}}，{{$t('您可以申请货款提现啦')}}～</view>
+				<view v-if="info.refundStatus == 3" class="data">{{$t('此订单退款已原路返回！')}}</view>
 			</view>
 			<view class="remarks acea-row row-middle" @click="modify('1')">
 				<text class="iconfont icon-ic_notes"></text>
 				<view class="line1 mark-box" style="text-align: left;">
-					{{info.merchantRemark ? info.merchantRemark : '订单未备注，点击添加备注信息'}}
+					{{info.merchantRemark ? info.merchantRemark : $t('订单未备注，点击添加备注信息')}}
 				</view>
 			</view>
 			<view class="address" v-if="info.shippingType==1&&info.secondType!=2">
@@ -31,7 +31,7 @@
 					{{ info.realName}}
 					<text class="phone">{{ info.userPhone }}</text>
 				</view>
-				<view v-if="info.shippingType == 1">地址：{{ info.userAddress }}</view>
+				<view v-if="info.shippingType == 1">{{$t('地址')}}：{{ info.userAddress }}</view>
 			</view>
 			<view class="acea-row row-middle user-box">
 				<image :src="info.avatar" class="image"></image>
@@ -58,51 +58,51 @@
 					</view>
 					<view class="money">
 						<BaseMoney :money="item.price" symbolSize="20" integerSize="32" decimalSize="20"></BaseMoney>
-						<view class="num">共{{ item.payNum }}件</view>
+						<view class="num">{{$t('共')}}{{ item.payNum }}{{$t('件')}}</view>
 						<view class="acea-row row-right">
 							<view class="writeOff" v-if="item.refundNum">
-								{{item.refundNum}}件已退款
+								{{item.refundNum}}{{$t('件已退款')}}
 							</view>
 						</view>
 					</view>
 				</navigator>
 				<view class="mark acea-row" v-if="info.userRemark">
-					<view class="name">买家留言：</view>
+					<view class="name">{{$t('买家留言：')}}</view>
 					<view class="value line1">{{info.userRemark}}</view>
 				</view>
 			</view>
 			<!-- 结束 -->
 			<view class="wrapper">
 				<view class="item acea-row row-between">
-					<view>订单编号：</view>
+					<view>{{$t('订单编号：')}}</view>
 					<view class="conter acea-row row-middle row-right">
 						{{ info.orderNo}}
 						<!-- #ifdef H5 -->
-						<text class="copy copy-data" :data-clipboard-text="info.orderNo">复制</text>
+						<text class="copy copy-data" :data-clipboard-text="info.orderNo">{{$t('复制')}}</text>
 						<!-- #endif -->
 						<!-- #ifdef MP -->
-						<text class="copy copy-data" @click="copyNum(info.orderNo)">复制</text>
+						<text class="copy copy-data" @click="copyNum(info.orderNo)">{{$t('复制')}}</text>
 						<!-- #endif -->
 					</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>下单时间：</view>
+					<view>{{$t('下单时间：')}}</view>
 					<view class="conter">{{ info.payTime }}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>支付方式：</view>
+					<view>{{$t('支付方式：')}}</view>
 					<view class="conter">
 						{{payType[info.payChannel]}}
 					</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>支付时间：</view>
+					<view>{{$t('支付时间：')}}</view>
 					<view class="conter">
 						{{info.payTime}}
 					</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>下单时间：</view>
+					<view>{{$t('下单时间：')}}</view>
 					<view class="conter">
 						{{info.createTime}}
 					</view>
@@ -110,11 +110,11 @@
 			</view>
 			<view class="wrapper" v-if="info.deliveryType != 'fictitious'">
 				<view class="item acea-row row-between">
-					<view>配送方式：</view>
-					<view v-if="Number(info.secondType) > 4" class='conter'>自动发货</view>
-					<view v-else-if="Number(info.secondType) == 2" class='conter'>虚拟发货</view>
+					<view>{{$t('配送方式：')}}</view>
+					<view v-if="Number(info.secondType) > 4" class='conter'>{{$t('自动发货')}}</view>
+					<view v-else-if="Number(info.secondType) == 2" class='conter'>{{$t('虚拟发货')}}</view>
 					<view class="conter" v-else>
-						{{info.shippingType==1?'商家配送':info.shippingType==2?'到店自提':'虚拟发货'}}
+						{{info.shippingType==1?$t('商家配送'):info.shippingType==2? $t('到店自提') : $t('虚拟发货')}}
 					</view>
 				</view>
 			</view>
@@ -123,31 +123,31 @@
 			</view>
 			<view class="wrapper">
 				<view class='item acea-row row-between'>
-					<view>商品总价（共{{info.totalNum}}件）</view>
-					<view class='conter'>￥{{info.proTotalPrice}}</view>
+					<view>{{$t('商品总价')}}（{{$t('共')}}{{info.totalNum}}{{$t('件')}}）</view>
+					<view class='conter'>฿{{info.proTotalPrice}}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>运费</view>
-					<view class="conter">￥{{ info.totalPostage }}</view>
+					<view>{{$t('运费')}}</view>
+					<view class="conter">฿{{ info.totalPostage }}</view>
 				</view>
 				<view class='item acea-row row-between'>
-					<view>会员优惠</view>
-					<view class='conter'>-￥{{info.svipDiscountPrice}}</view>
+					<view>{{$t('会员优惠')}}</view>
+					<view class='conter'>-฿{{info.svipDiscountPrice}}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>商家优惠</view>
-					<view class="conter">-￥{{ info.merCouponPrice }}</view>
+					<view>{{$t('商家优惠')}}</view>
+					<view class="conter">-฿{{ info.merCouponPrice }}</view>
 				</view>
 				<view class='item acea-row row-between'>
-					<view>平台优惠</view>
-					<view class='conter'>-￥{{info.platCouponPrice}}</view>
+					<view>{{$t('平台优惠')}}</view>
+					<view class='conter'>-฿{{info.platCouponPrice}}</view>
 				</view>
 				<view class='item acea-row row-between'>
-					<view>积分抵扣（使用{{info.useIntegral}}积分）</view>
-					<view class='conter'>-￥{{info.integralPrice}}</view>
+					<view>{{$t('积分抵扣')}}（{{$t('使用')}}{{info.useIntegral}}{{$t('积分')}}）</view>
+					<view class='conter'>-฿{{info.integralPrice}}</view>
 				</view>
 				<view class="actualPay acea-row row-right">
-					实付款：
+					{{$t('实付款：')}}
 					<BaseMoney :money="info.payPrice" symbolSize="24" integerSize="40" decimalSize="24" color="#E93323">
 					</BaseMoney>
 				</view>
@@ -155,29 +155,29 @@
 			<view class="height-add"></view>
 			<view class="footer acea-row row-right row-middle">
 				<view class="tomore" v-if="info.status==2&&!info.userRefundSign">
-					<span @click="toMore">更多</span>
+					<span @click="toMore">{{$t('更多')}}</span>
 					<view class="more-operate" v-if="moreShow">
 						<view class="sjx"></view>
 						<view class="more-operate-item" @click="print">
-							小票打印
+							{{$t('小票打印')}}
 						</view>
 						<view class="more-operate-item" @click="modify('1')">
-							订单备注
+							{{$t('订单备注')}}
 						</view>
 					</view>
 				</view>
 				<view class="bnt cancel" @click="print" v-if="info.status!=2||(info.status==2&&info.userRefundSign)">
-					小票打印</view>
+					{{$t('小票打印')}}</view>
 				<view class="bnt cancel" @click="modify('1')"
-					v-if="info.status!=2||(info.status==2&&info.userRefundSign)">订单备注</view>
+					v-if="info.status!=2||(info.status==2&&info.userRefundSign)">{{$t('订单备注')}}</view>
 				<view class="bnt cancel" v-if="!info.userRefundSign&&info.totalNum!=refundSum" @click="modify('2',1)">
-					直接退款</view>
+					{{$t('直接退款')}}</view>
 				<view class="bnt delivery" v-if="[1,2].includes(info.status)&&info.refundStatus != 3"
-					@click="goDelivery(info)">立即发货</view>
+					@click="goDelivery(info)">{{$t('立即发货')}}</view>
 				<view class="bnt delivery" v-if="[2,4,5,6].includes(info.status)&&info.shippingType=='1'"
-					@click="goLogistics(info)">发货记录
+					@click="goLogistics(info)">{{$t('发货记录')}}
 				</view>
-				<view class="bnt delivery" v-if="info.status==3&&info.refundStatus!=3" @click="verify">立即核销</view>
+				<view class="bnt delivery" v-if="info.status==3&&info.refundStatus!=3" @click="verify">{{$t('立即核销')}}</view>
 			</view>
 			<PriceChange :change="change" :orderInfo="info" :isRefund="isRefund"
 				v-on:statusChange="statusChange($event)" v-on:closechange="changeclose($event)"
@@ -187,14 +187,14 @@
 			<view class="sh_popup-content"
 				:class="{ 'popup-height': popup_center === 'left' || popup_center === 'right' }">
 				<view class="sh_popup_title">
-					打印小票
+					{{$t('打印小票')}}
 				</view>
 				<view class="sh_popup_text">
-					你确定要打印此订单小票吗？
+					{{$t('你确定要打印此订单小票吗？')}}
 				</view>
 				<view class="sh_popup_btn">
-					<view class="no_btn btn" @click="hsPopupClose">取消</view>
-					<view class="yes_btn btn" @click="toRecycle">确认</view>
+					<view class="no_btn btn" @click="hsPopupClose">{{$t('取消')}}</view>
+					<view class="yes_btn btn" @click="toRecycle">{{$t('确认')}}</view>
 				</view>
 			</view>
 		</uni-popup>
@@ -283,12 +283,12 @@
 				// var clipboard = new Clipboard(copybtn);
 				clipboard.on('success', function(e) {
 					self.$util.Tips({
-						title: '复制成功'
+						title: this.$t('复制成功')
 					})
 				});
 				clipboard.on('error', function(e) {
 					self.$util.Tips({
-						title: '复制失败'
+						title: this.$t('复制失败')
 					})
 				});
 			});
@@ -318,7 +318,7 @@
 				printReceipt(this.info.orderNo).then(res => {
 					if (res.code == 200) {
 						this.$util.Tips({
-							title: '操作成功'
+							title: this.$t('操作成功')
 						})
 						this.$refs.hs_popup.close()
 					}
@@ -364,7 +364,7 @@
 			//发货
 			goDelivery(info) {
 				if (info.refundStatus == 1) return this.$util.Tips({
-					title: '请处理售后，再操作',
+					title: this.$t('请处理售后，再操作'),
 				});
 				uni.navigateTo({
 					url: `/pages/admin/order/send?orderNo=${this.info.orderNo}`
@@ -399,7 +399,7 @@
 			async savePrice(opt) {
 				if (!opt.remark) {
 					return this.$util.Tips({
-						title: '请输入备注'
+						title: this.$t('请输入备注')
 					})
 				} else {
 					this.toMark(this.info.orderNo, opt.remark)
@@ -414,7 +414,7 @@
 					res.code == 200 && (this.change = false);
 					this.initOrderInfo(this.info.orderNo)
 					return this.$util.Tips({
-						title: '备注成功'
+						title: this.$t('备注成功')
 					})
 				})
 			},
@@ -471,7 +471,7 @@
 	}
 
 	.height-add {
-		height: calc(120rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(120rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(120rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 	}
 
@@ -863,9 +863,9 @@
 		background-color: #fff;
 		padding: 0 30upx;
 		border-top: 1px solid #eee;
-		height: calc(100rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(100rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(100rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
-		padding-bottom: calc(0rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		padding-bottom: calc(0rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		padding-bottom: calc(0rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 	}
 
@@ -1198,7 +1198,7 @@
 		}
 	}
 
-	/deep/ .uni-popup__wrapper {
+	::v-deep  .uni-popup__wrapper {
 		width: 600rpx;
 		height: 310rpx;
 		background: #FFFFFF;

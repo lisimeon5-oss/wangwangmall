@@ -20,6 +20,8 @@ import com.zbkj.common.request.SystemRoleStatusRequest;
 import com.zbkj.common.response.RoleInfoResponse;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.SystemConfigResultCode;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.I18nSearchUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.common.vo.MenuCheckTree;
 import com.zbkj.common.vo.MenuCheckVo;
@@ -81,14 +83,14 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleDao, SystemRole
         PageHelper.startPage(pageParamRequest.getPage(), pageParamRequest.getLimit());
 
         LambdaQueryWrapper<SystemRole> lqw = Wrappers.lambdaQuery();
-        lqw.select(SystemRole::getId, SystemRole::getRoleName, SystemRole::getStatus,
+        lqw.select(SystemRole::getId, SystemRole::getRoleName, SystemRole::getRoleNameJson, SystemRole::getStatus,
                 SystemRole::getCreateTime, SystemRole::getUpdateTime);
         if (ObjectUtil.isNotNull(request.getStatus())) {
             lqw.eq(SystemRole::getStatus, request.getStatus());
         }
         if (StrUtil.isNotBlank(request.getRoleName())) {
             String decode = URLUtil.decode(request.getRoleName());
-            lqw.like(SystemRole::getRoleName, decode);
+            I18nSearchUtil.likeName(lqw, SystemRole::getRoleName, SystemRole::getRoleNameJson, decode);
         }
         lqw.eq(SystemRole::getMerId, systemAdmin.getMerId());
         lqw.eq(SystemRole::getType, getRoleTypeByCurrentAdmin(systemAdmin.getType()));
@@ -130,11 +132,13 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleDao, SystemRole
     @Override
     public Boolean add(SystemRoleRequest systemRoleRequest) {
         SystemAdmin currentAdmin = SecurityUtil.getLoginUserVo().getUser();
-        if (existName(systemRoleRequest.getRoleName(), null, currentAdmin.getMerId())) {
+        if (StrUtil.isNotBlank(systemRoleRequest.getRoleName())
+                && existName(systemRoleRequest.getRoleName(), null, currentAdmin.getMerId())) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "角色名称重复");
         }
         SystemRole systemRole = new SystemRole();
         BeanUtils.copyProperties(systemRoleRequest, systemRole);
+        systemRole.setRoleName(I18nJsonUtil.emptyToBlank(systemRoleRequest.getRoleName()));
         List<Integer> ruleList = Stream.of(systemRoleRequest.getRules().split(",")).map(Integer::valueOf).distinct().collect(Collectors.toList());
         systemRole.setId(null);
         systemRole.setRules("");
@@ -202,7 +206,7 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleDao, SystemRole
                 || role.getType().equals(RoleEnum.SUPER_MERCHANT.getValue())) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "系统内置权限，不允许编辑");
         }
-        if (!role.getRoleName().equals(request.getRoleName())) {
+        if (StrUtil.isNotBlank(request.getRoleName()) && !StrUtil.equals(role.getRoleName(), request.getRoleName())) {
             if (existName(request.getRoleName(), request.getId(), currentAdmin.getMerId())) {
                 throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "角色名称重复");
             }
@@ -217,6 +221,7 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleDao, SystemRole
 
         SystemRole systemRole = new SystemRole();
         BeanUtils.copyProperties(request, systemRole);
+        systemRole.setRoleName(I18nJsonUtil.emptyToBlank(request.getRoleName()));
         systemRole.setRules("");
         return transactionTemplate.execute(e -> {
             updateById(systemRole);
@@ -284,6 +289,7 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleDao, SystemRole
         List<MenuCheckVo> menuCheckVoList = menuList.stream().map(menu -> {
             MenuCheckVo menuCheckVo = new MenuCheckVo();
             BeanUtils.copyProperties(menu, menuCheckVo);
+            menuCheckVo.setName(systemMenuService.resolveDisplayName(menu));
             menuCheckVo.setChecked(menuIdList.contains(menu.getId()));
             return menuCheckVo;
         }).collect(Collectors.toList());

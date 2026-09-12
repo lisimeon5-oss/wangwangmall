@@ -21,7 +21,7 @@
 import { mapState } from 'vuex';
 export default {
   name: 'home_text',
-  cname: '文本框',
+  cname: 'maintain.textBox',
   icon: 'icon-biaodanzujian-danhangwenben',
   configName: 'c_home_text',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -65,54 +65,54 @@ export default {
         name: 'texts',
         timestamp: this.num,
         titleConfig: {
-          title: '标题',
-          val: '文本框',
-          place: '请输入标题',
+          title: this.$t('formGenerator.title'),
+          val: this.$t('maintain.textBox'),
+          place: this.$t('formGenerator.pleaseEnterTitle'),
           max: 10,
           type: 'form',
           isShow: 1,
         },
         valConfig: {
-          title: '内容',
+          title: this.$t('pagediy.content'),
           tabVal: 0,
           type: 'form',
           list: [
             {
-              name: '文本',
+              name: this.$t('maintain.text'),
             },
             {
-              name: '手机号',
+              name: this.$t('common.phoneNumber'),
             },
             {
-              name: '身份证号',
+              name: this.$t('maintain.idCardNumber'),
             },
             {
-              name: '邮箱',
+              name: this.$t('maintain.email'),
             },
             {
-              name: '数字',
+              name: this.$t('maintain.number'),
             },
           ],
         },
         defaultValConfig: {
-          title: '默认值',
+          title: this.$t('formGenerator.defaultValue'),
           val: '',
-          place: '请输入默认值',
+          place: this.$t('formGenerator.pleaseEnterDefaultValue'),
           max: 100,
           type: 'form',
           inputType: 'text',
           isShow: 1,
         },
         tipConfig: {
-          title: '提示语',
-          val: '请填写',
-          place: '请输入提示语',
+          title: this.$t('maintain.prompt'),
+          val: this.$t('maintain.pleaseFill'),
+          place: this.$t('maintain.pleaseEnterPrompt'),
           max: 13,
           type: 'form',
           isShow: 1,
         },
         titleShow: {
-          title: '是否必填',
+          title: this.$t('formGenerator.required'),
           val: true,
           type: 'form',
         },

@@ -7,15 +7,15 @@
 				<view class="status_title">
 					<text class="iconfont"
 						:class="(noteDetails.auditStatus == 2 || noteDetails.auditStatus == 3) ? 'icon-tishi' : 'icon-shijian'"></text>
-					<text v-if="noteDetails.auditStatus == 2" class="title">审核未通过，内容仅自己可见</text>
-					<text v-if="noteDetails.auditStatus == 3" class="title">平台关闭，内容仅自己可见</text>
-					<text v-if="noteDetails.auditStatus == 0" class="title">正在审核，内容仅自己可见</text>
+					<text v-if="noteDetails.auditStatus == 2" class="title">{{$t('审核未通过，内容仅自己可见')}}</text>
+					<text v-if="noteDetails.auditStatus == 3" class="title">{{$t('平台关闭，内容仅自己可见')}}</text>
+					<text v-if="noteDetails.auditStatus == 0" class="title">{{$t('正在审核，内容仅自己可见')}}</text>
 				</view>
 				<view v-if="noteDetails.auditStatus == 2 || noteDetails.auditStatus == 3" class="status_info">
 					{{noteDetails.refusal}}
 				</view>
 				<view v-if="noteDetails.auditStatus == 0" class="status_info">
-					发布的内容审核通过后，将展示在首页！
+					{{$t('发布的内容审核通过后，将展示在首页！')}}
 				</view>
 			</view>
 		</view>
@@ -60,7 +60,7 @@
 									class="info">{{noteDetails.content && noteDetails.content.slice(0,70)}}...</text>
 								<text class="more" v-if="noteDetails.content && noteDetails.content.length>70"
 									@click.stop="moreTap(noteDetails,i)">
-									展开</text>
+									{{$t('展开')}}</text>
 							</view>
 						</view>
 					</view>
@@ -95,16 +95,16 @@
 				<view v-if="noteDetails.authorId!==uid && type !=='follow'" @click.stop="followAuthor(noteDetails)">
 					<view v-if="!noteDetails.isConcerned" class="author-follow flex-around-center font-color"><text
 							class="iconfont icon-shangpinshuliang-jia"></text>
-						<view class="line-heightOne">关注</view>
+						<view class="line-heightOne">{{$t('关注')}}</view>
 					</view>
 					<view v-else class="author-focused flex-around-center">
-						<view class="line-heightOne">已关注</view>
+						<view class="line-heightOne">{{$t('已关注')}}</view>
 					</view>
 				</view>
 				<!-- 管理 -->
 				<view class="manageCount" v-if="noteDetails.authorId==uid && type==='detail'">
 					<view class="follow_btn author-focused flex-around-center" @click.stop="handleManage">
-						<view class="line-heightOne">管理</view>
+						<view class="line-heightOne">{{$t('管理')}}</view>
 					</view>
 				</view>
 			</view>
@@ -114,12 +114,12 @@
 					<view class="item_count" @click.stop="likeToggle(noteDetails)">
 						<text class="iconfont"
 							:class="noteDetails.userIsLike ? 'icon-shoucang1' : 'icon-dianzan'"></text>
-						<text>{{noteDetails.likeNum > 0 ? noteDetails.likeNum < 10000 ? noteDetails.likeNum : (noteDetails.likeNum / 10000).toFixed(2) : '点赞'}}</text>
+						<text>{{noteDetails.likeNum > 0 ? noteDetails.likeNum < 10000 ? noteDetails.likeNum : (noteDetails.likeNum / 10000).toFixed(2) : $t('点赞')}}</text>
 					</view>
 					<!--  -->
 					<view v-if="noteDetails.platReplySwitch" class="item_count" @click="openCommon(noteDetails)">
 						<text class="iconfont icon-pinglun"></text>
-						<text>{{noteDetails.replyNum > 0 ? noteDetails.replyNum : '评论'}}</text>
+						<text>{{noteDetails.replyNum > 0 ? noteDetails.replyNum : $t('评论')}}</text>
 					</view>
 				</view>
 				<!-- #ifdef MP -->
@@ -163,16 +163,16 @@
 		<!-- 管理弹窗 -->
 		<uni-popup type="bottom" ref="manageRef">
 			<view class="manage">
-				<popup-header title="内容管理" @close="closeManage"></popup-header>
+				<popup-header :title="$t('内容管理')" @close="closeManage"></popup-header>
 				<navigator hover-class="none" :url="'/pages/discover/discover_release/index?noteId='+noteDetails.id"
 					class="items">
-					<text>编辑</text>
+					<text>{{$t('编辑')}}</text>
 				</navigator>
 				<view class="items" @click.stop="deleteTopic(noteDetails)">
-					<text>删除</text>
+					<text>{{$t('删除')}}</text>
 				</view>
 				<view disabled="true" class="items" @click.stop="replySwitch(noteDetails)">
-					<text>{{noteDetails.replyStatus ==1 ? '禁止评论' : '开启评论'}}</text>
+					<text>{{noteDetails.replyStatus ==1 ? $t('禁止评论') : $t('开启评论')}}</text>
 				</view>
 			</view>
 		</uni-popup>
@@ -312,7 +312,7 @@
 				let data = noteDetails;
 				// #ifdef APP-PLUS
 				uni.showLoading({
-					title: '加载中',
+					title: this.$t('加载中'),
 					mask: true
 				});
 				let routes = getCurrentPages(); // 获取当前打开过的页面路由数组
@@ -327,7 +327,7 @@
 					imageUrl: data.cover || '',
 					success: function(res) {
 						uni.showToast({
-							title: '分享成功',
+							title: this.$t('分享成功'),
 							icon: 'success'
 						})
 						uni.hideLoading();
@@ -335,7 +335,7 @@
 					fail: function(err) {
 						uni.hideLoading();
 						uni.showToast({
-							title: '分享失败',
+							title: this.$t('分享失败'),
 							icon: 'none',
 							duration: 2000
 						})
@@ -346,7 +346,7 @@
 				// #ifdef H5
 				if (that.$wechat.isWeixin()) {
 					uni.showLoading({
-						title: '加载中',
+						title: this.$t('加载中'),
 						mask: true
 					});
 					let configAppMessage = {
@@ -403,7 +403,7 @@
 			replySwitch(noteDetails) {
 				if (!noteDetails.platReplySwitch && noteDetails.replyStatus === 3) {
 					this.$util.Tips({
-						title: '平台设置不可评论'
+						title: this.$t('平台设置不可评论')
 					});
 				} else {
 					noteReplySwitchApi(noteDetails.id).then(res => {
@@ -435,12 +435,12 @@
 			deleteTopic(noteDetails) {
 				let that = this;
 				uni.showModal({
-					content: '确定要删除该内容么？',
+					content: this.$t('确定要删除该内容么？'),
 					success: function(res) {
 						if (res.confirm) {
 							noteDelApi(noteDetails.id).then(res => {
 								that.$util.Tips({
-									title: '删除成功'
+									title: this.$t('删除成功')
 								});
 								setTimeout(function() {
 									uni.redirectTo({
@@ -550,7 +550,7 @@
 	}
 
 	.release_bar_detail {
-		height: calc(90rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(90rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(90rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 		padding-bottom: constant(safe-area-inset-bottom); ///兼容 IOS<11.2/
 		padding-bottom: env(safe-area-inset-bottom); ///兼容 IOS>11.2/
@@ -590,7 +590,7 @@
 	}
 
 
-	/deep/.uni-swiper-dots-horizontal {
+	::v-deep .uni-swiper-dots-horizontal {
 		bottom: 40rpx !important;
 	}
 
@@ -682,8 +682,8 @@
 	}
 
 	.tab-conts {
-		// /deep/.container {
-		// 	padding-bottom: calc(100rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		// ::v-deep .container {
+		// 	padding-bottom: calc(100rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		// 	padding-bottom: calc(100rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 		// }
 	}
@@ -804,8 +804,8 @@
 			position: relative;
 			border-radius: 10px 10px 10px 10px;
 
-			/deep/image,
-			/deep/.easy-loadimage,
+			::v-deep image,
+			::v-deep .easy-loadimage,
 			uni-image {
 				width: 702rpx;
 				border-radius: 10px 10px 10px 10px;

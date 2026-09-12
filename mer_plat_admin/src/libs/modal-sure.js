@@ -15,9 +15,9 @@
  */
 export default function modalSure(title) {
   return new Promise((resolve, reject) => {
-    this.$confirm(`确定${title || '永久删除该数据'}`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+    this.$confirm(`${this.$t('common.confirmPrefix')}${title || this.$t('common.permanentDelete')}`, this.$t('el.messagebox.title'), {
+      confirmButtonText: this.$t('el.messagebox.confirm'),
+      cancelButtonText: this.$t('el.messagebox.cancel'),
       type: 'warning',
       customClass: 'deleteConfirm',
     })
@@ -28,7 +28,7 @@ export default function modalSure(title) {
         reject();
         this.$message({
           type: 'info',
-          message: '已取消',
+          message: this.$t('common.cancelled'),
         });
       });
   });

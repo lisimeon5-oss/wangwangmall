@@ -6,7 +6,7 @@
 			<template>
 				<view v-for="(item,index) in navList" :key="index"
 					:class="['acea-row', 'row-middle', type === item.type ? 'on' : '']">
-					<text @click="setType(item.type)">{{item.name}}</text>
+					<text @click="setType(item.type)">{{$t(item.name)}}</text>
 				</view>
 			</template>
 		</view>
@@ -15,7 +15,7 @@
 				<!-- :class="{gary:item.isUse}" -->
 				<view class="left main_bg">
 					<view class="money">
-						<text>￥{{ item.money }}</text>
+						<text>฿{{ item.money }}</text>
 						<view class="pic-num" v-if="parseFloat(item.minPrice)>0">
 							满{{ item.minPrice?Number(item.minPrice):'' }}可用</view>
 					</view>
@@ -23,7 +23,7 @@
 				</view>
 				<view class="right">
 					<view class="name line2">
-						<text>{{item.category===1?'商家券':'商品券'}}</text>
+						<text>{{item.category===1? $t('商家券') : $t('商品券')}}</text>
 
 						{{ item.name }}
 					</view>
@@ -34,13 +34,13 @@
 							</view>
 						</block>
 						<block v-else>
-							<view>{{'领取后'+ item.day+ '天内可用'}}</view>
+							<view>{{$t('领取后{n}天内可用', { n: item.day })}}</view>
 						</block>
 						<block v-if="item.isUse">
-							<view class='getgray iconfont icon-yilingqu1'></view>
+							<view class="coupon-stamp">{{$t('已领取')}}</view>
 						</block>
 						<block v-else>
-							<view class="button" @click="receiveCoupon(item)">领取</view>
+							<view class="button" @click="receiveCoupon(item)">{{$t('领取')}}</view>
 						</block>
 					</view>
 				</view>
@@ -48,9 +48,9 @@
 		</view>
 		<view class='loadingicon acea-row row-center-wrapper'>
 			<text class='loading iconfont icon-jiazai'
-				:hidden='loadingcoupon==false'></text>{{couponsList.length?loadTitle:''}}
+				:hidden='loadingcoupon==false'></text>{{couponsList.length?$t(loadTitle):''}}
 		</view>
-		<emptyPage v-if="couponsList.length == 0 && !loadingcoupon" title="暂无可用优惠券~" mTop="14%" 
+		<emptyPage v-if="couponsList.length == 0 && !loadingcoupon" :title="$t('暂无可用优惠券~')" mTop="14%" 
 			:imgSrc="urlDomain+'crmebimage/presets/noCoupon.png'"></emptyPage>
 	</view>
 </template>
@@ -116,12 +116,12 @@
 					toLogin();
 				} else {
 					uni.showLoading({
-						title: '加载中...'
+						title: this.$t('加载中...')
 					});
 
 					setCouponReceive(item.id).then(res => {
 						uni.showToast({
-							title: '领取成功',
+							title: this.$t('领取成功'),
 							icon: 'none'
 						})
 						uni.hideLoading();
@@ -175,13 +175,28 @@
 </script>
 
 <style lang="scss" scoped>
-	.getgray {
-		font-size: 134rpx !important;
+	.coupon-stamp {
+		width: 112rpx;
+		height: 112rpx;
+		border-radius: 50%;
+		border: 5rpx solid currentColor;
+		box-sizing: border-box;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		font-size: 22rpx;
+		font-weight: 700;
+		line-height: 1.2;
+		padding: 8rpx;
 		@include main_color(theme);
 		position: absolute;
-		right: -20rpx;
-		bottom: -20rpx;
-		opacity: .36;
+		right: 8rpx;
+		bottom: 8rpx;
+		opacity: .45;
+		transform: rotate(-18deg);
+		pointer-events: none;
+		word-break: break-word;
 	}
 	.coupon-list {
 		margin-top: 0;
@@ -193,7 +208,7 @@
 	}
 
 	.couponBox {
-		/deep/.empty-box {
+		::v-deep .empty-box {
 			padding-top: 200rpx;
 			margin-top: 0 !important;
 		}

@@ -4,7 +4,7 @@
 		<view class="all" v-if="select_all">
 			<checkbox-group @change="checkboxAllChange">
 				<checkbox value="all" :checked="isAllSelect" />
-				<text class='checkAll'>全选</text>
+				<text class='checkAll'>{{$t('全选')}}</text>
 			</checkbox-group>
 		</view>
 		<checkbox-group @change="checkboxChange">
@@ -26,9 +26,9 @@
 								<!-- <view>×{{item.cart_num}}</view> -->
 							</view>
 							<view class='infor line1'>
-								属性：{{item.cart_info.productInfo.attrInfo.suk || '默认'}}</view>
+								{{$t('属性')}}：{{item.cart_info.productInfo.attrInfo.suk || $t('默认')}}</view>
 							<view class="acea-row row-middle money-section">
-								实付款：<view class='money'>¥{{item.cart_info.sum_true_price}}</view>
+								{{$t('实付款：')}}<view class='money'>฿{{item.cart_info.sum_true_price}}</view>
 							</view>
 						</view>
 						<view class='carnum acea-row row-center-wrapper'>
@@ -126,13 +126,13 @@
 </script>
 
 <style lang="scss">
-	/deep/checkbox .uni-checkbox-input.uni-checkbox-input-checked {
+	::v-deep checkbox .uni-checkbox-input.uni-checkbox-input-checked {
 		border: 1px solid #2A7EFB !important;
 		background-color: #2A7EFB !important;
 		color: #fff !important;
 	}
 
-	/deep/checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+	::v-deep checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 		border: 1px solid #2A7EFB !important;
 		background-color: #2A7EFB !important;
 		color: #fff !important;

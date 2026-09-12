@@ -10,14 +10,14 @@
 								:key="index"
 								:style="[...contentConfig,{'background-image': `url(${urlDomain}crmebimage/presets/couponBg.png)`}]">
 								<view class="left">
-									<view :style="[...priceColorStyle]"><text class="price-icon">￥</text><text
+									<view :style="[...priceColorStyle]"><text class="price-icon">฿</text><text
 											class="price"
 											:class="item.money.length>6?'sizePrice':''">{{item.money}}</text></view>
 									<view class="title" :class="item.minPrice.length>6?'sizeTitle':''">
-										满{{item.minPrice}}元可用</view>
+										{{$t('满')}}{{item.minPrice}}{{$t('铢可用')}}</view>
 								</view>
 								<view class="right" @click="getCoupon(item)">
-									{{item.isUse?merId?'已 领 取':'去 使 用':'领 取'}}
+									{{item.isUse?merId? $t('已 领 取') : $t('去 使 用'):$t('领 取')}}
 								</view>
 							</view>
 						</view>
@@ -33,12 +33,12 @@
 								<view class="money" :style="[...priceColorStyle]">
 									<view :class="item.money.length>=6?'sizePrice-two':''" class="line-heightOne"><text
 											class="lable"
-											:class="item.money.length>=6?'sizeLable-two':''">¥</text>{{item.money}}
+											:class="item.money.length>=6?'sizeLable-two':''">฿</text>{{item.money}}
 									</view>
-									<view class="tips">满{{item.minPrice}}可用</view>
+									<view class="tips">{{$t('满')}}{{item.minPrice}}{{$t('可用')}}</view>
 								</view>
 								<view class="sill" :style="[...btnColorStyle]" @click="getCoupon(item)">
-									{{item.isUse?merId?'已 领 取':'去 使 用':'领 取'}}
+									{{item.isUse?merId? $t('已 领 取') : $t('去 使 用'):$t('领 取')}}
 								</view>
 								<image :src="urlDomain+'crmebimage/presets/newVip02.png'" />
 							</view>
@@ -54,17 +54,17 @@
 								:key="index"
 								:style="[...contentConfig,{'background-image': `url(${urlDomain}crmebimage/presets/couponBg2.png)`}]">
 								<view class="left">
-									<view :style="[...priceColorStyle]"><text class="price-icon">￥</text><text
+									<view :style="[...priceColorStyle]"><text class="price-icon">฿</text><text
 											class="price"
 											:class="item.money.length>=6?'sizePrice':''">{{item.money}}</text></view>
 									<view class="title " :class="item.minPrice.toString().length>5?'sizeTitle':''">
-										满{{item.minPrice}}元可用</view>
+										{{$t('满')}}{{item.minPrice}}{{$t('铢可用')}}</view>
 								</view>
 								<view class="right" @click="getCoupon(item)" v-if="!item.isUse">
-									立即领取
+									{{$t('立即领取')}}
 								</view>
 								<view class="right" @click="getCoupon(item)" v-else>
-									立即使用
+									{{$t('立即使用')}}
 								</view>
 							</view>
 						</view>
@@ -80,13 +80,13 @@
 								<view class="left">
 									<view :class="item.money.length>=6?'sizePrice-four':''"
 										:style="[...priceColorStyle]" class="money"><text
-											class="label">¥</text>{{item.money}}
+											class="label">฿</text>{{item.money}}
 									</view>
-									<view class="tips">满{{item.minPrice}}可用</view>
+									<view class="tips">{{$t('满')}}{{item.minPrice}}{{$t('可用')}}</view>
 								</view>
 								<view class="right acea-row row-center">
 									<view class="rightCon" @click="getCoupon(item)">
-										{{item.isUse?merId?'已 领 取':'去 使 用':'领 取'}}
+										{{item.isUse?merId? $t('已 领 取') : $t('去 使 用'):$t('领 取')}}
 									</view>
 								</view>
 								<view class="roll" :style="[...boxBg]"></view>
@@ -172,8 +172,8 @@
 					},
 					{
 						'background': this.listStyle == 1 ?
-							(this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.itemBgColor.color[0].item:this.themeColor) : this.listStyle == 3 ?
-							`linear-gradient(180deg,${this.dataConfig.btnColor.color[0].item}, ${this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.btnColor.color[1].item:this.themeColor})` :
+							(this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.itemBgColor.color[0].item:this.themeColor) : this.listStyle == 3 ?
+							`linear-gradient(180deg,${this.dataConfig.btnColor.color[0].item}, ${this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.btnColor.color[1].item:this.themeColor})` :
 							'',
 					},
 				];
@@ -181,13 +181,13 @@
 			//优惠金额颜色
 			priceColorStyle() {
 				return [{
-					'color': this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.priceColor.color[0].item:this.themeColor
+					'color': this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.priceColor.color[0].item:this.themeColor
 				}];
 			},
 			//领取按钮
 			btnColorStyle() {
 				return [{
-					'background': `linear-gradient(90deg,${this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.btnColor.color[0].item:'#FF7931'}, ${this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.btnColor.color[1].item:this.themeColor})`,
+					'background': `linear-gradient(90deg,${this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.btnColor.color[0].item:'#FF7931'}, ${this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.btnColor.color[1].item:this.themeColor})`,
 				}, ];
 			},
 			//展示数量

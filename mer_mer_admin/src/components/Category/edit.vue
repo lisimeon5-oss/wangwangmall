@@ -1,30 +1,47 @@
 <template>
   <div>
-    <el-form ref="editPram" :model="editPram" label-width="90px">
+    <el-form ref="editPram" :model="editPram" label-width="110px">
       <el-form-item
-        label="分类名称："
+        :label="$t('category.categoryNameLabel')"
         prop="name"
-        :rules="[{ required: true, message: '请输入分类名称', trigger: ['blur', 'change'] }]"
+        :rules="nameRules"
       >
-        <el-input v-model.trim="editPram.name" :maxlength="biztype.value === 1 ? 8 : 20" placeholder="分类名称" />
+        <div class="lang-name-switch">
+          <el-radio-group v-model="activeLang" size="small">
+            <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+              {{ lang.label }}
+            </el-radio-button>
+          </el-radio-group>
+          <el-input
+            v-if="activeLang === defaultLangCode"
+            v-model.trim="editPram.name"
+            :maxlength="8"
+            :placeholder="$t('category.categoryNamePlaceholder')"
+            clearable
+            class="lang-name-input"
+          />
+          <el-input
+            v-else
+            v-model.trim="nameJsonForm[activeLang]"
+            :maxlength="8"
+            :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+            clearable
+            class="lang-name-input"
+          />
+        </div>
       </el-form-item>
-      <el-form-item label="父级：">
+      <el-form-item :label="$t('category.parentLabel')">
         <el-cascader
           ref="cascader"
           v-model="editPram.pid"
           :disabled="isCreate === 1 && editPram.pid === 0"
           @change="change"
-          :options="allTreeList"
+          :options="parentOptions"
           :props="categoryProps"
           style="width: 100%"
         />
       </el-form-item>
-      <el-form-item label="菜单图标：" v-if="biztype.value === 5">
-        <el-input placeholder="请选择菜单图标" v-model.trim="editPram.icon">
-          <el-button slot="append" icon="el-icon-circle-plus-outline" @click="addIcon"></el-button>
-        </el-input>
-      </el-form-item>
-      <el-form-item label="分类图标：">
+      <el-form-item :label="$t('category.categoryIconLabel')">
         <div class="upLoadPicBox" @click="modalPicTap('1')">
           <div v-if="editPram.icon" class="pictrue">
             <img :src="editPram.icon" />
@@ -32,45 +49,31 @@
           <div v-else class="upLoad">
             <i class="el-icon-camera cameraIconfont" />
           </div>
-          <div class="from-tips">建议尺寸(180*180)</div>
+          <div class="from-tips">{{ $t('category.suggestedSize') }}</div>
         </div>
       </el-form-item>
-      <el-form-item label="排序：">
+      <el-form-item :label="$t('category.sortLabel')">
         <el-input-number v-model.trim="editPram.sort" :min="1" :max="9999" />
-      </el-form-item>
-      <el-form-item label="扩展字段：" v-if="biztype.value !== 1 && biztype.value !== 3 && biztype.value !== 5">
-        <el-input v-model.trim="editPram.extra" type="textarea" placeholder="扩展字段" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer-inner">
-      <el-button @click="close">取消</el-button>
+      <el-button @click="close">{{ $t('category.cancel') }}</el-button>
       <el-button
         type="primary"
         :loading="loadingBtn"
         @click="handlerSubmit('editPram')"
-        v-hasPermi="['merchant:product:category:update']"
-        >确定</el-button
+        v-hasPermi="['merchant:product:category:update', 'merchant:product:category:add']"
+        >{{ $t('category.confirm') }}</el-button
       >
     </div>
   </div>
 </template>
-<!--创建和编辑公用一个组件-->
 <script>
-// +----------------------------------------------------------------------
-// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
-// +----------------------------------------------------------------------
-// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
-// +----------------------------------------------------------------------
-// | Author: CRMEB Team <admin@crmeb.com>
-// +----------------------------------------------------------------------
-
-import * as categoryApi from '@/api/categoryApi.js';
-import * as selfUtil from '@/utils/ZBKJIutil.js';
 import * as storeApi from '@/api/product.js';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { resolveFormActiveLang, hasI18nNameContent, buildI18nNameJson, pickFormName, getLocalizedName, getUiLocale } from '@/utils/localizedName';
 export default {
-  // name: "edit"
   props: {
     prent: {
       type: Object,
@@ -94,54 +97,124 @@ export default {
   data() {
     return {
       loadingBtn: false,
-      constants: this.$constants,
       editPram: {
         icon: null,
-        name: null,
+        name: '',
+        nameJson: '',
         pid: 0,
         sort: 0,
         id: 0,
       },
       categoryProps: {
         value: 'id',
-        label: 'name',
-        children: 'childList',
+        label: 'label',
+        children: 'children',
         expandTrigger: 'hover',
         checkStrictly: true,
         emitPath: false,
       },
-      parentOptions: [],
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: {},
     };
+  },
+  computed: {
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    parentOptions() {
+      return this.buildLocalizedTreeOptions(this.allTreeList);
+    },
+    nameRules() {
+      this.$i18n.locale;
+      return [
+        {
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(pickFormName(this), this.nameJsonForm)) {
+              callback();
+            } else {
+              callback(new Error(this.$t('category.pleaseEnterCategoryName')));
+            }
+          },
+          trigger: ['blur', 'change'],
+        },
+      ];
+    },
+  },
+  created() {
+    this.getLanguageList();
   },
   mounted() {
     this.initEditData();
   },
   methods: {
-    change() {
-      //this.editPram.level = parseInt(this.$refs['cascader'].getCheckedNodes()[0].level) + 1
+    change() {},
+    emptyNameJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
     },
-    // 点击图标
-    addIcon() {
-      const _this = this;
-      _this.$modalIcon(function (icon) {
-        _this.editPram.extra = icon;
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseNameJson(this.editData && this.editData.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseNameJson(this.editData && this.editData.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
+    parseNameJson(nameJson) {
+      const form = this.emptyNameJsonForm();
+      if (!nameJson) return form;
+      try {
+        const obj = typeof nameJson === 'string' ? JSON.parse(nameJson) : nameJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // 解析失败时保持为空
+      }
+      return form;
+    },
+    buildNameJson() {
+      return buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, pickFormName(this));
+    },
+    buildLocalizedTreeOptions(nodes) {
+      if (!Array.isArray(nodes)) return [];
+      const locale = getUiLocale(this);
+      return nodes.map((node) => {
+        const item = { ...node, label: getLocalizedName(node, locale) };
+        if (node.children && node.children.length) {
+          item.children = this.buildLocalizedTreeOptions(node.children);
+        }
+        return item;
       });
     },
-    // 点击商品图
     modalPicTap(tit, num, i) {
       const _this = this;
-      const attr = [];
       this.$modalUpload(
         function (img) {
           if (!img) return;
           if (tit === '1' && !num) {
             _this.editPram.icon = img[0].sattDir;
-          }
-          if (tit === '2' && !num) {
-            img.map((item) => {
-              attr.push(item.attachment_src);
-              _this.formValidate.slider_image.push(item);
-            });
           }
         },
         tit,
@@ -152,15 +225,19 @@ export default {
       this.$emit('hideEditDialog');
     },
     initEditData() {
-      const { icon, name, pid, sort, id } = this.editData;
+      const { icon, name, pid, sort, id } = this.editData || {};
       if (this.isCreate === 1) {
         this.editPram.icon = icon;
         this.editPram.name = name;
         this.editPram.pid = pid;
         this.editPram.sort = sort;
         this.editPram.id = id;
+        this.nameJsonForm = this.parseNameJson(this.editData.nameJson);
+        this.activeLang = resolveFormActiveLang(this);
       } else {
         this.editPram.pid = this.prent.id;
+        this.nameJsonForm = this.emptyNameJsonForm();
+        this.activeLang = resolveFormActiveLang(this);
       }
     },
     handlerSubmit(formName) {
@@ -170,13 +247,14 @@ export default {
       });
     },
     handlerSaveOrUpdate(isSave) {
+      this.editPram.nameJson = this.buildNameJson();
       if (isSave) {
         this.loadingBtn = true;
         storeApi
           .productCategoryAddApi(this.editPram)
-          .then((data) => {
+          .then(() => {
             this.$emit('hideEditDialog');
-            this.$message.success('创建目录成功');
+            this.$message.success(this.$t('category.createDirectorySuccess'));
             this.$store.commit('product/SET_MerProductClassify', []);
             this.loadingBtn = false;
           })
@@ -187,9 +265,9 @@ export default {
         this.loadingBtn = true;
         storeApi
           .productCategoryUpdateApi(this.editPram)
-          .then((data) => {
+          .then(() => {
             this.$emit('hideEditDialog');
-            this.$message.success('更新目录成功');
+            this.$message.success(this.$t('category.updateDirectorySuccess'));
             this.$store.commit('product/SET_MerProductClassify', []);
             this.loadingBtn = false;
           })
@@ -202,4 +280,17 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.lang-name-switch {
+  width: 100%;
+
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.lang-name-input {
+  margin-top: 10px;
+}
+</style>

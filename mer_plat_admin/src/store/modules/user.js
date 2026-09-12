@@ -16,6 +16,15 @@ import Cookies from 'js-cookie';
 import { Loading } from 'element-ui';
 import * as roleApi from '@/api/roleApi.js';
 import { formatFlatteningRoutes } from '@/utils/system.js';
+import { normalizeAdminMenuTree } from '@/utils/menuPath.js';
+
+function readCachedMenuList() {
+  try {
+    return normalizeAdminMenuTree(JSON.parse(localStorage.getItem('MerPlatAdmin_MenuList')) || []);
+  } catch (e) {
+    return [];
+  }
+}
 
 const state = {
   token: getToken(),
@@ -31,7 +40,7 @@ const state = {
     token: '',
   }, //滑块验证token
   // 菜单数据
-  menuList: JSON.parse(localStorage.getItem('MerPlatAdmin_MenuList')) || [],
+  menuList: readCachedMenuList(),
   oneLvMenus: [],
   oneLvRoutes: JSON.parse(localStorage.getItem('MerPlatAdmin_oneLvRoutes')) || [],
   childMenuList: [],
@@ -64,7 +73,7 @@ const mutations = {
     state.captcha = captcha;
   },
   SET_MENU_LIST: (state, menuList) => {
-    state.menuList = menuList;
+    state.menuList = normalizeAdminMenuTree(menuList || []);
   },
   setOneLvMenus(state, oneLvMenus) {
     state.oneLvMenus = oneLvMenus;
@@ -73,7 +82,7 @@ const mutations = {
     state.oneLvRoutes = oneLvRoutes;
   },
   childMenuList(state, list) {
-    state.childMenuList = list;
+    state.childMenuList = normalizeAdminMenuTree(list || []);
   },
 };
 
@@ -188,7 +197,7 @@ const actions = {
       resolve();
     });
   },
-  getMenus({ commit }) {
+  getMenus({ commit, state }) {
     function formatTwoStageRoutes(arr) {
       if (arr.length <= 0) return false;
       const newArr = [];
@@ -209,10 +218,10 @@ const actions = {
       // let accessRoutes = formatRoutes(menusAll);
       // const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true });
       commit('SET_MENU_LIST', accessRoutes);
-      localStorage.setItem('MerPlatAdmin_MenuList', JSON.stringify(accessRoutes));
+      localStorage.setItem('MerPlatAdmin_MenuList', JSON.stringify(state.menuList));
       let arr = formatFlatteningRoutes(router.options.routes);
       formatTwoStageRoutes(arr);
-      let routes = formatFlatteningRoutes(accessRoutes);
+      let routes = formatFlatteningRoutes(state.menuList);
       localStorage.setItem('MerPlatAdmin_oneLvRoutes', JSON.stringify(routes));
       commit('setOneLvMenus', arr);
       commit('setOneLvRoute', routes);

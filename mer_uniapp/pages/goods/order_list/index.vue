@@ -9,33 +9,33 @@
 				<!-- #endif -->
 				<view class="search acea-row row-middle">
 					<text class="iconfont icon-ic_search"></text>
-					<input class="inputs" placeholder='输入商品或订单号搜索' placeholder-class='placeholder'
+					<input class="inputs" :placeholder="$t('输入商品或订单号搜索')" placeholder-class='placeholder'
 						placeholder-style="font-size:28rpx" v-model="keywords" @confirm="search"></input>
 				</view>
 				<view class="btn" @click="search">
-					<text>搜索</text>
+					<text>{{$t('搜索')}}</text>
 				</view>
 			</view>
 			<scroll-view class="scroll-view_x" scroll-x style="white-space: nowrap; vertical-align: middle;"
 				show-scrollbar="false">
 				<view class='nav borRadius14 acea-row'>
 					<text class='item' :class='orderStatus==-1 ? "on": ""' @click="statusClick(-1)">
-						<text>全部</text>
+						<text>{{$t('全部')}}</text>
 					</text>
 					<text class='item' :class='orderStatus==0 ? "on": ""' @click="statusClick(0)">
-						<text>待付款</text>
+						<text>{{$t('待付款')}}</text>
 					</text>
 					<text class='item' :class='orderStatus==1 ? "on": ""' @click="statusClick(1)">
-						<text>待发货</text>
+						<text>{{$t('待发货')}}</text>
 					</text>
 					<text class='item' :class='orderStatus==3 ? "on": ""' @click="statusClick(3)">
-						<text>待核销</text>
+						<text>{{$t('待核销')}}</text>
 					</text>
 					<text class='item' :class='orderStatus==4 ? "on": ""' @click="statusClick(4)">
-						<text>待收货</text>
+						<text>{{$t('待收货')}}</text>
 					</text>
 					<text class='item' :class='orderStatus==9 ? "on": ""' @click="statusClick(9)">
-						<text>已取消</text>
+						<text>{{$t('已取消')}}</text>
 					</text>
 				</view>
 			</scroll-view>
@@ -56,11 +56,11 @@
 								<text class="mr10">{{item.orderNo}}</text>
 							</view>
 						</view>
-						<view v-if="item.refundStatus == 3" class='font_color'>已退款</view>
+						<view v-if="item.refundStatus == 3" class='font_color'>{{$t('已退款')}}</view>
 						<template v-else>
 							<view v-if="item.groupBuyRecordStatus==99||item.status==9||item.groupBuyRecordStatus==10"
 								class='font_color'>{{item.status | orderStatusFilter}}</view>
-							<view v-else class='font_color'>{{item.groupBuyRecordStatus===0?'拼团中':'拼团失败'}}</view>
+							<view v-else class='font_color'>{{item.groupBuyRecordStatus===0? $t('拼团中') : $t('拼团失败')}}</view>
 						</template>
 					</view>
 					<view v-for="(items,indexs) in item.orderInfoList" :key="indexs">
@@ -73,55 +73,54 @@
 									<view class='name line2'>
 										<span v-if="Number(item.type) > 0 && Number(item.type) < 3"
 											class="activity bg_color">{{item.type | orderTypeFilter}}</span>
-										<span v-if="Number(item.secondType) === 1" class="activity bg_color">积分</span>
+										<span v-if="Number(item.secondType) === 1" class="activity bg_color">{{$t('积分')}}</span>
 										<span>{{items.productName}}</span>
 									</view>
 									<view class="sku line1">{{items.sku}}</view>
 								</view>
 								<view class='money'>
-									<view>￥{{items.price}}</view>
+									<view>฿{{items.price}}</view>
 									<view>x{{items.payNum}}</view>
 								</view>
 							</view>
 						</view>
 						<view v-if="items.applyRefundNum && item.refundStatus > -1"
 							class="text-24rpx font-color oppoSans-R mr-20px px-30 mt-14">
-							售后申请数量：{{ items.applyRefundNum }}
+							{{$t('售后申请数量')}}: {{ items.applyRefundNum }}
 						</view>
 					</view>
-					<view class='totalPrice' :class="item.status===0?'no-border':''">{{item.totalNum}}
-						件商品，总金额
-						<text class='money semiBold'> ￥{{item.payPrice}}</text>
+					<view class='totalPrice' :class="item.status===0?'no-border':''">{{item.totalNum}}{{$t('件商品，总金额')}}
+						<text class='money semiBold'> ฿{{item.payPrice}}</text>
 					</view>
 					<view v-if="item.status===0" class="mx-20 flex">
 						<view class="tips w-full px-20 f-s-26">
-							付款提醒<text class="ml-20 text-999">请在{{item.expirationTime}}前完成支付！</text>
+							{{$t('付款提醒')}}<text class="ml-20 text-999">{{$t('请在')}}{{item.expirationTime}}{{$t('前完成支付')}}！</text>
 						</view>
 					</view>
 					<!-- 订单状态（0：待支付，1：待发货,2：部分发货， 3：待核销，4：待收货,5：已收货,6：已完成，9：已取消） -->
 					<view class='bottom acea-row row-right row-middle'>
 						<view class='bnt cancelBnt' v-if="item.status === 0" @click='cancelOrder(index,item.orderNo)'>
-							取消订单
+							{{$t('取消订单')}}
 						</view>
 						<view class='bnt bg_color' v-if="item.status === 0" @click='goPay(item)'>
-							立即付款
+							{{$t('立即付款')}}
 						</view>
 						<view class='bnt cancelBnt' v-if="item.type==2&&item.status !== 0&&item.status !== 9"
 							@click="toCheckGroup(item)">
-							查看拼团
+							{{$t('查看拼团')}}
 						</view>
 						<view class='bnt bg_color'
 							v-if="item.type==2&&item.status !== 0&&item.groupBuyRecordStatus===0&&item.status!=9"
 							@click="listenerActionSheet(item)">
-							邀请好友
+							{{$t('邀请好友')}}
 						</view>
 						<view class='bnt bg_color'
 							v-if="((item.paid || item.status == 9)&&item.type!=2)||(item.type==2&&item.groupBuyRecordStatus!==0)"
 							@click='goOrderDetails(item)'>
-							查看详情</view>
+							{{$t('查看详情')}}</view>
 						<view class='bnt cancelBnt' v-if="item.status==6 || item.status==9"
 							@click='delOrder(item.orderNo,index)'>
-							删除订单
+							{{$t('删除订单')}}
 						</view>
 					</view>
 
@@ -130,12 +129,12 @@
 
 			<view class='loadingicon acea-row row-center-wrapper'>
 				<text class='loading iconfont icon-jiazai'
-					:hidden='loading==false'></text>{{orderList.length>0?loadTitle:''}}
+					:hidden='loading==false'></text>{{orderList.length>0?$t(loadTitle):''}}
 			</view>
 			<view class='noCart' v-if="orderList.length == 0 && isShow && !loading">
 				<view class='pictrue'>
 					<image :src="urlDomain+'crmebimage/presets/nodingdan.png'"></image>
-					<view class="default_txt">暂无订单信息~</view>
+					<view class="default_txt">{{$t('暂无订单信息~')}}</view>
 				</view>
 			</view>
 		</view>
@@ -145,11 +144,11 @@
 				<!-- #ifdef APP-PLUS -->
 				<view class="item" @click="appShare('WXSceneSession')">
 					<view class="iconfont icon-weixin3"></view>
-					<view class="">微信好友</view>
+					<view class="">{{$t('微信好友')}}</view>
 				</view>
 				<view class="item" @click="appShare('WXSenceTimeline')">
 					<view class="iconfont icon-pengyouquan"></view>
-					<view class="">微信朋友圈</view>
+					<view class="">{{$t('微信朋友圈')}}</view>
 				</view>
 				<!-- #endif -->
 				<!-- #ifdef H5 || MP -->
@@ -157,7 +156,7 @@
 					<view class="pictrue">
 						<image src="../static/images/changan.png"></image>
 					</view>
-					<view class="">预览发图</view>
+					<view class="">{{$t('预览发图')}}</view>
 				</view>
 				<!-- #endif -->
 				<!-- #ifdef MP  -->
@@ -165,11 +164,11 @@
 					<view class="pictrue">
 						<image src="../static/images/haibao.png"></image>
 					</view>
-					<view class="">保存海报</view>
+					<view class="">{{$t('保存海报')}}</view>
 				</button>
 				<!-- #endif -->
 			</view>
-			<view class="generateClose acea-row row-center-wrapper" @click="posterImageClose">取消</view>
+			<view class="generateClose acea-row row-center-wrapper" @click="posterImageClose">{{$t('取消')}}</view>
 		</view>
 		<view class="mask" v-if="canvasStatus"></view>
 		<!-- 海报展示 -->
@@ -310,7 +309,7 @@
 				this.selectItem = item
 				if (!item.groupBuyActivityRecord.activePrice) {
 					return this.$util.Tips({
-						title: '活动已失效！'
+						title: this.$t('活动已失效！')
 					});
 				}
 				if (this.isLogin) {
@@ -372,7 +371,7 @@
 					},
 					fail: function(err) {
 						uni.showToast({
-							title: "分享失败",
+							title: this.$t('分享失败'),
 							icon: "none",
 							duration: 2000,
 						});
@@ -439,7 +438,7 @@
 					complete: () => {},
 					fail: res => {
 						this.$util.Tips({
-							title: '海报二维码生成失败！'
+							title: this.$t('海报二维码生成失败！')
 						});
 					}
 				})
@@ -494,7 +493,7 @@
 			goPoster: function(item) {
 				let that = this;
 				uni.showLoading({
-					title: '海报生成中',
+					title: this.$t('海报生成中'),
 					mask: true
 				});
 				// that.posters = false;
@@ -511,7 +510,7 @@
 					if (!that.imgTop || !that.groupLeaderAvatar) {
 						uni.hideLoading();
 						that.$util.Tips({
-							title: '无法生成商品海报！'
+							title: this.$t('无法生成商品海报！')
 						});
 						return
 					}
@@ -551,7 +550,7 @@
 					});
 				} else {
 					this.$util.Tips({
-						title: '您的海报尚未生成'
+						title: this.$t('您的海报尚未生成')
 					});
 				}
 			},
@@ -572,13 +571,13 @@
 										success: function(res) {
 											that.posterImageClose();
 											that.$util.Tips({
-												title: '保存成功',
+												title: this.$t('保存成功'),
 												icon: 'success'
 											});
 										},
 										fail: function(res) {
 											that.$util.Tips({
-												title: '保存失败'
+												title: this.$t('保存失败')
 											});
 										}
 									})
@@ -590,13 +589,13 @@
 								success: function(res) {
 									that.posterImageClose();
 									that.$util.Tips({
-										title: '保存成功',
+										title: this.$t('保存成功'),
 										icon: 'success'
 									});
 								},
 								fail: function(res) {
 									that.$util.Tips({
-										title: '保存失败'
+										title: this.$t('保存失败')
 									});
 								},
 							})
@@ -648,23 +647,23 @@
 			cancelOrder: function(index, orderNo) {
 				let that = this;
 				if (!orderNo) return that.$util.Tips({
-					title: '缺少订单号无法取消订单'
+					title: this.$t('缺少订单号无法取消订单')
 				});
 				uni.showModal({
-					content: '确定取消该订单',
-					cancelText: "取消",
-					confirmText: "确定",
+					content: this.$t('确定取消该订单'),
+					cancelText: this.$t('取消'),
+					confirmText: this.$t('确定'),
 					showCancel: true,
 					confirmColor: '#f55850',
 					success: (res) => {
 						if (res.confirm) {
 							uni.showLoading({
-								title: '正在取消中'
+								title: this.$t('正在取消中')
 							});
 							orderCancel(orderNo).then(res => {
 								uni.hideLoading();
 								return that.$util.Tips({
-									title: '取消成功',
+									title: this.$t('取消成功'),
 									icon: 'success'
 								}, function() {
 									that.getAllOrder();
@@ -686,7 +685,7 @@
 			 */
 			goPay: Debounce(function(item) {
 				uni.showLoading({
-					title: '加载中...'
+					title: this.$t('加载中...')
 				});
 				if (item.secondType === this.ProductTypeEnum.Integral && item.payPrice == 0) {
 					// 积分商品并且支付金额为0时，直接默认走余额支付的逻辑，订单支付成功跳转到支付结果页
@@ -701,10 +700,10 @@
 			 */
 			goOrderDetails: function(item, status) {
 				if (item.groupBuyRecordStatus === 0) return this.$util.Tips({
-					title: '拼团中无法查看详情'
+					title: this.$t('拼团中无法查看详情')
 				});
 				if (!item.orderNo) return this.$util.Tips({
-					title: '缺少订单号无法查看订单详情'
+					title: this.$t('缺少订单号无法查看订单详情')
 				});
 				//虚拟商品
 				if (item.secondType === this.ProductTypeEnum.CloudDrive || item.secondType === this.ProductTypeEnum
@@ -782,9 +781,9 @@
 			 */
 			delOrder: function(orderNo, index) {
 				uni.showModal({
-					content: '确定删除该订单',
-					cancelText: "取消",
-					confirmText: "确定",
+					content: this.$t('确定删除该订单'),
+					cancelText: this.$t('取消'),
+					confirmText: this.$t('确定'),
 					showCancel: true,
 					confirmColor: '#f55850',
 					success: (res) => {
@@ -793,7 +792,7 @@
 							orderDel(orderNo).then(res => {
 								that.getAllOrder();
 								return that.$util.Tips({
-									title: '删除成功',
+									title: this.$t('删除成功'),
 									icon: 'success'
 								});
 							}).catch(err => {
@@ -1224,7 +1223,7 @@ s
 				border-radius: 50%;
 				margin: 0 auto 6rpx auto;
 
-				/deep/image,
+				::v-deep image,
 				.easy-loadimage,
 				image,
 				uni-image {

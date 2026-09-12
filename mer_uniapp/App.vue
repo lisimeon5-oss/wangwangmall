@@ -12,6 +12,7 @@
 	} from './api/api.js';
 	import Cache from './utils/cache.js';
 	import store from './store'
+	import { applyTabBar, getLocale, applyUniFrameworkLocale } from '@/i18n';
 	import {
 		silenceBindingSpread
 	} from "./utils";
@@ -53,7 +54,9 @@
 			//获取全局配置
 			store.dispatch('GetGlobalConfig');
 			//校验token是否有效,true为有效，false为无效
-			store.dispatch("GetTokenIsExist");
+			store.dispatch('GetTokenIsExist');
+			applyUniFrameworkLocale(getLocale());
+			applyTabBar();
 			
 			// 主题变色
 			getTheme().then(res => {
@@ -118,8 +121,8 @@
 				if (res.hasUpdate) {
 					updateManager.onUpdateReady(function(res2) {
 						uni.showModal({
-							title: '更新提示',
-							content: '发现新版本，是否重启应用?',
+							title: this.$t('更新提示'),
+							content: this.$t('发现新版本，是否重启应用?'),
 							cancelColor: '#eeeeee',
 							confirmColor: '#FF0000',
 							success(res2) {
@@ -135,8 +138,8 @@
 			updateManager.onUpdateFailed(function(res) {
 				// 新的版本下载失败
 				uni.showModal({
-					title: '提示',
-					content: '检查到有新版本，但下载失败，请检查网络设置',
+					title: this.$t('提示'),
+					content: this.$t('检查到有新版本，但下载失败，请检查网络设置'),
 					success(res) {
 						if (res.confirm) {
 							// 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
@@ -154,6 +157,13 @@
 			// #endif
 
 			// #ifdef H5	
+			if (typeof window !== 'undefined' && window.self === window.top && window.innerWidth > 450) {
+				const shell = '/static/html/pc.html';
+				if (location.pathname.indexOf('/static/html/pc.html') === -1) {
+					location.replace(shell);
+					return;
+				}
+			}
 			if (option.query.hasOwnProperty('type') && option.query.type == "iframeVisualizing") {
 				this.globalData.isIframe = true;
 			} else {
@@ -242,25 +252,6 @@
 		async mounted() {
 			//if (this.$store.getters.isLogin && !this.$Cache.get('USER_INFO')) await this.$store.dispatch('USERINFO');
 		},
-		methods: {
-			handleResize(e) {
-				/* 窗口宽度大于430px且不在PC页面且不在移动设备时跳转至 PC.html 页面 */
-				if (e.size.windowWidth > 430 && !/iOS|Android/i.test(e.system)) {
-					// window.location.pathname = 'https://java.crmeb.net/';
-					/* 若你的项目未设置根目录（默认为 / 时），则使用下方代码 */
-					window.location.pathname = '/static/html/pc.html';
-				}
-			}
-		},
-		onShow: function() {
-			// #ifdef H5
-			uni.onWindowResize(this.handleResize);
-			// #endif
-		},
-		onUnload() {
-			// 页面销毁时移除监听
-			uni.offWindowResize(this.handleResize);
-		},
 	}
 </script>
 <style>
@@ -273,7 +264,6 @@
 		--un: 0;
 	}
 </style>
-
 <style lang="scss">
 	/* #ifndef APP-PLUS-NVUE || APP-NVUE */
 	@import "@/plugin/animate/animate.min.css";
@@ -302,7 +292,7 @@
 		padding-top: var(--status-bar-height);
 	}
 
-	/deep/.uni-scroll-view::-webkit-scrollbar {
+	::v-deep .uni-scroll-view::-webkit-scrollbar {
 		/* 隐藏滚动条，但依旧具备可以滚动的功能 */
 		display: none
 	}

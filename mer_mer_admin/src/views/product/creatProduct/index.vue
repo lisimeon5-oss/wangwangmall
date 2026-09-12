@@ -2,14 +2,14 @@
   <div class="divBox">
     <pages-header
       ref="pageHeader"
-      :title="$route.params.id !== '0' ? (isDisabled ? '商品详情' : '编辑商品') : '添加商品'"
+      :title="$route.params.id !== '0' ? (isDisabled ? $t('product.productDetailTitle') : $t('product.editProductTitle')) : $t('product.addProduct')"
       backUrl="/product/list"
     ></pages-header>
     <el-card v-if="isCopy" class="mt14" shadow="never" :bordered="false">
       <div class="line-ht mb15">
-        生成的商品默认是没有上架的，请手动上架商品！
+        {{ $t('product.collectNotOnShelf') }}
         <span v-if="copyConfig.copyType && copyConfig.copyType == 1"
-          >您当前剩余{{ copyConfig.copyNum }}条采集次数。
+          >{{ $t('product.collectRemainingPrefix') }}{{ copyConfig.copyNum }}{{ $t('product.collectRemainingSuffix') }}
         </span>
         <el-link
           v-if="copyConfig.copyType && copyConfig.copyType != 1"
@@ -17,23 +17,23 @@
           :underline="false"
           href="https://help.crmeb.net/crmeb_java/2103903"
           target="_blank"
-          >如何配置密钥
+          >{{ $t('product.howConfigKey') }}
         </el-link>
         <br />
-        商品采集设置：设置 > 系统设置 > 第三方接口设置 >
-        采集商品配置（如配置一号通采集，请先登录一号通账号，无一号通，请选择99Api设置）
+        {{ $t('product.collectConfigTip') }}
+        {{ $t('product.collectConfigDesc') }}
       </div>
       <div class="mb15" v-if="copyConfig.copyType && copyConfig.copyType != 1">
         <el-radio-group v-model="form">
-          <el-radio :label="1">淘宝</el-radio>
-          <el-radio :label="2">京东</el-radio>
-          <el-radio :label="3">苏宁</el-radio>
-          <el-radio :label="4">拼多多</el-radio>
-          <el-radio :label="5">天猫</el-radio>
+          <el-radio :label="1">{{ $t('product.taobao') }}</el-radio>
+          <el-radio :label="2">{{ $t('product.jd') }}</el-radio>
+          <el-radio :label="3">{{ $t('product.suning') }}</el-radio>
+          <el-radio :label="4">{{ $t('product.pdd') }}</el-radio>
+          <el-radio :label="5">{{ $t('product.tmall') }}</el-radio>
         </el-radio-group>
       </div>
       <div :span="24" v-if="copyConfig.copyType">
-        <el-input v-model.trim="url" placeholder="请输入链接地址" class="selWidth100" size="small">
+        <el-input v-model.trim="url" :placeholder="$t('product.linkAddressPlaceholder')" class="selWidth100" size="small">
           <el-button
             slot="append"
             icon="el-icon-search"
@@ -61,34 +61,55 @@
         <el-row v-show="currentTab === '1'" :gutter="24">
           <!-- 商品信息-->
           <el-col v-bind="grid2">
-            <el-form-item label="商品类型：" required>
+            <el-form-item :label="$t('product.typeLabel')" required>
               <div class="from-ipt-width el-input el-input--small" maxlength="249" disabled>
                 <span class="el-input__inner">
                   {{ formValidate.type | productTpyeFilter }}
                 </span>
               </div>
-              <div class="from-tips">云盘商品、卡密商品不支持售后，一经出售，概不退换</div>
+              <div class="from-tips">{{ $t('product.typeNoRefund') }}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item :label="$t('common.language')">
+              <el-radio-group v-model="activeLang" size="small">
+                <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                  {{ lang.label }}
+                </el-radio-button>
+              </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="商品名称：" prop="name">
+            <el-form-item :label="$t('product.productName')" prop="name">
               <el-input
+                v-if="activeLang === defaultLangCode"
                 class="from-ipt-width"
                 v-model.trim="formValidate.name"
                 maxlength="50"
                 show-word-limit
-                placeholder="请输入商品名称"
+                :placeholder="$t('product.pleaseEnterProductName')"
+                :disabled="isDisabled"
+              />
+              <el-input
+                v-else
+                class="from-ipt-width"
+                v-model.trim="formValidate.nameJson[activeLang]"
+                maxlength="50"
+                show-word-limit
+                :placeholder="$t('product.inputNameInLang', { lang: activeLangLabel })"
                 :disabled="isDisabled"
               />
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="商户商品分类：" prop="cateIds">
+            <el-form-item :label="$t('product.merchantCategoryLabel')" prop="cateIds">
               <el-cascader
+                :key="'mer-cate-' + activeLang"
                 class="from-ipt-width"
                 v-model="formValidate.cateIds"
-                :options="merProductClassify"
+                :options="localizedMerProductClassify"
                 :props="props2"
+                :placeholder="$t('common.pleaseSelect')"
                 clearable
                 :show-all-levels="false"
                 :disabled="isDisabled"
@@ -96,19 +117,21 @@
               <el-button
                 v-if="checkPermi(['merchant:product:category:add']) && !isDisabled"
                 class="ml15"
-                @click="handleAddMenu({ id: 0, name: '顶层目录' })"
-                >添加分类</el-button
+                @click="handleAddMenu({ id: 0, name: $t('product.topLevel') })"
+                >{{ $t('product.addCategory') }}</el-button
               >
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="平台商品分类：" prop="categoryId">
+            <el-form-item :label="$t('product.platformCategory')" prop="categoryId">
               <el-cascader
+                :key="'plat-cate-' + activeLang"
                 class="from-ipt-width"
                 @change="onChangeCategory"
                 v-model="formValidate.categoryId"
-                :options="productClassify"
+                :options="localizedPlatProductClassify"
                 :props="props1"
+                :placeholder="$t('common.pleaseSelect')"
                 filterable
                 clearable
                 :show-all-levels="false"
@@ -117,7 +140,7 @@
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="品牌：" prop="brandId">
+            <el-form-item :label="$t('product.brand')" prop="brandId">
               <el-select
                 class="from-ipt-width"
                 clearable
@@ -125,79 +148,108 @@
                 v-model="formValidate.brandId"
                 v-selectLoadMore="selectLoadMore"
                 :loading="loading"
-                remote
                 :disabled="isDisabled || !formValidate.categoryId"
-                :remote-method="remoteMethod"
-                placeholder="请选择品牌"
+                :placeholder="formValidate.categoryId ? $t('product.brandPlaceholder') : $t('product.pleaseSelectPlatformCategory')"
+                @visible-change="onBrandVisible"
               >
-                <el-option v-for="user in brandList" :key="user.id" :label="user.name" :value="user.id"> </el-option>
+                <el-option
+                  v-for="user in brandList"
+                  :key="user.id"
+                  :label="getLocalizedName(user, activeLang) || user.name"
+                  :value="user.id"
+                />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="单位：" prop="unitName">
+            <el-form-item :label="$t('product.unit')" prop="unitName">
               <el-input
+                v-if="activeLang === defaultLangCode"
                 v-model.trim="formValidate.unitName"
-                placeholder="请输入单位"
+                :placeholder="$t('product.unitPlaceholder')"
+                class="from-ipt-width"
+                :disabled="isDisabled"
+              />
+              <el-input
+                v-else
+                v-model.trim="formValidate.unitNameJson[activeLang]"
+                :placeholder="$t('product.inputNameInLang', { lang: activeLangLabel })"
                 class="from-ipt-width"
                 :disabled="isDisabled"
               />
             </el-form-item>
           </el-col>
           <el-col v-if="formValidate.type == 0" :xs="18" :sm="18" :md="18" :lg="12" :xl="12">
-            <el-form-item label="运费模板：" prop="tempId">
+            <el-form-item :label="$t('product.shippingTemplate')" prop="tempId">
               <el-select
                 v-model="formValidate.tempId"
-                placeholder="请选择"
+                :placeholder="$t('product.pleaseSelect')"
                 :disabled="isDisabled"
                 class="from-ipt-width mr20"
               >
-                <el-option v-for="item in shippingTemplates" :key="item.id" :label="item.name" :value="item.id" />
+                <el-option
+                  v-for="item in shippingTemplates"
+                  :key="item.id"
+                  :label="getLocalizedName(item, getUiLocale()) || item.name"
+                  :value="item.id"
+                />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="商品关键字：">
+            <el-form-item :label="$t('product.productKeyword')">
               <keyword
                 @getLabelarr="getLabelarr"
                 :labelarr="labelarr"
                 class="from-ipt-width"
                 :isDisabled="isDisabled"
               ></keyword>
-              <div class="from-tips">用户可以根据关键字进行商品搜索</div>
+              <div class="from-tips">{{ $t('product.keywordTip') }}</div>
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="商品简介：" prop="intro">
+            <el-form-item :label="$t('product.productIntro')" prop="intro">
               <el-input
+                v-if="activeLang === defaultLangCode"
                 class="from-ipt-width"
                 v-model.trim="formValidate.intro"
                 type="textarea"
                 maxlength="100"
                 :rows="3"
-                placeholder="请输入商品简介"
+                :placeholder="$t('product.introPlaceholder')"
                 show-word-limit
                 :disabled="isDisabled"
               />
-              <div class="from-tips">通过公众号分享商品详情，会展示此简介信息</div>
+              <el-input
+                v-else
+                class="from-ipt-width"
+                v-model.trim="formValidate.introJson[activeLang]"
+                type="textarea"
+                maxlength="100"
+                :rows="3"
+                :placeholder="$t('product.inputNameInLang', { lang: activeLangLabel })"
+                show-word-limit
+                :disabled="isDisabled"
+              />
+              <div class="from-tips">{{ $t('product.introTip') }}</div>
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="商品封面图：" prop="image">
+            <el-form-item :label="$t('product.productCover')" prop="image">
               <div class="upLoadPicBox acea-row" @click="modalPicTap('1')" :disabled="isDisabled">
-                <div v-if="formValidate.image" class="pictrue"><img :src="formValidate.image" /></div>
+                <div v-if="currentCover" class="pictrue"><img :src="currentCover" /></div>
                 <div v-else class="upLoad">
                   <i class="el-icon-camera cameraIconfont" />
                 </div>
               </div>
-              <div class="from-tips" v-show="!isDisabled">建议尺寸：800*800px，上传小于500kb的图片</div>
+              <div class="from-tips" v-show="!isDisabled">{{ $t('product.coverTip') }}</div>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="商品轮播图：" prop="sliderImages">
+            <el-form-item :label="$t('product.productCarousel')" prop="sliderImages">
               <div class="acea-row">
                 <div
-                  v-for="(item, index) in formValidate.sliderImages"
+                  v-for="(item, index) in currentSliderList"
                   :key="index"
                   class="pictrue"
                   draggable="true"
@@ -210,7 +262,7 @@
                   <i v-show="!isDisabled" class="el-icon-error btndel" @click="handleRemove(index)" />
                 </div>
                 <div
-                  v-if="formValidate.sliderImages.length < 10 && !isDisabled"
+                  v-if="currentSliderList.length < 10 && !isDisabled"
                   class="upLoadPicBox"
                   @click="modalPicTap('2')"
                 >
@@ -219,14 +271,14 @@
                   </div>
                 </div>
               </div>
-              <div class="from-tips">建议尺寸：800*800px，上传小于500kb的图片；最多可上传10张图片，拖动可调整顺序</div>
+              <div class="from-tips">{{ $t('product.carouselTip') }}</div>
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="保障服务：">
+            <el-form-item :label="$t('product.guaranteeService')">
               <el-radio-group v-model="isShowGroup" @change="onchangeIsShow">
-                <el-radio label="combination">使用保障服务组合</el-radio>
-                <el-radio label="alone">单独设置保障服务</el-radio>
+                <el-radio label="combination">{{ $t('product.useGuaranteeGroup') }}</el-radio>
+                <el-radio label="alone">{{ $t('product.separateGuarantee') }}</el-radio>
               </el-radio-group>
               <div class="acea-row row-middle mb5">
                 <el-select
@@ -234,7 +286,7 @@
                   :key="multiples ? 'one' : 'two'"
                   class="from-ipt-width"
                   v-model="formValidate.guaranteeIdsList"
-                  placeholder="请选择保障服务"
+                  :placeholder="$t('product.guaranteePlaceholder')"
                   clearable
                   filterable
                   :multiple="multiples"
@@ -247,7 +299,7 @@
                     :value="item.id"
                     v-for="(item, index) in guaranteeNew"
                     :key="item.id"
-                    :label="item.name"
+                    :label="getLocalizedName(item, activeLang) || item.name"
                   ></el-option>
                 </el-select>
               </div>
@@ -255,14 +307,14 @@
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="主图视频：" prop="video_link">
+            <el-form-item :label="$t('product.mainVideo')" prop="video_link">
               <div class="acea-row">
                 <el-input
                   v-model="videoLink"
                   :disabled="isDisabled"
                   size="small"
                   class="from-ipt-width"
-                  placeholder="请输入MP4格式的视频链接"
+                  :placeholder="$t('product.videoLinkPlaceholder')"
                 >
                   <input ref="refid" type="file" style="display: none" />
                   <el-upload
@@ -277,12 +329,12 @@
                     multiple
                   >
                     <el-button :disabled="isDisabled" size="small">
-                      {{ videoLink ? '确认添加' : '上传视频' }}</el-button
+                      {{ videoLink ? $t('product.confirmAdd') : $t('product.uploadVideo') }}</el-button
                     >
                   </el-upload>
                 </el-input>
               </div>
-              <div class="from-tips">请上传小于20M的视频</div>
+              <div class="from-tips">{{ $t('product.videoTip') }}</div>
               <div v-if="videoLink" class="iview-video-style">
                 <video
                   class="from-ipt-width"
@@ -290,7 +342,7 @@
                   :src="videoLink"
                   controls="controls"
                 >
-                  您的浏览器不支持 video 标签。
+                  {{ $t('product.videoNotSupported') }}
                 </video>
                 <div class="mark" />
                 <i class="el-icon-delete iconv" @click="delVideo" />
@@ -310,6 +362,9 @@
           :ManyAttrValue="ManyAttrValue"
           :OneattrValue="OneattrValue"
           :manyTabTit="manyTabTit"
+          :langOptions="langOptions"
+          :defaultLangCode="defaultLangCode"
+          :activeLang.sync="activeLang"
           @changeManyAttrValue="changeManyAttrValue"
           @handleBatchDel="handleBatchDel"
           @changeIsEditVal="changeIsEditVal"
@@ -318,27 +373,49 @@
         <!-- 商品详情-->
         <el-row v-show="currentTab === '3' && !isDisabled">
           <el-col :span="24">
-            <el-form-item label="商品详情：">
-              <Tinymce v-model.trim="formValidate.content" :key="htmlKey"></Tinymce>
+            <el-form-item :label="$t('common.language')">
+              <el-radio-group v-model="activeLang" size="small">
+                <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                  {{ lang.label }}
+                </el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item :label="$t('product.productDetail')">
+              <Tinymce
+                v-model="currentProductContent"
+                :id="'product-content-' + activeLang"
+                :key="'content-' + htmlKey + '-' + activeLang"
+              ></Tinymce>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row v-show="currentTab === '3' && isDisabled">
           <el-col :span="24">
-            <el-form-item label="商品详情：">
-              <div class="contentPic" v-html="formValidate.content || '无'"></div>
+            <el-form-item :label="$t('common.language')">
+              <el-radio-group v-model="activeLang" size="small">
+                <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                  {{ lang.label }}
+                </el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item :label="$t('product.productDetail')">
+              <div class="contentPic" v-html="displayProductContent || $t('product.none')"></div>
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 其他设置-->
         <el-row v-show="currentTab === '4'">
-          <el-form-item label="关联表单：">
+          <el-form-item :label="$t('product.relatedForm')">
             <el-select
               :disabled="isDisabled"
               class="from-ipt-width"
               v-model="formValidate.systemFormId"
-              placeholder="请选择关联表单"
+              :placeholder="$t('product.relatedFormPlaceholder')"
               clearable
               filterable
             >
@@ -354,19 +431,19 @@
               class="ml15"
               v-if="checkPermi(['merchant:system:form:add']) && !isDisabled"
               @click="handlerCreatFrom(0, 'add')"
-              >添加表单</el-button
+              >{{ $t('product.addForm') }}</el-button
             >
             <el-button
               size="small"
               class="ml15"
               v-if="checkPermi(['merchant:system:form:add']) && !isDisabled"
               @click="getSystemFormList"
-              >刷新</el-button
+              >{{ $t('product.refresh') }}</el-button
             >
             <div class="from-tips mb5">
-              用户购买此商品时，必须填写关联表单中设置的字段内容才能够进行订单支付，例如：部分商品购买必须填写身份证号、预约时间等
+              {{ $t('product.formTip') }}
             </div>
-            <div class="from-tips mb15 colorPrompt">注：关联系统表单之后，该商品则不可进行「加入购物车」操作</div>
+            <div class="from-tips mb15 colorPrompt">{{ $t('product.formNote') }}</div>
             <div class="item" v-if="formValidate.systemFormId">
               <div class="acea-row row-middle">
                 <div>
@@ -381,42 +458,42 @@
               </div>
             </div>
           </el-form-item>
-          <el-form-item v-if="formValidate.type == 2" label="用户申请退款：">
+          <el-form-item v-if="formValidate.type == 2" :label="$t('product.userRefund')">
             <el-switch
               :disabled="isDisabled"
               v-model="formValidate.refundSwitch"
               :active-value="true"
               :inactive-value="false"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('product.open')"
+              :inactive-text="$t('product.close')"
               :width="35"
             >
             </el-switch>
-            <div class="from-tips">开启之后用户可进行退款申请；关闭之后仅支持商家直接退款，用户不能申请退款</div>
+            <div class="from-tips">{{ $t('product.refundTip') }}</div>
           </el-form-item>
-          <el-form-item label="配送方式：" v-if="formValidate.type == 0" prop="deliveryMethodList">
+          <el-form-item :label="$t('product.deliveryMethod')" v-if="formValidate.type == 0" prop="deliveryMethodList">
             <el-checkbox-group v-model="formValidate.deliveryMethodList" :disabled="isDisabled">
-              <el-checkbox label="1">商家配送</el-checkbox>
-              <el-checkbox label="2">到店自提</el-checkbox>
+              <el-checkbox label="1">{{ $t('product.merchantDelivery') }}</el-checkbox>
+              <el-checkbox label="2">{{ $t('product.storePickup') }}</el-checkbox>
             </el-checkbox-group>
             <div class="from-tips mb5">
-              请先配置店铺地址之后，再开启到店自提；若店铺统一关闭到店自提功能，商品配送方式选中到店自提，用户购买不支持到店自提！
+              {{ $t('product.deliveryTip') }}
             </div>
-            <div class="from-tips mb5 colorPrompt">注：店铺统一关闭到店自提功能，该商品必须选中「商家配送」</div>
+            <div class="from-tips mb5 colorPrompt">{{ $t('product.deliveryNote') }}</div>
           </el-form-item>
-          <el-form-item label="排序：">
+          <el-form-item :label="$t('product.sortLabel')">
             <el-input-number
               v-model.trim="formValidate.sort"
               :min="1"
               :max="9999"
-              placeholder="请输入排序"
+              :placeholder="$t('product.sortPlaceholder')"
               @keyup.native="proving1"
               :disabled="isDisabled"
             />
           </el-form-item>
           <div class="acea-row">
-            <el-form-item label="赠送优惠券：" class="proCoupon">
-              <div class="from-tips mb14">用户购买商品后赠送的优惠券</div>
+            <el-form-item :label="$t('product.giftCoupon')" class="proCoupon">
+              <div class="from-tips mb14">{{ $t('product.giftCouponTip') }}</div>
               <div class="acea-row">
                 <el-tag
                   v-for="(tag, index) in formValidate.coupons"
@@ -428,18 +505,18 @@
                 >
                   {{ tag.name }}
                 </el-tag>
-                <span class="mr15" v-if="formValidate.couponIds == null">无</span>
-                <el-button v-if="!isDisabled" size="small" class="mr15" @click="addCoupon">选择优惠券</el-button>
+                <span class="mr15" v-if="formValidate.couponIds == null">{{ $t('product.none') }}</span>
+                <el-button v-if="!isDisabled" size="small" class="mr15" @click="addCoupon">{{ $t('product.selectCoupon') }}</el-button>
               </div>
             </el-form-item>
           </div>
         </el-row>
         <el-form-item>
           <el-button v-if="Number(currentTab) > 1" class="submission priamry_border" @click="handleSubmitUp"
-            >上一步</el-button
+            >{{ $t('product.prevStep') }}</el-button
           >
           <el-button v-show="Number(currentTab) < 4" class="priamry_border" @click="handleSubmitNest('formValidate')"
-            >下一步</el-button
+            >{{ $t('product.nextStep') }}</el-button
           >
           <el-button
             v-show="(currentTab === '3' || $route.params.id) && !isDisabled"
@@ -448,7 +525,7 @@
             @click="handleSubmit('formValidate')"
             :loading="loadingBtn"
             v-if="checkPermi(['merchant:product:update'])"
-            >保存</el-button
+            >{{ $t('product.save') }}</el-button
           >
           <el-button
             v-show="
@@ -461,14 +538,14 @@
             @click="handleSubmitAndAudit('formValidate')"
             :loading="loadingBtn"
             v-if="checkPermi(['merchant:product:update'])"
-            >保存并提审</el-button
+            >{{ $t('product.saveAndSubmit') }}</el-button
           >
         </el-form-item>
       </el-form>
     </el-card>
     <!-- 添加商品分类-->
     <el-dialog
-      title="创建商品分类"
+      :title="$t('product.createCategory')"
       :visible.sync="editDialogConfig.visible"
       destroy-on-close
       :close-on-click-modal="false"
@@ -481,7 +558,7 @@
         :is-create="editDialogConfig.isCreate"
         :edit-data="editDialogConfig.data"
         :biztype="editDialogConfig.biztype"
-        :all-tree-list="merProductClassify"
+        :all-tree-list="localizedMerProductClassify"
         @hideEditDialog="hideEditDialog"
       />
     </el-dialog>
@@ -516,6 +593,7 @@ import {
 import { Debounce } from '@/utils/validate';
 import { mapGetters, mapState } from 'vuex';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import i18n from '@/i18n';
 
 import creatAttr from '../components/creatAttr';
 
@@ -524,10 +602,13 @@ import { getToken } from '@/utils/auth';
 import edit from '@/components/Category/edit.vue';
 import { productAuditSwitchInfoApi } from '@/api/merchant';
 import { systemFormPageApi } from '@/api/systemForm';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
 import { useProduct } from '@/hooks/use-product';
 const { handlerCreatFromUse } = useProduct();
 import product from '@/mixins/product';
 import { defaultObj, objTitle } from './default';
+import { hasI18nNameContent, buildI18nNameJson, resolveFormActiveLang, localizeNamedTree, getLocalizedName, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'ProductProductAdd',
   directives: {
@@ -571,11 +652,14 @@ export default {
       ],
       frontDomain: localStorage.getItem('frontDomain'),
       htmlKey: 0,
-      formThead: Object.assign({}, objTitle),
+      formThead: Object.assign({}, objTitle()),
       form: 2,
       url: '',
       copyConfig: {},
       labelarr: [],
+      langList: [],
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
       isDisabled: this.$route.params.isDisabled === '1' ? true : false,
       isCopy: this.$route.params.isCopy === '1' ? true : false, //是否是采集
       props2: {
@@ -620,19 +704,6 @@ export default {
         sm: 24,
         xs: 24,
       },
-      ruleValidate: {
-        name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
-        categoryId: [{ required: true, message: '请选择平台商品分类', trigger: 'change' }],
-        cateIds: [{ required: true, message: '请选择商户商品分类', trigger: 'change', type: 'array', min: '1' }],
-        unitName: [{ required: true, message: '请输入单位', trigger: 'blur' }],
-        intro: [{ required: true, message: '请输入商品简介', trigger: 'blur' }],
-        tempId: [{ required: true, message: '请选择运费模板', trigger: 'change' }],
-        image: [{ required: true, message: '请上传商品图', trigger: 'change' }],
-        sliderImages: [{ required: true, message: '请上传商品轮播图', type: 'array', trigger: 'change' }],
-        specType: [{ required: true, message: '请选择商品规格', trigger: 'change' }],
-        brandId: [{ required: true, message: '请选择商品品牌', trigger: 'change' }],
-        deliveryMethodList: [{ required: true, message: '请选择配送方式', type: 'array', trigger: 'change' }],
-      },
       tempRoute: {},
       keyNum: 0,
       isShowAttr: false,
@@ -655,9 +726,9 @@ export default {
       multiples: true,
       productClassify: [], //平台商品分类
       productType: [
-        { tit: '普通商品', id: 0, tit2: '实体货物' },
-        { tit: '云盘商品', id: 5, tit2: '同一链接发货' },
-        { tit: '卡密商品', id: 6, tit2: '不同充值码发货' },
+        { tit: this.$t('product.typeNormal'), id: 0, tit2: this.$t('product.typeEntityGoods') },
+        { tit: this.$t('product.typeCloudDisk'), id: 5, tit2: this.$t('product.typeSameLinkShipping') },
+        { tit: this.$t('product.typeCardPassword'), id: 6, tit2: this.$t('product.typeDifferentRechargeShipping') },
       ],
       upload: {
         videoIng: false, // 是否显示进度条；
@@ -670,7 +741,7 @@ export default {
         isCreate: 0, // 0=创建，1=编辑
         prent: {}, // 父级对象
         data: {},
-        biztype: { name: '产品分类', value: 1, shortName: '产品' }, // 统一主业务中的目录类型
+        biztype: { name: 'Product Category', value: 1, shortName: 'Product' },
       }, //商品分类
       isSwitch: false, //商户开关
       productSwitch: false, //商品是否需要审核 true需要审核，false免审
@@ -686,11 +757,80 @@ export default {
       },
     };
   },
+  watch: {
+    // 切换语言时重新生成单规格表单标题，确保售价/成本价等标签跟随语言
+    '$i18n.locale'() {
+      this.formThead = Object.assign({}, objTitle());
+      this.activeLang = resolveFormActiveLang(this);
+      this.$nextTick(() => {
+        if (this.$refs.formValidate) this.$refs.formValidate.clearValidate();
+      });
+    },
+  },
   beforeRouteUpdate(to, from, next) {
     this.bus.$emit('onTagsViewRefreshRouterView', this.$route.path);
     next();
   },
   computed: {
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    langOptions() {
+      return (this.langList || []).map((i) => ({ code: i.code, label: i.name || i.label }));
+    },
+    localizedMerProductClassify() {
+      return localizeNamedTree(this.$store.state.product.merProductClassify, this.activeLang);
+    },
+    localizedPlatProductClassify() {
+      return this.addDisabled(localizeNamedTree(this.$store.state.product.merPlatProductClassify, this.activeLang));
+    },
+    ruleValidate() {
+      this.$i18n.locale;
+      return {
+        name: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(this.formValidate.name, this.formValidate.nameJson)) callback();
+            else callback(new Error(this.$t('product.pleaseEnterProductName')));
+          },
+          trigger: 'blur',
+        }],
+        categoryId: [{ required: true, message: this.$t('product.pleaseSelectPlatformCategory'), trigger: 'change' }],
+        cateIds: [{ required: true, message: this.$t('product.selectMerchantCategory'), trigger: 'change', type: 'array', min: '1' }],
+        unitName: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(this.formValidate.unitName, this.formValidate.unitNameJson)) callback();
+            else callback(new Error(this.$t('product.unitPlaceholder')));
+          },
+          trigger: 'blur',
+        }],
+        intro: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(this.formValidate.intro, this.formValidate.introJson)) callback();
+            else callback(new Error(this.$t('product.introPlaceholder')));
+          },
+          trigger: 'blur',
+        }],
+        tempId: [{ required: true, message: this.$t('product.listPleaseSelectShippingTemplate'), trigger: 'change' }],
+        image: [{
+          validator: (rule, value, callback) => {
+            if (this.hasAnyProductCover()) callback();
+            else callback(new Error(this.$t('product.pleaseUploadProductImage')));
+          },
+          trigger: 'change',
+        }],
+        sliderImages: [{
+          validator: (rule, value, callback) => {
+            if (this.hasAnyProductSlider()) callback();
+            else callback(new Error(this.$t('product.pleaseUploadProductCarousel')));
+          },
+          trigger: 'change',
+        }],
+        specType: [{ required: true, message: this.$t('product.pleaseSelectProductSpec'), trigger: 'change' }],
+        brandId: [{ required: true, message: this.$t('product.pleaseSelectProductBrand'), trigger: 'change' }],
+        deliveryMethodList: [{ required: true, message: this.$t('product.pleaseSelectDeliveryMethod'), type: 'array', trigger: 'change' }],
+      };
+    },
     visitedViews() {
       return this.$store.state.tagsView.visitedViews;
     },
@@ -704,12 +844,12 @@ export default {
     this.tempRoute = Object.assign({}, this.$route);
   },
   mounted() {
+    this.getLanguageList();
     this.formValidate.attrs = [];
     this.formValidate.sliderImages = [];
     if (checkPermi(['merchant:plat:product:category:cache:tree']))
       this.$store.dispatch('product/getAdminProductClassify');
-    if (!localStorage.getItem('merProductClassify') && checkPermi(['merchant:product:category:cache:tree']))
-      this.$store.dispatch('product/getMerProductClassify');
+    if (checkPermi(['merchant:product:category:cache:tree'])) this.$store.dispatch('product/getMerProductClassify');
     if (checkPermi(['merchant:plat:product:brand:cache:list'])) this.$store.dispatch('product/getMerProductBrand');
     if (!localStorage.getItem('shippingTemplates')) this.$store.dispatch('product/getShippingTemplates');
     if (checkPermi(['merchant:plat:product:guarantee:list'])) this.getProductGuarantee();
@@ -722,10 +862,54 @@ export default {
       this.isShowAttr = true;
     }
     if (this.isCopy && checkPermi(['merchant:plat:product:brand:cache:list'])) this.getCopyConfig();
-    this.productClassify = this.addDisabled(this.merPlatProductClassify);
     this.getProductAuditSwitchInfo();
   },
   methods: {
+    getLocalizedName,
+    getUiLocale() {
+      return getUiLocale(this);
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.applyLangList(defaultLangList.map((i) => ({ code: i.value, name: i.label })));
+            return;
+          }
+          this.applyLangList(list.map((item) => ({ code: item.code, name: item.name, isDefault: item.isDefault })));
+        })
+        .catch(() => {
+          this.applyLangList(defaultLangList.map((i) => ({ code: i.value, name: i.label })));
+        });
+    },
+    applyLangList(list) {
+      this.langList = list || [];
+      const def = this.langList.find((i) => i.isDefault) || this.langList[0];
+      if (def) {
+        this.defaultLangCode = def.code;
+      }
+      this.langList.forEach((item) => {
+        if (item.code !== this.defaultLangCode && !Object.prototype.hasOwnProperty.call(this.formValidate.nameJson, item.code)) {
+          this.$set(this.formValidate.nameJson, item.code, '');
+        }
+        if (item.code !== this.defaultLangCode && !Object.prototype.hasOwnProperty.call(this.formValidate.unitNameJson, item.code)) {
+          this.$set(this.formValidate.unitNameJson, item.code, '');
+        }
+        if (item.code !== this.defaultLangCode && !Object.prototype.hasOwnProperty.call(this.formValidate.introJson, item.code)) {
+          this.$set(this.formValidate.introJson, item.code, '');
+        }
+        if (item.code !== this.defaultLangCode && !Object.prototype.hasOwnProperty.call(this.formValidate.imageJson, item.code)) {
+          this.$set(this.formValidate.imageJson, item.code, '');
+        }
+        if (item.code !== this.defaultLangCode && !Object.prototype.hasOwnProperty.call(this.formValidate.sliderImagesJson, item.code)) {
+          this.$set(this.formValidate.sliderImagesJson, item.code, []);
+        }
+        if (item.code !== this.defaultLangCode && !Object.prototype.hasOwnProperty.call(this.formValidate.contentJson, item.code)) {
+          this.$set(this.formValidate.contentJson, item.code, '');
+        }
+      });
+      this.activeLang = resolveFormActiveLang(this);
+    },
     checkPermi,
     // 切换默认选中规格
     changeDefault(e, index) {
@@ -805,10 +989,10 @@ export default {
       const isLt2M = file.size / 10240 / 10240 < 2;
 
       if (!isJPG) {
-        this.$message.error('上传视频只能是 mp4 格式!');
+        this.$message.error(this.$t('product.uploadVideoMp4Only'));
       }
       if (!isLt2M) {
-        this.$message.error('上传视频不能超过 20MB!');
+        this.$message.error(this.$t('product.uploadVideoMax20M'));
       }
       return isJPG && isLt2M;
     },
@@ -821,7 +1005,7 @@ export default {
       };
       let loading = this.$loading({
         lock: true,
-        text: '上传中，请稍候...',
+        text: this.$t('product.uploading'),
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)',
       });
@@ -842,29 +1026,16 @@ export default {
     },
     //限制平台商品分类只能选择第三级
     addDisabled(dropdownList) {
-      const list = [];
-      try {
-        dropdownList.forEach((e, index) => {
-          let e_new = {
-            id: e.id,
-            name: e.name,
-            level: e.level,
-            pid: e.pid,
-            isShow: e.isShow,
-          };
-          if (!e.childList && (e.level === 1 || e.level === 2)) {
-            e_new = { ...e_new, disabled: true };
-          }
-          if (e.childList) {
-            const childList = this.addDisabled(e.childList);
-            e_new = { ...e_new, childList: childList };
-          }
-          list.push(e_new);
-        });
-      } catch (error) {
-        return [];
-      }
-      return list;
+      if (!Array.isArray(dropdownList) || !dropdownList.length) return [];
+      return dropdownList.map((e) => {
+        const hasKids = Array.isArray(e.childList) && e.childList.length > 0;
+        const childList = hasKids ? this.addDisabled(e.childList) : undefined;
+        const e_new = { ...e, name: e.name || e.label || String(e.id || ''), childList };
+        if (!childList && (e.level === 1 || e.level === 2)) {
+          e_new.disabled = true;
+        }
+        return e_new;
+      });
     },
     // 生成商品表单
     addProduct() {
@@ -896,7 +1067,7 @@ export default {
                 this.fullscreenLoading = false;
               });
       } else {
-        this.$message.warning('请输入链接地址！');
+        this.$message.warning(this.$t('product.enterLinkAddress'));
       }
     },
     /**
@@ -980,7 +1151,7 @@ export default {
           this.formValidate.guaranteeIds = guaranteeGroupids.toString();
           this.guaranteeList.map((item) => {
             guaranteeGroupids.map((j) => {
-              if (item.id === j) this.guaranteeName.push(item.name);
+              if (item.id === j) this.guaranteeName.push(getLocalizedName(item, this.activeLang) || item.name);
             });
           });
         }
@@ -1033,9 +1204,17 @@ export default {
 
     onChangeCategory() {
       this.formValidate.brandId = '';
+      this.search.page = 1;
+      this.search.brandName = '';
       this.brandList = [];
       this.getbrandList();
-      this.brandList.push({ name: '其他', id: 0 });
+    },
+    onBrandVisible(visible) {
+      if (!visible || !this.formValidate.categoryId) return;
+      if (!this.brandList.length) {
+        this.search.page = 1;
+        this.getbrandList();
+      }
     },
     // 下拉加载更多
     selectLoadMore() {
@@ -1045,22 +1224,38 @@ export default {
     },
     // 远程搜索
     remoteMethod(query) {
-      this.loading = true;
+      if (!this.formValidate.categoryId) return;
       this.search.brandName = query;
       this.search.page = 1;
-      setTimeout(() => {
-        this.loading = false;
-        this.getbrandList(); // 请求接口
-      }, 200);
+      this.brandList = [];
+      this.getbrandList();
     },
-    // 品牌列表
     getbrandList() {
-      this.search.cid = this.formValidate.categoryId;
-      brandListApi(this.search).then((res) => {
-        this.totalPage = res.totalPage;
-        this.total = res.total;
-        this.brandList = this.brandList.concat(res.list);
-      });
+      const cid = Array.isArray(this.formValidate.categoryId)
+        ? this.formValidate.categoryId[this.formValidate.categoryId.length - 1]
+        : this.formValidate.categoryId;
+      if (!cid) {
+        this.brandList = [];
+        return;
+      }
+      this.search.cid = cid;
+      brandListApi(this.search)
+        .then((res) => {
+          this.totalPage = res.totalPage;
+          this.total = res.total;
+          const other = { name: this.$t('product.other'), id: 0 };
+          const list = (res && res.list) || [];
+          if (this.search.page === 1) {
+            this.brandList = [other].concat(list);
+          } else {
+            this.brandList = this.brandList.concat(list);
+          }
+        })
+        .catch(() => {
+          if (this.search.page === 1) {
+            this.brandList = [{ name: this.$t('product.other'), id: 0 }];
+          }
+        });
     },
 
     proving1(e) {
@@ -1089,12 +1284,12 @@ export default {
     },
     setTagsViewTitle() {
       if (this.$route.params.id && this.$route.params.id != 0) {
-        const title = this.isDisabled ? '商品详情' : '编辑商品';
+        const title = this.isDisabled ? this.$t('product.productDetailTitle') : this.$t('product.editProductTitle');
         const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.$route.params.id}` });
         this.$store.dispatch('tagsView/updateVisitedView', route);
       } else {
         if (this.isCopy) {
-          const title = '采集商品';
+          const title = this.$t('product.collectProductTitle');
           const route = Object.assign({}, this.tempRoute, { title: `${title}` });
           this.$store.dispatch('tagsView/updateVisitedView', route);
         }
@@ -1114,7 +1309,12 @@ export default {
         });
     },
     handleRemove(i) {
-      this.formValidate.sliderImages.splice(i, 1);
+      this.ensureSliderLang();
+      if (this.isProductDefaultLang) {
+        this.formValidate.sliderImages.splice(i, 1);
+      } else {
+        this.formValidate.sliderImagesJson[this.activeLang].splice(i, 1);
+      }
     },
     // 上一步
     handleSubmitUp() {
@@ -1127,16 +1327,16 @@ export default {
           this.currentTab = (Number(this.currentTab) + 1).toString();
         } else {
           if (
-            !this.formValidate.name ||
+            !hasI18nNameContent(this.formValidate.name, this.formValidate.nameJson) ||
             !this.formValidate.categoryId ||
             !this.formValidate.keyword ||
-            !this.formValidate.unitName ||
-            !this.formValidate.intro ||
-            !this.formValidate.image ||
-            !this.formValidate.sliderImages ||
+            !hasI18nNameContent(this.formValidate.unitName, this.formValidate.unitNameJson) ||
+            !hasI18nNameContent(this.formValidate.intro, this.formValidate.introJson) ||
+            !this.hasAnyProductCover() ||
+            !this.hasAnyProductSlider() ||
             !this.formValidate.deliveryMethodList.length
           ) {
-            this.$message.warning('请填写完整商品信息！');
+            this.$message.warning(this.$t('product.completeProductInfo'));
           }
         }
       });
@@ -1144,7 +1344,8 @@ export default {
     //保存接口数据更新
     getFromData() {
       if (this.formValidate.specType && this.formValidate.attrs.length < 1)
-        return this.$message.warning('请填写多规格属性！');
+        return this.$message.warning(this.$t('product.completeSpecAttr'));
+      this.fillDefaultMediaFromAnyLang();
       if (this.videoLink) {
         //如果有视频主图，将视频链接插入到轮播图第一的位置
         this.formValidate.sliderImages.unshift(this.videoLink);
@@ -1157,6 +1358,7 @@ export default {
         this.formValidate.attrList = this.formValidate.attrs.map((item, index) => {
           return {
             attributeName: item.value,
+            attributeNameJson: buildI18nNameJson(this.langOptions, item.valueJson || {}, this.defaultLangCode, item.value),
             isShowImage: item.add_pic == 1 ? true : false,
             id: 0,
             sort: index + 1,
@@ -1164,6 +1366,7 @@ export default {
               return {
                 image: arr.image,
                 optionName: arr.value,
+                optionNameJson: buildI18nNameJson(this.langOptions, arr.valueJson || {}, this.defaultLangCode, arr.value),
                 sort: idx + 1,
               };
             }),
@@ -1207,13 +1410,42 @@ export default {
         attrValueList: this.formValidate.specType ? attrValueListData : this.OneattrValue,
         tempId: this.formValidate.type != 0 ? 0 : this.formValidate.tempId,
       };
+      // 组装多语言商品名称：默认语言名 + 其它语言名
+      const nameMap = { ...(this.formValidate.nameJson || {}) };
+      nameMap[this.defaultLangCode] = this.formValidate.name || '';
+      data.nameJson = JSON.stringify(nameMap);
+      // 组装多语言商品单位：默认语言单位 + 其它语言单位
+      const unitMap = { ...(this.formValidate.unitNameJson || {}) };
+      unitMap[this.defaultLangCode] = this.formValidate.unitName || '';
+      data.unitNameJson = JSON.stringify(unitMap);
+      const introMap = { ...(this.formValidate.introJson || {}) };
+      introMap[this.defaultLangCode] = this.formValidate.intro || '';
+      data.introJson = JSON.stringify(introMap);
+      const imageMap = { ...(this.formValidate.imageJson || {}) };
+      delete imageMap[this.defaultLangCode];
+      Object.keys(imageMap).forEach((k) => {
+        if (!String(imageMap[k] || '').trim()) delete imageMap[k];
+      });
+      data.imageJson = Object.keys(imageMap).length ? JSON.stringify(imageMap) : '';
+      const sliderMap = { ...(this.formValidate.sliderImagesJson || {}) };
+      delete sliderMap[this.defaultLangCode];
+      Object.keys(sliderMap).forEach((k) => {
+        if (!Array.isArray(sliderMap[k]) || !sliderMap[k].length) delete sliderMap[k];
+      });
+      data.sliderImageJson = Object.keys(sliderMap).length ? JSON.stringify(sliderMap) : '';
+      const contentMap = { ...(this.formValidate.contentJson || {}) };
+      contentMap[this.defaultLangCode] = this.formValidate.content || '';
+      Object.keys(contentMap).forEach((k) => {
+        if (this.isProductHtmlBlank(contentMap[k])) delete contentMap[k];
+      });
+      data.contentJson = Object.keys(contentMap).length ? JSON.stringify(contentMap) : '';
       return data;
     },
     //是否自动上架
     automaticListing() {
-      this.$confirm(this.productSwitch ? '审核通过之后是否自动上架？' : '操作之后是否自动上架？', '提示', {
-        confirmButtonText: '上架',
-        cancelButtonText: '不用了',
+      this.$confirm(this.productSwitch ? this.$t('product.autoOnShelfAfterAuditPass') : this.$t('product.autoOnShelfAfterOperate'), this.$t('product.tip'), {
+        confirmButtonText: this.$t('product.onShelf'),
+        cancelButtonText: this.$t('product.listNoNeed'),
         type: 'warning',
         closeOnClickModal: false,
         distinguishCancelAndClose: true,
@@ -1242,15 +1474,15 @@ export default {
           this.automaticListing();
         } else {
           if (
-            !this.formValidate.name ||
+            !hasI18nNameContent(this.formValidate.name, this.formValidate.nameJson) ||
             !this.formValidate.cateId ||
             !this.formValidate.keyword ||
-            !this.formValidate.unitName ||
-            !this.formValidate.intro ||
-            !this.formValidate.image ||
-            !this.formValidate.sliderImages
+            !hasI18nNameContent(this.formValidate.unitName, this.formValidate.unitNameJson) ||
+            !hasI18nNameContent(this.formValidate.intro, this.formValidate.introJson) ||
+            !this.hasAnyProductCover() ||
+            !this.hasAnyProductSlider()
           ) {
-            this.$message.warning('请填写完整商品信息！');
+            this.$message.warning(this.$t('product.completeProductInfo'));
           }
         }
       });
@@ -1272,15 +1504,15 @@ export default {
           }
         } else {
           if (
-            !this.formValidate.name ||
+            !hasI18nNameContent(this.formValidate.name, this.formValidate.nameJson) ||
             !this.formValidate.cateId ||
             !this.formValidate.keyword ||
-            !this.formValidate.unitName ||
-            !this.formValidate.intro ||
-            !this.formValidate.image ||
-            !this.formValidate.sliderImages
+            !hasI18nNameContent(this.formValidate.unitName, this.formValidate.unitNameJson) ||
+            !hasI18nNameContent(this.formValidate.intro, this.formValidate.introJson) ||
+            !this.hasAnyProductCover() ||
+            !this.hasAnyProductSlider()
           ) {
-            this.$message.warning('请填写完整商品信息！');
+            this.$message.warning(this.$t('product.completeProductInfo'));
           }
         }
       });
@@ -1292,7 +1524,7 @@ export default {
       parseFloat(this.$route.params.id) > 0
         ? productUpdateApi(data)
             .then(async (res) => {
-              this.$message.success('编辑成功');
+              this.$message.success(this.$t('product.editSuccess'));
               setTimeout(() => {
                 this.$router.push({ path: '/product/list' });
               }, 500);
@@ -1304,7 +1536,7 @@ export default {
             })
         : productCreateApi(data)
             .then(async (res) => {
-              this.$message.success('新增成功');
+              this.$message.success(this.$t('product.addSuccess'));
               setTimeout(() => {
                 this.$router.push({ path: '/product/list' });
               }, 500);

@@ -11,26 +11,26 @@
       >
         <el-form-item prop="retailStoreSwitch">
           <span slot="label">
-            <span>分销启用：</span>
-            <el-tooltip class="item" effect="dark" content="商城分销功能开启关闭" placement="top-start">
+            <span>{{ $t('distribution.distributionEnabledLabel') }}</span>
+            <el-tooltip class="item" effect="dark" :content="$t('distribution.mallDistributionToggle')" placement="top-start">
               <i class="el-icon-warning-outline" />
             </el-tooltip>
           </span>
           <el-radio-group v-model="promoterForm.retailStoreSwitch">
-            <el-radio :label="1">开启</el-radio>
-            <el-radio :label="0">关闭</el-radio>
+            <el-radio :label="1">{{ $t('common.open') }}</el-radio>
+            <el-radio :label="0">{{ $t('common.close') }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item prop="retailStoreLine">
           <span slot="label">
-            <span>满额分销最低金额：</span>
-            <el-tooltip class="item" effect="dark" content="满额分销满足金额开通分销权限" placement="top-start">
+            <span>{{ $t('distribution.fullAmountDistributionMinLabel') }}</span>
+            <el-tooltip class="item" effect="dark" :content="$t('distribution.fullAmountDistributionTip')" placement="top-start">
               <i class="el-icon-warning-outline" />
             </el-tooltip>
           </span>
           <el-input-number
             v-model.trim="promoterForm.retailStoreLine"
-            placeholder="满额分销满足金额开通分销权限"
+            :placeholder="$t('distribution.fullAmountDistributionTip')"
             :min="-1"
             :step="1"
             class="selWidth"
@@ -39,28 +39,28 @@
         </el-form-item>
         <el-form-item prop="retailStoreBindingType">
           <span slot="label">
-            <span>分销关系绑定：</span>
+            <span>{{ $t('distribution.distributionRelationLabel') }}</span>
             <el-tooltip
               class="item"
               effect="dark"
-              content="所有用户”指所有没有上级推广人的用户，“新用户”指新注册的用户"
+              :content="$t('distribution.allUsersTip')"
               placement="top-start"
             >
               <i class="el-icon-warning-outline" />
             </el-tooltip>
           </span>
           <el-radio-group v-model="promoterForm.retailStoreBindingType">
-            <el-radio :label="0">所有用户</el-radio>
-            <el-radio :label="1">新用户</el-radio>
+            <el-radio :label="0">{{ $t('distribution.allUsers') }}</el-radio>
+            <el-radio :label="1">{{ $t('distribution.newUser') }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item prop="retailStoreBrokerageFirstRatio">
           <span slot="label">
-            <span>一级返佣比例：</span>
+            <span>{{ $t('distribution.firstCommissionRateLabel') }}</span>
             <el-tooltip
               class="item"
               effect="dark"
-              content="订单交易成功后给上级返佣的比例0 - 100,例:5 = 返订单金额的5%"
+              :content="$t('distribution.commissionRateTip2')"
               placement="top-start"
             >
               <i class="el-icon-warning-outline" />
@@ -72,17 +72,17 @@
             :min="0"
             :max="100"
             class="selWidth"
-            placeholder="订单交易成功后给上级返佣的比例0 - 100,例:5 = 返订单金额的5%"
+            :placeholder="$t('distribution.commissionRateTip2')"
           ></el-input-number>
           <span>%</span>
         </el-form-item>
         <el-form-item prop="retailStoreBrokerageSecondRatio">
           <span slot="label">
-            <span>二级返佣比例：</span>
+            <span>{{ $t('distribution.secondCommissionRateLabel') }}</span>
             <el-tooltip
               class="item"
               effect="dark"
-              content="订单交易成功后给上级返佣的比例,例:5 = 返订单金额的5%，返佣比例之和不能大于项目文件配置的佣金返佣比例和上限"
+              :content="$t('distribution.commissionRateTip1')"
               placement="top-start"
             >
               <i class="el-icon-warning-outline" />
@@ -94,14 +94,14 @@
             :min="0"
             :max="100"
             class="selWidth"
-            placeholder="订单交易成功后给上级返佣的比例,例:5 = 返订单金额的5%，返佣比例之和不能大于项目文件配置的佣金返佣比例和上限"
+            :placeholder="$t('distribution.commissionRateTip1')"
           ></el-input-number>
           <span>%</span>
         </el-form-item>
         <el-form-item prop="retailStoreExtractMinPrice">
           <span slot="label">
-            <span>提现最低金额：</span>
-            <el-tooltip class="item" effect="dark" content="用户提现最低金额" placement="top-start">
+            <span>{{ $t('distribution.withdrawMinAmountLabel') }}</span>
+            <el-tooltip class="item" effect="dark" :content="$t('distribution.userMinWithdrawAmount')" placement="top-start">
               <i class="el-icon-warning-outline" />
             </el-tooltip>
           </span>
@@ -110,13 +110,13 @@
             :min="0"
             :step="1"
             class="selWidth"
-            placeholder="用户提现最低金额"
+            :placeholder="$t('distribution.userMinWithdrawAmount')"
           ></el-input-number>
         </el-form-item>
         <el-form-item prop="retailStoreExtractBank">
           <span slot="label">
-            <span>提现银行卡：</span>
-            <el-tooltip class="item" effect="dark" content="提现银行卡，每个银行换行" placement="top-start">
+            <span>{{ $t('distribution.withdrawBankCardLabel') }}</span>
+            <el-tooltip class="item" effect="dark" :content="$t('distribution.withdrawBankCards')" placement="top-start">
               <i class="el-icon-warning-outline" />
             </el-tooltip>
           </span>
@@ -124,19 +124,23 @@
         </el-form-item>
         <el-form-item prop="retailStoreBrokerageFreezingTime">
           <span slot="label">
-            <span>开始冻结规则：</span>
-            <el-tooltip class="item" effect="dark" content="从哪个状态开始计算冻结时间" placement="top-start">
+            <span>{{ $t('distribution.freezeStartRuleLabel') }}</span>
+            <el-tooltip class="item" effect="dark" :content="$t('distribution.freezeStartStatus')" placement="top-start">
               <i class="el-icon-warning-outline" />
             </el-tooltip>
           </span>
-          <el-select v-model="promoterForm.retailStoreBrokerageShareNode" placeholder="请选择">
+          <el-select
+            :key="'freeze-node-' + ($i18n.locale || '')"
+            v-model="promoterForm.retailStoreBrokerageShareNode"
+            :placeholder="$t('el.select.placeholder')"
+          >
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="retailStoreBrokerageFreezingTime">
           <span slot="label">
-            <span>冻结时长：</span>
-            <el-tooltip class="item" effect="dark" content="冻结多久进行解冻" placement="top-start">
+            <span>{{ $t('distribution.freezeDurationLabel') }}</span>
+            <el-tooltip class="item" effect="dark" :content="$t('distribution.freezeDuration')" placement="top-start">
               <i class="el-icon-warning-outline" />
             </el-tooltip>
           </span>
@@ -147,7 +151,7 @@
             :step="1"
             step-strictly
             class="selWidth"
-            placeholder="佣金冻结时间(天)"
+            :placeholder="$t('distribution.commissionFreezeDays')"
           ></el-input-number>
         </el-form-item>
         <el-form-item>
@@ -156,7 +160,7 @@
             :loading="loading"
             @click="submitForm('promoterForm')"
             v-hasPermi="['platform:retail:store:config:save']"
-            >提交</el-button
+            >{{ $t('common.submit') }}</el-button
           >
         </el-form-item>
       </el-form>
@@ -182,20 +186,6 @@ export default {
   name: 'Index',
   data() {
     return {
-      options: [
-        {
-          value: 'pay',
-          label: '订单支付后',
-        },
-        {
-          value: 'receipt',
-          label: '订单收货后',
-        },
-        {
-          value: 'complete',
-          label: '订单完成后',
-        },
-      ],
       keywordType: 'textarea',
       labelarr: [],
       promoterForm: {
@@ -203,13 +193,24 @@ export default {
         retailStoreBrokerageFreezingTime: 7,
       },
       loading: false,
-      rules: {
-        retailStoreSwitch: [{ required: true, message: '请选择是否启用分销', trigger: 'change' }],
-        retailStoreBrokerageFirstRatio: [{ required: true, message: '请输入一级返佣比例', trigger: 'blur' }],
-        retailStoreBrokerageSecondRatio: [{ required: true, message: '请输入二级返佣比例', trigger: 'blur' }],
-        merchantShareFreezeTime: [{ required: true, message: '请输入冻结时间', trigger: 'blur' }],
-      },
     };
+  },
+  computed: {
+    options() {
+      return [
+        { value: 'pay', label: this.$t('distribution.afterOrderPaid') },
+        { value: 'receipt', label: this.$t('distribution.afterOrderReceived') },
+        { value: 'complete', label: this.$t('distribution.afterOrderCompleted') },
+      ];
+    },
+    rules() {
+      return {
+        retailStoreSwitch: [{ required: true, message: this.$t('distribution.pleaseSelectEnableDistribution'), trigger: 'change' }],
+        retailStoreBrokerageFirstRatio: [{ required: true, message: this.$t('distribution.pleaseEnterFirstCommissionRate'), trigger: 'blur' }],
+        retailStoreBrokerageSecondRatio: [{ required: true, message: this.$t('distribution.pleaseEnterSecondCommissionRate'), trigger: 'blur' }],
+        merchantShareFreezeTime: [{ required: true, message: this.$t('distribution.pleaseEnterFreezeTime'), trigger: 'blur' }],
+      };
+    },
   },
   mounted() {
     if (checkPermi(['platform:retail:store:config:get'])) this.getDetal();
@@ -221,7 +222,7 @@ export default {
     },
     channelInputLimit(e) {
       let key = e.key;
-      // 不允许输入'e'和'.'
+      // 不允许输入'ethis.$t('distribution.and').'
       if (key === 'e' || key === '.') {
         e.returnValue = false;
         return false;
@@ -249,13 +250,13 @@ export default {
               this.promoterForm.retailStoreBrokerageSecondRatio,
             ) > 100
           )
-            return this.$message.warning('返佣比例相加不能超过100%');
+            return this.$message.warning(this.$t('distribution.commissionRateLimit'));
           this.loading = true;
           this.promoterForm.retailStoreExtractBank = this.labelarr.join(',');
           configUpdateApi(this.promoterForm)
             .then((res) => {
               this.loading = false;
-              this.$message.success('提交成功');
+              this.$message.success(this.$t('user.submitSuccess'));
             })
             .catch((err) => {
               this.loading = false;

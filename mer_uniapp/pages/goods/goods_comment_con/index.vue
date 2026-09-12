@@ -8,10 +8,10 @@
 						<view class='starsList'>
 							<text @click="stars(indexn, indexw)" v-for="(itemn, indexn) in item.stars" :key="indexn" class='iconfont' :class="item.index >= indexn? 'icon-shitixing':'icon-kongxinxing'"></text>
 						</view>
-						<text class='evaluate'>{{item.index === -1 ? "" : item.index + 1 + "分"}}</text>
+						<text class='evaluate'>{{item.index === -1 ? "" : item.index + 1 + $t('分')}}</text>
 					</view>
 					<view class='textarea'>
-						<textarea placeholder='商品满足你的期待么？说说你的想法，分享给想买的他们吧~' name="comment" placeholder-class='placeholder'></textarea>
+						<textarea :placeholder="$t('商品满足你的期待么？说说你的想法，分享给想买的他们吧~')" name="comment" placeholder-class='placeholder'></textarea>
 						<view class='list acea-row row-middle'>
 							<view class='pictrue' v-for="(item,index) in picsPath" :key="index">
 								<image :src='item'></image>
@@ -19,11 +19,11 @@
 							</view>
 							<view class='pictrue acea-row row-center-wrapper row-column' @click='uploadpic' v-if="picsPath.length < 8">
 								<text class='iconfont icon-icon25201'></text>
-								<view>上传图片</view>
+								<view>{{$t('上传图片')}}</view>
 							</view>
 						</view>
 					</view>
-					<button class='evaluateBnt bg_color' formType="submit">立即评价</button>
+					<button class='evaluateBnt bg_color' formType="submit">{{$t('立即评价')}}</button>
 				</view>
 			</view>
 		</form>
@@ -73,7 +73,7 @@
 		computed: mapGetters(['isLogin']),
 		onLoad(options) {
 			if (!options.orderNo ) return this.$util.Tips({
-				title: '缺少参数'
+				title: this.$t('缺少参数')
 			}, {
 				tab: 3,
 				url: 1
@@ -139,7 +139,7 @@
 				orderComment(value).then(res => {
 					uni.hideLoading();
 					return that.$util.Tips({
-						title: '感谢您的评价!',
+						title: this.$t('感谢您的评价!'),
 						icon: 'success'
 					}, '/pages/goods/evaluation_list/index');
 				}).catch(err => {

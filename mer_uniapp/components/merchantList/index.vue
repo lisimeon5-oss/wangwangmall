@@ -12,7 +12,7 @@
 							<view class="con-box">
 								<view class="name line1 acea-row row-middle" :class="isStreet?'street-name':''" :style="[isHome?merchantStyle.nameColor:'']">
 									<text v-show="(isShowHome.nameShow&&isHome) ||!isHome" class="mer_name line1">{{item.name}}</text>
-									<text v-if="item.isSelf && ((isShowHome.typeShow&&isHome) ||!isHome)" class="font-bg-red mr10 merType" :class="isHome?'':'bg-color'" :style="[isHome?merchantStyle.labelColor:'']">自营</text>
+									<text v-if="item.isSelf && ((isShowHome.typeShow&&isHome) ||!isHome)" class="font-bg-red mr10 merType" :class="isHome?'':'bg-color'" :style="[isHome?merchantStyle.labelColor:'']">{{$t('自营')}}</text>
 								</view>
 								<view class="star-box">
 									<view v-if="!isStreet" class="score">
@@ -27,27 +27,27 @@
 									</view>
 									<view v-show="!isStreet" class="lines tui-skeleton-rect"></view>
 									<view class="fans" :style="isStreet?'color:#fff':'color:#999'">
-										{{ item.followerNum < 10000 ? item.followerNum : (item.followerNum / 10000).toFixed(2) + '万' }}人关注
+										{{ item.followerNum < 10000 ? item.followerNum : (item.followerNum / 10000).toFixed(2) + $t('万') }}{{$t('人关注')}}
 									</view>
 								</view>
 							</view>
 						</view>
-						<view v-if="!isStreet" class="link" @click="goShop(item.id)">进店</view>
+						<view v-if="!isStreet" class="link" @click="goShop(item.id)">{{$t('进店')}}</view>
 					</view>
 					<view v-if="item.proList.length" class="pic-wrapper" :class="isStreet?'street-wrapper':''">
 						<view v-for="(goods,indexn) in item.proList" :key="indexn" class="proList"
 							@click="godDetail(goods)">
 							<view class="pic-item" :class="isStreet?'street-pic':''">
-								<view v-show="goods.stock===0" class="sellOut">已售罄</view>
+								<view v-show="goods.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 								<image :src="goods.image" mode="aspectFill"></image>
 								<!-- <easy-loadimage :image-src="goods.image"></easy-loadimage> -->
 								<view v-if="!isStreet" class="price" :style="[isHome?merchantStyle.priceColor:'']">
-									<text>￥</text>{{goods.price}}
+									<text>฿</text>{{goods.price}}
 								</view>
 							</view>
 							<view class="pic-name line2" v-if="isStreet">{{goods.name}}</view>
 							<view v-if="isStreet" class="street-price" :style="[isHome?merchantStyle.priceColor:'']">
-								￥{{goods.price}}
+								฿{{goods.price}}
 							</view>
 						</view>
 					</view>

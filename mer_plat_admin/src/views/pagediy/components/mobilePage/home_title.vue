@@ -19,9 +19,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState } from 'vuex';
+import { diyCname } from '@/utils/diyCname';
+import { getLocalizedDiyVal, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'home_title',
-  cname: '标题',
+  ...diyCname('content.title'),
   icon: 't-icon-zujian-biaoti',
   configName: 'c_home_title',
   type: 2, // 0 基础组件 1 营销组件 2工具组件
@@ -98,6 +100,18 @@ export default {
         { color: this.configObj.fontRightColor.color[0].item },
       ];
     },
+    titleTxt() {
+      if (!this.configObj || !this.configObj.titleConfig) return '';
+      return getLocalizedDiyVal(this.configObj.titleConfig, getUiLocale(this));
+    },
+    titleFuTxt() {
+      if (!this.configObj || !this.configObj.titleFuConfig) return '';
+      return getLocalizedDiyVal(this.configObj.titleFuConfig, getUiLocale(this));
+    },
+    titleRightTxt() {
+      if (!this.configObj || !this.configObj.titleRightConfig) return '';
+      return getLocalizedDiyVal(this.configObj.titleRightConfig, getUiLocale(this));
+    },
   },
   watch: {
     pageData: {
@@ -150,70 +164,73 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '标题',
+          cname: this.$t('content.title'),
         },
         titleConfig: {
-          tabTitle: '文本标题',
-          title: '标题名称',
-          val: '标题',
-          place: '请输入标题，限制8个字以内',
+          tabTitle: this.$t('pagediy.textTitle'),
+          title: this.$t('pagediy.titleName'),
+          val: this.$t('content.title'),
+          valJson: '',
+          place: this.$t('pagediy.enterTitleMax8'),
           max: 8,
           isShow: 1,
         },
         titleFuConfig: {
-          tabTitle: '文本标题',
-          title: '副标题',
-          val: '副标题',
-          place: '请输入副标题，限制12个字以内',
+          tabTitle: this.$t('pagediy.textTitle'),
+          title: this.$t('pagediy.subtitle'),
+          val: this.$t('pagediy.subtitle'),
+          valJson: '',
+          place: this.$t('pagediy.enterSubtitleMax12'),
           max: 12,
           isShow: 1,
         },
         titleRightConfig: {
-          tabTitle: '右侧文字',
-          title: '右侧文字',
-          val: '更多',
-          place: '请输入右侧文字，限制4个字以内',
+          tabTitle: this.$t('pagediy.rightSideText'),
+          title: this.$t('pagediy.rightSideText'),
+          val: this.$t('user.more'),
+          valJson: '',
+          place: this.$t('pagediy.enterRightTextMax4'),
           max: 4,
           isShow: 1,
         },
         bgImg: {
           isShow: 1,
-          title: '上传背景图',
-          tips: '建议：910px*86px',
+          title: this.$t('pagediy.uploadBackgroundImage'),
+          tips: this.$t('pagediy.suggest910x86'),
           url: '',
         },
         selectShow: {
           cname: 'selectShow',
-          title: '右侧按钮',
+          title: this.$t('pagediy.rightButton'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '显示',
+              val: this.$t('common.show'),
             },
             {
-              val: '隐藏',
+              val: this.$t('menu.hide'),
             },
           ],
         },
         selectStyle: {
           cname: 'selectStyle',
-          title: '选择风格',
+          title: this.$t('pagediy.selectStyle'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '背景图片',
+              val: this.$t('pagediy.backgroundImg'),
             },
             {
-              val: '背景色',
+              val: this.$t('pagediy.backgroundColor'),
             },
           ],
         },
         // 背景颜色
         bgColor: {
-          tabTitle: '颜色设置',
-          title: '背景颜色',
+          tabTitle: this.$t('pagediy.colorSettings'),
+          title: this.$t('pagediy.backgroundColor'),
           isShow: 1,
           color: [
             {
@@ -233,15 +250,15 @@ export default {
           ],
         },
         linkConfig: {
-          title: '链接',
+          title: this.$t('pagediy.link'),
           val: '',
-          place: '请输入链接地址',
+          place: this.$t('pagediy.pleaseEnterLink'),
           max: 100,
           isShow: 1,
         },
         fontColor: {
-          title: '标题颜色',
-          tabTitle: '文字设置',
+          title: this.$t('pagediy.titleColor'),
+          tabTitle: this.$t('pagediy.textSettings'),
           name: 'fontColor',
           default: [
             {
@@ -255,51 +272,51 @@ export default {
           ],
         },
         bgTopStyle: {
-          tabTitle: '圆角设置',
-          title: '上圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.topRadius'),
           name: 'bgStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         bgDownStyle: {
-          title: '下圆角',
+          title: this.$t('pagediy.bottomRadius'),
           name: 'bgStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         textStyle: {
-          title: '文本样式',
+          title: this.$t('pagediy.textStyle'),
           isShow: 1,
           tabVal: 0,
           list: [
             {
-              val: '正常',
+              val: this.$t('maintain.normal'),
               style: 'normal',
               icon: 'icon-zhengchang',
             },
             {
-              val: '斜体',
+              val: this.$t('pagediy.italic'),
               style: 'italic',
               icon: 'icon-qingxie',
             },
             {
-              val: '加粗',
+              val: this.$t('pagediy.bold'),
               style: 'bold',
               icon: 'icon-jiacu',
             },
           ],
         },
         fontSize: {
-          title: '标题文字',
+          title: this.$t('pagediy.titleText'),
           val: 20,
           min: 12,
           max: 30,
         },
         fontFuColor: {
-          title: '副标题颜色',
-          tabTitle: '文字设置',
+          title: this.$t('pagediy.subtitleColor'),
+          tabTitle: this.$t('pagediy.textSettings'),
           name: 'fontFuColor',
           default: [
             {
@@ -313,14 +330,14 @@ export default {
           ],
         },
         fontFuSize: {
-          title: '副标题文字',
+          title: this.$t('pagediy.subtitleText'),
           val: 14,
           min: 12,
           max: 20,
         },
         fontRightColor: {
-          title: '按钮颜色',
-          tabTitle: '文字设置',
+          title: this.$t('pagediy.buttonColor'),
+          tabTitle: this.$t('pagediy.textSettings'),
           name: 'fontFuColor',
           default: [
             {
@@ -334,43 +351,40 @@ export default {
           ],
         },
         fontRightSize: {
-          title: '按钮文字',
+          title: this.$t('pagediy.buttonText'),
           val: 12,
           min: 12,
           max: 20,
         },
         // 上间距
         upConfig: {
-          title: '上边距',
-          tabTitle: '边距设置',
+          title: this.$t('pagediy.topMargin'),
+          tabTitle: this.$t('pagediy.marginSettings'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          tabTitle: '边距设置',
-          title: '下边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 40,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },
       },
       configObj: null,
-      titleTxt: '',
-      titleFuTxt: '',
-      titleRightTxt: '',
       link: '',
       txtPosition: '',
       txtStyle: '',
@@ -399,9 +413,6 @@ export default {
       if (!data) return;
       if (data) {
         this.configObj = data;
-        this.titleTxt = data.titleConfig.val;
-        this.titleFuTxt = data.titleFuConfig.val;
-        this.titleRightTxt = data.titleRightConfig.val;
         this.link = data.linkConfig.val;
         this.selectShow = this.configObj.selectShow.tabVal;
         this.selectStyle = this.configObj.selectStyle.tabVal;

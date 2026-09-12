@@ -17,6 +17,7 @@ import {
   philosophyDefault,
   shoppingQuickEntryDefault,
 } from '@/views/systemSetting/pcConfig/defaultPcConfig';
+import { hasI18nNameContent, parseLangJsonMap } from '@/utils/localizedName';
 export default {
   name: 'empower',
   components: { FromList },
@@ -24,18 +25,18 @@ export default {
     return {
       currentTab: '1',
       tabList: [
-        { value: '1', title: '经营理念' },
-        // { value: '2', title: '授权备案' },
-        { value: '3', title: '模块链接' },
-        { value: '4', title: '二维码配置' },
-        { value: '5', title: '友情链接' },
+        { value: '1', title: this.$t('systemSetting.businessPhilosophy') },
+        // { value: '2', title: this.$t('systemSetting.authorizationRecord') },
+        { value: '3', title: this.$t('systemSetting.moduleLink') },
+        { value: '4', title: this.$t('systemSetting.qrCodeConfig') },
+        { value: '5', title: this.$t('systemSetting.friendlyLink') },
       ],
       //经营理念
       philosophyConfig: Object.assign({}, philosophyDefault()),
       fullscreenLoading: false,
       ruleValidate: {
-        authInfo: [{ required: true, message: '请输入授权信息', trigger: 'blur' }],
-        filingNum: [{ required: true, message: '请输入备案号', trigger: 'blur' }],
+        authInfo: [{ required: true, message: this.$t('systemSetting.pleaseEnterAuthorizationInfo'), trigger: 'blur' }],
+        filingNum: [{ required: true, message: this.$t('systemSetting.pleaseEnterRecordNo'), trigger: 'blur' }],
       },
       // 友情链接
       friendlyLinkConfig: Object.assign({}, friendlyLinkDefault()),
@@ -56,19 +57,22 @@ export default {
     checkPermi,
     //经验理念新增
     handlePhilosophySave() {
-      let imageUrl = '';
-      let name = '';
       this.philosophyConfig.list.map((item, index) => {
-        imageUrl = item.imageUrl;
-        name = item.name;
         item.sort = index + 1;
       });
-      if (!imageUrl) return this.$message.warning('图片地址不能为空');
-      if (!name) return this.$message.warning('理念描述不能为空');
+      const missing = this.philosophyConfig.list.some(
+        (item) => !item.imageUrl || !hasI18nNameContent(item.name, parseLangJsonMap(item.nameJson)),
+      );
+      if (missing) {
+        const noImage = this.philosophyConfig.list.some((item) => !item.imageUrl);
+        return this.$message.warning(
+          noImage ? this.$t('systemSetting.imageAddressRequired') : this.$t('systemSetting.philosophyRequired'),
+        );
+      }
       this.loadingBtn = true;
       pcPhilosophySaveApi({ philosophyVoList: this.philosophyConfig.list })
         .then((res) => {
-          this.$message.success('保存成功');
+          this.$message.success(this.$t('user.saveSuccess'));
           this.loadingBtn = false;
           this.getPhilosophy();
         })
@@ -91,7 +95,7 @@ export default {
       });
       pcFriendlyLinkSaveApi(this.friendlyLinkConfig.list)
         .then((res) => {
-          this.$message.success('保存成功');
+          this.$message.success(this.$t('user.saveSuccess'));
           this.loadingBtn = false;
           this.getFriendly();
         })
@@ -114,7 +118,7 @@ export default {
 
       bottomQrcodeSaveApi(this.bottomQrcodeConfig.list)
         .then((res) => {
-          this.$message.success('保存成功');
+          this.$message.success(this.$t('user.saveSuccess'));
           this.loadingBtn = false;
           this.getBottomQrcode();
         })
@@ -136,7 +140,7 @@ export default {
       });
       shoppingQuickEntrySaveApi(this.shoppingQuickEntryConfig.list)
         .then((res) => {
-          this.$message.success('保存成功');
+          this.$message.success(this.$t('user.saveSuccess'));
           this.loadingBtn = false;
           this.getShoppingQuickEntry();
         })
@@ -164,7 +168,7 @@ export default {
       <div v-if="currentTab === '1'">
         <FromList :configObj="philosophyConfig"></FromList>
         <el-button type="primary" v-hasPermi="['platform:pc:shopping:philosophy:save']" @click="handlePhilosophySave">{{
-          loadingBtn ? '提交中 ...' : '保存'
+          loadingBtn ? $t('finance.submitting') : $t('common.save')
         }}</el-button>
       </div>
       <!-- 模块链接-->
@@ -174,7 +178,7 @@ export default {
           v-hasPermi="['platform:pc:shopping:quick:entry:save']"
           type="primary"
           @click="handleShoppingQuickEntrySave"
-          >{{ loadingBtn ? '提交中 ...' : '保存' }}</el-button
+          >{{ loadingBtn ? $t('finance.submitting') : $t('common.save') }}</el-button
         >
       </div>
       <!-- 二维码配置 -->
@@ -184,7 +188,7 @@ export default {
           v-hasPermi="['platform:pc:shopping:bottom:qrcode:save']"
           type="primary"
           @click="handleBottomQrcodeSave"
-          >{{ loadingBtn ? '提交中 ...' : '保存' }}</el-button
+          >{{ loadingBtn ? $t('finance.submitting') : $t('common.save') }}</el-button
         >
       </div>
       <!-- 友情链接-->
@@ -194,7 +198,7 @@ export default {
           v-hasPermi="['platform:pc:shopping:friendly:link:save']"
           type="primary"
           @click="handleFriendlySave"
-          >{{ loadingBtn ? '提交中 ...' : '保存' }}</el-button
+          >{{ loadingBtn ? $t('finance.submitting') : $t('common.save') }}</el-button
         >
       </div>
     </el-card>

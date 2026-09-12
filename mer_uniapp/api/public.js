@@ -138,3 +138,7 @@ export function liveroomApi(data) {
 export function globalConfigApi() {
 	return request.get("index/global/config/info", {}, { noAuth : true });
 }
+
+export function languageListApi() {
+	return request.get("language/list", {}, { noAuth : true });
+}

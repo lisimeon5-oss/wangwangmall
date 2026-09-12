@@ -9,7 +9,7 @@
     >
       <div class="padding-add">
         <el-form size="small" inline @submit.native.prevent>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('product.timeSelectLabel')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -17,17 +17,17 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               style="width: 260px"
               @change="onchangeTime"
             />
           </el-form-item>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('product.userSearchLabel')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -35,11 +35,15 @@
     <el-card class="box-card mt20" :bordered="false" shadow="never">
       <el-table v-loading="listLoading" :data="tableData.data" size="small" class="table" highlight-current-row>
         <el-table-column prop="id" label="ID" width="60" />
-        <el-table-column prop="title" label="标题" min-width="180" />
-        <el-table-column label="用户昵称" min-width="120" prop="nickName" :show-overflow-tooltip="true" />
+        <el-table-column :label="$t('content.title')" min-width="180">
+          <template slot-scope="scope">
+            <span>{{ translateText(scope.row.title) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('product.userNickname')" min-width="120" prop="nickName" :show-overflow-tooltip="true" />
         <el-table-column
           sortable
-          label="明细数字"
+          :label="$t('marketing.integralDetailValue')"
           min-width="120"
           prop="integral"
           :sort-method="
@@ -52,27 +56,27 @@
             <span>{{ scope.row.type === 1 ? '+' : '-' }}{{ scope.row.integral }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="关联号" min-width="180">
+        <el-table-column :label="$t('marketing.relatedNo')" min-width="180">
           <template slot-scope="scope">
             <span>{{ scope.row.linkId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="关联类型">
+        <el-table-column :label="$t('marketing.relatedType')">
           <template slot-scope="scope">
             <span>{{ scope.row.linkType | integralLinkTypeFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column :label="$t('common.status')">
           <template slot-scope="scope">
             <span>{{ scope.row.status | integralStatusFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="备注" :show-overflow-tooltip="true">
+        <el-table-column :label="$t('common.remark')" min-width="180" :show-overflow-tooltip="true">
           <template slot-scope="scope">
-            <span>{{ scope.row.mark | filterEmpty }}</span>
+            <span>{{ translateText(scope.row.mark) | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="updateTime" label="	添加时间" min-width="150" />
+        <el-table-column prop="updateTime" :label="$t('marketing.addTime')" min-width="150" />
       </el-table>
       <div class="block">
         <el-pagination
@@ -103,6 +107,7 @@
 import { integralListApi } from '@/api/marketing';
 import cardsData from '@/components/cards/index';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { translateText } from '@/utils/i18nText';
 export default {
   components: { cardsData },
   data() {
@@ -133,6 +138,7 @@ export default {
   },
   methods: {
     checkPermi,
+    translateText,
     seachList() {
       this.tableFrom.page = 1;
       this.getList();

@@ -20,6 +20,8 @@ import com.zbkj.common.response.SignConfigResponse;
 import com.zbkj.common.response.SignPageInfoResponse;
 import com.zbkj.common.response.UserSignRecordResponse;
 import com.zbkj.common.vo.PaidMemberBenefitsVo;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.service.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -69,8 +72,10 @@ public class SignServiceImpl implements SignService {
     @Override
     public SignConfigResponse getConfig() {
         String signRule = systemConfigService.getValueByKey(SysConfigConstants.CONFIG_SIGN_RULE_DESCRIPTION);
+        String signRuleJson = systemConfigService.getValueByKey(SysConfigConstants.CONFIG_SIGN_RULE_DESCRIPTION_JSON);
         SignConfigResponse response = new SignConfigResponse();
         response.setSignRuleDescription(signRule);
+        response.setSignRuleDescriptionJson(signRuleJson);
         List<SignConfig> configList = signConfigService.findList();
         if (CollUtil.isEmpty(configList)) {
             response.setBaseSignConfig(getInitBaseConfig());
@@ -119,12 +124,15 @@ public class SignServiceImpl implements SignService {
      */
     @Override
     public Boolean editBaseConfig(SignConfigRequest request) {
-        if (StrUtil.isBlank(request.getSignRuleDescription())) {
+        if (StrUtil.isBlank(request.getSignRuleDescription()) && !I18nJsonUtil.hasAnyText(request.getSignRuleDescriptionJson())) {
             throw new CrmebException("请填写签到规则说明");
         }
         return transactionTemplate.execute(e -> {
             signConfigService.editBaseConfig(request);
-            systemConfigService.updateOrSaveValueByName(SysConfigConstants.CONFIG_SIGN_RULE_DESCRIPTION, request.getSignRuleDescription());
+            systemConfigService.updateOrSaveValueByName(SysConfigConstants.CONFIG_SIGN_RULE_DESCRIPTION,
+                    Optional.ofNullable(request.getSignRuleDescription()).orElse(""));
+            systemConfigService.updateOrSaveValueByName(SysConfigConstants.CONFIG_SIGN_RULE_DESCRIPTION_JSON,
+                    Optional.ofNullable(request.getSignRuleDescriptionJson()).orElse(""));
             return Boolean.TRUE;
         });
     }
@@ -188,7 +196,8 @@ public class SignServiceImpl implements SignService {
         response.setIntegral(lastSignRecord.getIntegral() + lastSignRecord.getAwardIntegral());
         response.setExperience(lastSignRecord.getExperience() + lastSignRecord.getAwardExperience());
         String signRule = systemConfigService.getValueByKey(SysConfigConstants.CONFIG_SIGN_RULE_DESCRIPTION);
-        response.setSignRule(signRule);
+        String signRuleJson = systemConfigService.getValueByKey(SysConfigConstants.CONFIG_SIGN_RULE_DESCRIPTION_JSON);
+        response.setSignRule(I18nJsonUtil.resolveLocalized(signRule, signRuleJson, RequestUtil.getLang()));
         response.setIsTip(isTip);
         return response;
     }

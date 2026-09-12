@@ -9,7 +9,7 @@
     >
       <div class="padding-add">
         <el-form size="small" inline @submit.native.prevent>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('product.timeSelectLabel')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -17,17 +17,17 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               class="selWidth"
               @change="onchangeTime"
             />
           </el-form-item>
-          <el-form-item label="流水搜索：" label-width="66px">
-            <el-input v-model.trim="tableFrom.orderNo" placeholder="请输入订单号/退款单号" class="selWidth" />
+          <el-form-item :label="$t('finance.flowSearchLabel')" label-width="66px">
+            <el-input v-model.trim="tableFrom.orderNo" :placeholder="$t('finance.pleaseEnterOrderNoRefundNo')" class="selWidth" />
           </el-form-item>
           <el-form-item>
-            <el-button size="small" type="primary" @click="getList()">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button size="small" type="primary" @click="getList()">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('common.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -35,26 +35,26 @@
     <el-card class="box-card mt14" shadow="never" :bordered="false">
       <el-table v-loading="listLoading" :data="tableData.data" style="width: 100%" size="small">
         <el-table-column prop="id" label="ID" min-width="80" />
-        <el-table-column prop="orderNo" label="订单号" min-width="180" />
-        <el-table-column prop="nickName" label="对方信息" min-width="150" :show-overflow-tooltip="true">
+        <el-table-column prop="orderNo" :label="$t('common.orderNo')" min-width="180" />
+        <el-table-column prop="nickName" :label="$t('finance.counterpartyInfo')" min-width="150" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span v-if="scope.row.nickName">{{ scope.row.nickName }} | {{ scope.row.uid }}</span>
             <span v-else-if="scope.row.merName">{{ scope.row.merName }}</span>
             <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column label="交易类型" min-width="100">
+        <el-table-column :label="$t('finance.transactionType')" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.type | transactionTypeFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="金额" min-width="100">
+        <el-table-column :label="$t('finance.amount')" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.pm === 1 ? scope.row.amount : -scope.row.amount }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="mark" label="备注" min-width="180" :show-overflow-tooltip="true" />
-        <el-table-column prop="createTime" label="交易时间" min-width="150" :show-overflow-tooltip="true" />
+        <el-table-column prop="mark" :label="$t('common.remark')" min-width="180" :show-overflow-tooltip="true" />
+        <el-table-column prop="createTime" :label="$t('finance.transactionTime')" min-width="150" :show-overflow-tooltip="true" />
       </el-table>
       <div class="block">
         <el-pagination
@@ -92,13 +92,13 @@ export default {
   filters: {
     transactionTypeFilter(status) {
       const statusMap = {
-        pay_order: '订单支付',
-        refund_order: '订单退款',
-        recharge_user: '用户充值',
-        yue_pay: '余额支付',
-        merchant_collect: '商户分账',
-        brokerage: '分佣',
-        system: '系统',
+        pay_order: this.$t('finance.orderPay'),
+        refund_order: this.$t('finance.orderRefund'),
+        recharge_user: this.$t('finance.userRecharge'),
+        yue_pay: this.$t('finance.balancePay'),
+        merchant_collect: this.$t('finance.merchantShare'),
+        brokerage: this.$t('finance.commissionShare'),
+        system: this.$t('finance.system'),
       };
       return statusMap[status];
     },
@@ -132,8 +132,8 @@ export default {
       LogLoading: false,
       dialogVisible: false,
       evaluationStatusList: [
-        { value: 1, label: '已回复' },
-        { value: 0, label: '未回复' },
+        { value: 1, label: this.$t('product.replied') },
+        { value: 0, label: this.$t('product.notReplied') },
       ],
       cardLists: [],
       orderDatalist: null,
@@ -162,13 +162,13 @@ export default {
         .then((res) => {
           const h = this.$createElement;
           this.$msgbox({
-            title: '提示',
+            title: this.$t('common.tip'),
             message: h('p', null, [
-              h('span', null, '文件正在生成中，请稍后点击"'),
-              h('span', { style: 'color: teal' }, '导出记录'),
-              h('span', null, '"查看~ '),
+              h('span', null, this.$t('finance.fileGenerating')),
+              h('span', { style: 'color: teal' }, this.$t('finance.exportRecords')),
+              h('span', null, this.$t('finance.viewSuffix')),
             ]),
-            confirmButtonText: '我知道了',
+            confirmButtonText: this.$t('finance.iKnow'),
           }).then((action) => {});
         })
         .catch((res) => {

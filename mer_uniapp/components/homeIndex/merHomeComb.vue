@@ -29,7 +29,7 @@
 									<swiper-item catchtouchmove='catchTouchMove'>
 										<view class=''>
 											<view class='text'>
-												<view class='newsTitle line1'><text :style="[iconColorStyle]" class="iconfont icon-ic_search"></text><text>{{item.val}}</text></view>
+												<view class='newsTitle line1'><text :style="[iconColorStyle]" class="iconfont icon-ic_search"></text><text>{{hotWordText(item)}}</text></view>
 											</view>
 										</view>
 									</swiper-item>
@@ -72,7 +72,7 @@
 										<swiper-item catchtouchmove='catchTouchMove'>
 											<view class='acea-row row-between-wrapper'>
 												<view class='text'>
-													<view class='newsTitle line1'><text class="iconfont icon-ic_search"></text><text>{{item.val}}</text></view>
+													<view class='newsTitle line1'><text class="iconfont icon-ic_search"></text><text>{{hotWordText(item)}}</text></view>
 												</view>
 											</view>
 										</swiper-item>
@@ -106,7 +106,7 @@
 							<view @click="menusTap(item.info[1].value)"
 								class='slide-navigator acea-row row-between-wrapper tui-skeleton-rect'
 								:class="swiperType==0?'row-between-wrapper-1':'row-between-wrapper-2'">
-								<image mode="aspectFill" :style="[contentStyleBanner]" :src="item.img"
+								<image mode="aspectFill" :style="[contentStyleBanner]" :src="slideImg(item)"
 									class="slide-image aa"></image>
 							</view>
 						</swiper-item>
@@ -115,14 +115,14 @@
 				<view v-if="docType === 0" class="dots" :style="[dotStyle]">
 					<block v-for="(item,index) in banner" :key="index">
 						<view class="dot-item"
-							:style="{'background-color': swiperCur === index ? (dataConfig.themeStyleConfig.tabVal?dataConfig.docColor.color[0].item:themeColor) : ''}">
+							:style="{'background-color': swiperCur === index ? (dataConfig.themeStyleConfig && dataConfig.themeStyleConfig.tabVal?dataConfig.docColor.color[0].item:themeColor) : ''}">
 						</view>
 					</block>
 				</view>
 				<view v-if="docType === 1" class="dots" :style="[dotStyle]">
 					<block v-for="(item,index) in banner" :key="index">
 						<view class="dot"
-							:style="{'background-color': swiperCur === index ? (dataConfig.themeStyleConfig.tabVal?dataConfig.docColor.color[0].item:themeColor) : ''}">
+							:style="{'background-color': swiperCur === index ? (dataConfig.themeStyleConfig && dataConfig.themeStyleConfig.tabVal?dataConfig.docColor.color[0].item:themeColor) : ''}">
 						</view>
 					</block>
 				</view>
@@ -155,6 +155,7 @@
 	import {
 		mapGetters
 	} from 'vuex';
+	import { getLocalizedDiyVal, getLocalizedDiyImg } from '@/utils/localizedName';
 	export default {
 		name: 'homeComb',
 		props: {
@@ -228,7 +229,7 @@
 			banner: {
 				handler(val) {
 
-					this.bgColor = val[0].img;
+					this.bgColor = val && val[0] ? getLocalizedDiyImg(val[0]) : '';
 				},
 				immediate: true
 			},
@@ -237,7 +238,7 @@
 			...mapGetters(['merchantAPPInfo']),
 			//搜索提示语
 			placeWords() {
-				return this.dataConfig.placeWords.val;
+				return getLocalizedDiyVal(this.dataConfig.placeWords, this.i18nLocale);
 			},
 			//轮播切换时间
 			interval() {
@@ -346,6 +347,7 @@
 					if (res) this.marTop = res.height //头部的高度
 				}).exec();
 				query.select('.navTabBox').boundingClientRect(data => {
+					if (!data) return
 					this.navHeight = data.height //元素navHeight的高度
 					// #ifdef H5
 					this.swiperTop =  this.marTop + this.statusBarHeight - 10; //轮播图的top值
@@ -363,6 +365,12 @@
 			}, 200)
 		},
 		methods: {
+			hotWordText(item) {
+				return getLocalizedDiyVal(item, this.i18nLocale);
+			},
+			slideImg(item) {
+				return getLocalizedDiyImg(item, this.i18nLocale);
+			},
 			// 后退
 			returns: function() {
 				uni.navigateBack();
@@ -378,7 +386,7 @@
 				} = e.detail;
 				if (source === 'autoplay' || source === 'touch') {
 					this.swiperCur = e.detail.current;
-					this.bgColor = this.banner[e.detail.current]['img']
+					this.bgColor = getLocalizedDiyImg(this.banner[e.detail.current])
 				}
 			},
 			textChange(e) {
@@ -387,7 +395,7 @@
 					source
 				} = e.detail;
 				if (source === 'autoplay' || source === 'touch') {
-					this.searchVal = this.hotWords[e.detail.current]['val']
+					this.searchVal = this.hotWordText(this.hotWords[e.detail.current])
 				}
 			},
 			// 导航栏点击
@@ -544,7 +552,7 @@
 				height: 310rpx;
 
 				&.scalex {
-					/deep/.uni-swiper-slide-frame {
+					::v-deep .uni-swiper-slide-frame {
 						transform: translate(0, 0) !important;
 					}
 				}
@@ -555,7 +563,7 @@
 				transition: all 0.6s ease;
 			}
 
-			/deep/ swiper-item.active {
+			::v-deep  swiper-item.active {
 				image {
 					transform: scale(1);
 				}
@@ -600,8 +608,8 @@
 		color: #000 !important;
 		transition: background-color .5s ease;
 
-		/deep/.name,
-		/deep/.icon-jiantou {
+		::v-deep .name,
+		::v-deep .icon-jiantou {
 			@include main_color(theme);
 		}
 		.mp-header{

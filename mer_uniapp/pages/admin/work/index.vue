@@ -1,7 +1,7 @@
 <template>
 	<view class="pagebox">
 		<!-- #ifdef MP || APP-PLUS -->
-		<workNavBar titleText="工作台" :iconColor="iconColor" :textColor="iconColor" :isScrolling="isScrolling" showBack>
+		<workNavBar :titleText="$t('工作台')" :iconColor="iconColor" :textColor="iconColor" :isScrolling="isScrolling" showBack>
 			<view class="word_header_text">
 				<view class="text-box line1 wx-text-box">
 					{{popupName}}
@@ -44,22 +44,22 @@
 			<view class="today" v-if="selectMerchantRole.split(',').includes('6')">
 				<view class="title-box">
 					<navigator class="link"  hover-class="none">
-						今日销售额(元)
+						{{$t('今日销售额(铢)')}}
 					</navigator>
 					<view class="money semiBold">{{homeData.sales?homeData.sales:0}}</view>
 				</view>
 				<view class="acea-row">
 					<view class="item">
 						<view class="num semiBold">{{homeData.yesterdaySales?homeData.yesterdaySales:0}} </view>
-						<view class="">昨日销售额(元)</view>
+						<view class="">{{$t('昨日销售额(铢)')}}</view>
 					</view>
 					<view class="item semiBold">
 						<view class="num">{{ homeData.orderNum?homeData.orderNum:0 }}</view>
-						<view class="">今日订单量</view>
+						<view class="">{{$t('今日订单量')}}</view>
 					</view>
 					<view class="item semiBold">
 						<view class="num">{{ homeData.yesterdayOrderNum?homeData.yesterdayOrderNum:0 }}</view>
-						<view class="">昨日订单量</view>
+						<view class="">{{$t('昨日订单量')}}</view>
 					</view>
 				</view>
 			</view>
@@ -76,7 +76,7 @@
 							</view>
 						</view>
 					</view>
-					<view class="">待发货</view>
+					<view class="">{{$t('待发货')}}</view>
 				</navigator>
 				<navigator url="/pages/admin/order/index?type=awaitVerification" hover-class="none" class="item" v-if="selectMerchantRole.split(',').includes('1')">
 					<view class="img-box">
@@ -87,7 +87,7 @@
 							</view>
 						</view>
 					</view>
-					<view class="">待核销</view>
+					<view class="">{{$t('待核销')}}</view>
 				</navigator>
 				<navigator url="/pages/admin/after_sale/index?type=0" hover-class="none" class="item" v-if="selectMerchantRole.split(',').includes('2')">
 					<view class="img-box">
@@ -98,47 +98,47 @@
 							</view>
 						</view>
 					</view>
-					<view class="">审核中</view>
+					<view class="">{{$t('审核中')}}</view>
 				</navigator>
 			</view>
 			<!-- 商品 -->
 			<view class="product" v-if="selectMerchantRole.split(',').includes('2')">
 				<view class="acea-row titleBottom">
 					<image class="ddImg" :src="urlDomain+'crmebimage/presets/adminImg/ic_shangpin.png'" mode=""></image>
-					<view class="title-box bottom-line">商品统计</view>
+					<view class="title-box bottom-line">{{$t('商品统计')}}</view>
 				</view>
 				<view class="acea-row product-box">
 					<view class="">
 						<view class="num semiBold">{{productStatusNum?productStatusNum[0]['count']:0}}</view>
-						<view class="special list-text">出售中</view>
+						<view class="special list-text">{{$t('出售中')}}</view>
 					</view>
 					<view class="">
 						<view class="num semiBold">{{productStatusNum?productStatusNum[1]['count']:0}}</view>
-						<view class="special list-text">仓库中</view>
+						<view class="special list-text">{{$t('仓库中')}}</view>
 					</view>
 					<view class="">
 						<view class="num semiBold">{{productStatusNum?productStatusNum[2]['count']:0}}</view>
-						<view class="special list-text">已售罄</view>
+						<view class="special list-text">{{$t('已售罄')}}</view>
 					</view>
 					<view class="">
 						<view class="num semiBold">{{productStatusNum?productStatusNum[3]['count']:0}}</view>
-						<view class="special list-text">警戒库存</view>
+						<view class="special list-text">{{$t('警戒库存')}}</view>
 					</view>
 					<view class="">
 						<view class="num semiBold">{{productStatusNum?productStatusNum[7]['count']:0}}</view>
-						<view class="special list-text">待提审</view>
+						<view class="special list-text">{{$t('待提审')}}</view>
 					</view>
 					<view class="">
 						<view class="num semiBold">{{productStatusNum?productStatusNum[5]['count']:0}}</view>
-						<view class="special list-text">待审核</view>
+						<view class="special list-text">{{$t('待审核')}}</view>
 					</view>
 					<view class="">
 						<view class="num semiBold">{{productStatusNum?productStatusNum[6]['count']:0}}</view>
-						<view class="special list-text">审核失败</view>
+						<view class="special list-text">{{$t('审核失败')}}</view>
 					</view>
 					<view class="">
 						<view class="num semiBold">{{productStatusNum?productStatusNum[4]['count']:0}}</view>
-						<view class="special list-text">回收站</view>
+						<view class="special list-text">{{$t('回收站')}}</view>
 					</view>
 				</view>
 			</view>
@@ -146,12 +146,12 @@
 				<view class="acea-row ddImg-box titleBottom">
 					<image class="ddImg" :src="urlDomain+'crmebimage/presets/adminImg/ic_user.png'" mode="">
 					</image>
-					<view class="title-box bottom-line">用户统计</view>
+					<view class="title-box bottom-line">{{$t('用户统计')}}</view>
 				</view>
 				<view class="list acea-row">
 					<view class="gz-box">
 						<view class="num semiBold">{{homeData.followNum?homeData.followNum:0}}</view>
-						<view class="list-text">累计关注量</view>
+						<view class="list-text">{{$t('累计关注量')}}</view>
 					</view>
 				</view>
 			</view>

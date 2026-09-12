@@ -8,21 +8,22 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import uploadFromComponent from './index.vue';
+import store from '@/store';
+import i18n from '@/i18n';
 const uploadFrom = {};
 uploadFrom.install = function (Vue, options) {
-  // 创建一个可以被多次使用的组件构造器
   const ToastConstructor = Vue.extend(uploadFromComponent);
-  // 生成一个该子类的实例
-  const instance = new ToastConstructor();
-  // 挂载实例到元素上
+  const instance = new ToastConstructor({
+    store,
+    i18n,
+  });
   instance.$mount(document.createElement('div'));
   document.body.appendChild(instance.$el);
-  // 挂载到本身的全局方法
   Vue.prototype.$modalUpload = function (callback, multiple, modelName, isShowVideo) {
     instance.visible = true;
-    instance.callback = callback; //回调函数
-    instance.multiple = multiple; //是否是多选
-    instance.modelName = modelName; //上传文件包名字
+    instance.callback = callback;
+    instance.multiple = multiple;
+    instance.modelName = modelName;
     instance.isShowVideo = isShowVideo;
   };
 };

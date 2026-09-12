@@ -9,7 +9,7 @@
 		</navigator>
 		<view v-show="orderData.secondType ===1" class='total'>
 			<text class="mr10 iconfont icon-zhuanti"></text>
-			<text class="mr10">积分商品兑换</text>
+			<text class="mr10">{{$t('积分商品兑换')}}</text>
 		</view>
 		<view class='goodWrapper pad24'>
 			<view class="item" v-for="(item,index) in cartInfo" :key="index">
@@ -30,23 +30,23 @@
 						<!-- 其他价格 -->
 						<view v-else class='acea-row justify-between' style="align-items: baseline;">
 							<view class="acea-row">
-								<view class='money line-heightOne'>￥{{item.price || item.productPrice}}</view>
+								<view class='money line-heightOne'>฿{{item.price || item.productPrice}}</view>
 							</view>
 							<view
 								v-if="(item.deliveryMethod == 1 || !orderInfo.takeTheirSwitch) && !jump && Number(item.productType)==0"
-								class="font-color">不支持到店自提</view>
+								class="font-color">{{$t('不支持到店自提')}}</view>
 							<view v-if="item.deliveryMethod == 2 && !jump && Number(item.productType)==0"
-								class="font-color">不支持商家配送</view>
+								class="font-color">{{$t('不支持商家配送')}}</view>
 						</view>
 					</view>
 				</view>
 				<!-- 订单状态（0：待支付，1：待发货,2：部分发货， 3：待核销，4：待收货,5：已收货,6：已完成，9：已取消） -->
 				<view v-if="isShowBtn" class="acea-row evaluateBox">
-					<view v-show="getApplyRefundNum(item)>0" class="text">申请售后（
-						数量：{{(getApplyRefundNum(item))}} ）</view>
+					<view v-show="getApplyRefundNum(item)>0" class="text">{{$t('申请售后')}}（
+						{{$t('数量')}}：{{(getApplyRefundNum(item))}} ）</view>
 					<view class='evaluate'
 						v-if="isRefund(item) && getApplyRefundNum(item)< item.payNum"
-						@click.stop="goRefund(item)"><text class="line-heightOne">申请退款</text>
+						@click.stop="goRefund(item)"><text class="line-heightOne">{{$t('申请退款')}}</text>
 					</view>
 					<!-- 虚拟商品退款需要判断是否开启退款按钮 -->
 				</view>

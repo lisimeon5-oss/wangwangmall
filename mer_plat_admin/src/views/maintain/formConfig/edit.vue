@@ -38,7 +38,7 @@ export default {
     },
     handlerSave(pram) {
       systemFormConfigApi.getFormConfigSave(pram).then((data) => {
-        this.$message.success('创建表单配置成功');
+        this.$message.success(this.$t('maintain.createFormConfigSuccess'));
         setTimeout(() => {
           this.$emit('hideDialog');
         }, 800);
@@ -46,7 +46,7 @@ export default {
     },
     handlerEdit(pram) {
       systemFormConfigApi.getFormConfigEdit(pram).then((data) => {
-        this.$message.success('编辑表单配置成功');
+        this.$message.success(this.$t('maintain.editFormConfigSuccess'));
         setTimeout(() => {
           this.$emit('hideDialog');
         }, 800);

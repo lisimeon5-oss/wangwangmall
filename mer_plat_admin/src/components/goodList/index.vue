@@ -3,24 +3,26 @@
     <div class="header clearfix">
       <div class="container">
         <el-form inline>
-          <el-form-item label="商品搜索：">
-            <el-input v-model.trim="name" @input="onInput($event)" placeholder="请输入商品名称" class="selWidth">
+          <el-form-item :label="$t('product.productSearchLabel')">
+            <el-input v-model.trim="name" @input="onInput($event)" :placeholder="$t('product.pleaseEnterProductName')" class="selWidth">
               <el-button slot="append" icon="el-icon-search" @click="getList(1)" />
             </el-input>
           </el-form-item>
-          <el-form-item label="商品分类：">
+          <el-form-item :label="$t('product.productCategoryLabel')">
             <el-cascader
+              :key="currentLocale"
               v-model="tableFrom.categoryId"
               class="selWidth"
-              :options="categoryList"
+              :options="merPlatProductClassify"
               :props="props"
               filterable
               clearable
               @change="getList(1)"
             />
           </el-form-item>
-          <el-form-item label="商户选择：">
+          <el-form-item :label="$t('product.merchantSelectLabel')">
             <el-cascader
+              :key="'good-list-mer-' + currentLocale"
               v-model="merIds"
               class="selWidth"
               :show-all-levels="false"
@@ -31,16 +33,16 @@
               @change="getList(1)"
             />
           </el-form-item>
-          <el-form-item label="商品状态：">
+          <el-form-item :label="$t('product.productStatusLabel')">
             <el-select
               clearable
               v-model="tableFrom.isShow"
-              placeholder="请选择商品状态"
+              :placeholder="$t('product.pleaseSelectProductStatus')"
               class="selWidth"
               @change="getList(1)"
             >
-              <el-option label="上架" value="1" />
-              <el-option label="下架" value="0" />
+              <el-option :label="$t('product.onShelf')" value="1" />
+              <el-option :label="$t('product.offShelf')" value="0" />
             </el-select>
           </el-form-item>
         </el-form>
@@ -74,23 +76,33 @@
         </template>
       </el-table-column>
       <el-table-column prop="id" label="ID" min-width="50" />
-      <el-table-column label="商品图" width="80">
+      <el-table-column :label="$t('product.productImage')" min-width="110">
         <template slot-scope="scope">
           <div class="demo-image__preview line-heightOne">
             <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="商品名称" min-width="180" />
-      <el-table-column prop="categoryName" label="商品分类" min-width="100" />
-      <el-table-column label="商品类型" min-width="100">
+      <el-table-column :label="$t('product.productName')" min-width="180">
+        <template slot-scope="scope">{{ localizedProductName(scope.row) }}</template>
+      </el-table-column>
+      <el-table-column :label="$t('product.productCategory')" min-width="100">
+        <template slot-scope="scope">{{
+          getLocalizedText(
+            scope.row.categoryName,
+            scope.row.categoryNameI18n || scope.row.categoryNameJson,
+            currentLocale,
+          )
+        }}</template>
+      </el-table-column>
+      <el-table-column :label="$t('product.productType')" min-width="100">
         <template slot-scope="scope">
           <div>{{ scope.row.type | productTpyeFilter }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="商品状态" width="100">
+      <el-table-column :label="$t('product.productStatus')" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.isShow ? '上架' : '下架' }}</span>
+          <span>{{ scope.row.isShow ? $t('product.onShelf') : $t('product.offShelf') }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -106,8 +118,8 @@
       />
     </div>
     <div v-if="handleNum === 'many'" slot="footer" class="dialog-footer">
-      <el-button size="small" @click="close">取消</el-button>
-      <el-button size="small" type="primary" @click="handleSubmit">确定</el-button>
+      <el-button size="small" @click="close">{{ $t('common.cancel') }}</el-button>
+      <el-button size="small" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</el-button>
     </div>
   </div>
 </template>
@@ -133,6 +145,7 @@ import { merCategoryListApi } from '@/api/merchant';
 import { mapGetters } from 'vuex';
 import store from '@/store';
 import product from '@/mixins/product';
+import { localizeNamedTree, getUiLocale, getLocalizedName, getLocalizedText } from '@/utils/localizedName';
 export default {
   name: 'GoodList',
   mixins: [product],
@@ -190,17 +203,25 @@ export default {
       isChecked: false,
       isIndex: 0,
       checkBox: [],
+      merSelectRaw: [],
       merSelect: [],
       checkedIds: [], // 订单当前页选中的数据
     };
   },
-  computed: {},
+  watch: {
+    currentLocale() {
+      this.applyLocalizedMerSelect();
+    },
+  },
+  computed: {
+    ...mapGetters(['merPlatProductClassify']),
+    currentLocale() {
+      return (this.$i18n && this.$i18n.locale) || getUiLocale(this);
+    },
+  },
   mounted() {
     this.fixCascader();
     if (!store.getters.merPlatProductClassify.length) store.dispatch('product/getAdminProductClassify');
-    this.$nextTick(() => {
-      this.categoryList = store.getters.merPlatProductClassify;
-    });
     this.getMerchantList();
     this.getList();
     if (this.checked.length) {
@@ -219,9 +240,18 @@ export default {
       this.$forceUpdate();
     },
     // 商户列表
+    getLocalizedText,
+    localizedProductName(row) {
+      const locale = (this.$i18n && this.$i18n.locale) || this.currentLocale;
+      return getLocalizedName(row, locale);
+    },
+    applyLocalizedMerSelect() {
+      this.merSelect = localizeNamedTree(this.merSelectRaw, this.currentLocale, 'merchantList');
+    },
     getMerchantList() {
       merCategoryListApi().then((res) => {
-        this.merSelect = res;
+        this.merSelectRaw = res || [];
+        this.applyLocalizedMerSelect();
       });
     },
     changeType(v) {
@@ -277,7 +307,7 @@ export default {
       this.multipleSelection = tables;
     },
     handleSubmit() {
-      if (this.checkBox.length > 100) return this.$message.warning('最多可选择100个商品');
+      if (this.checkBox.length > 100) return this.$message.warning(this.$t('product.maxSelect100Products'));
       this.$emit('getStoreItem', this.checkBox);
     },
     getTemplateRow(row) {

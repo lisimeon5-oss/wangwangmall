@@ -12,10 +12,10 @@
         <el-form inline size="small" ref="userFrom" label-width="66px">
           <div class="acea-row search-form">
             <div class="search-form-box">
-              <el-form-item label="员工状态：">
+              <el-form-item :label="$t('user.staffStatusLabel')">
                 <el-select
                   v-model="staffSearchData.status"
-                  placeholder="请选择"
+                  :placeholder="$t('common.pleaseSelect')"
                   clearable
                   class="form_content_width"
                   @change="getSearch"
@@ -24,17 +24,17 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="员工搜索：">
+              <el-form-item :label="$t('user.staffSearchLabel')">
                 <el-input
                   v-model="staffSearchData.keywords"
-                  placeholder="请输入员工姓名或手机号搜索"
+                  :placeholder="$t('user.staffSearchPlaceholder')"
                   clearable
                   class="form_content_width"
                 />
               </el-form-item>
               <el-form-item class="search-form-sub">
-                <el-button type="primary" size="small" @click="getSearch">搜索</el-button>
-                <el-button size="small" class="ResetSearch" @click="handleReset">重置</el-button>
+                <el-button type="primary" size="small" @click="getSearch">{{ $t('common.search') }}</el-button>
+                <el-button size="small" class="ResetSearch" @click="handleReset">{{ $t('common.reset') }}</el-button>
               </el-form-item>
             </div>
           </div>
@@ -42,7 +42,7 @@
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '20px' }" shadow="never" :bordered="false">
-      <el-button size="small" type="primary" @click="addStaff">添加员工</el-button>
+      <el-button size="small" type="primary" @click="addStaff">{{ $t('user.addStaff') }}</el-button>
       <el-table
         ref="table"
         v-loading="listLoading"
@@ -53,34 +53,34 @@
         class="mt20"
       >
         <el-table-column prop="id" label="ID" min-width="50"> </el-table-column>
-        <el-table-column label="头像" min-width="80">
+        <el-table-column :label="$t('user.avatar')" min-width="80">
           <template slot-scope="{ row }">
             <img :src="row.avatar" alt="" />
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="员工姓名" min-width="80"> </el-table-column>
-        <el-table-column prop="user" label="关联用户" min-width="100">
+        <el-table-column prop="name" :label="$t('user.staffName')" min-width="80"> </el-table-column>
+        <el-table-column prop="user" :label="$t('user.relatedUser')" min-width="100">
           <template slot-scope="{ row }">
             <span
               >uid:<a @click="toDetail(row.uid)" class="uid">{{ row.uid }}</a></span
             >
           </template>
         </el-table-column>
-        <el-table-column prop="phone" label="手机号" min-width="100"> </el-table-column>
-        <el-table-column prop="admin" label="管理权限" min-width="220">
+        <el-table-column prop="phone" :label="$t('user.phoneCol')" min-width="100"> </el-table-column>
+        <el-table-column prop="admin" :label="$t('user.managementPermission')" min-width="220">
           <template slot-scope="{ row }">{{ roleText(row.role) }} </template>
         </el-table-column>
-        <el-table-column prop="creatTime" label="创建时间" min-width="100"> </el-table-column>
-        <el-table-column label="状态" min-width="100">
+        <el-table-column prop="creatTime" :label="$t('product.createTime')" min-width="100"> </el-table-column>
+        <el-table-column :label="$t('common.status')" min-width="100">
           <template slot-scope="{ row }">
             <el-switch v-model="row.status" :active-value="1" :inactive-value="0" @change="updataStaff(row)" />
           </template>
         </el-table-column>
-        <el-table-column label="操作" min-width="100">
+        <el-table-column :label="$t('common.operate')" min-width="100">
           <template slot-scope="{ row }">
-            <a @click="handleEditMenu(row)">编辑</a>
+            <a @click="handleEditMenu(row)">{{ $t('common.edit') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a @click="handleDelMenu(row)">删除</a>
+            <a @click="handleDelMenu(row)">{{ $t('common.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -96,7 +96,7 @@
     </el-card>
     <!-- 弹窗框 -->
     <el-dialog
-      :title="editDialogConfig.isCreate === 0 ? `添加员工` : `编辑员工`"
+      :title="editDialogConfig.isCreate === 0 ? $t('user.addStaff') : $t('user.editStaff')"
       :visible.sync="editDialogConfig.visible"
       destroy-on-close
       :close-on-click-modal="false"
@@ -134,7 +134,15 @@ export default {
   components: { adminEdit, detailUser },
   data() {
     return {
-      roleArr: ['', '订单管理', '商品管理', '售后管理', '代客下单', '订单核销', '销量/用户统计'],
+      roleArr: [
+        '',
+        this.$t('user.orderManagement'),
+        this.$t('user.productManagement'),
+        this.$t('user.afterSalesManagement'),
+        this.$t('user.placeOrderForCustomer'),
+        this.$t('user.orderVerification'),
+        this.$t('user.salesUserStatistics'),
+      ],
       listLoading: false,
       tableData: {
         data: [],
@@ -148,21 +156,21 @@ export default {
       },
       identityOption: [
         {
-          label: '上货员',
+          label: this.$t('user.stockClerk'),
           value: 0,
         },
         {
-          label: '管理员',
+          label: this.$t('user.administrator'),
           value: 1,
         },
       ],
       statusOption: [
         {
-          label: '关闭',
+          label: this.$t('common.close'),
           value: 0,
         },
         {
-          label: '开启',
+          label: this.$t('common.open'),
           value: 1,
         },
       ],
@@ -208,7 +216,7 @@ export default {
     //更新
     updataStaff(row) {
       employeeUpdateRole(row).then((res) => {
-        this.$message.success(row.status == 1 ? '开启成功' : '关闭成功');
+        this.$message.success(row.status == 1 ? this.$t('user.enableSuccess') : this.$t('user.disableSuccess'));
       });
     },
     //拼接管理权限
@@ -237,8 +245,8 @@ export default {
     hideEditDialog(type, isCreate) {
       this.editDialogConfig.visible = false;
       this.getRoleList();
-      isCreate == 0 && this.$message.success('添加成功');
-      isCreate == 1 && this.$message.success('编辑成功');
+      isCreate == 0 && this.$message.success(this.$t('common.addSuccess'));
+      isCreate == 1 && this.$message.success(this.$t('common.editSuccess'));
     },
     //编辑
     handleEditMenu(row) {
@@ -252,9 +260,9 @@ export default {
     },
     //删除
     handleDelMenu(row) {
-      this.$modalSure('该员工删除后，将无法使用移动端-商家管理').then(() => {
+      this.$modalSure(this.$t('user.deleteStaffConfirm')).then(() => {
         employeeDelRole(row.id).then((res) => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('common.deleteSuccess'));
           this.getRoleList();
         });
       });

@@ -2,9 +2,9 @@
 	<view class="containers" :data-theme="theme">
 		<view class="header">
 			<view class="title">
-				<text :class="isActive == 0 ? 'on' : ''" @click="tabs(0)">已购</text>
-				<text :class="isActive == 1 ? 'on' : ''" @click="tabs(1)">收藏</text>
-				<text :class="isActive == 2 ? 'on' : ''" @click="tabs(2)">浏览</text>
+				<text :class="isActive == 0 ? 'on' : ''" @click="tabs(0)">{{$t('已购')}}</text>
+				<text :class="isActive == 1 ? 'on' : ''" @click="tabs(1)">{{$t('收藏')}}</text>
+				<text :class="isActive == 2 ? 'on' : ''" @click="tabs(2)">{{$t('浏览')}}</text>
 			</view>
 			<text class="iconfont icon-guanbi5" @click="close"></text>
 		</view>
@@ -23,13 +23,13 @@
 							</view>
 							<view class='text'>
 								<view class='line2 name'>{{item.name}}</view>
-								<view class='money'>￥<text>{{item.price}}</text></view>
+								<view class='money'>฿<text>{{item.price}}</text></view>
 							</view>
 						</view>
 					</view>
 					<view v-if="bought.length===0 && !loadingb" class="empty">
 						<image :src="urlDomain+'crmebimage/presets/noShopper.png'"></image>
-						<text>暂无商品哦~</text>
+						<text>{{$t('暂无商品哦~')}}</text>
 					</view>
 				</view>
 				<view v-if="isActive == 1">
@@ -45,13 +45,13 @@
 							</view>
 							<view class='text'>
 								<view class='line2 name'>{{item.name}}</view>
-								<view class='money'>￥<text>{{item.price}}</text></view>
+								<view class='money'>฿<text>{{item.price}}</text></view>
 							</view>
 						</view>
 					</view>
 					<view v-if="collect.length===0 && !loadingc" class="empty">
 						<image :src="urlDomain+'crmebimage/presets/noShopper.png'"></image>
-						<text>暂无商品哦~</text>
+						<text>{{$t('暂无商品哦~')}}</text>
 					</view>
 				</view>
 				<view v-if="isActive == 2">
@@ -67,22 +67,22 @@
 							</view>
 							<view class='text'>
 								<view class='line2 name'>{{item.name}}</view>
-								<view class='money'>￥<text>{{item.price}}</text></view>
+								<view class='money'>฿<text>{{item.price}}</text></view>
 							</view>
 						</view>
 					</view>
 					<view v-if="browse.length===0 && !loadings" class="empty">
 						<image :src="urlDomain+'crmebimage/presets/noShopper.png'"></image>
-						<text>暂无商品哦~</text>
+						<text>{{$t('暂无商品哦~')}}</text>
 					</view>
 				</view>
 				<view class="acea-row row-center-wrapper loadingicon">
 					<text :hidden="!loadingb || !loadingc || !loadings"
-						class="iconfont icon-jiazai loading"></text>{{(isActive == 0 &&bought.length>0) || (isActive == 1 &&collect.length>0) || (isActive == 2 &&browse.length>0) ?loadTitle:''}}
+						class="iconfont icon-jiazai loading"></text>{{(isActive == 0 &&bought.length>0) || (isActive == 1 &&collect.length>0) || (isActive == 2 &&browse.length>0) ?$t(loadTitle):''}}
 				</view>
 			</scroll-view>
 			<view class="foot_bar">
-				<button class="confirm_btn" @click="submit">确定({{checkedArr.length}}/5)</button>
+				<button class="confirm_btn" @click="submit">{{$t('确定')}}({{checkedArr.length}}/5)</button>
 			</view>
 		</view>
 	</view>
@@ -368,7 +368,7 @@
 			height: 100%;
 			margin: 40rpx 0 80rpx;
 
-			/deep/.uni-scroll-view-content {
+			::v-deep .uni-scroll-view-content {
 				height: auto;
 			}
 

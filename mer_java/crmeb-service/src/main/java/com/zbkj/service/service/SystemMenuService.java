@@ -143,4 +143,9 @@ public interface SystemMenuService extends IService<SystemMenu> {
      * @return List
      */
     List<MenuCheckVo> getPlatformMenuCacheTree();
+
+    /**
+     * 按请求语言解析菜单名称，缺省回退默认 name
+     */
+    String resolveDisplayName(SystemMenu menu);
 }

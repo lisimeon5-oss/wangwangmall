@@ -13,6 +13,7 @@ import {
 	HTTP_REQUEST_URL
 } from '../config/app.js';
 import store from '../store';
+import { t, getLocale, localizeMessage } from '@/i18n';
 import animationType from '@/utils/animationType.js'
 // #ifdef APP-PLUS
 import permision from "./permission.js"
@@ -37,9 +38,9 @@ export default {
 		let newTime = Date.now();
 		let reg = new RegExp('-', 'g') //g代表全部
 		if (newTime < start) {
-			return startTime.slice(0, 16).replace(reg, '.') + ' - ' + endTime.slice(0, 16).replace(reg, '.') + ' 可用';
+			return startTime.slice(0, 16).replace(reg, '.') + ' - ' + endTime.slice(0, 16).replace(reg, '.') + ' ' + t('可用');
 		} else {
-			return '有效期至 ' + endTime.slice(0, 16).replace(reg, '.');
+			return t('有效期至') + ' ' + endTime.slice(0, 16).replace(reg, '.');
 		}
 	},
 	/**
@@ -47,8 +48,8 @@ export default {
 	 * to_url object | string
 	 * 例:
 	 * this.Tips('/pages/test/test'); 跳转不提示
-	 * this.Tips({title:'提示'},'/pages/test/test'); 提示并跳转
-	 * this.Tips({title:'提示'},{tab:1,url:'/pages/index/index'}); 提示并跳转值table上
+	 * this.Tips({title:this.$t('提示')},'/pages/test/test'); 提示并跳转
+	 * this.Tips({title:this.$t('提示')},{tab:1,url:'/pages/index/index'}); 提示并跳转值table上
 	 * tab=1 一定时间后跳转至 table上
 	 * tab=2 一定时间后跳转至非 table上
 	 * tab=3 一定时间后返回上页面
@@ -238,7 +239,7 @@ export default {
 			fail: function(err) {
 				uni.hideLoading();
 				that.Tips({
-					title: '无法获取图片信息'
+					title: t('无法获取图片信息')
 				});
 				errFun && errFun(err);
 			}
@@ -339,12 +340,12 @@ export default {
 				ctx.setTextAlign('left')
 				ctx.setFontSize(72);
 				ctx.setFillStyle('#DA4F2A');
-				ctx.fillText('￥' + price, 40, 820 + contentHh);
+				ctx.fillText('฿' + price, 40, 820 + contentHh);
 
 				ctx.setTextAlign('left')
 				ctx.setFontSize(36);
 				ctx.setFillStyle('#999');
-				ctx.fillText('￥' + ot_price, 50, 876 + contentHh);
+				ctx.fillText('฿' + ot_price, 50, 876 + contentHh);
 
 				var underline = function(ctx, text, x, y, size, color, thickness, offset) {
 					var width = ctx.measureText(text).width;
@@ -366,7 +367,7 @@ export default {
 					ctx.lineTo(x + width, y);
 					ctx.stroke();
 				}
-				underline(ctx, '￥' + ot_price, 55, 865, 36, '#999', 2, 0)
+				underline(ctx, '฿' + ot_price, 55, 865, 36, '#999', 2, 0)
 				ctx.setTextAlign('left')
 				ctx.setFontSize(28);
 				ctx.setFillStyle('#999');
@@ -388,7 +389,7 @@ export default {
 				console.log('失败', err)
 				uni.hideLoading();
 				that.Tips({
-					title: '无法获取图片信息'
+					title: t('无法获取图片信息')
 				});
 			}
 		})
@@ -475,9 +476,9 @@ export default {
 				ctx.setTextAlign('left')
 				ctx.setFontSize(40);
 				ctx.setFillStyle('#DA4F2A');
-				ctx.fillText('￥' + price, 95, 950 + contentHh);
+				ctx.fillText('฿' + price, 95, 950 + contentHh);
 				
-				let priceNumWidth = ctx.measureText('￥' + price).width
+				let priceNumWidth = ctx.measureText('฿' + price).width
 				ctx.drawImage(arr2[4], 110+priceNumWidth, 948, 100, 50);
 				
 				
@@ -515,7 +516,7 @@ export default {
 				console.log('失败', err)
 				uni.hideLoading();
 				that.Tips({
-					title: '无法获取图片信息'
+					title: t('无法获取图片信息')
 				});
 			}
 		})
@@ -597,7 +598,7 @@ export default {
 
 				context.setFontSize(14 * rain);
 				context.setFillStyle('#fc4141');
-				context.fillText('￥', 157 * rain, 145 * rain);
+				context.fillText('฿', 157 * rain, 145 * rain);
 
 				context.setFontSize(24 * rain);
 				context.setFillStyle('#fc4141');
@@ -634,7 +635,7 @@ export default {
 				console.log('失败', err)
 				uni.hideLoading();
 				that.Tips({
-					title: '无法获取图片信息'
+					title: t('无法获取图片信息')
 				});
 			}
 		})
@@ -714,7 +715,7 @@ export default {
 					video.setAttribute('preload', 'auto');
 					video.addEventListener('loadeddata', async function() {
 						uni.showLoading({
-							title: '加载中...',
+							title: t('加载中...'),
 						});
 						let canvas = document.createElement("canvas"),
 							width = video.width, //canvas的尺寸和图片一样
@@ -793,7 +794,7 @@ export default {
 					"&pid=" + opt.pid
 				if (count === 1) {
 					successCallback && successCallback(await that.uploadFile(urlPath, res.tempFilePaths[
-						0], opt, '图片上传中'))
+						0], opt, t('图片上传中')))
 				} else {
 					for (let i = 0; i < res.tempFiles.length; i++) {
 						if (Math.ceil(res.tempFiles[i].size / 1024) < uploadMaxSize * 1024) {
@@ -815,7 +816,7 @@ export default {
 						}
 					}
 					for (const key in image) {
-						imageList.push(await that.uploadFile(urlPath, image[key], opt, '图片上传中'))
+						imageList.push(await that.uploadFile(urlPath, image[key], opt, t('图片上传中')))
 					}
 					successCallback && successCallback(imageList)
 				}
@@ -837,7 +838,8 @@ export default {
 					// #ifdef MP
 					"Content-Type": "multipart/form-data",
 					// #endif
-					[TOKENNAME]: store.state.app.token
+					[TOKENNAME]: store.state.app.token,
+					lang: getLocale()
 				},
 				success: function(res) {
 					uni.hideLoading();
@@ -851,7 +853,7 @@ export default {
 							resolve(data.data.url);
 						} else {
 							that.Tips({
-								title: data.message
+								title: localizeMessage(data.message)
 							});
 						}
 					}
@@ -900,7 +902,8 @@ export default {
 				// #ifdef MP
 				"Content-Type": "multipart/form-data",
 				// #endif
-				[TOKENNAME]: store.state.app.token
+				[TOKENNAME]: store.state.app.token,
+				lang: getLocale()
 			},
 			success: function(res) {
 				uni.hideLoading();
@@ -916,7 +919,7 @@ export default {
 					} else {
 						errorCallback && errorCallback(data);
 						that.Tips({
-							title: data.message
+							title: localizeMessage(data.message)
 						});
 					}
 				}
@@ -1118,7 +1121,7 @@ export default {
 					uni.removeStorageSync('user_latitude');
 					uni.removeStorageSync('user_longitude');
 					this.Tips({
-						title: '获取当前定位遇到困难，如需定位请开启权限'
+						title: t('获取当前定位遇到困难，如需定位请开启权限')
 					});
 					//this.openSetting();
 					resolve(status);
@@ -1157,7 +1160,7 @@ export default {
 						// #ifndef MP-BAIDU
 						if (err.errMsg.indexOf("auth deny") >= 0) {
 							uni.showToast({
-								title: '访问位置被拒绝',
+								title: t('访问位置被拒绝'),
 								icon: 'none',
 								duration: 2000
 							});
@@ -1213,8 +1216,8 @@ export default {
 			} else if (status === 2) {
 				if (prePage === 'pages/users/user_address/index')
 					uni.showModal({
-						content: "系统定位已关闭",
-						confirmText: "确定",
+						content: this.$t('系统定位已关闭'),
+						confirmText: this.$t('确定'),
 						showCancel: false,
 						success: function(res) {}
 					})
@@ -1226,8 +1229,8 @@ export default {
 			} else {
 				if (prePage === 'pages/users/user_address/index')
 					uni.showModal({
-						content: "需要定位权限",
-						confirmText: "设置",
+						content: this.$t('需要定位权限'),
+						confirmText: this.$t('设置'),
 						success: function(res) {
 							if (res.confirm) {
 								permision.gotoAppSetting();
@@ -1282,7 +1285,7 @@ export default {
 	addressWxImport() {
 		let that = this;
 		uni.showLoading({
-			title: '加载中...'
+			title: t('加载中...')
 		});
 
 		return new Promise((resolve, reject) => {
@@ -1296,7 +1299,7 @@ export default {
 						},
 						fail: function(err) {
 							if (err.errMsg == 'chooseAddress:cancel') return that.Tips({
-								title: '取消选择'
+								title: t('取消选择')
 							});
 						},
 					})
@@ -1304,8 +1307,8 @@ export default {
 				fail: function(err) {
 					uni.hideLoading();
 					uni.showModal({
-						title: '您已拒绝导入微信地址权限',
-						content: '是否进入权限管理，调整授权？',
+						title: t('您已拒绝导入微信地址权限'),
+						content: this.$t('是否进入权限管理，调整授权？'),
 						success(err) {
 							if (err.confirm) {
 								uni.openSetting({
@@ -1315,7 +1318,7 @@ export default {
 								});
 							} else if (err.cancel) {
 								return that.Tips({
-									title: '已取消！'
+									title: t('已取消！')
 								});
 							}
 						}

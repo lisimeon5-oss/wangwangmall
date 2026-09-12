@@ -1,7 +1,7 @@
 <template>
 	<view class='recommend'>
 		<block v-if="tempArr.length">
-			<title-box v-if="isShowTitle" title="热门推荐"></title-box>
+			<title-box v-if="isShowTitle" :title="$t('热门推荐')"></title-box>
 			<view class='recommendList borderPad' :class="isShowTitle?'':'mt30'">
 				<WaterfallsFlow :wfList='tempArr' :type="1" :isStore="1">
 					<template slot-scope="{item}">{{item.name}}
@@ -13,7 +13,7 @@
 				<text class='loading iconfont icon-jiazai'></text>
 			</view>
 			<view class="mores-txt flex" v-if="goodScroll">
-				<text>我是有底线的</text>
+				<text>{{$t('我是有底线的')}}</text>
 			</view>
 		</block>
 	</view>

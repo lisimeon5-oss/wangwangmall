@@ -1,0 +1,3869 @@
+{
+  "code": 200,
+  "message": null,
+  "data": [
+    {
+      "id": 893,
+      "pid": 0,
+      "name": "餐饮",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/category/2026/08/28/5aabb1f3ccec4520a4c93c4c413e45ed8629rkcuo8.png",
+      "level": 1,
+      "sort": 300,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 894,
+          "pid": 893,
+          "name": "中餐菜品",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/70da99fed5644f8ea1d220ccb1e582abqll2di4w20.png",
+          "level": 2,
+          "sort": 50,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 896,
+              "pid": 894,
+              "name": "热菜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/bff185aad7b140caa510351932c6fd6ett41fy69v1.png",
+              "level": 3,
+              "sort": 50,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 897,
+              "pid": 894,
+              "name": "凉菜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/0c58015709cb40ef80fdb384281373d1xsgxg59u25.png",
+              "level": 3,
+              "sort": 40,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 895,
+              "pid": 894,
+              "name": "汤羹",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/4a3609f0141e4c1ca4dab093de70be5dnji0xj85fb.png",
+              "level": 3,
+              "sort": 30,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 936,
+              "pid": 894,
+              "name": "海鲜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/c550c8cb613a4c1b9fd4fcdae52b9293n3ufeaez88.png",
+              "level": 3,
+              "sort": 20,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 900,
+          "pid": 893,
+          "name": "主食面点",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/4e913562920a4638a2cb80b1e9d4bcabt90jrs754e.png",
+          "level": 2,
+          "sort": 40,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 901,
+              "pid": 900,
+              "name": "汤粉面",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/f73a52b3aa3a433c8ae0d376450e973dlsoj4lm5a2.png",
+              "level": 3,
+              "sort": 60,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 902,
+              "pid": 900,
+              "name": "拌粉面",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/779f497b13654ad3b6653116f94fc92f2xpbiq0g1m.png",
+              "level": 3,
+              "sort": 50,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 918,
+              "pid": 900,
+              "name": "饺子锅贴",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/070f77b9e3ff4a95b2951b74a3a6e7e6nsgzsf1aw7.png",
+              "level": 3,
+              "sort": 40,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 917,
+              "pid": 900,
+              "name": "馄饨",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/f6fc9c8ef94c49d1ac4e6a10e9256f0306ntoxo2sc.png",
+              "level": 3,
+              "sort": 30,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 916,
+              "pid": 900,
+              "name": "包子饼类",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/74bc7b04c01c4a7baf51302e4afc8f6eegl2yj01wf.png",
+              "level": 3,
+              "sort": 20,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 919,
+              "pid": 900,
+              "name": "米饭盖饭",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/baa0f6cc47de40faa4b870bf8df662eaq3txlugurb.png",
+              "level": 3,
+              "sort": 10,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 898,
+          "pid": 893,
+          "name": "小吃快餐",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/ad6ad7a3b26e4511a10b8d24c1f77be0r1vi1lpa4b.png",
+          "level": 2,
+          "sort": 30,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 937,
+              "pid": 898,
+              "name": "炸物小吃",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/116227e239374d818307b72c5c50971dsv5xvrvhin.png",
+              "level": 3,
+              "sort": 50,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 899,
+              "pid": 898,
+              "name": "烧烤",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/d301bb6ec2544efc9cb38aa203c301b0pt3w3kr5g6.png",
+              "level": 3,
+              "sort": 40,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 938,
+              "pid": 898,
+              "name": "卤味",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/c5e038ab22354e57b40613b289a6d2b96d71iva6xj.png",
+              "level": 3,
+              "sort": 30,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 939,
+              "pid": 898,
+              "name": "快餐套餐",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/ac3aa5c423694a46ac1f0ffc47205914g5lmibp7hp.png",
+              "level": 3,
+              "sort": 20,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 903,
+          "pid": 893,
+          "name": "茶饮甜品",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/be5f0615de6a4d47b3d8b58129df4f65d62ygron37.png",
+          "level": 2,
+          "sort": 20,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 914,
+              "pid": 903,
+              "name": "奶茶",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/e3a2c9d24e4e475cb311711756d0ba7a2zrtg3jppw.png",
+              "level": 3,
+              "sort": 50,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 904,
+              "pid": 903,
+              "name": "果茶果汁",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/6d41ee7e3c4546d2a3385b7f7d8d1948xbtin7cdml.png",
+              "level": 3,
+              "sort": 40,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 913,
+              "pid": 903,
+              "name": "咖啡",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/3df05d86532c4b71b1b24cfc5076faf6gzhrtq1c7m.png",
+              "level": 3,
+              "sort": 30,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 940,
+              "pid": 903,
+              "name": "甜品冰品",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/d767566e3da4421c8540ecc4dae81849klxej295ya.png",
+              "level": 3,
+              "sort": 20,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 906,
+          "pid": 893,
+          "name": "早餐",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/13460da194de4ca48abd7c19acd2432c4l4uxs4gk3.png",
+          "level": 2,
+          "sort": 10,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 907,
+              "pid": 906,
+              "name": "包子油条",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/d81c3b744b464d60a7566d8b0fa14c051648yy44cv.png",
+              "level": 3,
+              "sort": 60,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 908,
+              "pid": 906,
+              "name": "豆浆牛奶",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/40e7458aee8d4913b229c3421b4dfd07wg5okw90ex.png",
+              "level": 3,
+              "sort": 50,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 909,
+              "pid": 906,
+              "name": "早餐饼类",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/aebfcd34d6f94302a84a6bd898191027b6g4yazdlx.png",
+              "level": 3,
+              "sort": 40,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 911,
+              "pid": 906,
+              "name": "鸡蛋",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/134fc8ac33e84c88a67564c2b1e62e4byyqks4blxq.png",
+              "level": 3,
+              "sort": 30,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 910,
+              "pid": 906,
+              "name": "早餐小菜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/8f641b47f74f40568c55ec975c6e2a4epzjs6kqvul.png",
+              "level": 3,
+              "sort": 20,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 912,
+              "pid": 906,
+              "name": "早餐套餐",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/acc9783bf72e48f7bc642ae6d8915f29fczukx4pp7.png",
+              "level": 3,
+              "sort": 10,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 554,
+      "pid": 0,
+      "name": "食品",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/07/23/6d5408e4dbdb4488a602cb35b605aa60q853w9v073.jpeg",
+      "level": 1,
+      "sort": 200,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 555,
+          "pid": 554,
+          "name": "零食",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/07/23/6d5408e4dbdb4488a602cb35b605aa60q853w9v073.jpeg",
+          "level": 2,
+          "sort": 100,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 556,
+              "pid": 555,
+              "name": "薯片膨化",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/f0c364bda7db4dcaa7eec395a2e5e872sb8ch5iov7.png",
+              "level": 3,
+              "sort": 100,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 628,
+              "pid": 555,
+              "name": "饼干糕点",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/35c3dcbfc2ed423caf8165be9523ee5cby1vc2ha95.png",
+              "level": 3,
+              "sort": 90,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 861,
+              "pid": 555,
+              "name": "糖果巧克力",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/809d28910f2a403ea3e54fadb04f328d87jw5gbgnq.png",
+              "level": 3,
+              "sort": 80,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 866,
+              "pid": 555,
+              "name": "坚果炒货",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/9b7b0f0a337a46f08e2f8c30dc9d77f408xmvurcbv.png",
+              "level": 3,
+              "sort": 70,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 941,
+              "pid": 555,
+              "name": "肉干卤味",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/de4a124e097647a8945c983b52b05a9byihpi7s41k.png",
+              "level": 3,
+              "sort": 60,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 942,
+              "pid": 555,
+              "name": "辣条豆制品",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/6e27ae3f5d3e4dbba04989e0d68d039a9f3ba2vgiq.png",
+              "level": 3,
+              "sort": 50,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 943,
+              "pid": 555,
+              "name": "果冻布丁",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/04fe510ae8174aa29487ee9c3138afc2bgu25bq3ua.png",
+              "level": 3,
+              "sort": 40,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 944,
+              "pid": 555,
+              "name": "果干蜜饯",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/4f425023f8284b2a8ab1b511f8e26279est0kapmkb.png",
+              "level": 3,
+              "sort": 30,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 945,
+              "pid": 555,
+              "name": "海苔鱼干",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/447d6779e9df4aa0b2766c05fffbea5ckx80luwb3e.png",
+              "level": 3,
+              "sort": 20,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 946,
+              "pid": 555,
+              "name": "特色零食",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/15f7d620906d4d04abf1f5613c4ccfddz7tbz1ujbr.png",
+              "level": 3,
+              "sort": 10,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 609,
+          "pid": 554,
+          "name": "方便速食",
+          "icon": "",
+          "level": 2,
+          "sort": 90,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 949,
+              "pid": 609,
+              "name": "方便面粉",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/188203d7def645a1839b09bd74ccf72flx48mbufb9.png",
+              "level": 3,
+              "sort": 100,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 947,
+              "pid": 609,
+              "name": "冲调食品",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/f7f460ba6ec748a08824f8780382682e79kwl3qohm.png",
+              "level": 3,
+              "sort": 90,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 948,
+              "pid": 609,
+              "name": "调味酱料",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/12d559d971924a7d983339d4cd868c15kl3re1ucv6.png",
+              "level": 3,
+              "sort": 80,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 607,
+          "pid": 554,
+          "name": "饮料乳品",
+          "icon": "",
+          "level": 2,
+          "sort": 80,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 608,
+              "pid": 607,
+              "name": "饮用水",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/00f454d2602d4aa8a56b4c81ea815db3d8deurpdoj.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 859,
+              "pid": 607,
+              "name": "碳酸饮料",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/a2bb15871d544140876e03f82df820c8gk0o3ckg2o.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 860,
+              "pid": 607,
+              "name": "牛奶",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/41c56b6ea32f4590ab8689ff697c3b5f9znwlqlx68.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 862,
+              "pid": 607,
+              "name": "乳酸饮料",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/9b8d20fd4d434091a43979c35f074cf6fiipiabhhs.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 863,
+              "pid": 607,
+              "name": "果汁饮品",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/67df5c9bfc5740eda53958ce5c9227edpid0pm33v5.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 618,
+          "pid": 554,
+          "name": "粮油主食",
+          "icon": "",
+          "level": 2,
+          "sort": 70,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 619,
+              "pid": 618,
+              "name": "大米",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/760f314c058b4cb79e353dbde5ae2db5i7uq7cyhkz.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 620,
+              "pid": 618,
+              "name": "食用油",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/b237b6bdac2b4daea8a0f422071937c9u7ht7vsdv5.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 621,
+              "pid": 618,
+              "name": "面粉",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/c0148ad14b764539812ca4c0eb84a1a5yyfar009uv.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 612,
+          "pid": 554,
+          "name": "酒类",
+          "icon": null,
+          "level": 2,
+          "sort": 60,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 613,
+              "pid": 612,
+              "name": "啤酒",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/6b7a659562084896b3dd7f25b4216c01xyrl2hs0qq.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 614,
+              "pid": 612,
+              "name": "白酒",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/ee633c0551004b379e581a5da38d5728eo4yybz2qh.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 557,
+          "pid": 554,
+          "name": "茶叶",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/16/36bdc320052b4844879c972a584df9cb8hwamtb8ct.png",
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 590,
+              "pid": 557,
+              "name": "普洱",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/16/9fa293b32de042b9849019bfaedc0e3dm2e7v7ts8s.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 872,
+              "pid": 557,
+              "name": "大红袍",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/26/346df7c0fc9c41ea9b3697c9f6d2df215e37mb703d.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 873,
+              "pid": 557,
+              "name": "其它",
+              "icon": null,
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 879,
+          "pid": 554,
+          "name": "烟",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 880,
+              "pid": 879,
+              "name": "本地烟",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/28/aa8500c3d7e54063a2b50c590aff93f9uyca6lu2f2.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 881,
+          "pid": 554,
+          "name": "水果",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/08/01/4a05906c2bee475a82c265b93a228fc2880vgwf93o.png",
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 884,
+              "pid": 881,
+              "name": "榴莲",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/08/10/778e30968ab2462eb64e2ee1f50ba4c0fc6pk8iref.png",
+              "level": 3,
+              "sort": 100,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 882,
+              "pid": 881,
+              "name": "梨",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/08/01/75c16ba7ddb34ae7807741fdbb4b0f1317qrukbnzz.png",
+              "level": 3,
+              "sort": 89,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 885,
+              "pid": 881,
+              "name": "山竹",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/08/10/1d3ffbc0073f4ebba2a7748dbdfdd09ckz0xg9ayan.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 886,
+              "pid": 881,
+              "name": "椰子",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/08/10/f648e1d36b4f4d708899318e25fa78214t6x453giw.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 887,
+              "pid": 881,
+              "name": "葡萄提子",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/08/10/f7fc4dd7e74b46b4bb14215cddc74779e6zyfwwd9y.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 888,
+              "pid": 881,
+              "name": "柚子",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/08/10/c1a1339298654ac68a2bd022feaa5d54k2n2hr850h.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 889,
+              "pid": 881,
+              "name": "西瓜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/08/10/bbea66662a1a478a8776603e3805ee9bv1el9wwwje.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 890,
+              "pid": 881,
+              "name": "香蕉",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/08/10/f058e7ed426042dea6b295a573c5e57aggwpjpbj0s.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 891,
+              "pid": 881,
+              "name": "火龙果",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/08/10/44b4711d35534ba0b7aa77921b6d7eb17hw11wzjdy.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 892,
+              "pid": 881,
+              "name": "桃",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/08/10/eb1d7a433bc443c78c44563fc35ec69b6tori12gje.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 915,
+              "pid": 881,
+              "name": "果盘",
+              "icon": null,
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 541,
+      "pid": 0,
+      "name": "百货",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/16/3f3aaed0aaa34b90ad0804fe2f62be6c8ts12odqr8.png",
+      "level": 1,
+      "sort": 199,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 542,
+          "pid": 541,
+          "name": "生活百货",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/07/23/808101d083384b5abfc61da82aeff49e0hijzz0dvd.jpeg",
+          "level": 2,
+          "sort": 30,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 597,
+              "pid": 542,
+              "name": "家居日用",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/60408dfa8a0a4adb8ffa981f93ab829bj6fr76thge.png",
+              "level": 3,
+              "sort": 100,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 950,
+              "pid": 542,
+              "name": "家居纺织",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/cc4458441c0d46a6a37ffd05386e8df80a7ur1gvg0.png",
+              "level": 3,
+              "sort": 90,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 951,
+              "pid": 542,
+              "name": "卫浴用品",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/e693782b47c949228f4696ae6e2beff953z2gecun8.png",
+              "level": 3,
+              "sort": 80,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 952,
+              "pid": 542,
+              "name": "晾晒护理",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/b34fd64fe1964403965f022545952aeco4px8qbwt6.png",
+              "level": 3,
+              "sort": 70,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 953,
+              "pid": 542,
+              "name": "家居装饰",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/444908cf89a34599a75905f0adc61304vxiso20fhz.png",
+              "level": 3,
+              "sort": 60,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 954,
+              "pid": 542,
+              "name": "日用电器",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/5bbfb16918a348a1ad15aa5647274000pgz2s9sdm1.png",
+              "level": 3,
+              "sort": 50,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 955,
+              "pid": 542,
+              "name": "节庆礼品",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/d63b3680e11b49db9bf26fab1f61d4f6ghe70sw5f1.png",
+              "level": 3,
+              "sort": 40,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 956,
+              "pid": 542,
+              "name": "缝纫修补",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/f9ba2bb97fa34c7797715e7b886590b2xxwju1atii.png",
+              "level": 3,
+              "sort": 30,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 957,
+              "pid": 542,
+              "name": "健康护理",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/585a61c70ec34aea8af19fe138a7dd056nsxwsy29l.png",
+              "level": 3,
+              "sort": 20,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 543,
+              "pid": 542,
+              "name": "雨具",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/16/d518c692ccf74edea3b04ffdadd5d2d8urdjn0glec.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 550,
+              "pid": 542,
+              "name": "驱蚊",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/16/5f7be553e5a84093a650bf34038f36c33iiw3tscqq.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 869,
+              "pid": 542,
+              "name": "玩具",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/214b18b24c4f4aacb7e62166877e9af0ng9r6zhas7.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 870,
+              "pid": 542,
+              "name": "文具",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/91c9cd69f34d443da9c103d7b5316499m93z19n9yr.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 926,
+              "pid": 542,
+              "name": "家居香薰",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/6a08a6964bf141689be08339c8fa68e3qdxbg9hbhm.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 592,
+          "pid": 541,
+          "name": "家用清洁",
+          "icon": null,
+          "level": 2,
+          "sort": 28,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 630,
+              "pid": 592,
+              "name": "扫把",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/8cb1b9c647fe4badb043c926fd21b24dhuo9w94r7r.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 708,
+              "pid": 592,
+              "name": "垃圾袋",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/14d1dd9a74a5453eb78fcee3d6d08505u50phw7k4c.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 709,
+              "pid": 592,
+              "name": "垃圾桶",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/fc177605c6ac4bbaab108da3200505c6guv0vahk65.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 710,
+              "pid": 592,
+              "name": "洁厕剂",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/6105c79c97d94d5ab21e7e59f2718ed69dmvgam25r.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 711,
+              "pid": 592,
+              "name": "洗洁精",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/f8e78bb2554c40779f747050357ffc56jfywc83afq.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 712,
+              "pid": 592,
+              "name": "消毒液",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/b0f203979da848a8918b7940c4e09ef3lajx537uia.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 714,
+              "pid": 592,
+              "name": "空气芳香剂",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/2c69a2523cef4eb0aeb1f6cdb48c3277ltqzuw79i3.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 718,
+              "pid": 592,
+              "name": "管道疏通剂",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/701dcbe9c5534a409b73423752669a403mbda9vd4q.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 719,
+              "pid": 592,
+              "name": "百洁布",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/b0a3356956fa475da9043ff9acb4c91cr5b442ppc1.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 720,
+              "pid": 592,
+              "name": "柔顺剂",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/b67c1cc5c7bc42ab96061506bb7e9350gb74azsf8k.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 722,
+              "pid": 592,
+              "name": "鞋油",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/03607504e3f34f3eb53a83389b88903458j02jdzuy.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 730,
+              "pid": 592,
+              "name": "拖把",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/28a1403a9da646db84f59e13f2ba3ad3qgqu7985ua.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 858,
+              "pid": 592,
+              "name": "收纳",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/4e5a314ec7e041939506118ce3c50a571ri9rf7qda.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 546,
+          "pid": 541,
+          "name": "餐饮用具",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/07/23/6314c7705a7d4722b23ab2725088b018n2h75tsta2.jpeg",
+          "level": 2,
+          "sort": 26,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 580,
+              "pid": 546,
+              "name": "筷子",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/c5af8e440cd44832972018e50deeddd31uarid3jcs.png",
+              "level": 3,
+              "sort": 60,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 783,
+              "pid": 546,
+              "name": "碗",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/5487663ee88943039551782a1e856f30l2eitlgbmm.png",
+              "level": 3,
+              "sort": 50,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 549,
+              "pid": 546,
+              "name": "盘子",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/fa83361df3914231aaccce06bc6e365eybdvaxwmsl.png",
+              "level": 3,
+              "sort": 48,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 781,
+              "pid": 546,
+              "name": "水杯",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/325ebc559169469db09b7989c62fac9btnl3nxa1kx.png",
+              "level": 3,
+              "sort": 45,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 548,
+              "pid": 546,
+              "name": "玻璃杯",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/47e99e096b4d497f82139070f1166df0rnucejyigi.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 782,
+              "pid": 546,
+              "name": "保温杯",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/31d1b2e6c526480eaf179b75caeacf32w9ewmcux76.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 784,
+              "pid": 546,
+              "name": "水壶",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/e91c5f630c2d4aca89c528aac3faff13zq6irfg8vj.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 785,
+              "pid": 546,
+              "name": "马克杯",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/9f293c432b264005849bece459e8d8b1yhivgwq5ie.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 786,
+              "pid": 546,
+              "name": "饭盒",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/38081f40a9034297b3c6fcd4c93eced6gaanww65so.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 787,
+              "pid": 546,
+              "name": "一次性餐盒",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/cfcd086f398c4a8085e672d91612187ey3te31o29f.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 788,
+              "pid": 546,
+              "name": "咖啡杯",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/eaaa7f030e4645e3bd38e2b5a5c353dbnbolzhkci4.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 789,
+              "pid": 546,
+              "name": "茶具套餐",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/aa4c6b4f6299400b8fd36681c1878069mfjy5leigs.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 790,
+              "pid": 546,
+              "name": "一次性手套",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/0a03cd155fa4496784fea21459a9983ahxb4ydo950.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 791,
+              "pid": 546,
+              "name": "纸杯",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/e4f2b3c9918c46b1ae3fb54e6fdb1b6flu83g2yi98.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 792,
+              "pid": 546,
+              "name": "碟子",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/35d83846c90b4f0c87263cda2f81234enrcaaxtx2h.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 793,
+              "pid": 546,
+              "name": "酒杯",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/a1492571188c41609d0851c9958f9d3chxt1jiywsj.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 794,
+              "pid": 546,
+              "name": "勺子",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/533acb85e49446eab8df5a9e6b0357dab384dom2l6.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 795,
+              "pid": 546,
+              "name": "叉子",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/e1e26f99ceb44e8b8df677af8ac4e514l5355abn24.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 796,
+          "pid": 541,
+          "name": "厨房工具",
+          "icon": null,
+          "level": 2,
+          "sort": 24,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 809,
+              "pid": 796,
+              "name": "刀具",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/65bac25b2cf04ebb99f1540df3f74ab2cy3lqxskrc.png",
+              "level": 3,
+              "sort": 30,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 797,
+              "pid": 796,
+              "name": "切菜板",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/19092b9024f54e53b0901fe8eae07702mgbzgfg76u.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 798,
+              "pid": 796,
+              "name": "调味瓶",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/3c3a3b3f4ecf43ad9ac9296baa7ed0b3mvfx1olk8x.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 799,
+              "pid": 796,
+              "name": "锅铲",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/139038507e704b5c89bcd255251d256c21vo95yjg2.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 800,
+              "pid": 796,
+              "name": "锡纸",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/29674b25463649cabccb48c549bb56fd07dxar4sos.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 801,
+              "pid": 796,
+              "name": "擀面杖",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/3a9610ae2740472ba2bea6571181444249gfr5bfws.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 802,
+              "pid": 796,
+              "name": "沥水篮",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/8282cdcb027340f18b410d67bbd794cetvjgc7nhds.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 808,
+              "pid": 796,
+              "name": "保鲜膜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/cf34c67813934339bead99c2396e67b4z5r7h88qg6.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 635,
+      "pid": 0,
+      "name": "洗护",
+      "icon": null,
+      "level": 1,
+      "sort": 199,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 636,
+          "pid": 635,
+          "name": "纸品湿巾",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 637,
+              "pid": 636,
+              "name": "抽纸",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/06fa376fcee941ddb43228b83f22020f83sf77c69k.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 638,
+              "pid": 636,
+              "name": "湿巾",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/455bbae76d8b4906b78476b467e625d369dy8t3hiy.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 929,
+              "pid": 636,
+              "name": "洗脸巾",
+              "icon": "",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 642,
+          "pid": 635,
+          "name": "洗发护发",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 643,
+              "pid": 642,
+              "name": "洗发水",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/92e97374b4d44278b05bf616fa71a413dd6ay6mvjn.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 644,
+              "pid": 642,
+              "name": "护发",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/b6a925adbbe844949a5f1bb26db947a8xxybe4lpyn.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 648,
+          "pid": 635,
+          "name": "洗浴用品",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 649,
+              "pid": 648,
+              "name": "沐浴露",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/2b363dc85a154ce395a5ae14fd7fb408yedw9usccs.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 650,
+              "pid": 648,
+              "name": "香皂",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/a8f8b69cb3134d6da436e2d012bd3d7224lza42zcu.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 651,
+              "pid": 648,
+              "name": "浴帽浴巾",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/b8735113efe24a6d8fa3025a53972c43xu65kcehm5.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 928,
+              "pid": 648,
+              "name": "身体乳",
+              "icon": "",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 652,
+          "pid": 635,
+          "name": "牙齿清洁",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 653,
+              "pid": 652,
+              "name": "牙膏",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/e8d092fd41654a1495e31d32c1dbfb3fz6ppgufi45.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 654,
+              "pid": 652,
+              "name": "牙刷",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/4e8daa05c3af4065a83f07964d18b0d1hao94llzf0.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 655,
+              "pid": 652,
+              "name": "牙线",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/1b69e584c6354f56bc6cb4e70ec4092b7khcspyw1j.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 656,
+              "pid": 652,
+              "name": "漱口水",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/9ce583c9bdfa4aa0b28e475e664a0823v9kuvw34uk.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 658,
+          "pid": 635,
+          "name": "女性护理",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 659,
+              "pid": 658,
+              "name": "卫生巾",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/b869e667916a4ce584d0361d682fbe8d46wnpnarzx.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 660,
+              "pid": 658,
+              "name": "私处护理",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/bdd133b36702468f98d730696381715dpxfa06loom.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 661,
+              "pid": 658,
+              "name": "护垫",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/702d5d5faab64e80816a31de2102d05ajd2it12teg.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 662,
+          "pid": 635,
+          "name": "男士理容",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 663,
+              "pid": 662,
+              "name": "剃须刀",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/21d8f4a2beb046ab949d0be4468594ebd2ay3chapp.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 664,
+              "pid": 662,
+              "name": "男士沐浴露",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/923cccb022fc43e5b6af45fbfc737620mmqgaphwdc.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 665,
+              "pid": 662,
+              "name": "男士造型",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/a1dc2bae05d142f3aeef91c59c809201mefjmpqnu9.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 666,
+              "pid": 662,
+              "name": "男士洗发",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/cbf03a9d54ac4e07ad5def1317f85f4b6bp2xwmjqs.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 667,
+              "pid": 662,
+              "name": "男士止汗",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/81c941a22fbc4d2ebf6199df668b23e47qqlw4fxor.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 559,
+      "pid": 0,
+      "name": "美妆",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/07/23/b051dfcc349d49dd991f2e3d0201893322od416fln.jpeg",
+      "level": 1,
+      "sort": 198,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 563,
+          "pid": 559,
+          "name": "护肤",
+          "icon": null,
+          "level": 2,
+          "sort": 10,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 680,
+              "pid": 563,
+              "name": "面膜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/2c93ddb9f38c4b068984f18d09acbb88lijtp4ktjq.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 681,
+              "pid": 563,
+              "name": "洁面",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/d449a64ef4444af4b558334801f499c52zsnsvxc56.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 682,
+              "pid": 563,
+              "name": "防晒",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/012dc7c17cb947139233760ed57812dbjklzpnd6mu.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 683,
+              "pid": 563,
+              "name": "面霜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/404fa7b7d4164585a6cd67698498f0b9h31merhujb.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 684,
+              "pid": 563,
+              "name": "精华",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/21163d35754a46c1aa8e13a504f6af405njg99fwe1.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 685,
+              "pid": 563,
+              "name": "眼霜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/9c0e999df3244ec18ba0063418e00b70k4gdh1spzr.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 686,
+              "pid": 563,
+              "name": "化妆水",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/a155da8ed1c44778820ab6b774169367lrlawcrfhr.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 687,
+              "pid": 563,
+              "name": "卸妆",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/44ad083cad544d36ad4b1e481cc6ad769kdu9a6lc5.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 688,
+              "pid": 563,
+              "name": "润唇膏",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/de79583dc61643488894ea565e1ca46fcowluv3js7.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 689,
+              "pid": 563,
+              "name": "鼻贴",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/2b5ecf2ec6f44ea4ac36b02168a2f18bvnpgkndwn8.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 690,
+              "pid": 563,
+              "name": "护肤套装",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/a599c20f664946b19fd747016a26a2fb313vuseicx.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 560,
+          "pid": 559,
+          "name": "彩妆",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 561,
+              "pid": 560,
+              "name": "美甲",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/16/c4af41113f304fb3939424a52936d0abeq7t8hiv9p.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 691,
+              "pid": 560,
+              "name": "粉底",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/a28f074238624ea7a9b46a5d6be88963kuo8d9gcw6.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 692,
+              "pid": 560,
+              "name": "口红",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/5dc3fc9bce1c4e2891bc252134445253cpajhfrqje.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 693,
+              "pid": 560,
+              "name": "眼影",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/e0233ee896df41bc97cbad64d736c690bazibbqhw3.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 694,
+              "pid": 560,
+              "name": "隔离",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/f2b754d0ecec497f86ade32f3b3362a0e72vw375e3.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 695,
+              "pid": 560,
+              "name": "眉粉",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/d3293f5b46fd430eab958546138750a2ypojoqb3ap.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 696,
+              "pid": 560,
+              "name": "眼线",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/fb3e377842f245c294343d9320f0e264g2v1dfywv2.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 697,
+              "pid": 560,
+              "name": "睫毛膏",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/88acc7e7da984dc9bb751860362a0522mc7xfunv1g.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 698,
+              "pid": 560,
+              "name": "修容",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/c0c7b678018f4377a8a2a8f10a78c0cckjmlkk5v0k.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 699,
+              "pid": 560,
+              "name": "彩妆套装",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/d25acb3ba497494c85001af4a9fc184cpaqns9cwkc.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 700,
+              "pid": 560,
+              "name": "化妆工具",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/a765f25bee8e4b3184306cf086af0d15chtezjlhdl.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 703,
+              "pid": 560,
+              "name": "香水",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/e93213a5f7894e48b745cf3feaf52ea4iwdrxcxsm2.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 704,
+              "pid": 560,
+              "name": "手霜手膜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/427db1e75ac74e33a4a59cf676ac05a35q4pxcta47.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 755,
+      "pid": 0,
+      "name": "内衣",
+      "icon": null,
+      "level": 1,
+      "sort": 198,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 756,
+          "pid": 755,
+          "name": "内裤",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 757,
+              "pid": 756,
+              "name": "男士内裤",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/8e69e7ac971d4bd68f5296d49f94d7afy921850ulz.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 758,
+              "pid": 756,
+              "name": "女士内裤",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/77afd18fa62a4f24815eb5f65042b856r47thi64n9.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 759,
+          "pid": 755,
+          "name": "睡衣类",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 762,
+              "pid": 759,
+              "name": "女士睡衣",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/ef1d3aa426b14f9598c905f423add8afvctxeb846d.png",
+              "level": 3,
+              "sort": 10,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 760,
+              "pid": 759,
+              "name": "男士睡衣",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/af00351cbb674380b29950b84e947284b1okb7gprg.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 766,
+          "pid": 755,
+          "name": "文胸",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 767,
+              "pid": 766,
+              "name": "文胸",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/c9e7c49ecbfd4ac3b5eb20d17174ac835gp9z5w5yn.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 768,
+              "pid": 766,
+              "name": "抹胸",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/e4659399b68a4d759b5223962e66ba0flq13hviws9.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 769,
+              "pid": 766,
+              "name": "文胸套装",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/8bd8fe0f23334e899db8fb70b1c1003861eweaqz3u.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 871,
+              "pid": 766,
+              "name": "配件",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/ebdf4db5dbdc4b94a29e9b031c4b8d1aff5z9nu8k6.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "pid": 0,
+      "name": "服饰",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/afca3dec63314086829769e57de68c9e7i3bbywj0i.jpg",
+      "level": 1,
+      "sort": 197,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 622,
+          "pid": 5,
+          "name": "男装",
+          "icon": null,
+          "level": 2,
+          "sort": 10,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 732,
+              "pid": 622,
+              "name": "T恤",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/3cfbaf10220d4843b7da12dd49e8315davueb2ocji.png",
+              "level": 3,
+              "sort": 50,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 733,
+              "pid": 622,
+              "name": "衬衫",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/adc7cc2a5bea4df8951e0f0dda6965480fyga7b3k9.png",
+              "level": 3,
+              "sort": 45,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 734,
+              "pid": 622,
+              "name": "卫衣",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/76467e80f76b4c9ca9a70fa4002a4d545q31fod2zl.png",
+              "level": 3,
+              "sort": 40,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 736,
+              "pid": 622,
+              "name": "polo衫",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/54853cbb26104861bd1141d7b526e18cw9kzc9u6ls.png",
+              "level": 3,
+              "sort": 38,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 735,
+              "pid": 622,
+              "name": "外套",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/be14aad1635849a8bdce7e0dd2d91746r11i4r97ub.png",
+              "level": 3,
+              "sort": 35,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 737,
+              "pid": 622,
+              "name": "背心",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/bf75032160594015b11cb664ee127908f2cz7tkwrh.png",
+              "level": 3,
+              "sort": 33,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 738,
+              "pid": 622,
+              "name": "皮衣",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/0fb077cab7c04fff87635f110d4f3842m2tirk3zh7.png",
+              "level": 3,
+              "sort": 30,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 739,
+              "pid": 622,
+              "name": "风衣",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/d34eefedd22f491791f8f002f1ecc8bctakrunmzk4.png",
+              "level": 3,
+              "sort": 28,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 740,
+              "pid": 622,
+              "name": "大衣",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/86d3aa79d5f1445d8e080a35b1ce3e9ch0uvwcc55r.png",
+              "level": 3,
+              "sort": 26,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 623,
+              "pid": 622,
+              "name": "裤子",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/2724f513240d470f8b7eaa55859e3f04l2fsyttb0o.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 626,
+              "pid": 622,
+              "name": "男鞋",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/48cb8de9b15a4b66a684867949bfa1de99us5el0cd.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 741,
+              "pid": 622,
+              "name": "特色男装",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/e94396e667bf4ead90c6784f12c90b180fawptt60f.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 742,
+              "pid": 622,
+              "name": "正装套装",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/9d12d70e56854253a5edb03ca75e126293wlgebo1o.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 624,
+          "pid": 5,
+          "name": "女装",
+          "icon": null,
+          "level": 2,
+          "sort": 9,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 625,
+              "pid": 624,
+              "name": "裙子",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/c8afa8eddfe441c6a086d3911f1d8267rytrih011d.png",
+              "level": 3,
+              "sort": 80,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 745,
+              "pid": 624,
+              "name": "旗袍",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/1923393846d4479481c91aa4285e7651dnbwhqd2me.png",
+              "level": 3,
+              "sort": 70,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 744,
+              "pid": 624,
+              "name": "外套",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/78ae7c74db674fe69699e99107562c77j5dcqlq6o4.png",
+              "level": 3,
+              "sort": 65,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 743,
+              "pid": 624,
+              "name": "T恤",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/b3c399d4d025499697a4773c0a9646e6hcbgc7m1ph.png",
+              "level": 3,
+              "sort": 60,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 752,
+              "pid": 624,
+              "name": "风衣",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/f02c95d72288404d9f89e401d2273940idl385sxpv.png",
+              "level": 3,
+              "sort": 45,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 627,
+              "pid": 624,
+              "name": "女鞋",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/75a3c66f3c004e61955953dfefda521cy4zw5n29v7.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 746,
+              "pid": 624,
+              "name": "休闲裤",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/115e75eb64264b19a650483c72b272c51hy79dqlg1.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 747,
+              "pid": 624,
+              "name": "牛仔裤",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/7a800361177d425da299121d23f52207e69drob6fc.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 749,
+              "pid": 624,
+              "name": "打底裤",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/4aeb3e15ef284d75a186f9313d51e3afkdzya2ugbs.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 750,
+              "pid": 624,
+              "name": "女士套装",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/a053f10b2a8a475db13af597aaf5b8ee4ahfg2pqjd.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 751,
+              "pid": 624,
+              "name": "大码女装",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/524e4223d0b14137a7dfd5c445e6fe309aeh95q70l.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 753,
+              "pid": 624,
+              "name": "女士西装",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/09125d6f794f4cc1a567c532e50bcba5bpi02rbc24.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 754,
+              "pid": 624,
+              "name": "皮草",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/55b9c6658534477f889ce31e7c01a0fdiw7kj722yd.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "pid": 5,
+          "name": "潮搭",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/07/19/23bf736cafab4ef488769910d308623fu14f0i1rql.png",
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 958,
+              "pid": 6,
+              "name": "吊坠",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/5b36ddae5c6146848d2e83cdfb2678e62qj4bgtqmp.jpeg",
+              "level": 3,
+              "sort": 5,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 959,
+              "pid": 6,
+              "name": "手镯",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/8249e31e706043eda003b66324828030dg29r9cjgt.jpeg",
+              "level": 3,
+              "sort": 5,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 960,
+              "pid": 6,
+              "name": "套链",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/5b36ddae5c6146848d2e83cdfb2678e62qj4bgtqmp.jpeg",
+              "level": 3,
+              "sort": 5,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 961,
+              "pid": 6,
+              "name": "翡翠玉石",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/8249e31e706043eda003b66324828030dg29r9cjgt.jpeg",
+              "level": 3,
+              "sort": 5,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 962,
+              "pid": 6,
+              "name": "挂件",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/5b36ddae5c6146848d2e83cdfb2678e62qj4bgtqmp.jpeg",
+              "level": 3,
+              "sort": 4,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 7,
+              "pid": 6,
+              "name": "手串",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/e7ac69238a4841e983f6fdbaf7dd0217mbmgxlaief.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 523,
+              "pid": 6,
+              "name": "发饰",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/f9f7167d66ed44af90ecf64568eb62e8a7p7zjb56w.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 524,
+              "pid": 6,
+              "name": "耳饰",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/1cb8867e287441ea9c0819e9256e9956p2gmrgimou.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 525,
+              "pid": 6,
+              "name": "项链",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/5b36ddae5c6146848d2e83cdfb2678e62qj4bgtqmp.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 526,
+              "pid": 6,
+              "name": "手链",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/8249e31e706043eda003b66324828030dg29r9cjgt.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 527,
+              "pid": 6,
+              "name": "戒指",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/04126d00762b4b6f959638b751d8aa33ewj923dqm1.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 528,
+              "pid": 6,
+              "name": "胸针",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/857bd51a60674c73ac74998475d5d0f6367vgu2qxv.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 539,
+              "pid": 6,
+              "name": "脚链",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/7d05b2212b674e8cb96c5923794f37e7t5u9tx5bp4.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 935,
+              "pid": 6,
+              "name": "手表",
+              "icon": "",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 529,
+          "pid": 5,
+          "name": "服配",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 530,
+              "pid": 529,
+              "name": "丝巾",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/6ef3642a460d45c8bfd0a7f4d4f876ce0kb8jw7ya8.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 531,
+              "pid": 529,
+              "name": "围巾",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/50edabf559e845c38d4fa3581892d0acbb1oekwxje.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 532,
+              "pid": 529,
+              "name": "棒球帽",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/e7f4cd3a78624fb3be3b7ab8e21dfa62ohz7tpd6qk.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 533,
+              "pid": 529,
+              "name": "毛线帽",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/78aaef8cc76e410dbbfb608039e55804mefqhinpg5.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 534,
+              "pid": 529,
+              "name": "瓜皮帽",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/79b9ea9d293444338983abe3551a520cz9fg709v70.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 535,
+              "pid": 529,
+              "name": "礼帽",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/dd6285fe8a19494690d16fd0816bb60d5v2eqrij2j.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 536,
+              "pid": 529,
+              "name": "草帽",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/01a3d3f134c549bda42690467b3724cfosev4sgncw.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 537,
+              "pid": 529,
+              "name": "贝雷帽",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/f7fd446916504a0da2b2284ecd91cb43lv61qe4h5a.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "pid": 0,
+      "name": "家纺",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/fbbe8da1da9042059e6f0eff0546fc24sgwto6dopc.jpg",
+      "level": 1,
+      "sort": 196,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 2,
+          "pid": 1,
+          "name": "床上用品",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/07/19/0fff30b3b37a4b47be4f3c40e93dfc23xlxjkm77v6.png",
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 63,
+              "pid": 2,
+              "name": "四件套",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/ff473e398e5746d29d3ef896abf45eade4kobhalzq.jpeg",
+              "level": 3,
+              "sort": 1,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 3,
+              "pid": 2,
+              "name": "被子",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/d52870a8a29446e480b9e30c935fe862ki35ywvhdl.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 510,
+              "pid": 2,
+              "name": "枕头",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/07/19/0fff30b3b37a4b47be4f3c40e93dfc23xlxjkm77v6.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 513,
+              "pid": 2,
+              "name": "蚊帐",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/a04bd1a1bf9b481c906f2334e11a58c8watk3s7859.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 927,
+              "pid": 2,
+              "name": "三件套",
+              "icon": "",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 567,
+      "pid": 0,
+      "name": "箱包",
+      "icon": null,
+      "level": 1,
+      "sort": 195,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 568,
+          "pid": 567,
+          "name": "女士包",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 570,
+              "pid": 568,
+              "name": "化妆包",
+              "icon": null,
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 840,
+              "pid": 568,
+              "name": "女士单肩包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/c63865359692433787391d05ca26fa3eblb5ibcib6.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 841,
+              "pid": 568,
+              "name": "女士帆布包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/90dccc25f81149ca974e5c4f754ec7f9ru1bmevf0m.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 842,
+              "pid": 568,
+              "name": "女士手拿包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/c785c21e51d54fd0b02cb4de674fe577f4vnysag6r.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 843,
+              "pid": 568,
+              "name": "女士手提包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/b942efdf69b548be94a1f3eda7c2ba0b8ei4yv28f3.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 844,
+              "pid": 568,
+              "name": "女士斜挎包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/1c38dcfe3a5149fe94167e9b6a13ce58zg9nio1l14.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 845,
+              "pid": 568,
+              "name": "女士真皮包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/7008f18a833d4e64a3f09f16134860e1eynio7abwx.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 846,
+          "pid": 567,
+          "name": "男士包",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 847,
+              "pid": 846,
+              "name": "男士单肩包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/9536db3d879c46b49d14a798b556e47dosk1iuda91.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 848,
+              "pid": 846,
+              "name": "男士斜挎包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/656ad8e8a1b14ad09e230c939002ce016gi2plw4w5.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 849,
+              "pid": 846,
+              "name": "男士真皮包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/8fe11c2a43e34a3cab7661e2cf6f3a77awwgi0ukyi.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 850,
+              "pid": 846,
+              "name": "男士胸包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/1a91785018504b929528fcbf743abdce37mmsyjok0.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 851,
+              "pid": 846,
+              "name": "男士腰包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/1a91785018504b929528fcbf743abdce37mmsyjok0.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 852,
+          "pid": 567,
+          "name": "功能类箱包",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 853,
+              "pid": 852,
+              "name": "双肩背包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/414c21dad9b7453289126cb7ef06da93eo8t0w6qtx.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 854,
+              "pid": 852,
+              "name": "旅行箱",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/4211409595c24ee987617e0fb237ecef3tmcznf4ms.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 855,
+              "pid": 852,
+              "name": "旅行袋",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/323078fce9d14750a8aab7f3b4d645fe6r15twq8y7.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 856,
+              "pid": 852,
+              "name": "钱包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/a5a8a5437b624dc08723485a9e55867e05no0yqibg.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 857,
+              "pid": 852,
+              "name": "卡包",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/391176d3f66f48629b513b200cdd45ae9m2a3y2u04.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 963,
+      "pid": 0,
+      "name": "家具",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/928f2a27f3b94592a1efaadb9d891043jk7isd198v.png",
+      "level": 1,
+      "sort": 194,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 964,
+          "pid": 963,
+          "name": "卧室家具",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/fa8ad0ba5e914641b73bbed3fce2111es844zg1f1s.png",
+          "level": 2,
+          "sort": 100,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 965,
+              "pid": 964,
+              "name": "床",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/09/02/16c01d5fc58a4518a376066712867266206f45ovfd.png",
+              "level": 3,
+              "sort": 100,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 966,
+              "pid": 964,
+              "name": "床头柜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/3750d940a1484a448a19ce064286ab25hoozijjzy9.png",
+              "level": 3,
+              "sort": 90,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 971,
+              "pid": 964,
+              "name": "卧室家具套装",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/09/02/296f6cdcd1f24d6d981e5e99ecb6c1c777mv6ssjua.png",
+              "level": 3,
+              "sort": 80,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 981,
+              "pid": 964,
+              "name": "穿衣镜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/02/61a3e7076427404e9cc236821352269bsg85rkzb50.png",
+              "level": 3,
+              "sort": 60,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 969,
+          "pid": 963,
+          "name": "客厅家具",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/928f2a27f3b94592a1efaadb9d891043jk7isd198v.png",
+          "level": 2,
+          "sort": 90,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 970,
+              "pid": 969,
+              "name": "沙发",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/02/f463d908fbda4d339c734af9ee23d7e3d3ymegrwr8.png",
+              "level": 3,
+              "sort": 100,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 977,
+          "pid": 963,
+          "name": "办公家具",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/928f2a27f3b94592a1efaadb9d891043jk7isd198v.png",
+          "level": 2,
+          "sort": 80,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 978,
+              "pid": 977,
+              "name": "文件柜",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/02/2f3bed2edb49499ca76089238f64860fdnx79zpdd4.png",
+              "level": 3,
+              "sort": 100,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 979,
+              "pid": 977,
+              "name": "办公桌",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/02/58c321d2fcab48d0a4442138c1830812fyq9pl6qzd.png",
+              "level": 3,
+              "sort": 90,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 980,
+              "pid": 977,
+              "name": "移动白板",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/02/db0232cf35224df8a9c5d55e7745a616p75nutvat5.png",
+              "level": 3,
+              "sort": 70,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 998,
+          "pid": 963,
+          "name": "餐厅家具",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/fa8ad0ba5e914641b73bbed3fce2111es844zg1f1s.png",
+          "level": 2,
+          "sort": 70,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 999,
+              "pid": 998,
+              "name": "餐桌",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/fa8ad0ba5e914641b73bbed3fce2111es844zg1f1s.png",
+              "level": 3,
+              "sort": 100,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 401,
+      "pid": 0,
+      "name": "运动",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/99cd7ca092144fbeb4f8820b1ac27994z30o901xyi.jpg",
+      "level": 1,
+      "sort": 193,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 631,
+          "pid": 401,
+          "name": "篮球",
+          "icon": null,
+          "level": 2,
+          "sort": 80,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 810,
+              "pid": 631,
+              "name": "篮球",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/2b5e2b0e668240288f11cc502980c436btkj10u2fv.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 811,
+              "pid": 631,
+              "name": "篮球服",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/db3e3f0344fe4b2188b6c6f8070a9d70zcccijj8xx.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 812,
+              "pid": 631,
+              "name": "篮球鞋",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/9471348606f44a2a96af50d902820e05xq85clgn2f.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 632,
+          "pid": 401,
+          "name": "足球",
+          "icon": null,
+          "level": 2,
+          "sort": 70,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 813,
+              "pid": 632,
+              "name": "足球",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/4444dad8bf094b218c8dc9e1195a44e1fj69dsgf1z.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 814,
+              "pid": 632,
+              "name": "足球服",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/274b20d601cf4a1b9a8e693863687611ucx1wb5yuo.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 815,
+              "pid": 632,
+              "name": "足球鞋",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/482ec16e8c8e4c20ac25926816df135eoota74z7tj.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 584,
+          "pid": 401,
+          "name": "健身用品",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/07/23/5b30d6eda0874e4d84abdeddd74ecf0a0edv26r0i0.jpeg",
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 819,
+              "pid": 584,
+              "name": "跑步机",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/d8f5b533ca984571bbf4bba227306bd5ix7jj81b9g.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 587,
+          "pid": 401,
+          "name": "体重称",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/16/803da8acfd09455bad7fbd6298d6d5d4vldg5ci66f.png",
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 588,
+              "pid": 587,
+              "name": "体重称",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/16/803da8acfd09455bad7fbd6298d6d5d4vldg5ci66f.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 633,
+          "pid": 401,
+          "name": "羽毛球",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 822,
+              "pid": 633,
+              "name": "羽毛球",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/16/f89a7de0f4cf4244b88bf35ea0d2ce2aj8lztoz2jh.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 823,
+              "pid": 633,
+              "name": "羽毛球拍",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/c0f3aebfc96f4087b4f6a42f26031c32s6iw2rvb5g.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 824,
+              "pid": 633,
+              "name": "羽毛球鞋",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/c3819d8933f04eb6b568eb8cbd79f417i59h98tuaa.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 827,
+          "pid": 401,
+          "name": "垂钓",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 831,
+              "pid": 827,
+              "name": "鱼竿",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/9e746688f3e94a3da4c62aaa2348b0bf0zs01ob6ts.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 832,
+              "pid": 827,
+              "name": "钓箱",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/a6daa089607641538f21d4528cd0b9f14juduje6qu.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 381,
+      "pid": 0,
+      "name": "电器",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/6478c50b813840dbad77ae154e0c942e9qget6i2t4.jpg",
+      "level": 1,
+      "sort": 190,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 967,
+          "pid": 381,
+          "name": "大家电",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/a6f03a180ab141da84fb0a3c945d7c32ywsapma499.png",
+          "level": 2,
+          "sort": 100,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 968,
+              "pid": 967,
+              "name": "冰箱",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/a6f03a180ab141da84fb0a3c945d7c32ywsapma499.png",
+              "level": 3,
+              "sort": 100,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 972,
+          "pid": 381,
+          "name": "办公电器",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/6478c50b813840dbad77ae154e0c942e9qget6i2t4.jpg",
+          "level": 2,
+          "sort": 80,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 973,
+              "pid": 972,
+              "name": "碎纸机",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/6478c50b813840dbad77ae154e0c942e9qget6i2t4.jpg",
+              "level": 3,
+              "sort": 100,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 382,
+          "pid": 381,
+          "name": "厨房小电",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/6478c50b813840dbad77ae154e0c942e9qget6i2t4.jpg",
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 383,
+              "pid": 382,
+              "name": "电饭煲",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/f7725bf75b7b468db940c661c1ce9430f43ohmrlcp.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 384,
+              "pid": 382,
+              "name": "电热火锅",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/18b7b4b6619a4f61bdfacf2ce3a77ef6z3ayn5wcsv.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 385,
+              "pid": 382,
+              "name": "电热水壶",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/a7221561419f47f893ff4aedf67289c5y8o7ikh4xj.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 386,
+              "pid": 382,
+              "name": "空气炸锅",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/e3d0956a7b9a44f38bbb2fe4978b8a128yjn38nre7.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 387,
+              "pid": 382,
+              "name": "养生壶",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/8ceff152d9914018a5b4bec6fec10724qhf50y7y44.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 388,
+              "pid": 382,
+              "name": "破壁机",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/88330cce2c6f4d65abfa098479560a7381q7vr3yr9.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 389,
+              "pid": 382,
+              "name": "电磁炉",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/371c8a73e1344cf0861f6b6842f367fdkdeqnxk5rk.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 390,
+              "pid": 382,
+              "name": "微波炉",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/af2437de2e134590ad28c099089811dacy45z861k6.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 391,
+          "pid": 381,
+          "name": "居家生活",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 974,
+              "pid": 391,
+              "name": "吸尘器",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/6478c50b813840dbad77ae154e0c942e9qget6i2t4.jpg",
+              "level": 3,
+              "sort": 90,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 975,
+              "pid": 391,
+              "name": "空气净化器",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/6478c50b813840dbad77ae154e0c942e9qget6i2t4.jpg",
+              "level": 3,
+              "sort": 80,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 976,
+              "pid": 391,
+              "name": "洗衣机",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/6478c50b813840dbad77ae154e0c942e9qget6i2t4.jpg",
+              "level": 3,
+              "sort": 70,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 985,
+              "pid": 391,
+              "name": "除湿机",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/6478c50b813840dbad77ae154e0c942e9qget6i2t4.jpg",
+              "level": 3,
+              "sort": 65,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 393,
+              "pid": 391,
+              "name": "吹风机",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/8c195c28315c40b092f145a1e762e96fm6jpdmdmen.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 394,
+              "pid": 391,
+              "name": "剃须刀",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/f4fe1b2c37bd4a258b8ff51765123175cjnorwiq1q.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 395,
+              "pid": 391,
+              "name": "卷发棒",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/0a9a7e902ab643c6ae566c03a81f24f1bxupbnb9vx.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 396,
+              "pid": 391,
+              "name": "干衣机",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/578aef66dc814058ad187717c993363fj84s7evdb5.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 397,
+              "pid": 391,
+              "name": "足浴器",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/f06d26b532b74e5eb25380b97b20ef75wiwfi7xzj0.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 398,
+              "pid": 391,
+              "name": "毛球修剪器",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/b404c4e846a94522ab9b811ab456748266y1pqt18v.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 399,
+              "pid": 391,
+              "name": "迷你清洗机",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/be17e9249170403ea25239f95b57dc1a360wi0h141.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 400,
+              "pid": 391,
+              "name": "暖菜板",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/ad0e24740f1f43d7989aa6ad896876f2lc9ysc5jpy.jpeg",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 934,
+              "pid": 391,
+              "name": "风扇",
+              "icon": "",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 122,
+      "pid": 0,
+      "name": "数码",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/11a60a86496a4b11a055ea5ae47577363kqtqlqbzz.jpg",
+      "level": 1,
+      "sort": 150,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 123,
+          "pid": 122,
+          "name": "品牌",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 137,
+              "pid": 123,
+              "name": "苹果",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/f2ec11c1d8654dc5bef56d1bff5ff8e230vtc2n7lb.jpeg",
+              "level": 3,
+              "sort": 20,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 133,
+              "pid": 123,
+              "name": "华为",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/234398276c1b458fb84d6a7287d05e1ax8lyr0v5tx.jpeg",
+              "level": 3,
+              "sort": 19,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 134,
+              "pid": 123,
+              "name": "小米",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/9b928794f57b4a99b11ce8c21627aa1cv8cqj3tpnh.jpeg",
+              "level": 3,
+              "sort": 18,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 128,
+              "pid": 123,
+              "name": "vivo",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/235aecf50efb42ba98dbac37067a57d4kr666nf2jz.jpeg",
+              "level": 3,
+              "sort": 15,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 126,
+              "pid": 123,
+              "name": "iQOO",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/037c1b8189c841a7b3c8ec4a96b6851eirpe3qcapu.jpeg",
+              "level": 3,
+              "sort": 14,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 127,
+              "pid": 123,
+              "name": "realme",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/26a2c2f923234816965a436cbd9339acywhtcj4a7p.jpeg",
+              "level": 3,
+              "sort": 13,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 634,
+              "pid": 123,
+              "name": "OPPO",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/25/e26778b434b141708d560c3094632d93k7n73yffzo.png",
+              "level": 3,
+              "sort": 13,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 130,
+              "pid": 123,
+              "name": "三星",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/33e82be0a73f4a298d73d076199bdc37b0qe5uaaxw.png",
+              "level": 3,
+              "sort": 12,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 138,
+              "pid": 123,
+              "name": "荣耀",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/6f82188f522943ae80ddfd75ffa7fc69wqkh2hfzrd.jpeg",
+              "level": 3,
+              "sort": 11,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 129,
+              "pid": 123,
+              "name": "一加",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2023/12/05/8b209328499a4dbbbfb66287710328581bws6pzo6s.jpeg",
+              "level": 3,
+              "sort": 10,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 140,
+          "pid": 122,
+          "name": "配件",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 566,
+              "pid": 140,
+              "name": "鼠标垫",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/07/16/4c13bd7a20944dd585256c26aad76f2dqv1nuzovvo.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 922,
+              "pid": 140,
+              "name": "键盘",
+              "icon": "",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 932,
+              "pid": 140,
+              "name": "鼠标",
+              "icon": "",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 933,
+              "pid": 140,
+              "name": "音箱",
+              "icon": "",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 920,
+          "pid": 122,
+          "name": "摄影摄像",
+          "icon": "",
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 921,
+              "pid": 920,
+              "name": "相机",
+              "icon": "",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1000,
+      "pid": 0,
+      "name": "鲜花礼品",
+      "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/2946073ffdea4397afbb165e9eaf676dldyt5j7hj6.jpg",
+      "level": 1,
+      "sort": 35,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 1001,
+          "pid": 1000,
+          "name": "鲜花花束",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/2946073ffdea4397afbb165e9eaf676dldyt5j7hj6.jpg",
+          "level": 2,
+          "sort": 100,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 1003,
+              "pid": 1001,
+              "name": "玫瑰花束",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/2946073ffdea4397afbb165e9eaf676dldyt5j7hj6.jpg",
+              "level": 3,
+              "sort": 100,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        },
+        {
+          "id": 1002,
+          "pid": 1000,
+          "name": "礼盒与布置",
+          "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/2946073ffdea4397afbb165e9eaf676dldyt5j7hj6.jpg",
+          "level": 2,
+          "sort": 90,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 1004,
+              "pid": 1002,
+              "name": "创意花礼",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/2946073ffdea4397afbb165e9eaf676dldyt5j7hj6.jpg",
+              "level": 3,
+              "sort": 100,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 1005,
+              "pid": 1002,
+              "name": "蛋糕组合",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/01/2946073ffdea4397afbb165e9eaf676dldyt5j7hj6.jpg",
+              "level": 3,
+              "sort": 90,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 874,
+      "pid": 0,
+      "name": "服务",
+      "icon": null,
+      "level": 1,
+      "sort": 0,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 875,
+          "pid": 874,
+          "name": "便民服务",
+          "icon": null,
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 876,
+              "pid": 875,
+              "name": "跑腿",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/07/15/85ea430a7d17427f8c5a4f9a37b09fecao8q1ftrvv.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 877,
+              "pid": 875,
+              "name": "打车",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/07/15/9453661a6b814482b75b9932e64247b6cxx0oy1o1x.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 878,
+              "pid": 875,
+              "name": "换汇",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/07/15/a00aeff8f9224bfc9b150fb6245ce249m8yiqdlmy2.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            },
+            {
+              "id": 883,
+              "pid": 875,
+              "name": "代购",
+              "icon": "https://yt.pic.sheep2.shop/crmebimage/public/store/2026/08/09/c79a5da0721f4d40a71c33b9650fb3885fy6733ta3.png",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 923,
+      "pid": 0,
+      "name": "药品",
+      "icon": "",
+      "level": 1,
+      "sort": 0,
+      "isShow": true,
+      "childList": [
+        {
+          "id": 924,
+          "pid": 923,
+          "name": "外用药品",
+          "icon": "",
+          "level": 2,
+          "sort": 0,
+          "isShow": true,
+          "childList": [
+            {
+              "id": 925,
+              "pid": 924,
+              "name": "药用贴剂",
+              "icon": "",
+              "level": 3,
+              "sort": 0,
+              "isShow": true,
+              "childList": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

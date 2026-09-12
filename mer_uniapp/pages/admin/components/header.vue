@@ -15,7 +15,7 @@
 				<view class="h-80 px-5 flex-y-center">
 					<view class="w-full h-58 flex-y-center rd-30rpx bg--w111-fff px-32">
 						<text class="iconfont icon-sousuo8 fs-28"></text>
-						<input class="fs-24 pl-18" placeholder="搜索商品名称或订单号">
+						<input class="fs-24 pl-18" :placeholder="$t('搜索商品名称或订单号')">
 					</view>
 					<view class="search_right_icon">
 						

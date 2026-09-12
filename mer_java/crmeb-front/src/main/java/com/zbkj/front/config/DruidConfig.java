@@ -10,8 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
 
 /**
  * Druid配置组件
@@ -53,7 +52,10 @@ public class DruidConfig {
     @Bean("dataSource")
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource druidDataSource() {
-        return new DruidDataSource();
+        DruidDataSource dataSource = new DruidDataSource();
+        dataSource.setConnectionInitSqls(Collections.singletonList(
+                "SET SESSION sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'"));
+        return dataSource;
     }
 }
 

@@ -1,6 +1,6 @@
 <template>
 	<text class="price-box semiBold">
-		<text class="icon">￥</text>
+		<text class="icon">฿</text>
 		<text class="big-num">{{priceArr[0]}}</text>
 		<text>.</text>
 		<text class="small-num">{{priceArr[1]}}</text>

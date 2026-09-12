@@ -2,17 +2,17 @@
   <div>
     <el-input
       v-model="tableFromNew.content"
-      placeholder="请输入用户信息"
+      :placeholder="$t('common.pleaseEnterUserInfo')"
       :type="tableFromNew.searchType === 'phone' || tableFromNew.searchType === 'uid' ? 'number' : 'text'"
       @input="handleChangeContent"
       clearable
       class="selWidth"
     >
-      <el-select @change="handleChangeType" v-model="tableFromNew.searchType" slot="prepend" style="width: 100px">
-        <el-option value="all" label="全部"></el-option>
-        <el-option value="uid" label="用户ID"></el-option>
-        <el-option value="phone" label="手机号"></el-option>
-        <el-option value="nickname" label="用户昵称"></el-option>
+      <el-select @change="handleChangeType" v-model="tableFromNew.searchType" slot="prepend" style="width: 130px">
+        <el-option value="all" :label="$t('common.all')"></el-option>
+        <el-option value="uid" :label="$t('common.userId')"></el-option>
+        <el-option value="phone" :label="$t('common.phoneNumber')"></el-option>
+        <el-option value="nickname" :label="$t('common.userNickname')"></el-option>
       </el-select>
     </el-input>
   </div>

@@ -30,6 +30,8 @@
 import toolCom from '../mobileConfigRight/index.js';
 import rightBtn from '../rightBtn/index.vue';
 import { mapGetters } from 'vuex';
+import { applyDiyUiLabels } from '@/utils/diyCname';
+import homeMerchantPage from '../mobilePage/home_merchant.vue';
 export default {
   name: 'c_home_merchant',
   componentsName: 'home_merchant',
@@ -64,8 +66,7 @@ export default {
   },
   watch: {
     num(nVal) {
-      let value = JSON.parse(JSON.stringify(this.$store.state.mobildConfig.defaultArray[nVal]));
-      this.configObj = value;
+      this.loadConfig(nVal);
     },
     configObj: {
       handler(nVal, oVal) {
@@ -207,13 +208,17 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      let value = JSON.parse(JSON.stringify(this.$store.state.mobildConfig.defaultArray[this.num]));
-      this.configObj = value;
-      // this.configObj.logoConfig.url = this.mediaDomain + '/crmebimage/presets/haodian.png';
+      this.loadConfig(this.num);
     });
   },
   created() {},
   methods: {
+    loadConfig(nVal) {
+      const raw = this.$store.state.mobildConfig.defaultArray[nVal];
+      if (!raw) return;
+      const value = JSON.parse(JSON.stringify(raw));
+      this.configObj = applyDiyUiLabels(value, { data: homeMerchantPage.data, num: nVal });
+    },
     getConfig(data) {
       if (data.name === 'tab_radio' && data.values === 0) {
         this.configObj.numConfig.isShow = 1;

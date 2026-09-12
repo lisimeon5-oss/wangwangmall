@@ -10,6 +10,8 @@
 
 import * as constants from '@/utils/constants.js';
 import { formatDates } from '@/utils/index';
+import i18n from '@/i18n';
+import { getLocalizedName } from '@/utils/localizedName';
 
 // 公共过滤器
 export function filterEmpty(val) {
@@ -30,19 +32,19 @@ export function formatDate(time) {
 }
 
 export function filterYesOrNo(value) {
-  return value ? '是' : '否';
+  return value ? i18n.t('common.yes') : i18n.t('common.no');
 }
 
 export function filterShowOrHide(value) {
-  return value ? '显示' : '不显示';
+  return value ? i18n.t('common.show') : i18n.t('common.notShow');
 }
 
 export function filterShowOrHideForFormConfig(value) {
-  return value === '‘0’' ? '显示' : '不显示';
+  return value === '‘0’' ? i18n.t('common.show') : i18n.t('common.notShow');
 }
 
 export function filterYesOrNoIs(value) {
-  return value ? '否' : '是';
+  return value ? i18n.t('common.no') : i18n.t('common.yes');
 }
 
 export function filterCategroyType(value) {
@@ -58,10 +60,10 @@ export function filterConfigCategory(value) {
  */
 export function keywordStatusFilter(status) {
   const statusMap = {
-    text: '文字消息',
-    image: '图片消息',
-    news: '图文消息',
-    voice: '声音消息',
+    text: i18n.t('common.textMessage'),
+    image: i18n.t('common.imageMessage'),
+    news: i18n.t('common.newsMessage'),
+    voice: i18n.t('common.voiceMessage'),
   };
   return statusMap[status];
 }
@@ -71,9 +73,9 @@ export function keywordStatusFilter(status) {
  */
 export function couponTypeFilter(status) {
   const statusMap = {
-    1: '手动领取',
-    2: '新人券',
-    3: '赠送券',
+    1: i18n.t('common.couponManual'),
+    2: i18n.t('common.couponNewcomer'),
+    3: i18n.t('common.couponGift'),
   };
   return statusMap[status];
 }
@@ -89,7 +91,7 @@ export function articleTypeFilter(status) {
   if (arrayList.filter((item) => Number(status) === Number(item.id)).length < 1) {
     return '';
   }
-  return arrayList.filter((item) => Number(status) === Number(item.id))[0].name;
+  return getLocalizedName(arrayList.filter((item) => Number(status) === Number(item.id))[0], i18n.locale);
 }
 
 /**
@@ -97,8 +99,8 @@ export function articleTypeFilter(status) {
  */
 export function payStatusFilter(status) {
   const statusMap = {
-    false: '未支付',
-    true: '已支付',
+    false: i18n.t('order.unpaid'),
+    true: i18n.t('order.paid'),
   };
   return statusMap[status];
 }
@@ -108,9 +110,9 @@ export function payStatusFilter(status) {
  */
 export function extractTypeFilter(status) {
   const statusMap = {
-    bank: '银行卡',
-    alipay: '支付宝',
-    weixin: '微信',
+    bank: i18n.t('finance.bankCard'),
+    alipay: i18n.t('order.alipay'),
+    weixin: i18n.t('order.wechat'),
   };
   return statusMap[status];
 }
@@ -120,13 +122,13 @@ export function extractTypeFilter(status) {
  */
 export function rechargeTypeFilter(status) {
   const statusMap = {
-    public: '微信公众号',
-    h5: '网页支付',
-    mini: '小程序',
-    wechatIos: '微信Ios',
-    wechatAndroid: '微信Android',
-    alipay: '支付宝',
-    alipayApp: '支付宝App',
+    public: i18n.t('common.publicAccount'),
+    h5: i18n.t('common.webPayment'),
+    mini: i18n.t('common.miniProgram'),
+    wechatIos: i18n.t('common.wechatIos'),
+    wechatAndroid: i18n.t('common.wechatAndroid'),
+    alipay: i18n.t('order.alipay'),
+    alipayApp: i18n.t('common.alipayApp'),
   };
   return statusMap[status];
 }
@@ -136,9 +138,9 @@ export function rechargeTypeFilter(status) {
  */
 export function extractStatusFilter(status) {
   const statusMap = {
-    '-1': '已拒绝',
-    0: '审核中',
-    1: '已提现',
+    '-1': i18n.t('common.rejected'),
+    0: i18n.t('common.auditing'),
+    1: i18n.t('common.withdrawn'),
   };
   return statusMap[status];
 }
@@ -148,9 +150,9 @@ export function extractStatusFilter(status) {
  */
 export function bargainStatusFilter(status) {
   const statusMap = {
-    1: '进行中',
-    2: '未完成',
-    3: '已成功',
+    1: i18n.t('common.ongoing'),
+    2: i18n.t('common.incomplete'),
+    3: i18n.t('common.succeeded'),
   };
   return statusMap[status];
 }
@@ -172,9 +174,9 @@ export function bargainColorFilter(status) {
  */
 export function groupStatusFilter(status) {
   const statusMap = {
-    1: '进行中',
-    2: '已成功',
-    3: '未完成',
+    1: i18n.t('common.ongoing'),
+    2: i18n.t('common.succeeded'),
+    3: i18n.t('common.incomplete'),
   };
   return statusMap[status];
 }
@@ -196,10 +198,10 @@ export function groupColorFilter(status) {
  */
 export function onePassTypeFilter(status) {
   const statusMap = {
-    sms: '短信',
-    copy: '商品采集',
-    expr_query: '物流查询',
-    expr_dump: '电子面单打印',
+    sms: i18n.t('common.sms'),
+    copy: i18n.t('common.productCollection'),
+    expr_query: i18n.t('common.logisticsQuery'),
+    expr_dump: i18n.t('common.electronicWaybill'),
   };
   return statusMap[status];
 }
@@ -209,10 +211,10 @@ export function onePassTypeFilter(status) {
  */
 export function integralStatusFilter(status) {
   const statusMap = {
-    1: '订单创建',
-    2: '冻结期',
-    3: '完成',
-    4: '失效',
+    1: i18n.t('common.orderCreated'),
+    2: i18n.t('common.frozenPeriod'),
+    3: i18n.t('common.finish'),
+    4: i18n.t('common.expired'),
   };
   return statusMap[status];
 }
@@ -222,10 +224,10 @@ export function integralStatusFilter(status) {
  */
 export function integralLinkTypeFilter(status) {
   const statusMap = {
-    order: '订单',
-    refund: '退款',
-    sign: '签到',
-    system: '系统操作',
+    order: i18n.t('common.linkOrder'),
+    refund: i18n.t('common.linkRefund'),
+    sign: i18n.t('common.linkSign'),
+    system: i18n.t('common.linkSystem'),
   };
   return statusMap[status];
 }
@@ -235,8 +237,8 @@ export function integralLinkTypeFilter(status) {
  */
 export function integralLinkIdFilter(status) {
   const statusMap = {
-    orderNo: '订单号',
-    refundOrderNo: '退款单号',
+    orderNo: i18n.t('common.orderNo'),
+    refundOrderNo: i18n.t('order.refundOrderNo'),
     0: '-',
   };
   return statusMap[status];
@@ -247,11 +249,11 @@ export function integralLinkIdFilter(status) {
  */
 export function activityMethodFilter(status) {
   const statusMap = {
-    0: '全部商品',
-    1: '指定商品',
-    2: '指定品牌',
-    3: '指定商品分类',
-    4: '指定商户',
+    0: i18n.t('common.allProducts'),
+    1: i18n.t('common.specifiedProducts'),
+    2: i18n.t('common.specifiedBrand'),
+    3: i18n.t('common.specifiedCategory'),
+    4: i18n.t('common.specifiedMerchant'),
   };
   return statusMap[status];
 }
@@ -262,9 +264,9 @@ export function activityMethodFilter(status) {
  */
 export function activityStatusFilter(status) {
   const statusMap = {
-    0: '未开始',
-    1: '进行中',
-    2: '已结束',
+    0: i18n.t('common.notStarted'),
+    1: i18n.t('common.ongoing'),
+    2: i18n.t('common.ended'),
   };
   return statusMap[status];
 }
@@ -275,9 +277,9 @@ export function activityStatusFilter(status) {
  */
 export function communityStatusFilter(status) {
   const statusMap = {
-    0: '待审核',
-    1: '已通过',
-    2: '已拒绝',
+    0: i18n.t('order.pendingAudit'),
+    1: i18n.t('common.approved'),
+    2: i18n.t('common.rejected'),
   };
   return statusMap[status];
 }
@@ -288,9 +290,9 @@ export function communityStatusFilter(status) {
  */
 export function communityReplyStatusFilter(status) {
   const statusMap = {
-    1: '开启',
-    2: '关闭',
-    3: '平台关闭',
+    1: i18n.t('common.open'),
+    2: i18n.t('common.close'),
+    3: i18n.t('common.platformClosed'),
   };
   return statusMap[status];
 }
@@ -301,10 +303,10 @@ export function communityReplyStatusFilter(status) {
  */
 export function communityAuditStatusFilter(status) {
   const statusMap = {
-    0: '待审核',
-    1: '审核成功',
-    2: '审核失败',
-    3: '平台关闭',
+    0: i18n.t('order.pendingAudit'),
+    1: i18n.t('common.auditSuccess'),
+    2: i18n.t('common.auditFailed'),
+    3: i18n.t('common.platformClosed'),
   };
   return statusMap[status];
 }

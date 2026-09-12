@@ -1,5 +1,6 @@
 package com.zbkj.common.request;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -31,10 +32,13 @@ public class SeckillTimeIntervalRequest implements Serializable {
     @ApiModelProperty(value = "秒杀时段ID，新增时不填，编辑时必填")
     private Integer id;
 
-    @ApiModelProperty(value = "秒杀时段名称", required = true)
-    @NotBlank(message = "秒杀时段名称不能为空")
+    @ApiModelProperty(value = "秒杀时段名称")
     @Length(max = 30, message = "秒杀时段名称最多30个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言秒杀时段名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言秒杀时段名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "秒杀时段开始时间", required = true)
     @NotBlank(message = "秒杀时段开始时间不能为空")

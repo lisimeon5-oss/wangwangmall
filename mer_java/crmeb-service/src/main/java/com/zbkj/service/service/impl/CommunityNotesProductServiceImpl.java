@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zbkj.common.model.community.CommunityNotesProduct;
 import com.zbkj.common.model.product.Product;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.service.dao.community.CommunityNotesProductDao;
 import com.zbkj.service.service.CommunityNotesProductService;
 import com.zbkj.service.service.ProductService;
@@ -49,7 +50,7 @@ public class CommunityNotesProductServiceImpl extends ServiceImpl<CommunityNotes
         list.forEach(np -> {
             Product product = productService.getById(np.getProductId());
             if (ObjectUtil.isNotNull(product)) {
-                np.setProductName(product.getName());
+                np.setProductName(I18nJsonUtil.resolveByRequest(product.getName(), product.getNameJson()));
                 np.setProductImage(product.getImage());
                 np.setPrice(product.getPrice());
                 np.setOtPrice(product.getOtPrice());

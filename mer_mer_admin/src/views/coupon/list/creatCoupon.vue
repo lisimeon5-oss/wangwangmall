@@ -2,7 +2,7 @@
   <div class="divBox">
     <pages-header
       ref="pageHeader"
-      :title="$route.params.edit === 'edit' ? '优惠券编辑' : !$route.params.id ? '优惠券添加' : '优惠券复制'"
+      :title="$route.params.edit === 'edit' ? $t('coupon.editCouponTitle') : !$route.params.id ? $t('coupon.addCouponTitle') : $t('coupon.copyCouponTitle')"
       backUrl="/coupon/list"
     ></pages-header>
     <el-card class="box-card mt14" shadow="never" :bordered="false">
@@ -14,22 +14,38 @@
         class="demo-ruleForm"
         @submit.native.prevent
       >
-        <el-form-item label="优惠劵名称：" prop="name">
-          <el-input
-            v-model.trim="ruleForm.name"
-            class="from-ipt-width"
-            maxlength="20"
-            placeholder="请输入优惠券名称"
-            :disabled="$route.params.edit ? true : false"
-          ></el-input>
+        <el-form-item :label="$t('user.couponName')" prop="name">
+          <div class="lang-name-switch from-ipt-width">
+            <el-radio-group v-model="activeLang" size="small">
+              <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                {{ lang.label }}
+              </el-radio-button>
+            </el-radio-group>
+            <el-input
+              v-if="activeLang === defaultLangCode"
+              v-model.trim="ruleForm.name"
+              class="lang-name-input"
+              maxlength="20"
+              :placeholder="$t('marketing.pleaseEnterCouponName')"
+              :disabled="$route.params.edit ? true : false"
+            ></el-input>
+            <el-input
+              v-else
+              v-model.trim="nameJsonForm[activeLang]"
+              class="lang-name-input"
+              maxlength="20"
+              :placeholder="$t('marketing.inputNameInLang', { lang: activeLangLabel })"
+              :disabled="$route.params.edit ? true : false"
+            ></el-input>
+          </div>
         </el-form-item>
-        <el-form-item label="优惠劵类别：">
+        <el-form-item :label="$t('coupon.couponTypeLabel')">
           <el-radio-group v-model="ruleForm.category" :disabled="$route.params.edit ? true : false">
-            <el-radio :label="1">商家券</el-radio>
-            <el-radio :label="2">商品券</el-radio>
+            <el-radio :label="1">{{ $t('coupon.merchantCoupon') }}</el-radio>
+            <el-radio :label="2">{{ $t('coupon.productCoupon') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="商品：" v-if="ruleForm.category === 2" prop="checked">
+        <el-form-item :label="$t('product.productLabel')" v-if="ruleForm.category === 2" prop="checked">
           <div class="acea-row">
             <template v-if="ruleForm.checked.length">
               <div class="pictrue" v-for="(item, index) in ruleForm.checked" :key="index">
@@ -44,72 +60,72 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="优惠券面值：" prop="money">
+        <el-form-item :label="$t('marketing.couponFaceValueLabel')" prop="money">
           <el-input-number
             v-model.trim="ruleForm.money"
             :min="1"
             :max="9999"
             step-strictly
-            label="优惠券面值"
+            :label="$t('product.couponMoney')"
             :disabled="$route.params.edit ? true : false"
             controls-position="right"
           ></el-input-number>
         </el-form-item>
-        <el-form-item label="使用门槛：">
+        <el-form-item :label="$t('marketing.useThresholdLabel')">
           <el-radio-group v-model="threshold" :disabled="$route.params.edit ? true : false">
-            <el-radio :label="false">无门槛</el-radio>
-            <el-radio :label="true">有门槛</el-radio>
+            <el-radio :label="false">{{ $t('coupon.noThreshold') }}</el-radio>
+            <el-radio :label="true">{{ $t('coupon.hasThreshold') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="优惠券最低消费：" prop="minPrice" v-if="threshold">
+        <el-form-item :label="$t('coupon.couponMinSpendLabel')" prop="minPrice" v-if="threshold">
           <el-input-number
             v-model.trim="ruleForm.minPrice"
             :step="1"
             step-strictly
             :min="1"
             :max="999999"
-            label="描述文字"
+            :label="$t('coupon.descriptionText')"
             :disabled="$route.params.edit ? true : false"
             controls-position="right"
           ></el-input-number>
         </el-form-item>
-        <el-form-item label="使用有效期：">
+        <el-form-item :label="$t('marketing.useValidityLabel')">
           <el-radio-group v-model="ruleForm.isFixedTime" :disabled="$route.params.edit ? true : false">
-            <el-radio :label="false">天数</el-radio>
-            <el-radio :label="true">时间段</el-radio>
+            <el-radio :label="false">{{ $t('marketing.days') }}</el-radio>
+            <el-radio :label="true">{{ $t('marketing.timePeriod') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="使用有效期限（天）：" prop="day" v-if="!ruleForm.isFixedTime">
+        <el-form-item :label="$t('coupon.validDaysLabel')" prop="day" v-if="!ruleForm.isFixedTime">
           <el-input-number
             v-model.trim="ruleForm.day"
             :min="1"
             :max="999"
             step-strictly
-            label="使用有效期限（天）"
+            :label="$t('coupon.validDaysInput')"
             :disabled="$route.params.edit ? true : false"
             controls-position="right"
           ></el-input-number>
         </el-form-item>
-        <el-form-item label="使用有效期限：" prop="resource" v-if="ruleForm.isFixedTime">
+        <el-form-item :label="$t('coupon.validPeriodLabel')" prop="resource" v-if="ruleForm.isFixedTime">
           <el-date-picker
             :disabled="$route.params.edit ? true : false"
             v-model="termTime"
             type="datetimerange"
             range-separator="-"
             value-format="yyyy-MM-dd HH:mm:ss"
-            start-placeholder="开始日期"
+            :start-placeholder="$t('product.startDate')"
             :picker-options="pickerOptions"
-            end-placeholder="结束日期"
+            :end-placeholder="$t('product.endDate')"
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="领取是否限时：" prop="isTimeReceive">
+        <el-form-item :label="$t('coupon.timedClaimLabel')" prop="isTimeReceive">
           <el-radio-group v-model="ruleForm.isTimeReceive" :disabled="$route.params.edit ? true : false">
-            <el-radio :label="true">限时</el-radio>
-            <el-radio :label="false">不限时</el-radio>
+            <el-radio :label="true">{{ $t('coupon.limitedTime') }}</el-radio>
+            <el-radio :label="false">{{ $t('marketing.noTimeLimit') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="领取时间：" v-if="ruleForm.isTimeReceive">
+        <el-form-item :label="$t('marketing.receiveTimeLabel')" v-if="ruleForm.isTimeReceive">
           <el-date-picker
             :disabled="$route.params.edit ? true : false"
             v-model="isForeverTime"
@@ -117,25 +133,25 @@
             range-separator="-"
             value-format="yyyy-MM-dd HH:mm:ss"
             :picker-options="pickerOptions"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
+            :start-placeholder="$t('product.startDate')"
+            :end-placeholder="$t('product.endDate')"
             @blur="handleTimestamp"
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="领取方式：" prop="receiveType">
+        <el-form-item :label="$t('marketing.receiveMethodLabel')" prop="receiveType">
           <el-radio-group v-model="ruleForm.receiveType" :disabled="$route.params.edit ? true : false">
-            <el-radio :label="1">手动领取</el-radio>
-            <el-radio :label="2">商品买赠券</el-radio>
+            <el-radio :label="1">{{ $t('common.couponManual') }}</el-radio>
+            <el-radio :label="2">{{ $t('coupon.productPurchaseGiftCoupon') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="是否限量：" prop="isLimited">
+        <el-form-item :label="$t('coupon.quantityLimitedLabel')" prop="isLimited">
           <el-radio-group v-model="ruleForm.isLimited" :disabled="$route.params.edit ? true : false">
-            <el-radio :label="true">限量</el-radio>
-            <el-radio :label="false">不限量</el-radio>
+            <el-radio :label="true">{{ $t('marketing.limited') }}</el-radio>
+            <el-radio :label="false">{{ $t('product.unlimited') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="发布数量：" prop="total" v-if="ruleForm.isLimited">
+        <el-form-item :label="$t('marketing.publishCountLabel')" prop="total" v-if="ruleForm.isLimited">
           <el-input-number
             v-model.trim="ruleForm.total"
             :min="1"
@@ -145,21 +161,21 @@
             controls-position="right"
           ></el-input-number>
         </el-form-item>
-        <el-form-item label="排序：" prop="sort">
+        <el-form-item :label="$t('product.sortLabel')" prop="sort">
           <el-input-number
             v-model.trim="ruleForm.sort"
             :min="1"
             :max="9999"
             step-strictly
-            label="排序"
+            :label="$t('product.sort')"
             :disabled="$route.params.edit ? true : false"
             controls-position="right"
           ></el-input-number>
         </el-form-item>
-        <el-form-item label="状态：" prop="status">
+        <el-form-item :label="$t('user.statusColon')" prop="status">
           <el-radio-group v-model="ruleForm.status" :disabled="$route.params.edit ? true : false">
-            <el-radio :label="true">开启</el-radio>
-            <el-radio :label="false">关闭</el-radio>
+            <el-radio :label="true">{{ $t('common.open') }}</el-radio>
+            <el-radio :label="false">{{ $t('common.close') }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item>
@@ -169,7 +185,7 @@
             @click="submitForm('ruleForm')"
             :loading="loading"
             v-hasPermi="['merchant:coupon:save', 'merchant:coupon:product:join:edit']"
-            >立即提交</el-button
+            >{{ $t('coupon.submitNow') }}</el-button
           >
         </el-form-item>
       </el-form>
@@ -189,8 +205,16 @@
 // +----------------------------------------------------------------------
 
 import { couponSaveApi, couponInfoApi, couponProductEditApi } from '@/api/product';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
 import { Debounce } from '@/utils/validate';
 import { checkPermi } from '@/utils/permission';
+import {
+  resolveFormActiveLang,
+  hasI18nNameContent,
+  buildI18nNameJson,
+  pickFormName,
+} from '@/utils/localizedName';
 export default {
   name: 'creatCoupon',
   data() {
@@ -217,6 +241,7 @@ export default {
         category: 1,
         isFixedTime: false,
         name: '',
+        nameJson: '',
         money: 1,
         minPrice: 1,
         day: null,
@@ -234,21 +259,43 @@ export default {
         checked: [],
       },
       isForeverTime: [],
-      rules: {
-        name: [{ required: true, message: '请输入优惠券名称', trigger: 'blur' }],
-        day: [{ required: true, message: '请输入使用有效期限（天）', trigger: 'blur' }],
-        money: [{ required: true, message: '请输入优惠券面值', trigger: 'blur' }],
-        productIds: [{ required: true, message: '请选择品类', trigger: 'change' }],
-        checked: [{ required: true, message: '请至少选择一个商品', trigger: 'change', type: 'array' }],
-        isForeverTime: [{ required: true, message: '请选择领取时间', trigger: 'change', type: 'array' }],
-        total: [{ required: true, message: '请输入发布数量', trigger: 'blur' }],
-        minPrice: [{ required: true, message: '请输入最低消费', trigger: 'blur' }],
-      },
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
       tempRoute: {},
     };
   },
+  computed: {
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    rules() {
+      return {
+        name: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(pickFormName(this), this.nameJsonForm)) callback();
+            else callback(new Error(this.$t('marketing.pleaseEnterCouponName')));
+          },
+          trigger: 'blur',
+        }],
+        day: [{ required: true, message: this.$t('coupon.pleaseEnterValidDays'), trigger: 'blur' }],
+        money: [{ required: true, message: this.$t('marketing.pleaseEnterCouponFace'), trigger: 'blur' }],
+        productIds: [{ required: true, message: this.$t('coupon.pleaseSelectCategory'), trigger: 'change' }],
+        checked: [{ required: true, message: this.$t('product.listPleaseSelectAtLeastOne'), trigger: 'change', type: 'array' }],
+        isForeverTime: [{ required: true, message: this.$t('coupon.pleaseSelectClaimTime'), trigger: 'change', type: 'array' }],
+        total: [{ required: true, message: this.$t('coupon.pleaseEnterPublishCount'), trigger: 'blur' }],
+        minPrice: [{ required: true, message: this.$t('coupon.pleaseEnterMinimumSpend'), trigger: 'blur' }],
+      };
+    },
+  },
   created() {
     this.tempRoute = Object.assign({}, this.$route);
+    this.getLanguageList();
   },
   mounted() {
     if (this.$route.params.id) {
@@ -257,9 +304,55 @@ export default {
     }
   },
   methods: {
+    emptyNameJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    parseNameJson(nameJson) {
+      const form = this.emptyNameJsonForm();
+      if (!nameJson) return form;
+      try {
+        const obj = typeof nameJson === 'string' ? JSON.parse(nameJson) : nameJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // ignore
+      }
+      return form;
+    },
+    buildNameJson() {
+      return buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, pickFormName(this));
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseNameJson(this.ruleForm && this.ruleForm.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseNameJson(this.ruleForm && this.ruleForm.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     setTagsViewTitle() {
       const title =
-        this.$route.params.edit === 'edit' ? '优惠券编辑' : !this.$route.params.id ? '优惠券添加' : '优惠券复制';
+        this.$route.params.edit === 'edit' ? this.$t('coupon.editCouponTitle') : !this.$route.params.id ? this.$t('coupon.addCouponTitle') : this.$t('coupon.copyCouponTitle');
       const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.$route.params.id}` });
       this.$store.dispatch('tagsView/updateVisitedView', route);
     },
@@ -274,6 +367,7 @@ export default {
             isFixedTime: info.isFixedTime,
             isTimeReceive: info.receiveEndTime ? true : false, //复制优惠券如果没有限制结束时间
             name: info.name,
+            nameJson: info.nameJson || '',
             money: info.money,
             minPrice: info.minPrice,
             day: info.day,
@@ -285,6 +379,8 @@ export default {
             productIds: Number(info.productIds),
             checked: res.productList || [],
           };
+          this.nameJsonForm = this.parseNameJson(info.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
           info.minPrice == 0 ? (this.threshold = false) : (this.threshold = true);
           info.isTimeReceive
             ? (this.isForeverTime = [info.receiveStartTime, info.receiveEndTime])
@@ -313,12 +409,12 @@ export default {
     },
     save(formName) {
       if ((this.ruleForm.isFixedTime && !this.termTime) || (this.ruleForm.isFixedTime && !this.termTime.length))
-        return this.$message.warning('请选择使用有效期限');
+        return this.$message.warning(this.$t('coupon.pleaseSelectValidity'));
       if (
         (this.ruleForm.isTimeReceive && !this.isForeverTime) ||
         (this.ruleForm.isTimeReceive && !this.isForeverTime.length)
       )
-        return this.$message.warning('请选择请选择领取时间');
+        return this.$message.warning(this.$t('coupon.pleaseSelectClaimTimeDuplicate'));
       if (!this.threshold) this.ruleForm.minPrice = 0;
       if (!this.ruleForm.isLimited) this.ruleForm.total = 0;
       this.ruleForm.isFixedTime && this.termTime.length
@@ -333,12 +429,13 @@ export default {
       this.ruleForm.isTimeReceive && this.isForeverTime.length
         ? (this.ruleForm.receiveEndTime = this.isForeverTime[1])
         : (this.ruleForm.receiveEndTime = '');
+      this.ruleForm.nameJson = this.buildNameJson();
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true;
           couponSaveApi(this.ruleForm)
             .then(() => {
-              this.$message.success('新增成功');
+              this.$message.success(this.$t('product.addSuccess'));
               this.loading = false;
               setTimeout(() => {
                 this.$router.push({ path: `/coupon/list` });
@@ -373,7 +470,7 @@ export default {
               productIds: this.ruleForm.productIds,
             })
               .then(() => {
-                this.$message.success('编辑成功');
+                this.$message.success(this.$t('product.editSuccess'));
                 this.loading = false;
                 setTimeout(() => {
                   this.$router.push({ path: `/coupon/list` });
@@ -422,5 +519,15 @@ export default {
   height: 20px !important;
   left: 46px;
   top: -4px;
+}
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.lang-name-input {
+  margin-top: 10px;
 }
 </style>

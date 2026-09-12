@@ -10,17 +10,17 @@
 				<!-- #endif -->
 				<view class="listCon">
 					<view class="item acea-row row-middle">
-						<view class="name">规格名称</view>
+						<view class="name">{{$t('规格名称')}}</view>
 						<view class="info">{{item.attrValue}}</view>
 					</view>
 					<view class="item acea-row row-middle">
-						<view class="name">目前库存</view>
-						<input type="number" :disabled="true"  v-model="item.nowStock" placeholder="请填写库存"
+						<view class="name">{{$t('目前库存')}}</view>
+						<input type="number" :disabled="true"  v-model="item.nowStock" :placeholder="$t('请填写库存')"
 							placeholder-class="placeholder" />
 					</view>
 					<view class="item acea-row row-middle">
-						<view class="name">增加库存</view>
-						<input type="number" :disabled="administer"  v-model="item.stock" placeholder="请填写库存"
+						<view class="name">{{$t('增加库存')}}</view>
+						<input type="number" :disabled="administer"  v-model="item.stock" :placeholder="$t('请填写库存')"
 							placeholder-class="placeholder" />
 					</view>
 				</view>
@@ -30,17 +30,17 @@
 			<checkbox-group @change="checkboxAllChange">
 				<view class="acea-row all-box">
 					<checkbox value="all" :checked="isAllSelect" />
-					<view class='checkAll'>全选</view>
+					<view class='checkAll'>{{$t('全选')}}</view>
 				</view>
 			</checkbox-group>
 			<view class="acea-row row-middle">
-				<view class="bnt acea-row row-center-wrapper" @click="manageTap">取消</view>
-				<view class="bnt on acea-row row-center-wrapper" @click="batchEdit">批量修改</view>
+				<view class="bnt acea-row row-center-wrapper" @click="manageTap">{{$t('取消')}}</view>
+				<view class="bnt on acea-row row-center-wrapper" @click="batchEdit">{{$t('批量修改')}}</view>
 			</view>
 		</view>
 		<view class="footer acea-row row-between-wrapper" v-else>
-			<view class="bnt acea-row row-center-wrapper" @click="manageTap">批量操作</view>
-			<view class="bnt on acea-row row-center-wrapper" @click="define">保存</view>
+			<view class="bnt acea-row row-center-wrapper" @click="manageTap">{{$t('批量操作')}}</view>
+			<view class="bnt on acea-row row-center-wrapper" @click="define">{{$t('保存')}}</view>
 		</view>
 		<editNum :visible='visiblePrice' :goodsInfo='goodsInfo' @closeDrawer='priceCloseDrawer'
 			@successChange='successChange'></editNum>
@@ -91,7 +91,7 @@
 			batchEdit() {
 				if (!this.getIds().length) {
 					this.$util.Tips({
-						title: '请选择商品规格'
+						title: this.$t('请选择商品规格')
 					});
 					return
 				}
@@ -119,7 +119,7 @@
 				quickStockAdd(requestObj).then(res=>{
 					if(res.code==200){
 						this.$util.Tips({
-							title: '操作成功'
+							title: this.$t('操作成功')
 						});
 						setTimeout(function() {
 							uni.navigateBack()
@@ -208,13 +208,13 @@
 </script>
 
 <style lang="scss" scoped>
-	/deep/checkbox .uni-checkbox-input.uni-checkbox-input-checked {
+	::v-deep checkbox .uni-checkbox-input.uni-checkbox-input-checked {
 		border: 1px solid #2A7EFB !important;
 		background-color: #2A7EFB !important;
 		color: #FFF !important;
 	}
 
-	/deep/checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+	::v-deep checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 		border: 1px solid #2A7EFB !important;
 		background-color: #2A7EFB !important;
 		color: #FFF !important;

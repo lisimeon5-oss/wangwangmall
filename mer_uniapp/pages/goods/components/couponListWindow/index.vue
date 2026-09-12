@@ -2,15 +2,15 @@
 	<view>
 		<view class='coupon-list-window' :class='coupon.coupon==true?"on":""'>
 			<text class="iconfont icon-guanbi5" @click="close"></text>
-			<view class="_tit text-center">选择优惠券</view>
+			<view class="_tit text-center">{{$t('选择优惠券')}}</view>
 			<view class='coupon-list' :style="{'margin-top':!orderShow?'0':'0'}">
 				<view v-if="couponList.length">
 					<view style="padding-bottom: 70rpx;">
 						<view class='item acea-row row-center-wrapper' @click="getCouponUser(index,item)" v-for="(item,index) in couponList"
 							:key='index'>
 							<view class='money acea-row row-column row-center-wrapper' :class='!item.isChoose&&!item.isChecked?"moneyGray":"main_bg"'>
-								<view>￥<text class='num'>{{item.money?Number(item.money):''}}</text></view>
-								<view class="pic-num">满{{item.minPrice}}元可用</view>
+								<view>฿<text class='num'>{{item.money?Number(item.money):''}}</text></view>
+								<view class="pic-num">{{$t('满')}}{{item.minPrice}}{{$t('铢可用')}}</view>
 							</view>
 							<view class='text'>
 								<view class='acea-row condition'>
@@ -32,16 +32,16 @@
 					</view>
 					<view class="foot-box">
 						<view v-if="Number(couponMoney)>0" class="left">
-							可优惠<text class="font-color">￥{{couponMoney}}</text>
+							{{$t('可优惠')}}<text class="font-color">฿{{couponMoney}}</text>
 						</view>
 						<view v-else class="left"></view>
-						<view @click="onSure" class="btn bg-color">确定</view>
+						<view @click="onSure" class="btn bg-color">{{$t('确定')}}</view>
 					</view>
 				</view>
 				<!-- 无优惠券 -->
 				<view class='pictrue' v-if="!couponList.length">
 					<image :src="urlDomain+'crmebimage/presets/noCoupon.png'"></image>
-					<view class="default_txt">暂无优惠券哦~</view>
+					<view class="default_txt">{{$t('暂无优惠券哦~')}}</view>
 				</view>
 			</view>
 
@@ -187,7 +187,7 @@
 		}
 	}
 
-	/deep/.uni-radio-input-checked {
+	::v-deep .uni-radio-input-checked {
 		@include main_bg_color(theme);
 	}
 

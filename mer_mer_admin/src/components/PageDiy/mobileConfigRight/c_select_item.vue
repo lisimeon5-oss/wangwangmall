@@ -6,7 +6,7 @@
       </div>
       <div class="slider-box ml22">
         <div class="inputs" v-for="(item, index) in configData.list" :key="index">
-          <el-input size="small" v-model="item.val" maxlength="10" placeholder="选填，不超过十个字">
+          <el-input size="small" v-model="item.val" maxlength="10" :placeholder="translateText('选填，不超过十个字')">
             <i v-if="index > 1" slot="suffix" class="el-icon-delete" @click="bindDelete(index)"></i>
           </el-input>
         </div>
@@ -21,12 +21,12 @@
           </div>
           <div class="batchCount" v-if="visible">
             <div class="batchItem on">
-              <div class="title">批量添加选项</div>
-              <div class="tips">可按回车键添加多个选项</div>
+              <div class="title">{{ translateText("批量添加选项") }}</div>
+              <div class="tips">{{ translateText("可按回车键添加多个选项") }}</div>
               <el-input v-model="batchWord" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }" />
               <div class="batchBnt acea-row row-right">
-                <el-button @click.stop="cancel(1)" size="small">取消</el-button>
-                <el-button type="primary" size="small" class="ml10" @click.stop="cancel(2)">确定</el-button>
+                <el-button @click.stop="cancel(1)" size="small">{{ translateText("取消") }}</el-button>
+                <el-button type="primary" size="small" class="ml10" @click.stop="cancel(2)">{{ translateText("确定") }}</el-button>
               </div>
             </div>
           </div>

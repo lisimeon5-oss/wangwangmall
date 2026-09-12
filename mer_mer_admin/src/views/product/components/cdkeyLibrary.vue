@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :visible.sync="cdkeyShow"
-    title="设置卡密"
+    :title="$t('product.setCdkey')"
     :append-to-body="true"
     width="610px"
     :close-on-click-modal="false"
@@ -10,10 +10,10 @@
       <div class="type-radio">
         <el-form label-width="100px" :model="carMyValidateForm" ref="carMyValidateForm" :inline="true">
           <el-form-item
-            label="关联卡密库"
+            :label="$t('product.relatedCdkeyLibrary')"
             :rules="{
               required: true,
-              message: '卡密库不能为空',
+              message: $t('product.cdkeyLibraryRequired'),
               trigger: 'change',
             }"
           >
@@ -22,7 +22,7 @@
               value-key="id"
               @change="handleChange($event)"
               v-model="carMyValidateForm.cdkeyInfo"
-              placeholder="请选择关联卡密库"
+              :placeholder="$t('product.relatedCdkeyLibraryPlaceholder')"
               clearable
               filterable
             >
@@ -30,21 +30,21 @@
                 :value="item"
                 v-for="(item, index) in cdkeyLibraryList"
                 :key="index"
-                :label="item.name"
+                :label="getLocalizedName(item, uiLocale) || item.name"
               ></el-option>
             </el-select>
           </el-form-item>
         </el-form>
       </div>
       <div class="dialog-footer-inner dialog-bottom-top" slot="footer">
-        <el-button class="btns" size="small" @click="cdkeyShow = false">取消</el-button>
+        <el-button class="btns" size="small" @click="cdkeyShow = false">{{ $t('product.cancel') }}</el-button>
         <el-button
           :loading="btnloading"
           type="primary"
           class="btns"
           size="small"
           @click="submitForm('carMyValidateForm')"
-          >保存</el-button
+          >{{ $t('product.save') }}</el-button
         >
       </div>
     </div>
@@ -52,6 +52,7 @@
 </template>
 <script setup>
 import { productUnrelatedListApi } from '@/api/productCdkey';
+import { getLocalizedName, getUiLocale } from '@/utils/localizedName';
 
 export default {
   name: 'cdkeyLibrary',
@@ -61,6 +62,11 @@ export default {
       default: function () {
         return null;
       },
+    },
+  },
+  computed: {
+    uiLocale() {
+      return (this.$i18n && this.$i18n.locale) || getUiLocale(this);
     },
   },
   data() {
@@ -85,6 +91,7 @@ export default {
     this.carMyValidateForm.cdkeyInfo = this.cdkeyLibraryInfo;
   },
   methods: {
+    getLocalizedName,
     //卡密列表
     getCdkeyLibraryList() {
       productUnrelatedListApi().then((res) => {

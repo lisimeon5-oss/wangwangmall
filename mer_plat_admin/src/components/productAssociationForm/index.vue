@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-form-item v-if="productAssociationType == 'product'">
-      <el-button size="small" type="primary" @click="handleAddGoods">添加商品</el-button>
+      <el-button size="small" type="primary" @click="handleAddGoods">{{ $t('product.addProduct') }}</el-button>
       <el-button v-if="isBatchDelete" size="small" @click="handleBatchDel" :disabled="!multipleSelection.length"
-        >批量删除</el-button
+        >{{ $t('product.batchDelete') }}</el-button
       >
     </el-form-item>
     <el-form-item v-if="productAssociationType == 'product'">
@@ -19,27 +19,27 @@
       >
         <el-table-column v-if="isBatchDelete" type="selection" width="55"> </el-table-column>
         <el-table-column prop="id" label="ID" width="55"> </el-table-column>
-        <el-table-column label="商品图" min-width="80">
+        <el-table-column :label="$t('product.productImage')" min-width="80">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="name" label="商品名称" min-width="200" />
-        <el-table-column prop="price" label="售价" min-width="90" />
-        <el-table-column prop="stock" label="库存" min-width="70" />
-        <el-table-column label="操作" width="60" fixed="right" align="center">
+        <el-table-column :show-overflow-tooltip="true" prop="name" :label="$t('product.productName')" min-width="200" />
+        <el-table-column prop="price" :label="$t('product.attrPrice')" min-width="90" />
+        <el-table-column prop="stock" :label="$t('product.stock')" min-width="70" />
+        <el-table-column :label="$t('product.operate')" width="60" fixed="right" align="center">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">{{ $t('common.delete') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-form-item>
     <el-form-item
-      label-width="73px"
+      label-width="100px"
       v-if="productAssociationType == 'brand'"
-      label="选择品牌："
+      :label="$t('product.selectBrandLabel')"
       :span="24"
       prop="proBrandList"
     >
@@ -49,17 +49,17 @@
         filterable
         v-model="formValidate.proBrandList"
         :multiple="multipleBrand"
-        placeholder="请选择品牌"
+        :placeholder="$t('product.pleaseSelectBrand')"
         @change="handleBrandSelected"
       >
-        <el-option v-for="(v, i) in productBrand" :key="i" :label="v.name" :value="v.id" :disabled="!v.isShow">
+        <el-option v-for="(v, i) in productBrand" :key="i" :label="getLocalizedBrandName(v)" :value="v.id" :disabled="!v.isShow">
         </el-option>
       </el-select>
     </el-form-item>
     <el-form-item
-      label-width="73px"
+      label-width="100px"
       v-if="productAssociationType == 'category'"
-      label="选择分类："
+      :label="$t('product.selectCategoryLabel')"
       :span="24"
       prop="proCategorylist"
     >
@@ -76,8 +76,8 @@
       />
     </el-form-item>
     <el-form-item
-      label-width="73px"
-      label="选择商户："
+      label-width="100px"
+      :label="$t('product.selectMerchantLabel')"
       v-hasPermi="['platform:merchant:page:list']"
       v-if="productAssociationType == 'merchant'"
       :span="24"
@@ -91,6 +91,7 @@
 import merchantName from '@/components/merUseCategory/index.vue';
 import { mapGetters } from 'vuex';
 import { productListbyidsApi } from '@/api/product';
+import { getLocalizedName } from '@/utils/localizedName';
 export default {
   props: {
     formValidate: {
@@ -146,6 +147,15 @@ export default {
   },
   computed: {
     ...mapGetters(['merPlatProductClassify', 'productBrand']),
+    currentLocale() {
+      return (
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn'
+      );
+    },
   },
   mounted() {
     if (!localStorage.getItem('merPlatProductClassify')) this.$store.dispatch('product/getAdminProductClassify');
@@ -155,6 +165,9 @@ export default {
     this.getProductListByIds();
   },
   methods: {
+    getLocalizedBrandName(row) {
+      return getLocalizedName(row, this.currentLocale);
+    },
     async getProductListByIds() {
       if (this.productAssociationType === 'product' && this.formValidate.data) {
         // 根据id查询出对应商品
@@ -177,14 +190,14 @@ export default {
     },
     //行删除
     handleDelete(index, row) {
-      this.$modalSure('删除该商品吗？').then(() => {
+      this.$modalSure(this.$t('product.deleteThisProductConfirm')).then(() => {
         this.tableData.data.splice(index, 1);
         this.$emit('getProductAssociationData', this.tableData.data);
       });
     },
     //批量删除
     handleBatchDel() {
-      this.$modalSure('批量删除商品吗？').then(() => {
+      this.$modalSure(this.$t('product.batchDeleteProductConfirm')).then(() => {
         let data = [];
         for (let item1 of this.tableData.data) {
           let _index = this.multipleSelection.findIndex((c) => c.id === item1.id);

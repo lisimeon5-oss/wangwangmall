@@ -1,46 +1,46 @@
 <template>
   <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="65px">
-      <el-form-item label="用户编号:">
+      <el-form-item :label="$t('user.userNo')">
         <el-input v-model.trim="ruleForm.id" disabled></el-input>
       </el-form-item>
-      <el-form-item label="用户地址:">
+      <el-form-item :label="$t('user.userAddress')">
         <el-input v-model.trim="ruleForm.province + ruleForm.city" disabled></el-input>
       </el-form-item>
-      <el-form-item label="用户备注:">
+      <el-form-item :label="$t('user.userRemark')">
         <el-input v-model.trim="ruleForm.mark" type="textarea"></el-input>
       </el-form-item>
-      <el-form-item label="生日:">
+      <el-form-item :label="$t('user.birthday')">
         <el-date-picker
           v-model="ruleForm.birthday"
           value-format="yyyy-MM-dd"
           format="yyyy-MM-dd"
           type="date"
-          placeholder="选择日期"
+          :placeholder="$t('user.chooseDate')"
         >
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="用户标签:">
-        <el-select v-model="labelData" placeholder="请选择" clearable filterable multiple>
-          <el-option :value="item.id" v-for="(item, index) in labelLists" :key="index" :label="item.name"></el-option>
+      <el-form-item :label="$t('user.userTag')">
+        <el-select v-model="labelData" :placeholder="$t('common.pleaseSelect')" clearable filterable multiple>
+          <el-option :value="item.id" v-for="(item, index) in labelLists" :key="index" :label="getLocalizedTagName(item)"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="推广员:">
+      <el-form-item :label="$t('user.promoterLabel')">
         <el-radio-group v-model="ruleForm.isPromoter">
-          <el-radio :label="true">开启</el-radio>
-          <el-radio :label="false">关闭</el-radio>
+          <el-radio :label="true">{{ $t('user.on') }}</el-radio>
+          <el-radio :label="false">{{ $t('user.off') }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="状态:" class="mb30">
+      <el-form-item :label="$t('user.statusLabel')" class="mb30">
         <el-radio-group v-model="ruleForm.status">
-          <el-radio :label="true">开启</el-radio>
-          <el-radio :label="false">关闭</el-radio>
+          <el-radio :label="true">{{ $t('user.on') }}</el-radio>
+          <el-radio :label="false">{{ $t('user.off') }}</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer-inner">
-      <el-button @click="resetForm('ruleForm')">取消</el-button>
-      <el-button type="primary" @click="submitForm('ruleForm')" v-hasPermi="['platform:user:update']">确认</el-button>
+      <el-button @click="resetForm('ruleForm')">{{ $t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')" v-hasPermi="['platform:user:update']">{{ $t('common.confirm') }}</el-button>
     </div>
   </div>
 </template>
@@ -57,6 +57,7 @@
 // +---------------------------------------------------------------------
 import { groupListApi, levelListApi, tagListApi, userInfoApi, userUpdateApi } from '@/api/user';
 import { Debounce } from '@/utils/validate';
+import { getLocalizedName } from '@/utils/localizedName';
 const defaultObj = {
   // birthday: '',
   // cardId: '',
@@ -93,12 +94,22 @@ export default {
     this.labelData = this.userInfo.tagId ? this.userInfo.tagId.split(',').map(Number) : [];
   },
   methods: {
+    getLocalizedTagName(row) {
+      return getLocalizedName(
+        row,
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+          this.$i18n.locale ||
+          'zh-cn',
+      );
+    },
     submitForm: Debounce(function (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.ruleForm.tagId = this.labelData.join(',');
           userUpdateApi({ id: this.ruleForm.id }, this.ruleForm).then(async (res) => {
-            this.$message.success('编辑成功');
+            this.$message.success(this.$t('user.editSuccess'));
             this.$parent.$parent.visible = false;
             this.$parent.$parent.getList();
           });

@@ -30,6 +30,8 @@ import com.zbkj.common.response.SeckillProductPageResponse;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.ProductResultCode;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.service.dao.SeckillProductDao;
 import com.zbkj.service.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +69,8 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductDao, Se
     private ProductDescriptionService productDescriptionService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductAttributeService productAttributeService;
 
 
 
@@ -155,6 +159,7 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductDao, Se
                 List<ProductAttrValue> attrValueList = productAttrValueService.getListByProductIdAndType(p.getId(), p.getType(), ProductConstants.PRODUCT_MARKETING_TYPE_SECKILL, false);
                 setShowStatus(attrValueList, p.getProductId(), p.getType());
                 p.setAttrValue(attrValueList);
+                p.setAttrList(productAttributeService.findListWithOptionsByProductId(p.getProductId()));
             });
         }
         return CommonPage.copyPageInfo(page, productList);
@@ -323,7 +328,8 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductDao, Se
         }
         ProductDescription sd = productDescriptionService.getByProductIdAndType(seckillProduct.getProductId(), seckillProduct.getType());
         if (ObjectUtil.isNotNull(sd)) {
-            seckillProduct.setContent(StrUtil.isBlank(sd.getDescription()) ? "" : sd.getDescription());
+            seckillProduct.setContentJson(sd.getDescriptionJson());
+            seckillProduct.setContent(I18nJsonUtil.resolveLocalizedHtml(sd.getDescription(), sd.getDescriptionJson(), RequestUtil.getLang()));
         }
         return seckillProduct;
     }

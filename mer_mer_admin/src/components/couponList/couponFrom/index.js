@@ -9,11 +9,12 @@
 // +----------------------------------------------------------------------
 
 import couponFromComponent from './index.vue';
+import i18n from '@/i18n';
 const couponFrom = {};
 couponFrom.install = function (Vue, options) {
   const ToastConstructor = Vue.extend(couponFromComponent);
   // 生成一个该子类的实例
-  const instance = new ToastConstructor();
+  const instance = new ToastConstructor({ i18n });
   instance.$mount(document.createElement('div'));
   document.body.appendChild(instance.$el);
   Vue.prototype.$modalCoupon = function (handle, keyNum, coupons = [], callback, userIds = '', userType = '') {

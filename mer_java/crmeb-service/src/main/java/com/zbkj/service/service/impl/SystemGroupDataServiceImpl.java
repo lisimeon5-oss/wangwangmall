@@ -14,6 +14,7 @@ import com.zbkj.common.request.SystemFormItemCheckRequest;
 import com.zbkj.common.request.SystemGroupDataRequest;
 import com.zbkj.common.request.SystemGroupDataSearchRequest;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.service.dao.SystemGroupDataDao;
 import com.zbkj.service.service.SystemAttachmentService;
 import com.zbkj.service.service.SystemFormTempService;
@@ -144,6 +145,7 @@ public class SystemGroupDataServiceImpl extends ServiceImpl<SystemGroupDataDao, 
                 map.put(systemFormItemCheckRequest.getName(), systemFormItemCheckRequest.getValue());
             }
             map.put("id", systemGroupData.getId());
+            applyNameI18n(map);
             t = CrmebUtil.mapToObj(map, cls);
             arrayList.add(t);
         }
@@ -181,6 +183,7 @@ public class SystemGroupDataServiceImpl extends ServiceImpl<SystemGroupDataDao, 
                 map.put(systemFormItemCheckRequest.getName(), systemFormItemCheckRequest.getValue());
             }
             map.put("id", systemGroupData.getId());
+            applyNameI18n(map);
             arrayList.add(map);
         }
         return arrayList;
@@ -208,6 +211,7 @@ public class SystemGroupDataServiceImpl extends ServiceImpl<SystemGroupDataDao, 
             map.put(systemFormItemCheckRequest.getName(), systemFormItemCheckRequest.getValue());
         }
         map.put("id", systemGroupData.getId());
+        applyNameI18n(map);
         t = CrmebUtil.mapToObj(map, cls);
 
         return t;
@@ -240,6 +244,28 @@ public class SystemGroupDataServiceImpl extends ServiceImpl<SystemGroupDataDao, 
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
+    }
+
+    private void applyNameI18n(HashMap<String, Object> map) {
+        if (map == null) {
+            return;
+        }
+        applyTextI18n(map, "name", "nameJson");
+        applyTextI18n(map, "title", "titleJson");
+        applyTextI18n(map, "tag", "tagJson");
+        applyTextI18n(map, "label", "labelJson");
+        applyTextI18n(map, "info", "infoJson");
+    }
+
+    private void applyTextI18n(HashMap<String, Object> map, String field, String jsonField) {
+        if (!map.containsKey(field) && !map.containsKey(jsonField)) {
+            return;
+        }
+        Object text = map.get(field);
+        Object json = map.get(jsonField);
+        String defaultText = text == null ? "" : String.valueOf(text);
+        String jsonStr = json == null ? "" : String.valueOf(json);
+        map.put(field, I18nJsonUtil.resolveByRequest(defaultText, jsonStr));
     }
 
 }

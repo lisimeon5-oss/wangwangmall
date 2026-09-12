@@ -13,7 +13,8 @@
             and o.`order_no` = #{orderNo}
         </if>
         <if test="cardName != '' and cardName != null ">
-            and o.card_name like CONCAT('%',#{cardName},'%')
+            and (o.card_name like CONCAT('%',#{cardName},'%')
+                or o.card_id in (select id from eb_paid_member_card where name_json like CONCAT('%',#{cardName},'%')))
         </if>
         <if test="payType != '' and payType != null ">
             and o.`pay_type` = #{payType}

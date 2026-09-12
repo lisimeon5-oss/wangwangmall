@@ -33,9 +33,11 @@ public class PcFriendlyLinkVo implements Serializable {
     @ApiModelProperty(value = "ID")
     private Integer id;
 
-    @ApiModelProperty(value = "链接名称", required = true)
-    @NotBlank(message = "请填写链接名称")
+    @ApiModelProperty(value = "链接名称")
     private String name;
+
+    @ApiModelProperty(value = "多语言链接名称(JSON)")
+    private String nameJson;
 
     @ApiModelProperty(value = "链接地址", required = true)
     @NotBlank(message = "链接地址不能为空")

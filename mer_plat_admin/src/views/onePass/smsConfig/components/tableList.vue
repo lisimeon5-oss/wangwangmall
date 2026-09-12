@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-tabs v-model="tableFrom.type" @tab-click="onChangeType" v-hasPermi="['platform:one:pass:user:record']">
-      <el-tab-pane label="短信" name="sms"></el-tab-pane>
-      <el-tab-pane label="商品采集" name="copy"></el-tab-pane>
-      <el-tab-pane label="物流查询" name="expr_query"></el-tab-pane>
+      <el-tab-pane :label="$t('common.sms')" name="sms"></el-tab-pane>
+      <el-tab-pane :label="$t('common.productCollection')" name="copy"></el-tab-pane>
+      <el-tab-pane :label="$t('common.logisticsQuery')" name="expr_query"></el-tab-pane>
     </el-tabs>
     <!--短信列表-->
     <div
@@ -17,19 +17,19 @@
     >
       <div class="filter-container flex-between mb20" v-if="tableFrom.type === 'sms'">
         <div class="demo-input-suffix">
-          <span class="seachTiele">短信状态：</span>
+          <span class="seachTiele">{{ $t('onePass.smsStatusLabel') }}</span>
           <el-radio-group v-model="tableFrom.status" size="small" @change="getList" class="mr20">
-            <el-radio-button label="3">全部</el-radio-button>
-            <el-radio-button label="1">成功</el-radio-button>
-            <el-radio-button label="2">失败</el-radio-button>
-            <el-radio-button label="0">发送中</el-radio-button>
+            <el-radio-button label="3">{{ $t('el.table.clearFilter') }}</el-radio-button>
+            <el-radio-button label="1">{{ $t('onePass.success') }}</el-radio-button>
+            <el-radio-button label="2">{{ $t('onePass.failure') }}</el-radio-button>
+            <el-radio-button label="0">{{ $t('onePass.sending') }}</el-radio-button>
           </el-radio-group>
         </div>
         <div>
           <router-link :to="{ path: '/operation/onePass/template' }">
-            <el-button type="primary" class="mr20" v-hasPermi="['platform:one:pass:sms:temps']">短信模板</el-button>
+            <el-button type="primary" class="mr20" v-hasPermi="['platform:one:pass:sms:temps']">{{ $t('onePass.smsTemplate') }}</el-button>
           </router-link>
-          <el-button @click="editSign" v-hasPermi="['platform:one:pass:sms:modify:sign']">修改签名</el-button>
+          <el-button @click="editSign" v-hasPermi="['platform:one:pass:sms:modify:sign']">{{ $t('onePass.modifySignature') }}</el-button>
         </div>
       </div>
       <el-table v-loading="listLoading" :data="tableData.data" style="width: 100%" size="small" highlight-current-row>
@@ -50,7 +50,7 @@
             <span v-else>{{ scope.row[item.key] }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="tableFrom.type === 'expr_query'" label="操作" width="150" fixed="right">
+        <el-table-column v-if="tableFrom.type === 'expr_query'" :label="$t('common.operate')" width="150" fixed="right">
           <template slot-scope="scope">
             <el-button
               type="text"
@@ -58,7 +58,7 @@
               @click="handleLogistics(scope.row.content)"
               class="mr10"
               v-hasPermi="['platform:one:pass:user:record']"
-              >物流信息</el-button
+              >{{ $t('onePass.logisticsInfo') }}</el-button
             >
           </template>
         </el-table-column>
@@ -89,22 +89,22 @@
       >
         <div class="wuTu"><img src="../../../../assets/imgs/wutu.png" /></div>
         <div class="mb15">
-          <span class="wuSp1">{{ tableFrom.type | onePassTypeFilter }}未开通哦</span>
-          <span class="wuSp2">点击立即开通按钮，即可使用{{ tableFrom.type | onePassTypeFilter }}服务哦～～～</span>
+          <span class="wuSp1">{{ tableFrom.type | onePassTypeFilter }}{{ $t('onePass.notActivated') }}</span>
+          <span class="wuSp2">{{ $t('onePass.activatePromptPrefix') }}{{ tableFrom.type | onePassTypeFilter }}{{ $t('onePass.activatePromptSuffix') }}</span>
         </div>
         <el-button
           size="medium"
           v-hasPermi="['platform:one:pass:service:open']"
           type="primary"
           @click="onOpenIndex(tableFrom.type)"
-          >立即开通</el-button
+          >{{ $t('onePass.activateNow') }}</el-button
         >
       </div>
       <!--短信立即开通/开通电子面单服务-->
       <div class="smsBox" v-if="(isDump && tableFrom.type === 'expr_dump') || (isSms && tableFrom.type === 'sms')">
         <div class="index_from page-account-container">
           <div class="page-account-top">
-            <span class="page-account-top-tit">开通{{ tableFrom.type | onePassTypeFilter }}服务</span>
+            <span class="page-account-top-tit">{{ $t('onePass.activatePrefix') }}{{ tableFrom.type | onePassTypeFilter }}{{ $t('onePass.serviceWord') }}</span>
           </div>
           <el-form
             ref="formInlineDump"
@@ -118,7 +118,7 @@
                 type="text"
                 v-model="formInlineDump.sign"
                 prefix="ios-contact-outline"
-                placeholder="请输入短信签名"
+                :placeholder="$t('onePass.pleaseEnterSmsSignature')"
               />
             </el-form-item>
             <template v-if="isDump && tableFrom.type === 'expr_dump'">
@@ -126,7 +126,7 @@
                 <el-select
                   v-model="formInlineDump.com"
                   filterable
-                  placeholder="请选择快递公司"
+                  :placeholder="$t('onePass.pleaseSelectExpressCompany')"
                   @change="onChangeExport"
                   style="text-align: left"
                   class="width10"
@@ -143,7 +143,7 @@
                 <div class="acea-row">
                   <el-select
                     v-model="formInlineDump.tempId"
-                    placeholder="请选择电子面单模板"
+                    :placeholder="$t('onePass.pleaseSelectWaybillTemplate')"
                     style="text-align: left"
                     :class="[formInlineDump.tempId ? 'width9' : 'width10']"
                     @change="onChangeImg"
@@ -156,7 +156,7 @@
                     ></el-option>
                   </el-select>
                   <div v-if="formInlineDump.tempId" style="position: relative">
-                    <!--<span class="tempImg" @click="">预览</span>-->
+                    <!--<span class="tempImg" @click="">{{ $t('user.preview') }}</span>-->
                     <div class="tempImgList ml10">
                       <div class="demo-image__preview">
                         <el-image style="width: 36px; height: 36px" :src="tempImg" :preview-src-list="[tempImg]" />
@@ -170,7 +170,7 @@
                   type="text"
                   v-model="formInlineDump.toName"
                   prefix="ios-contact-outline"
-                  placeholder="请填写寄件人姓名"
+                  :placeholder="$t('onePass.pleaseEnterSenderName2')"
                 />
               </el-form-item>
               <el-form-item prop="toTel" class="maxInpt">
@@ -178,7 +178,7 @@
                   type="text"
                   v-model="formInlineDump.toTel"
                   prefix="ios-contact-outline"
-                  placeholder="请填写寄件人电话"
+                  :placeholder="$t('onePass.pleaseEnterSenderPhone')"
                 />
               </el-form-item>
               <el-form-item prop="toAddress" class="maxInpt">
@@ -186,7 +186,7 @@
                   type="text"
                   v-model="formInlineDump.toAddress"
                   prefix="ios-contact-outline"
-                  placeholder="请填写寄件人详细地址"
+                  :placeholder="$t('onePass.pleaseEnterSenderDetailAddress')"
                 />
               </el-form-item>
               <el-form-item prop="siid" class="maxInpt">
@@ -194,7 +194,7 @@
                   type="text"
                   v-model="formInlineDump.siid"
                   prefix="ios-contact-outline"
-                  placeholder="请填写云打印编号"
+                  :placeholder="$t('onePass.pleaseEnterCloudPrintNo')"
                 />
               </el-form-item>
             </template>
@@ -207,7 +207,7 @@
                 v-hasPermi="['platform:one:pass:service:open']"
                 @click="handleSubmitDump('formInlineDump')"
                 class="btn width10"
-                >立即开通</el-button
+                >{{ $t('onePass.activateNow') }}</el-button
               >
             </el-form-item>
           </el-form>
@@ -215,7 +215,7 @@
       </div>
     </div>
     <!--修改签名-->
-    <el-dialog title="短信账户签名修改" :visible.sync="dialogVisible" width="500px" :before-close="handleClose">
+    <el-dialog :title="$t('onePass.smsAccountSignatureModify')" :visible.sync="dialogVisible" width="500px" :before-close="handleClose">
       <el-form
         ref="formInline"
         size="small"
@@ -229,13 +229,13 @@
           <el-input v-model="formInline.account" :disabled="true" prefix-icon="el-icon-user"> </el-input>
         </el-form-item>
         <el-form-item prop="sign">
-          <el-input v-model="formInline.sign" placeholder="请输入短信签名，例如：CRMEB" prefix-icon="el-icon-document">
+          <el-input v-model="formInline.sign" :placeholder="$t('onePass.pleaseEnterSmsSignatureExample')" prefix-icon="el-icon-document">
           </el-input>
         </el-form-item>
         <el-form-item prop="phone">
           <el-input
             v-model="formInline.phone"
-            placeholder="请输入您的手机号"
+            :placeholder="$t('onePass.pleaseEnterYourPhone')"
             :disabled="true"
             prefix-icon="el-icon-phone-outline"
           >
@@ -246,7 +246,7 @@
             <el-input
               ref="username"
               v-model="formInline.code"
-              placeholder="验证码"
+              :placeholder="$t('onePass.verificationCode')"
               name="username"
               type="text"
               tabindex="1"
@@ -265,7 +265,7 @@
         </el-form-item>
         <el-form-item>
           <el-alert
-            title="短信签名提交后需要审核才会生效，请耐心等待或者联系客服"
+            :title="$t('onePass.smsSignatureTip')"
             type="warning"
             effect="light"
           ></el-alert>
@@ -273,17 +273,17 @@
       </el-form>
       <span slot="footer">
         <el-button v-hasPermi="['platform:one:pass:sms:modify:sign']" type="primary" @click="handleSubmit('formInline')"
-          >确 定</el-button
+          >{{ $t('finance.confirmSpaced') }}</el-button
         >
       </span>
     </el-dialog>
     <!--物流信息-->
-    <el-dialog v-if="logisticsDialogVisible" title="提示" :visible.sync="logisticsDialogVisible" width="700px">
+    <el-dialog v-if="logisticsDialogVisible" :title="$t('el.messagebox.title')" :visible.sync="logisticsDialogVisible" width="700px">
       <div class="logistics acea-row row-top">
         <div class="logistics_img"><img src="@/assets/imgs/expressi.jpg" /></div>
         <div class="logistics_cent">
-          <span class="mb10">物流公司：{{ logisticsInfo.com }}</span>
-          <span>物流单号：{{ logisticsInfo.num }}</span>
+          <span class="mb10">{{ $t('onePass.logisticsCompanyLabel') }}{{ logisticsInfo.com }}</span>
+          <span>{{ $t('onePass.logisticsNoLabel') }}{{ logisticsInfo.num }}</span>
         </div>
       </div>
       <div class="acea-row row-column-around trees-coadd">
@@ -297,7 +297,7 @@
         </div>
       </div>
       <span slot="footer">
-        <el-button type="primary" @click="logisticsDialogVisible = false">关闭</el-button>
+        <el-button type="primary" @click="logisticsDialogVisible = false">{{ $t('common.close') }}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -377,15 +377,15 @@ export default {
         type: '',
       },
       ruleInline: {
-        sign: [{ required: true, message: '请输入短信签名', trigger: 'blur' }],
+        sign: [{ required: true, message: this.$t('onePass.pleaseEnterSmsSignature'), trigger: 'blur' }],
         phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
-        com: [{ required: true, message: '请选择快递公司', trigger: 'change' }],
-        tempId: [{ required: true, message: '请选择打印模板', trigger: 'change' }],
-        toName: [{ required: true, message: '请输寄件人姓名', trigger: 'blur' }],
+        code: [{ required: true, message: this.$t('onePass.pleaseEnterVerificationCode'), trigger: 'blur' }],
+        com: [{ required: true, message: this.$t('onePass.pleaseSelectExpressCompany'), trigger: 'change' }],
+        tempId: [{ required: true, message: this.$t('onePass.pleaseSelectPrintTemplate'), trigger: 'change' }],
+        toName: [{ required: true, message: this.$t('onePass.pleaseEnterSenderName'), trigger: 'blur' }],
         toTel: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-        siid: [{ required: true, message: '请输入云打印机编号', trigger: 'blur' }],
-        toAddress: [{ required: true, message: '请输寄件人地址', trigger: 'blur' }],
+        siid: [{ required: true, message: this.$t('onePass.pleaseEnterCloudPrinterNo'), trigger: 'blur' }],
+        toAddress: [{ required: true, message: this.$t('onePass.pleaseEnterSenderAddress'), trigger: 'blur' }],
       },
       tempImg: '', // 图片
       exportTempList: [], // 电子面单模板
@@ -396,11 +396,11 @@ export default {
         sign: '',
       },
       ruleInlineSign: {
-        sign: [{ required: true, message: '请输入短信签名', trigger: 'blur' }],
+        sign: [{ required: true, message: this.$t('onePass.pleaseEnterSmsSignature'), trigger: 'blur' }],
         phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+        code: [{ required: true, message: this.$t('onePass.pleaseEnterVerificationCode'), trigger: 'blur' }],
       },
-      cutNUm: '获取验证码',
+      cutNUm: this.$t('onePass.getVerificationCode'),
       canClick: true,
       logisticsInfo: {},
     };
@@ -431,7 +431,7 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           smsSignApi(this.formInline).then(async (res) => {
-            this.$message.success('修改签名之后一号通需要审核过后通过!');
+            this.$message.success(this.$t('onePass.modifySignatureTip'));
             this.dialogVisible = false;
             this.$refs[formName].resetFields();
           });
@@ -456,13 +456,13 @@ export default {
         let time = setInterval(() => {
           this.cutNUm--;
           if (this.cutNUm === 0) {
-            this.cutNUm = '获取验证码';
+            this.cutNUm = this.$t('onePass.getVerificationCode');
             this.canClick = true;
             clearInterval(time);
           }
         }, 1000);
       } else {
-        this.$message.warning('请填写手机号!');
+        this.$message.warning(this.$t('onePass.pleaseEnterPhoneExcl'));
       }
     },
     handleClose() {
@@ -486,15 +486,15 @@ export default {
     },
     // 开通其他
     openOther() {
-      this.$confirm(`确定开通${commFilter.onePassTypeFilter(this.tableFrom.type)}吗?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(`${this.$t('onePass.confirmActivatePrefix')}${commFilter.onePassTypeFilter(this.tableFrom.type)}${this.$t('onePass.activateQuestion')}`, this.$t('el.messagebox.title'), {
+        confirmButtonText: this.$t('el.messagebox.confirm'),
+        cancelButtonText: this.$t('el.messagebox.cancel'),
         type: 'warning',
       })
         .then(() => {
           // this.handleSubmitDump('formInlineDump');
           serviceOpenApi({ type: this.tableFrom.type }).then(async (res) => {
-            this.$message.success('开通成功!');
+            this.$message.success(this.$t('onePass.activationSuccess'));
             this.getList();
             this.$emit('openService');
           });
@@ -502,7 +502,7 @@ export default {
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消',
+            message: this.$t('common.cancelled'),
           });
         });
     },
@@ -541,7 +541,7 @@ export default {
           serviceOpenApi(this.formInlineDump)
             .then(async (res) => {
               this.$emit('openService');
-              this.$message.success('开通成功!');
+              this.$message.success(this.$t('onePass.activationSuccess'));
               this.getList();
               this.loading = false;
             })
@@ -570,16 +570,16 @@ export default {
               obj = item;
               switch (item.status) {
                 case 0:
-                  obj.status = '发送中';
+                  obj.status = this.$t('onePass.sending');
                   break;
                 case 1:
-                  obj.status = '成功';
+                  obj.status = this.$t('onePass.success');
                   break;
                 case 2:
-                  obj.status = '失败';
+                  obj.status = this.$t('onePass.failure');
                   break;
                 case 3:
-                  obj.status = '全部';
+                  obj.status = this.$t('el.table.clearFilter');
                   break;
               }
               newArr.push(obj);
@@ -591,23 +591,23 @@ export default {
             case 'sms':
               this.columns2 = [
                 {
-                  title: '手机号',
+                  title: this.$t('user.phoneCol'),
                   key: 'phone',
                   minWidth: 100,
                 },
                 {
-                  title: '模板内容',
+                  title: this.$t('onePass.templateContent'),
                   key: 'content',
                   minWidth: 590,
                 },
 
                 {
-                  title: '发送时间',
+                  title: this.$t('onePass.sendTime'),
                   key: 'add_time',
                   minWidth: 150,
                 },
                 // {
-                //   title: '状态',
+                //   title: this.$t('common.status'),
                 //   key: 'status',
                 //   minWidth: 100
                 // }
@@ -616,37 +616,37 @@ export default {
             case 'expr_dump':
               this.columns2 = [
                 // {
-                //   title: '订单号',
+                //   title: this.$t('common.orderNo'),
                 //   key: 'order_id',
                 //   minWidth: 150
                 // },
                 {
-                  title: '发货人',
+                  title: this.$t('onePass.shipper'),
                   key: 'from_name',
                   minWidth: 120,
                 },
                 {
-                  title: '收货人',
+                  title: this.$t('onePass.receiver'),
                   key: 'to_name',
                   minWidth: 120,
                 },
                 {
-                  title: '快递单号',
+                  title: this.$t('onePass.expressTrackingNo'),
                   key: 'num',
                   minWidth: 120,
                 },
                 {
-                  title: '快递公司编码',
+                  title: this.$t('onePass.expressCompanyCode'),
                   key: 'code',
                   minWidth: 120,
                 },
                 {
-                  title: '状态',
+                  title: this.$t('common.status'),
                   key: '_resultcode',
                   minWidth: 100,
                 },
                 {
-                  title: '打印时间',
+                  title: this.$t('onePass.printTime'),
                   key: 'add_time',
                   minWidth: 150,
                 },
@@ -655,22 +655,22 @@ export default {
             case 'expr_query':
               this.columns2 = [
                 {
-                  title: '快递单号',
+                  title: this.$t('onePass.expressTrackingNo'),
                   key: 'content',
                   minWidth: 120,
                 },
                 {
-                  title: '快递公司编码',
+                  title: this.$t('onePass.expressCompanyCode'),
                   key: 'code',
                   minWidth: 120,
                 },
                 {
-                  title: '状态',
+                  title: this.$t('common.status'),
                   key: '_resultcode',
                   minWidth: 120,
                 },
                 {
-                  title: '添加时间',
+                  title: this.$t('merchant.addTime'),
                   key: 'add_time',
                   minWidth: 150,
                 },
@@ -679,17 +679,17 @@ export default {
             default:
               this.columns2 = [
                 {
-                  title: '复制URL',
+                  title: this.$t('onePass.copyUrl'),
                   key: 'url',
                   minWidth: 400,
                 },
                 {
-                  title: '请求状态',
+                  title: this.$t('onePass.requestStatus'),
                   key: '_resultcode',
                   minWidth: 120,
                 },
                 {
-                  title: '添加时间',
+                  title: this.$t('merchant.addTime'),
                   key: 'add_time',
                   minWidth: 150,
                 },

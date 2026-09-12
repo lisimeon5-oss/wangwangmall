@@ -39,7 +39,9 @@ public class ProCategoryCacheTree {
 
     // 排序
     private List<ProCategoryCacheVo> sortList(List<ProCategoryCacheVo> treeMenus) {
-        treeMenus = treeMenus.stream().sorted(Comparator.comparing(ProCategoryCacheVo::getSort).reversed()).collect(Collectors.toList());
+        treeMenus = treeMenus.stream()
+                .sorted(Comparator.comparingInt(ProCategoryCacheTree::sortVal).reversed())
+                .collect(Collectors.toList());
         treeMenus.forEach(e -> {
             if (CollUtil.isNotEmpty(e.getChildList())) {
                 e.setChildList(sortList(e.getChildList()));
@@ -52,11 +54,11 @@ public class ProCategoryCacheTree {
     private ProCategoryCacheVo buildChildTree(ProCategoryCacheVo pNode){
         List<ProCategoryCacheVo> childMenus = new ArrayList<ProCategoryCacheVo>();
         for(ProCategoryCacheVo categoryNode : categoryList) {
-            if(categoryNode.getPid().equals(pNode.getId())) {
+            if (pNode.getId() != null && pNode.getId().equals(categoryNode.getPid())) {
                 childMenus.add(buildChildTree(categoryNode));
             }
         }
-        pNode.setChildList(childMenus);
+        pNode.setChildList(childMenus.isEmpty() ? null : childMenus);
         return pNode;
     }
 
@@ -64,11 +66,15 @@ public class ProCategoryCacheTree {
     private List<ProCategoryCacheVo> getRootNode() {
         List<ProCategoryCacheVo> rootMenuLists = new  ArrayList<ProCategoryCacheVo>();
         for(ProCategoryCacheVo categoryNode : categoryList) {
-            if(categoryNode.getPid().equals(0)) {
+            if (categoryNode.getPid() == null || categoryNode.getPid() == 0) {
                 rootMenuLists.add(categoryNode);
             }
         }
         return rootMenuLists;
+    }
+
+    private static int sortVal(ProCategoryCacheVo node) {
+        return node.getSort() == null ? 0 : node.getSort();
     }
 
 }

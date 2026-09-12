@@ -35,6 +35,9 @@ public class SystemUserLevel implements Serializable {
     @ApiModelProperty(value = "会员名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言会员名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "达到多少升级经验")
     private Integer experience;
 

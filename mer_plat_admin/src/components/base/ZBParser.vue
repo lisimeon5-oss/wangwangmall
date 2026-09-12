@@ -1,7 +1,7 @@
 <template>
   <div>
     <parser
-      v-if="formConf.fields.length > 0 && checkPermi(['platform:system:form:info'])"
+      v-if="formConf.fields && formConf.fields.length > 0"
       v-loading="loading"
       :is-edit="isCreate === 1"
       :form-conf="formConf"
@@ -35,7 +35,6 @@
 import * as systemFormConfigApi from '@/api/systemFormConfig.js';
 import parser from '@/components/FormGenerator/components/parser/Parser';
 import { Debounce } from '@/utils/validate';
-import { checkPermi } from '@/utils/permission'; // 权限判断函数
 export default {
   name: 'ZBParser',
   components: { parser },
@@ -76,11 +75,10 @@ export default {
     this.handlerGetFormConfig(this.formName);
   },
   methods: {
-    checkPermi,
     handlerGetFormConfig(formName) {
       // 获取表单配置后生成table列
       this.loading = true;
-      const _pram = { name: encodeURIComponent(formName) };
+      const _pram = { name: formName };
       systemFormConfigApi
         .formTempNameInfoApi(_pram)
         .then((data) => {

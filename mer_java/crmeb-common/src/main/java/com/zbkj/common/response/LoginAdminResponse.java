@@ -73,4 +73,10 @@ public class LoginAdminResponse implements Serializable {
 
     @ApiModelProperty(value = "商户id，0-平台")
     private Integer merId;
+
+    @ApiModelProperty(value = "商户名称")
+    private String merName;
+
+    @ApiModelProperty(value = "多语言商户名称(JSON)")
+    private String merNameJson;
 }

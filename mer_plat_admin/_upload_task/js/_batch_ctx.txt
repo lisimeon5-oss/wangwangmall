@@ -1,0 +1,20 @@
+================================================================================
+context for batch/recycle
+:"/admin/merchant/product/batch/add/feedback/coupons",method:"post",data:e})}function ee(e){return Object(r["a"])({url:"/admin/merchant/product/batch/delete",method:"post",data:e})}function te(e){return Object(r["a"])({url:"/admin/merchant/product/batch/down",method:"post",data:e})}function ne(e){return Object(r["a"])({url:"/admin/merchant/product/batch/recycle",method:"post",data:e})}function re(e){return Object(r["a"])({url:"/admin/merchant/product/batch/restore",method:"post",data:e})}function oe(e){return Object(r["a"])({url:"/admin/merchant/product/bat
+----------------------------------------
+================================================================================
+context for batch/delete
+/product/activity/search/page",method:"get",params:e})}function X(e){return Object(r["a"])({url:"/admin/merchant/product/add/feedback/coupons",method:"post",data:e})}function Z(e){return Object(r["a"])({url:"/admin/merchant/product/batch/add/feedback/coupons",method:"post",data:e})}function ee(e){return Object(r["a"])({url:"/admin/merchant/product/batch/delete",method:"post",data:e})}function te(e){return Object(r["a"])({url:"/admin/merchant/product/batch/down",method:"post",data:e})}function ne(e){return Object(r["a"])({url:"/admin/merchant/product/batch/
+----------------------------------------
+================================================================================
+context for batch/restore
+(r["a"])({url:"/admin/merchant/product/batch/delete",method:"post",data:e})}function te(e){return Object(r["a"])({url:"/admin/merchant/product/batch/down",method:"post",data:e})}function ne(e){return Object(r["a"])({url:"/admin/merchant/product/batch/recycle",method:"post",data:e})}function re(e){return Object(r["a"])({url:"/admin/merchant/product/batch/restore",method:"post",data:e})}function oe(e){return Object(r["a"])({url:"/admin/merchant/product/batch/set/brokerage",method:"post",data:e})}function ie(e){return Object(r["a"])({url:"/admin/merchant/produ
+----------------------------------------
+================================================================================
+context for batch/down
+merchant/product/add/feedback/coupons",method:"post",data:e})}function Z(e){return Object(r["a"])({url:"/admin/merchant/product/batch/add/feedback/coupons",method:"post",data:e})}function ee(e){return Object(r["a"])({url:"/admin/merchant/product/batch/delete",method:"post",data:e})}function te(e){return Object(r["a"])({url:"/admin/merchant/product/batch/down",method:"post",data:e})}function ne(e){return Object(r["a"])({url:"/admin/merchant/product/batch/recycle",method:"post",data:e})}function re(e){return Object(r["a"])({url:"/admin/merchant/product/bat
+----------------------------------------
+================================================================================
+context for batch/up
+nt/product/batch/set/brokerage",method:"post",data:e})}function ie(e){return Object(r["a"])({url:"/admin/merchant/product/batch/set/freight/template",method:"post",data:e})}function ae(e){return Object(r["a"])({url:"/admin/merchant/product/batch/submit/audit",method:"post",data:e})}function ce(e){return Object(r["a"])({url:"/admin/merchant/product/batch/up",method:"post",data:e})}function se(e){return Object(r["a"])({url:"/admin/merchant/product/set/brokerage",method:"post",data:e})}function ue(e){return Object(r["a"])({url:"/admin/merchant/product/set
+----------------------------------------

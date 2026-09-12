@@ -9,11 +9,12 @@
 // +----------------------------------------------------------------------
 
 import uploadFromComponent from './index.vue';
+import i18n from '@/i18n';
 const uploadFrom = {};
 uploadFrom.install = function (Vue, options) {
   const ToastConstructor = Vue.extend(uploadFromComponent);
   // 生成一个该子类的实例
-  const instance = new ToastConstructor();
+  const instance = new ToastConstructor({ i18n });
   instance.$mount(document.createElement('div'));
   document.body.appendChild(instance.$el);
   Vue.prototype.$modalUpload = function (callback, isMore, modelName, boolean, isShowVideo) {

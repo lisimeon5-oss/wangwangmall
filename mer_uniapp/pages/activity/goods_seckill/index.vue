@@ -2,7 +2,7 @@
 	<view :data-theme="theme">
 		<view class='cart_nav'>
 			<view v-if="styleValue=='1'">
-				<nav-bar ref="navBarRef" @getNavH='getNavH' iconColor='#fff' :navTitle="pageScrollStatus ? '限时秒杀' : ''"
+				<nav-bar ref="navBarRef" @getNavH='getNavH' iconColor='#fff' :navTitle="pageScrollStatus ? $t('限时秒杀') : ''"
 					:backgroundColor="pageScrollStatus?'#e93323':''" :isBackgroundColor="false" :isHeight="false">
 				</nav-bar>
 			</view>
@@ -195,7 +195,6 @@
 					this.loading = false;
 					this.loadend = false;
 					this.page = 1;
-					//this.seckillList = [];
 					let item = this.timeLine[this.active];
 					this.activeTime = item;
 					this.getSeckillList(this.activeTime);
@@ -215,7 +214,6 @@
 					if (this.loading) return;
 					this.loadTitle = '';
 					this.loading = true
-					// 获取数据的逻辑
 					const res = await getSeckillListApi(data);
 					this.loadend = this.page > res.data.totalPage;
 					if (this.page == 1) {
@@ -224,7 +222,6 @@
 					this.loadTitle = this.loadend ? '已全部加载' : '加载更多';
 					this.seckillList = this.seckillList.concat(res.data.list || []);
 					this.$set(this, 'page', this.page + 1);
-					// 在数据更新后恢复滚动位置
 					this.$nextTick(() => {
 						this.$set(this, 'seckillList', this.seckillList);
 					});
@@ -233,8 +230,6 @@
 					this.setShare();
 					// #endif
 					this.showSkeleton = false
-
-
 				} catch (error) {
 					this.loading = false
 				}

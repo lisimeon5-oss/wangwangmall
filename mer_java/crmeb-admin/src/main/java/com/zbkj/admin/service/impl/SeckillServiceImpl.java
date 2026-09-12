@@ -377,6 +377,7 @@ public class SeckillServiceImpl implements SeckillService {
                 p.setAttrValue(attrValueList);
                 p.setMerName(merchantMap.get(p.getMerId()).getName());
                 p.setCategoryName(categoryMap.get(p.getCategoryId()).getName());
+                p.setAttrList(productAttributeService.findListWithOptionsByProductId(p.getProductId()));
             });
         }
         response.setProductList(productList);
@@ -905,14 +906,16 @@ public class SeckillServiceImpl implements SeckillService {
      * 时间段赋值
      */
     private void setTimeIntervalRequest(SeckillTimeIntervalRequest request, SeckillTimeInterval timeInterval) {
-        if (request.getStartTime().length() != 5 || request.getEndTime().length() != 5) {
+        String startTimeStr = normalizeHHmm(request.getStartTime());
+        String endTimeStr = normalizeHHmm(request.getEndTime());
+        if (startTimeStr.length() != 5 || endTimeStr.length() != 5) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "时间参数不正确 例如:01:00,02:00");
         }
-        if (!request.getStartTime().contains(":") || !request.getEndTime().contains(":")) {
+        if (!startTimeStr.contains(":") || !endTimeStr.contains(":")) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "时间参数不正确 例如:01:00,02:00");
         }
 
-        String[] splitStart = request.getStartTime().split(":");
+        String[] splitStart = startTimeStr.split(":");
         for (String s : splitStart) {
             if (StrUtil.isBlank(s) || s.trim().length() != 2) {
                 throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "时间参数不正确 例如:01:00,02:00");
@@ -921,7 +924,7 @@ public class SeckillServiceImpl implements SeckillService {
         String start = splitStart[0].trim().concat(splitStart[1].trim());
         Integer startTime = Integer.valueOf(start);
 
-        String[] splitEnd = request.getEndTime().split(":");
+        String[] splitEnd = endTimeStr.split(":");
         for (String s : splitEnd) {
             if (StrUtil.isBlank(s) || s.trim().length() != 2) {
                 throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "时间参数不正确 例如:01:00,02:00");
@@ -935,6 +938,17 @@ public class SeckillServiceImpl implements SeckillService {
         }
         timeInterval.setStartTime(startTime);
         timeInterval.setEndTime(endTime);
+    }
+
+    private String normalizeHHmm(String time) {
+        if (StrUtil.isBlank(time)) {
+            return "";
+        }
+        String value = time.trim();
+        if (value.length() >= 8 && value.charAt(2) == ':' && value.charAt(5) == ':') {
+            return value.substring(0, 5);
+        }
+        return value;
     }
 
 

@@ -11,13 +11,13 @@
 				</block>
 			</swiper>
 			<!-- #ifdef APP-PLUS || MP-->
-			<view class='keep' :style="{backgroundColor:bgColor}" @click='savePhoto(spreadList[swiperIndex].pic)'>保存海报
+			<view class='keep' :style="{backgroundColor:bgColor}" @click='savePhoto(spreadList[swiperIndex].pic)'>{{$t('保存海报')}}
 			</view>
 			<!-- #endif -->
 			<!-- #ifndef MP || APP-PLUS -->
 			<div class="preserve acea-row row-center-wrapper">
 				<div class="line"></div>
-				<div class="tip">长按保存图片</div>
+				<div class="tip">{{$t('长按保存图片')}}</div>
 				<div class="line"></div>
 			</div>
 			<!-- #endif -->
@@ -121,7 +121,7 @@
 		 */
 		onShareAppMessage: function() {
 			return {
-				title: this.userInfo.nickname + '-分销海报',
+				title: this.userInfo.nickname + '-' + this.$t('分销海报'),
 				imageUrl: this.spreadList[0].pic,
 				path: `/pages/index/index?id=0&sd=${this.uid}`,
 			};
@@ -132,7 +132,7 @@
 			userSpreadBannerList: function() {
 				let that = this;
 				uni.showLoading({
-					title: '获取中',
+					title: this.$t('获取中'),
 					mask: true,
 				})
 				spreadBanner({
@@ -148,7 +148,7 @@
 			},
 			getImageBase64: function(images) {
 				uni.showLoading({
-					title: '海报生成中',
+					title: this.$t('海报生成中'),
 					mask: true
 				});
 				let that = this;
@@ -217,7 +217,7 @@
 					fail: res => {
 						uni.hideLoading();
 						that.$util.Tips({
-							title: '海报二维码生成失败！'
+							title: this.$t('海报二维码生成失败！')
 						});
 					}
 				})
@@ -260,7 +260,7 @@
 					fail: function(err) {
 						uni.hideLoading();
 						that.$util.Tips({
-							title: '无法获取图片信息'
+							title: this.$t('无法获取图片信息')
 						});
 					}
 				});
@@ -289,13 +289,13 @@
 					filePath: url,
 					success: function(res) {
 						that.$util.Tips({
-							title: '保存成功',
+							title: this.$t('保存成功'),
 							icon: 'success'
 						});
 					},
 					fail: function(res) {
 						that.$util.Tips({
-							title: '保存失败'
+							title: this.$t('保存失败')
 						});
 					}
 				});
@@ -304,7 +304,7 @@
 				if (this.$wechat.isWeixin()) {
 					let configAppMessage = {
 						desc: '分销海报',
-						title: this.userInfo.nickname + '-分销海报',
+						title: this.userInfo.nickname + '-' + this.$t('分销海报'),
 						link: '/pages/index/index?sd=' + this.uid,
 						imgUrl: this.spreadList[0].pic
 					};

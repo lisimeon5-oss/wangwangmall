@@ -2,7 +2,7 @@
 	<view :data-theme="theme">
 		<view class="container">
 			<!-- <view class="header">
-				<text class="title">TA提到的宝贝</text>
+				<text class="title">{{$t('TA提到的宝贝')}}</text>
 				<image @click="closePopup" class="closeBnt" :src="urlDomain +'crmebimage/presets/close.png'" mode=""></image>
             </view> -->
 			<view class="main_count flex" :class="isHome ? 'mb90' : ''">
@@ -13,11 +13,11 @@
 						</view>
 						<view class="info">
 							<view class="name line1 text--w111-333 text-28rpx">{{item.productName}}</view>
-							<text v-if="item.isPay == 1" class="isPay">作者买过</text>
+							<text v-if="item.isPay == 1" class="isPay">{{$t('作者买过')}}</text>
 							<view class="bottom">
-								<view v-if="item.price" class="price"><text class="sm">￥</text><text
+								<view v-if="item.price" class="price"><text class="sm">฿</text><text
 										class="text">{{item.price}}</text></view>
-								<text class="buy-btn">立即购买</text>
+								<text class="buy-btn">{{$t('立即购买')}}</text>
 							</view>
 						</view>
 					</view>

@@ -3,12 +3,12 @@
     <el-card class="box-card" shadow="never" :bordered="false">
       <div class="container">
         <el-form size="small" inline label-width="100px">
-          <el-form-item label="文件类型：">
+          <el-form-item :label="$t('systemSetting.fileTypeLabel')">
             <el-select
               v-model="tableFrom.type"
               clearable
               filterable
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="selWidth"
               @change="exportFileList(1)"
             >
@@ -26,22 +26,22 @@
           class="table"
           highlight-current-row
         >
-          <el-table-column label="文件名" prop="name" min-width="200" />
-          <el-table-column label="操作者名称" prop="admin_id" min-width="80" />
-          <el-table-column label="生成时间" prop="create_time" min-width="180" />
-          <el-table-column label="类型" min-width="120">
+          <el-table-column :label="$t('systemSetting.fileName')" prop="name" min-width="200" />
+          <el-table-column :label="$t('systemSetting.operatorName')" prop="admin_id" min-width="80" />
+          <el-table-column :label="$t('systemSetting.generatedTime')" prop="create_time" min-width="180" />
+          <el-table-column :label="$t('common.type')" min-width="120">
             <template slot-scope="scope">
               <span>{{ scope.row.type }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="状态" min-width="80">
+          <el-table-column :label="$t('common.status')" min-width="80">
             <template slot-scope="scope">
               <span>{{ scope.row.status | exportOrderStatusFilter }}</span>
             </template>
           </el-table-column>
-          <el-table-column key="8" label="操作" width="70" fixed="right">
+          <el-table-column key="8" :label="$t('common.operate')" width="70" fixed="right">
             <template slot-scope="scope">
-              <a v-if="scope.row.status == 1" @click="downLoad(scope.row.path)">下载</a>
+              <a v-if="scope.row.status == 1" @click="downLoad(scope.row.path)">{{ $t('systemSetting.download') }}</a>
             </template>
           </el-table-column>
         </el-table>
@@ -89,12 +89,12 @@ export default {
         type: '',
       },
       fileTypeList: [
-        { name: '订单', value: 'order' },
-        { name: '流水记录', value: 'financial' },
-        { name: '发货单', value: 'delivery' },
-        { name: '导入记录', value: 'importDelivery' },
-        { name: '账单信息', value: 'exportFinancial' },
-        { name: '退款单', value: 'refundOrder' },
+        { name: this.$t('systemSetting.orders'), value: 'order' },
+        { name: this.$t('systemSetting.transactionRecords'), value: 'financial' },
+        { name: this.$t('systemSetting.deliveryNotes'), value: 'delivery' },
+        { name: this.$t('systemSetting.importRecords'), value: 'importDelivery' },
+        { name: this.$t('systemSetting.billingInfo'), value: 'exportFinancial' },
+        { name: this.$t('systemSetting.refundOrders'), value: 'refundOrder' },
       ],
     };
   },

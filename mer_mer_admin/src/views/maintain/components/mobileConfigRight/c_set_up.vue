@@ -2,8 +2,8 @@
   <div class="setUp borderPadding">
     <template>
       <el-tabs v-model="configData.tabVal">
-        <el-tab-pane label="内容设置" />
-        <el-tab-pane label="样式设置" />
+        <el-tab-pane :label="$t('pagediy.contentSettings')" />
+        <el-tab-pane :label="$t('pagediy.styleSettings')" />
       </el-tabs>
     </template>
   </div>

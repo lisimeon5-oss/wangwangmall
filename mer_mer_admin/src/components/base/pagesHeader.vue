@@ -3,7 +3,7 @@
     <div class="acea-row row-middle">
       <div class="font-sm after-line" @click="goBack">
         <span class="el-icon-arrow-left"></span>
-        <span class="pl10">返回</span>
+        <span class="pl10">{{ $t('common.back') }}</span>
       </div>
       <span class="ht_title ml10">{{ title }}</span>
     </div>

@@ -1,5 +1,6 @@
 package com.zbkj.admin.controller.platform;
 
+import cn.hutool.core.util.StrUtil;
 import com.zbkj.common.constants.DateConstants;
 import com.zbkj.common.model.acticitystyle.ActivityStyle;
 import com.zbkj.common.page.CommonPage;
@@ -10,6 +11,7 @@ import com.zbkj.common.request.PageParamRequest;
 import com.zbkj.common.response.ActivityStyleResponse;
 import com.zbkj.common.result.CommonResult;
 import com.zbkj.common.utils.CrmebDateUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.service.service.ActivityStyleService;
 import com.zbkj.service.service.SystemAttachmentService;
 import io.swagger.annotations.Api;
@@ -66,6 +68,8 @@ public class ActivityStyleController {
     public CommonResult<String> save(@RequestBody @Validated ActivityStyleRequest activityStyleRequest) {
         ActivityStyle activityStyle = new ActivityStyle();
         BeanUtils.copyProperties(activityStyleRequest, activityStyle);
+        activityStyle.setName(I18nJsonUtil.emptyToBlank(activityStyleRequest.getName()));
+        activityStyle.setNameJson(StrUtil.blankToDefault(activityStyleRequest.getNameJson(), ""));
         activityStyle.setStarttime(CrmebDateUtil.strToDate(activityStyleRequest.getStarttime(), DateConstants.DATE_FORMAT));
         activityStyle.setEndtime(CrmebDateUtil.strToDate(activityStyleRequest.getEndtime(), DateConstants.DATE_FORMAT));
         activityStyle.setStyle(systemAttachmentService.clearPrefix(activityStyle.getStyle()));
@@ -108,6 +112,10 @@ public class ActivityStyleController {
         ActivityStyle activityStyle = new ActivityStyle();
         BeanUtils.copyProperties(activityStyleRequest, activityStyle);
         activityStyle.setId(activityStyleRequest.getId());
+        activityStyle.setName(I18nJsonUtil.emptyToBlank(activityStyleRequest.getName()));
+        if (activityStyleRequest.getNameJson() != null) {
+            activityStyle.setNameJson(activityStyleRequest.getNameJson());
+        }
         activityStyle.setStyle(systemAttachmentService.clearPrefix(activityStyle.getStyle()));
         activityStyle.setStarttime(CrmebDateUtil.strToDate(activityStyleRequest.getStarttime(), DateConstants.DATE_FORMAT));
         activityStyle.setEndtime(CrmebDateUtil.strToDate(activityStyleRequest.getEndtime(), DateConstants.DATE_FORMAT));

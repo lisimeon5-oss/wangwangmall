@@ -1,21 +1,24 @@
 <template>
   <!--视频上传-->
-  <div class="upload_img acea-row row-between borderPadding" v-if="configData && configData.isShow === 1">
-    <div>
-      <div class="header">{{ configData.title }}</div>
-      <div class="title">{{ configData.tips }}</div>
-    </div>
-    <div class="box">
-      <el-upload
-        class="upload-demo"
-        action
-        :http-request="handleUploadForm"
-        :headers="myHeaders"
-        :show-file-list="false"
-        multiple
-      >
-        <el-button icon="el-icon-upload2" size="small" class="mr15"></el-button>
-      </el-upload>
+  <div v-if="configData && configData.isShow === 1">
+    <div class="upload_img acea-row row-between borderPadding">
+      <div>
+        <div class="header">{{ configData.title }}</div>
+        <div class="title">{{ configData.tips }}</div>
+      </div>
+      <div class="box">
+        <el-upload
+          class="upload-demo"
+          action
+          :http-request="handleUploadForm"
+          :headers="myHeaders"
+          :show-file-list="false"
+          multiple
+        >
+          <el-button icon="el-icon-upload2" size="small" class="mr15"></el-button>
+        </el-upload>
+        <span v-if="displayUrl" class="video-ok el-icon-circle-check"></span>
+      </div>
     </div>
   </div>
 </template>
@@ -33,12 +36,21 @@
 import { mapState } from 'vuex';
 import { fileFileApi } from '@/api/systemSetting';
 import { getToken } from '@/utils/auth';
+import { parseLangJsonMap } from '@/utils/localizedName';
 export default {
   name: 'c_upload_video',
   computed: {
     ...mapState({
       tabVal: (state) => state.admin.mobildConfig.searchConfig.data.tabVal,
     }),
+    mediaLang() {
+      return (this.configObj && this.configObj.diyMediaLang) || this.defaultLangCode;
+    },
+    displayUrl() {
+      if (!this.configData) return '';
+      if (this.mediaLang === this.defaultLangCode) return this.configData.url || '';
+      return parseLangJsonMap(this.configData.urlJson)[this.mediaLang] || '';
+    },
   },
   props: {
     configObj: {
@@ -53,6 +65,7 @@ export default {
       defaults: {},
       configData: {},
       myHeaders: { 'X-Token': getToken() },
+      defaultLangCode: 'zh-cn',
     };
   },
   watch: {
@@ -83,16 +96,15 @@ export default {
     uploadPic(formData, data) {
       let loading = this.$loading({
         lock: true,
-        text: '上传中，请稍候...',
+        text: this.$t('upload.uploading'),
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)',
       });
       fileFileApi(formData, data)
         .then((res) => {
           loading.close();
-          this.$message.success('上传成功');
+          this.$message.success(this.$t('upload.uploadSuccess'));
           this.$emit('getConfig', { name: 'video', values: res.url });
-          this.configData.uploadVideo.url = res.url;
         })
         .catch((res) => {
           loading.close();
@@ -133,6 +145,15 @@ export default {
   .iconfont {
     position: absolute;
     color: #999;
+  }
+  .video-ok {
+    position: absolute;
+    right: -6px;
+    top: -6px;
+    color: #67c23a;
+    font-size: 16px;
+    background: #fff;
+    border-radius: 50%;
   }
 
   img {

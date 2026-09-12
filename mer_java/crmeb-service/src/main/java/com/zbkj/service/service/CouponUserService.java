@@ -144,4 +144,9 @@ public interface CouponUserService extends IService<CouponUser> {
     List<CouponUser> findManyPlatByUidAndMerIdAndMoneyAndProList(Integer userId, List<Integer> proIdList, List<Integer> proCategoryIdList, List<Integer> merIdList, List<Integer> brandIdList, BigDecimal money);
 
     Boolean userIsCanReceiveCoupon(Coupon coupon, Integer userId);
+
+    /**
+     * C 端展示：用优惠券模板 nameJson 覆盖用户券快照名称
+     */
+    void applyLocalizedName(List<CouponUser> list);
 }

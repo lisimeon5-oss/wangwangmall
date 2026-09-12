@@ -2,12 +2,12 @@
   <div class="deviseBox">
     <div class="devise_head acea-row row-between-wrapper">
       <div class="acea-row row-baseline">
-        <div class="title">当前页面：{{ nameTop }}</div>
+        <div class="title">{{ $t('pagediy.currentPageColon') }}{{ nameTop }}</div>
         <el-popover placement="bottom" width="450" trigger="click" v-model="visible">
           <div class="acea-row row-middle">
             <el-input
               v-model="nameTopFrom"
-              placeholder="必填不超过15个字"
+              :placeholder="$t('pagediy.requiredMax15')"
               maxlength="15"
               size="small"
               style="width: 260px"
@@ -19,14 +19,14 @@
                 visible = false;
                 nameTopFrom = '';
               "
-              >取消</el-button
+              >{{ $t('common.cancel') }}</el-button
             >
             <el-button
               v-hasPermi="['platform:pagediy:update', 'platform:pagediy:save']"
               type="primary"
               size="small"
               @click="saveName(nameTopFrom, 0)"
-              >确定</el-button
+              >{{ $t('common.confirm') }}</el-button
             >
           </div>
           <i slot="reference" class="edit el-icon-edit-outline"></i>
@@ -35,14 +35,14 @@
       <div class="acea-row preview">
         <el-popover placement="top-start" trigger="hover" :disabled="Number(pageId) === 0">
           <div id="diyQrcode"></div>
-          <el-button @click="reast" class="ht_btn" slot="reference" style="line-height: 9px">重置</el-button>
+          <el-button @click="reast" class="ht_btn" slot="reference" style="line-height: 9px">{{ $t('common.reset') }}</el-button>
         </el-popover>
         <button
           v-hasPermi="['merchant:system:form:add', 'merchant:system:form:update']"
           class="ht_btn mx_12"
           v-debounceClick="saveConfig"
         >
-          仅保存
+          {{ $t('pagediy.saveOnly') }}
         </button>
         <el-button
           v-hasPermi="['merchant:system:form:add', 'merchant:system:form:update']"
@@ -54,7 +54,7 @@
             }
           "
           :loading="loading"
-          >保存关闭</el-button
+          >{{ $t('pagediy.saveClose') }}</el-button
         >
       </div>
     </div>
@@ -95,9 +95,9 @@
                   v-show="item.isOpen"
                 >
                   <div>
-                    <div class="position" style="display: none">释放鼠标将组建添加到此处</div>
+                    <div class="position" style="display: none">{{ $t('pagediy.dropComponentHere') }}</div>
                     <span class="conter iconfont" :class="element.icon"></span>
-                    <p class="conter">{{ element.cname }}</p>
+                    <p class="conter">{{ $t(element.cname) }}</p>
                   </div>
                 </div>
               </draggable>
@@ -194,7 +194,7 @@
         <div class="right-box">
           <div class="mConfig-item" style="background-color: #fff" v-for="(item, key) in rConfig" :key="key">
             <div class="title-config-diy">
-              <div class="title-bar">{{ item.cname }}</div>
+              <div class="title-bar">{{ $t(item.cname) }}</div>
             </div>
             <component
               :is="item.configName"
@@ -271,7 +271,9 @@ export default {
   },
   computed: {
     ...mapState({
-      nameTop: (state) => state.mobildConfig.pageName || '系统表单',
+      nameTop(state) {
+        return state.mobildConfig.pageName || this.$t('maintain.systemForm');
+      },
       showTxt: (state) => state.mobildConfig.pageShow,
       colorTxt: (state) => state.mobildConfig.pageColor,
       picTxt: (state) => state.mobildConfig.pagePic,
@@ -311,8 +313,8 @@ export default {
     this.pageId = Number(this.$route.params.id);
     this.pageType = this.$route.params.type;
     if (this.pageId === 0) this.visible = true; //新增的时候修改模板名称显示出来
-    this.nameTopFrom = this.pageType !== 'copy' ? this.nameTop : this.nameTop + '-副本';
-    this.name = this.pageType !== 'copy' ? this.nameTop : this.nameTop + '-副本';
+    this.nameTopFrom = this.pageType !== 'copy' ? this.nameTop : this.nameTop + this.$t('pagediy.copySuffix');
+    this.name = this.pageType !== 'copy' ? this.nameTop : this.nameTop + this.$t('pagediy.copySuffix');
     this.$nextTick(() => {
       this.arraySort();
       if (this.pageId != 0) {
@@ -337,10 +339,10 @@ export default {
       return true;
     },
     onCopy() {
-      this.$message.success('复制成功');
+      this.$message.success(this.$t('application.copySuccess'));
     },
     onError() {
-      this.$message.error('复制失败');
+      this.$message.error(this.$t('maintain.copyFailed'));
     },
     // 左侧tab
     bindTab(index) {
@@ -514,7 +516,7 @@ export default {
     arraySort() {
       let tempArr = [];
       let basis = {
-        title: '组件',
+        title: this.$t('maintain.components'),
         list: [],
         isOpen: true,
       };
@@ -539,7 +541,7 @@ export default {
             formName: this.nameTopFrom,
           })
             .then((res) => {
-              this.$message.success('保存成功');
+              this.$message.success(this.$t('user.saveSuccess'));
               this.$store.commit('mobildConfig/SET_SystemForm', []);
               this.loading = false;
               this.relLoading = false;
@@ -556,7 +558,7 @@ export default {
           })
             .then((res) => {
               this.pageId = res.id;
-              this.$message.success('保存成功');
+              this.$message.success(this.$t('user.saveSuccess'));
               this.loading = false;
               this.$store.commit('mobildConfig/SET_SystemForm', []);
               this.$store.commit('mobildConfig/nameUpdata', this.nameTopFrom);
@@ -585,7 +587,7 @@ export default {
     },
     // 模板名称保存
     saveName(n, j) {
-      if (!n) return this.$message.warning('请填写模板名称');
+      if (!n) return this.$message.warning(this.$t('maintain.pleaseEnterTemplateName'));
       if (j === 1) {
         //this.$store.commit('mobildConfig/UPNAME', this.nameContent);
       } else {
@@ -599,7 +601,7 @@ export default {
      */
     saveConfig(n, j) {
       if (this.mConfig.length == 0) {
-        return this.$message.error('暂未添加任何组件，保存失败！');
+        return this.$message.error(this.$t('maintain.noComponentsSaveFailed'));
       }
       this.loading = true;
       let val = this.$store.state.mobildConfig.defaultArray;
@@ -610,8 +612,8 @@ export default {
     // 获取默认配置
     getDefaultConfig() {
       systemFormDetailApi(this.pageId).then((res) => {
-        this.nameTopFrom = this.pageType !== 'copy' ? res.formName : res.formName + '-副本';
-        this.$store.commit('mobildConfig/nameUpdata', this.pageType !== 'copy' ? res.formName : res.formName + '-副本');
+        this.nameTopFrom = this.pageType !== 'copy' ? res.formName : res.formName + this.$t('pagediy.copySuffix');
+        this.$store.commit('mobildConfig/nameUpdata', this.pageType !== 'copy' ? res.formName : res.formName + this.$t('pagediy.copySuffix'));
         let obj = {};
         let tempARR = [];
         let newArr = objToArr(JSON.parse(res.formValue));
@@ -644,7 +646,7 @@ export default {
     },
     // 重置
     reast() {
-      this.$modalSure('是否重置当前页面数据?').then(() => {
+      this.$modalSure(this.$t('pagediy.resetPageDataConfirm')).then(() => {
         this.mConfig = [];
         this.rConfig = [];
         this.activeIndex = -99;

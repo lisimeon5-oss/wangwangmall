@@ -1,5 +1,6 @@
 package com.zbkj.common.request.merchant;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,7 +9,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -40,9 +40,12 @@ public class MerchantProductCategoryRequest implements Serializable {
     private Integer pid;
 
     @ApiModelProperty(value = "名称")
-    @NotEmpty(message = "分类名称不能为空")
     @Length(max = 100, message = "分类名称不能超过100个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言分类名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言分类名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "icon")
     private String icon;

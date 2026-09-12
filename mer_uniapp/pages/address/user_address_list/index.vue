@@ -7,23 +7,23 @@
 			<radio-group class="radio-group" @change="radioChange" v-if="addressList.length">
 				<view class='item borRadius14' v-for="(item,index) in addressList" :key="index">
 					<view class='address' @click='goOrder(item.id)'>
-						<view class='consignee'>收货人：{{item.realName}}<text class='phone'>{{item.phone}}</text></view>
-						<view>收货地址：{{item.province}}{{item.city}}{{item.district}}{{ item.street}}{{item.detail}}</view>
+						<view class='consignee'>{{$t('收货人')}}：{{item.realName}}<text class='phone'>{{item.phone}}</text></view>
+						<view>{{$t('收货地址')}}：{{item.province}}{{item.city}}{{item.district}}{{ item.street}}{{item.detail}}</view>
 					</view>
 					<view class='operation acea-row row-between-wrapper'>
 						<!-- #ifndef MP -->
 						<radio class="radio" :value="index.toString()" :checked="item.isDefault">
-							<text>设为默认</text>
+							<text>{{$t('设为默认')}}</text>
 						</radio>
 						<!-- #endif -->
 						<!-- #ifdef MP -->
 						<radio class="radio" :value="index" :checked="item.isDefault">
-							<text>设为默认</text>
+							<text>{{$t('设为默认')}}</text>
 						</radio>
 						<!-- #endif -->
 						<view class='acea-row row-middle'>
-							<view @click='editAddress(item.id)'><text class='iconfont icon-bianji'></text>编辑</view>
-							<view @click='delAddress(index)'><text class='iconfont icon-shanchu'></text>删除</view>
+							<view @click='editAddress(item.id)'><text class='iconfont icon-bianji'></text>{{$t('编辑')}}</view>
+							<view @click='delAddress(index)'><text class='iconfont icon-shanchu'></text>{{$t('删除')}}</view>
 						</view>
 					</view>
 				</view>
@@ -31,21 +31,21 @@
 			<view class='loadingicon acea-row row-center-wrapper'>
 				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>
 			</view>
-			<emptyPage v-if="addressList.length == 0 && !loading" title="暂无添加地址~" :imgSrc="urlDomain+'crmebimage/presets/noAddress.png'"></emptyPage>
+			<emptyPage v-if="addressList.length == 0 && !loading" :title="$t('暂无添加地址~')" :imgSrc="urlDomain+'crmebimage/presets/noAddress.png'"></emptyPage>
 			<view style='height:120rpx;'></view>
 		</view>
 		<view class='footer acea-row row-between-wrapper'>
 			<!-- #ifdef APP-PLUS -->
 			<view class='addressBnt bg_color on' @click='addAddress'><text
-					class='iconfont icon-tianjiadizhi'></text>添加新地址</view>
+					class='iconfont icon-tianjiadizhi'></text>{{$t('添加新地址')}}</view>
 			<!-- #endif -->
 			<!-- #ifdef MP-->
-			<view class='addressBnt bg_color' @click='addAddress'><text class='iconfont icon-tianjiadizhi'></text>添加新地址
+			<view class='addressBnt bg_color' @click='addAddress'><text class='iconfont icon-tianjiadizhi'></text>{{$t('添加新地址')}}
 			</view>
 			<!-- #endif -->
 			<!-- #ifdef H5-->
 			<view class='addressBnt bg_color' :class="this.$wechat.isWeixin()?'':'on'" @click='addAddress'><text
-					class='iconfont icon-tianjiadizhi'></text>添加新地址</view>
+					class='iconfont icon-tianjiadizhi'></text>{{$t('添加新地址')}}</view>
 			<!-- #endif -->
 		</view>
 		
@@ -171,7 +171,7 @@
 					that = this;
 				let address = this.addressList[index];
 				if (address == undefined) return that.$util.Tips({
-					title: '您设置的默认地址不存在!'
+					title: this.$t('您设置的默认地址不存在!')
 				});
 				setAddressDefault(address.id).then(res => {
 					for (let i = 0, len = that.addressList.length; i < len; i++) {
@@ -179,7 +179,7 @@
 						else that.addressList[i].isDefault = false;
 					}
 					that.$util.Tips({
-						title: '设置成功',
+						title: this.$t('设置成功'),
 						icon: 'success'
 					}, function() {
 						that.$set(that, 'addressList', that.addressList);
@@ -205,10 +205,10 @@
 				let that = this,
 					address = this.addressList[index];
 				if (address == undefined) return that.$util.Tips({
-					title: '您删除的地址不存在!'
+					title: this.$t('您删除的地址不存在!')
 				});
 				uni.showModal({
-					content: '确定删除该地址',
+					content: this.$t('确定删除该地址'),
 					cancelText: "取消", // 取消按钮的文字
 					confirmText: "确定", // 确认按钮文字
 					showCancel: true, // 是否显示取消按钮，默认为 true
@@ -219,7 +219,7 @@
 								that.addressList.splice(index, 1);
 								that.$set(that, 'addressList', that.addressList);
 								that.$util.Tips({
-									title: '删除成功',
+									title: this.$t('删除成功'),
 									icon: 'success'
 								});
 							}).catch(err => {
@@ -361,12 +361,12 @@
 		@include left_color(theme);
 	}
 
-	/deep/ radio .wx-radio-input.wx-radio-input-checked {
+	::v-deep  radio .wx-radio-input.wx-radio-input-checked {
 		@include main_bg_color(theme);
 		@include coupons_border_color(theme);
 	}
 
-	/deep/ radio .uni-radio-input.uni-radio-input-checked {
+	::v-deep  radio .uni-radio-input.uni-radio-input-checked {
 		@include main_bg_color(theme);
 		border: none !important;
 	}

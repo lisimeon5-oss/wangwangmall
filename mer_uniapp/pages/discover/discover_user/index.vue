@@ -2,7 +2,7 @@
 	<view class="container" :data-theme="theme">
 		<!-- :style="userInfo.avatar?{ backgroundImage: `url(${userInfo.avatar})` }: ''" -->
 		<!-- #ifdef MP || APP -->
-		<NavBar navTitle="个人主页" :isBackgroundColor="false" iconColor='#fff'></NavBar>
+		<NavBar :navTitle="$t('个人主页')" :isBackgroundColor="false" iconColor='#fff'></NavBar>
 		<!-- #endif -->
 		<view class="header">
 			<view class="header-bg" :style="{'background-image': userInfo.avatar}">
@@ -17,34 +17,34 @@
 						</image>
 						<view class="user_text">
 							<view class="name acea-row">
-								<text>{{userInfo.isLogoff ? "用户已注销": (userInfo.nickname || '')}}</text>
+								<text>{{userInfo.isLogoff ? $t('用户已注销'): (userInfo.nickname || '')}}</text>
 							</view>
 							<view v-if="userInfo.id" class="user_id">ID: {{userInfo.id || ''}}</view>
 						</view>
 					</view>
 					<view v-if="id && id!=uid" @click.stop="followAuthor">
 						<button v-if="!userInfo.isConcerned" class="follow_btn focus">
-							<text class="iconfont icon-jiahao2"></text>关注
+							<text class="iconfont icon-jiahao2"></text>{{$t('关注')}}
 						</button>
-						<button v-else class="follow_btn focused">已关注</button>
+						<button v-else class="follow_btn focused">{{$t('已关注')}}</button>
 					</view>
 					<view v-if="userInfo.id==uid">
 						<navigator hover-class="none" url="/pages/discover/discover_release/index"
 							class="follow_btn focus bg-color">
-							去发布
+							{{$t('去发布')}}
 						</navigator>
 					</view>
 			</view>
 			<view class="acea-row plant_info" @click="onEdit">
-				<view v-if="!userInfo.signature && userInfo.id==uid">点击可编辑个性签名</view>
+				<view v-if="!userInfo.signature && userInfo.id==uid">{{$t('点击可编辑个性签名')}}</view>
 				<view class="" v-if="userInfo.signature" style="width: 92%;">
 					<view class="acea-row" v-if="userInfo.isMore || userInfo.signature.length<=30">
 						<text class="signature">{{userInfo.signature}}</text>
-						<text v-if="userInfo.isMore" class="more" @click.stop="moreTap">收起</text>
+						<text v-if="userInfo.isMore" class="more" @click.stop="moreTap">{{$t('收起')}}</text>
 					</view>
 					<view v-else class="acea-row">
 						<text class="info signature">{{userInfo.signature.slice(0,23)}}...</text>
-						<text class="more" @click.stop="moreTap"> 展开</text>
+						<text class="more" @click.stop="moreTap"> {{$t('展开')}}</text>
 					</view>
 				</view>
 				<text v-show="userInfo.id==uid" class="ml10 iconfont icon-fabuzhongcao"></text>
@@ -54,20 +54,20 @@
 				<view class="count_wrapper acea-row">
 					<navigator :url="!id ? '/pages/discover/discover_follow/index?type=follow' : ''" class="item"
 						hover-class="none">
-						<text class="mr10">{{userInfo.concernedNum}}</text> 关注
+						<text class="mr10">{{userInfo.concernedNum}}</text> {{$t('关注')}}
 					</navigator>
 					<navigator :url="!id ? '/pages/discover/discover_follow/index?type=fans' : ''" class="item"
 						hover-class="none">
-						<text class="mr10">{{userInfo.fansNum}}</text> 粉丝
+						<text class="mr10">{{userInfo.fansNum}}</text> {{$t('粉丝')}}
 					</navigator>
 					<view class="item">
-						<text class="mr10">{{userInfo.likeNum}}</text> 获赞
+						<text class="mr10">{{userInfo.likeNum}}</text> {{$t('获赞')}}
 					</view>
 				</view>
 			</view>
 			<view v-if="!id && isShow" class="tab_count relative">
-				<text @click.stop="changeTab(0)" :class="tab==0 ? 'on' : ''">作品</text>
-				<text @click.stop="changeTab(1)" :class="tab==1 ? 'on' : ''">赞过</text>
+				<text @click.stop="changeTab(0)" :class="tab==0 ? 'on' : ''">{{$t('作品')}}</text>
+				<text @click.stop="changeTab(1)" :class="tab==1 ? 'on' : ''">{{$t('赞过')}}</text>
 			</view>
 		</view>
 		<view class="main">
@@ -79,13 +79,13 @@
 					</view>
 				</view>
 				<view class="empty-boxs noContent" v-if="list.length == 0 && !loading">
-					<emptyPage title="暂无更多内容~" mTop="13%" :imgSrc="urlDomain+'crmebimage/presets/noguanzhu.png'">
+					<emptyPage :title="$t('暂无更多内容~')" mTop="13%" :imgSrc="urlDomain+'crmebimage/presets/noguanzhu.png'">
 					</emptyPage>
 				</view>
 				<view class='loadingicon acea-row row-center-wrapper'>
 					<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>
 					<view class="end" :hidden="loading || list.length == 0"><text
-							:class="loaded ? 'loaded' : ''">{{loadTitle}}</text>
+							:class="loaded ? 'loaded' : ''">{{$t(loadTitle)}}</text>
 					</view>
 				</view>
 			</view>
@@ -93,17 +93,17 @@
 
 		<uni-popup ref="inputDialog" type="dialog">
 			<view v-if="isShowSignature" class="tui-modal-custom">
-				<view class="fs-32 fw-500 lh-44rpx text-center">编辑简介</view>
+				<view class="fs-32 fw-500 lh-44rpx text-center">{{$t('编辑简介')}}</view>
 				<view class="mt-24 bg--w111-f5f5f5 rd-16rpx p-24 h-342">
 					<textarea class="w-full fs-26" ref="myTextarea" v-model="signature" :focus="focus"
 						 :always-embed="true" :adjust-position="true" cursor-spacing="85rpx"
-						placeholder="请输入内容" :maxlength="100" name="desc" />
+						:placeholder="$t('请输入内容')" :maxlength="100" name="desc" />
 				</view>
 				<view class="flex-between-center mt-40">
-					<view class="w-244 h-72 rd-36rpx flex-center fs-26 font-color close-btn" @tap="handleInputClose">取消
+					<view class="w-244 h-72 rd-36rpx flex-center fs-26 font-color close-btn" @tap="handleInputClose">{{$t('取消')}}
 					</view>
 					<view class="w-244 h-72 rd-36rpx flex-center bg-color text--w111-fff fs-26"
-						@tap="handleInputConfirm">保存
+						@tap="handleInputConfirm">{{$t('保存')}}
 					</view>
 				</view>
 			</view>

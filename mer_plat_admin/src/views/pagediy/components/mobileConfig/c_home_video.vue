@@ -28,10 +28,12 @@
 // +---------------------------------------------------------------------
 import toolCom from '../mobileConfigRight/index.js';
 import rightBtn from '../rightBtn/index.vue';
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { applyDiyUiLabels, diyCname } from '@/utils/diyCname';
+import homeVideoPage from '../mobilePage/home_video.vue';
 export default {
-  name: 'c_home_article',
-  componentsName: 'home_article',
+  name: 'c_home_video',
+  componentsName: 'home_video',
+  ...diyCname('community.video'),
   components: {
     ...toolCom,
     rightBtn,
@@ -60,8 +62,7 @@ export default {
   },
   watch: {
     num(nVal) {
-      let value = JSON.parse(JSON.stringify(this.$store.state.mobildConfig.defaultArray[nVal]));
-      this.configObj = value;
+      this.loadConfig(nVal);
     },
     configObj: {
       handler(nVal, oVal) {
@@ -147,12 +148,17 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      let value = JSON.parse(JSON.stringify(this.$store.state.mobildConfig.defaultArray[this.num]));
-      this.configObj = value;
+      this.loadConfig(this.num);
     });
   },
   created() {},
   methods: {
+    loadConfig(nVal) {
+      const raw = this.$store.state.mobildConfig.defaultArray[nVal];
+      if (!raw) return;
+      const value = JSON.parse(JSON.stringify(raw));
+      this.configObj = applyDiyUiLabels(value, { data: homeVideoPage.data, num: nVal });
+    },
     getConfig(data) {
       if (data.name === 'radio' && data.values === 0) {
         this.configObj.uploadVideo.isShow = 1;

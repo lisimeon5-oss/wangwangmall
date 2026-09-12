@@ -41,17 +41,29 @@ public class Product implements Serializable {
     @ApiModelProperty(value = "商品图片")
     private String image;
 
+    @ApiModelProperty(value = "多语言商品封面图(JSON)")
+    private String imageJson;
+
     @ApiModelProperty(value = "展示图")
     private String flatPattern;
 
     @ApiModelProperty(value = "轮播图")
     private String sliderImage;
 
+    @ApiModelProperty(value = "多语言商品轮播图(JSON)")
+    private String sliderImageJson;
+
     @ApiModelProperty(value = "商品名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言商品名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "商品简介")
     private String intro;
+
+    @ApiModelProperty(value = "多语言商品简介(JSON)")
+    private String introJson;
 
     @ApiModelProperty(value = "关键字,英文逗号拼接")
     private String keyword;
@@ -79,6 +91,9 @@ public class Product implements Serializable {
 
     @ApiModelProperty(value = "单位名")
     private String unitName;
+
+    @ApiModelProperty(value = "多语言商品单位(JSON)")
+    private String unitNameJson;
 
     @ApiModelProperty(value = "销量")
     private Integer sales;
@@ -111,6 +126,7 @@ public class Product implements Serializable {
     private Integer sort;
 
     @ApiModelProperty(value = "总后台排序")
+    @TableField(value = "`rank`")
     private Integer rank;
 
     @ApiModelProperty(value = "规格 0单 1多")
@@ -176,6 +192,10 @@ public class Product implements Serializable {
     @ApiModelProperty(value = "商品详情")
     @TableField(exist = false)
     private String content;
+
+    @ApiModelProperty(value = "多语言商品详情(JSON)")
+    @TableField(exist = false)
+    private String contentJson;
 
     @ApiModelProperty(value = "活动边框 列表中是边框 详情中是背景图")
     @TableField(exist = false)

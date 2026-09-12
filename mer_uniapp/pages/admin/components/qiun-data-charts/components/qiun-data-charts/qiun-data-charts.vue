@@ -1000,7 +1000,7 @@ export default {
               filePath: res.tempFilePath,
               success: function () {
                 uni.showToast({
-                  title: '保存成功',
+                  title: this.$t('保存成功'),
                   duration: 2000
                 });
               }

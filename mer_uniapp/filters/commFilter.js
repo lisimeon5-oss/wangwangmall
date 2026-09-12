@@ -8,6 +8,7 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import store from "../store";
+import { t } from '@/i18n';
 
 // 公共过滤器
 export function filterEmpty(val) {
@@ -28,7 +29,7 @@ export function merCategoryFilter(status) {
 	let arrayList = store.getters.merchantClassify;
 	let array = arrayList.filter(item => status === item.id)
 	if (array.length) {
-		return array[0].name
+		return t(array[0].name || '')
 	} else {
 		return ''
 	}
@@ -44,7 +45,7 @@ export function merchantTypeFilter(status) {
 	let arrayList = store.getters.merchantType;
 	let array = arrayList.filter(item => status === item.id)
 	if (array.length) {
-		return array[0].name
+		return t(array[0].name || '')
 	} else {
 		return ''
 	}
@@ -58,7 +59,7 @@ export function merCreateTypeFilter(status) {
 		'admin': '管理员创建',
 		'apply': '商户入驻申请'
 	}
-	return statusMap[status]
+	return t(statusMap[status] || '')
 }
 
 /**
@@ -69,7 +70,7 @@ export function selfTypeFilter(status) {
 		true: '自营',
 		false: '非自营'
 	}
-	return statusMap[status]
+	return t(statusMap[status] || '')
 }
 
 /**
@@ -95,7 +96,7 @@ export function refundStatusFilter(status) {
 		5: '等待商家收货并退款',
 		6: '撤销申请',
 	}
-	return statusMap[status]
+	return t(statusMap[status] || '')
 }
 
 /**
@@ -111,7 +112,7 @@ export function orderRefundTipsStatusFilter(status) {
 		5: '商家确认收货后进行退款,请您耐心等待，若有异议请联系平台客服处理!',
 		6: '此退款单已撤销，若对此订单存在疑问，请联系商家协商处理。',
 	}
-	return statusMap[status]
+	return t(statusMap[status] || '')
 }
 
 /**
@@ -128,7 +129,7 @@ export function orderStatusFilter(status) {
 		6: '已完成',
 		9: '已取消'
 	}
-	return statusMap[status]
+	return t(statusMap[status] || '')
 }
 
 /**
@@ -142,7 +143,7 @@ export function payTypeFilter(status) {
         'offline': '线下',
         'give': '平台赠送'
 	}
-	return statusMap[status]
+	return t(statusMap[status] || '')
 }
 
 /**
@@ -155,7 +156,7 @@ export function timeStatusFilter(status) {
 		2: '即将开始',
 		3: '明日预告'
 	}
-	return statusMap[status]
+	return t(statusMap[status] || '')
 }
 
 /**
@@ -167,7 +168,7 @@ export function orderTypeFilter(status) {
 		1: '秒杀',
 		2: '拼团'
 	}
-	return statusMap[status]
+	return t(statusMap[status] || '')
 }
 
 /**
@@ -183,17 +184,13 @@ export function orderTypeValFilter(status) {
 	}
 	return statusMap[status]
 }
-
-/**
- * 逛逛评论审核状态
- */
 export function discoverReplyAuditStatusFilter(status) {
 	const statusMap = {
 		0: '待审核',
 		1: '审核通过',
 		2: '审核失败',
 	}
-	return statusMap[status]
+	return t(statusMap[status] || '')
 }
 
 /**
@@ -201,19 +198,15 @@ export function discoverReplyAuditStatusFilter(status) {
  */
 export function couponTypeFilter(status) {
 	const statusMap = {
-		1: '店铺',
-		2: '商品',
-		3: '通用',
-		4: '品类',
-		5: '品牌',
-		6: '跨店'
+		1: t('店铺'),
+		2: t('商品'),
+		3: t('通用'),
+		4: t('品类'),
+		5: t('品牌'),
+		6: t('跨店')
 	}
 	return statusMap[status]
 }
-
-/**
- * 主题色色值
- */
 export function filterTheme(status) {
 	const statusMap = {
 		'theme1': '#e93323',

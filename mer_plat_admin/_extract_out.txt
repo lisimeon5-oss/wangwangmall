@@ -1,0 +1,159 @@
+REUSE menu.button | 按钮
+REUSE common.save | 保存
+REUSE common.remark | 备注
+REUSE user.remarkLabel | 备注：
+REUSE common.edit | 编辑
+REUSE menu.menu | 菜单
+REUSE menu.menuType | 菜单类型：
+REUSE menu.menuName | 菜单名称：
+REUSE common.operate | 操作
+REUSE product.operateSuccess | 操作成功
+REUSE common.query | 查询
+REUSE product.createTime | 创建时间
+REUSE product.notSelfOperated | 非自营
+REUSE category.categoryNamePlaceholder | 分类名称
+REUSE common.no | 否
+REUSE user.more | 更多
+REUSE common.close | 关闭
+REUSE product.endDate | 结束日期
+REUSE product.rejectReason | 拒绝原因
+REUSE common.open | 开启
+REUSE product.startDate | 开始日期
+REUSE menu.directory | 目录
+REUSE product.sort | 排序
+REUSE product.sortLabel | 排序：
+REUSE menu.inputMenuName | 请输入菜单名称
+REUSE product.pleaseEnterRejectReason | 请填写拒绝原因
+REUSE el.select.placeholder | 请选择
+REUSE product.pleaseSelectAuditStatus | 请选择审核状态
+REUSE el.messagebox.cancel | 取消
+REUSE common.delete | 删除
+REUSE product.deleteSuccess | 删除成功
+REUSE product.merchantName | 商户名称
+REUSE product.merchantNameLabel | 商户名称：
+REUSE finance.applyTime | 申请时间
+REUSE finance.audit | 审核
+REUSE product.auditRejected | 审核拒绝
+REUSE finance.auditPassed | 审核通过
+REUSE finance.auditStatusLabel | 审核状态：
+REUSE common.yes | 是
+REUSE user.submitSuccess | 提交成功
+REUSE finance.submitting | 提交中 ...
+REUSE finance.none | 无
+REUSE common.show | 显示
+REUSE common.detail | 详情
+REUSE user.addNew | 新增
+REUSE product.addSuccess | 新增成功
+REUSE category.updateSuccess | 修改成功
+REUSE user.chooseDate | 选择日期
+REUSE common.rejected | 已拒绝
+REUSE common.approved | 已通过
+REUSE menu.hide | 隐藏
+REUSE el.table.resetFilter | 重置
+REUSE common.status | 状态
+REUSE product.selfOperated | 自营
+NEW  | // +---------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +---------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +---------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +---------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | // +----------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +----------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | > 更多<i class=
+NEW  | 编辑店铺类型
+NEW  | 编辑分类
+NEW  | 菜单名称
+NEW  | 创建类型
+NEW  | 的数据项？
+NEW  | 登录
+NEW  | 登录密码：
+NEW  | 第三方复制次数
+NEW  | 店铺类型
+NEW  | 店铺类型：
+NEW  | 店铺类型名称
+NEW  | 店铺类型要求
+NEW  | 关闭成功
+NEW  | 简介：
+NEW  | 开启/关闭
+NEW  | 开启成功
+NEW  | 类型
+NEW  | 联系方式
+NEW  | 切换商户推荐开关成功
+NEW  | 请上传资质图片
+NEW  | 请输入备注
+NEW  | 请输入后回车
+NEW  | 请输入商户名称
+NEW  | 请输入商户名称/关键字
+NEW  | 请输入商户手机号
+NEW  | 请输入商户姓名
+NEW  | 请输入商户账号
+NEW  | 请输入手续费
+NEW  | 请选择店铺类型
+NEW  | 请选择商户分类
+NEW  | 权限标识
+NEW  | 删除当前店铺类型吗？
+NEW  | 删除当前分类吗
+NEW  | 删除店铺类型成功
+NEW  | 删除分类成功
+NEW  | 商户
+NEW  | 商户登录账号为手机号，初始密码为000000，可从个人中心修改密码
+NEW  | 商户分类
+NEW  | 商户分类：
+NEW  | 商户关键字：
+NEW  | 商户类别：
+NEW  | 商户入驻审核
+NEW  | 商户手机号
+NEW  | 商户手机号：
+NEW  | 商户搜索：
+NEW  | 商户详情
+NEW  | 商户姓名
+NEW  | 商户姓名：
+NEW  | 商户账号：
+NEW  | 商品审核：
+NEW  | 设置第三方平台商品复制次数
+NEW  | 审核通过该商户吗？
+NEW  | 是否关闭推荐商户
+NEW  | 是否开启：
+NEW  | 是否开启推荐商户
+NEW  | 是否确认删除名称为
+NEW  | 是否推荐：
+NEW  | 是否自营：
+NEW  | 手续费
+NEW  | 手续费(%)：
+NEW  | 添加店铺类型
+NEW  | 添加商户
+NEW  | 添加商户分类
+NEW  | 添加时间
+NEW  | 图标
+NEW  | 推荐
+NEW  | 未处理
+NEW  | 新建分类
+NEW  | 新增商户
+NEW  | 星级评分：
+NEW  | 修改
+NEW  | 修改复制商品数量
+NEW  | 修改商户手机号
+NEW  | 修改手机号
+NEW  | 选择时间：
+NEW  | 已关闭商户
+NEW  | 展开/折叠
+NEW  | 正常开启的商户
+NEW  | 重置密码成功
+NEW  | 重置商户密码
+NEW  | 重置商户密码为000000吗？
+NEW  | 主类目
+NEW  | 主目录
+NEW  | 资质图片：
+NEW  | 组件路径
+NEW  | 最多选择10张图片！
+
+TOTAL unique: 143, NEW: 89

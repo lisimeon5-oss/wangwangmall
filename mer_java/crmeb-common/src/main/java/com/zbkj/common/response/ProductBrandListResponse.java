@@ -35,6 +35,9 @@ public class ProductBrandListResponse implements Serializable {
     @ApiModelProperty(value = "名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言品牌名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "icon")
     private String icon;
 

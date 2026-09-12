@@ -2,7 +2,7 @@
   <div class="divBox">
     <pages-header
       ref="pageHeader"
-      :title="isChoose || isCopy || isDisabled || $route.params.id == 0 ? '添加商品' : '编辑商品'"
+      :title="isChoose || isCopy || isDisabled || $route.params.id == 0 ? $t('marketing.addProduct') : $t('product.editProduct')"
       backUrl="/marketing/pointsMall/productManage"
     ></pages-header>
     <el-card class="box-card mt14" :body-style="{ padding: '0 20px 20px' }" shadow="never" :bordered="false">
@@ -20,23 +20,53 @@
       >
         <el-row v-show="currentTab === '1'" :gutter="24">
           <!-- 商品信息-->
+          <el-col :span="24">
+            <el-form-item :label="$t('common.language')">
+              <div class="lang-name-switch">
+                <el-radio-group v-model="activeLang" size="small">
+                  <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                    {{ lang.label }}
+                  </el-radio-button>
+                </el-radio-group>
+              </div>
+            </el-form-item>
+          </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="商品名称：" prop="name">
+            <el-form-item :label="$t('videoChannel.productNameLabel')" prop="name">
               <el-input
+                v-if="activeLang === defaultLangCode"
                 class="from-ipt-width"
                 v-model.trim="formValidate.name"
                 maxlength="50"
                 show-word-limit
-                placeholder="请输入商品名称"
+                :placeholder="$t('product.pleaseEnterProductName')"
+                :disabled="isDisabled"
+              />
+              <el-input
+                v-else
+                class="from-ipt-width"
+                v-model.trim="nameJsonForm[activeLang]"
+                maxlength="50"
+                show-word-limit
+                :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
                 :disabled="isDisabled"
               />
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="单位：" prop="unitName">
+            <el-form-item :label="$t('videoChannel.unitLabel')" prop="unitName">
               <el-input
+                v-if="activeLang === defaultLangCode"
                 v-model.trim="formValidate.unitName"
-                placeholder="请输入单位"
+                :placeholder="$t('videoChannel.pleaseEnterUnit')"
+                class="from-ipt-width"
+                :disabled="isDisabled"
+                maxlength="16"
+              />
+              <el-input
+                v-else
+                v-model.trim="unitJsonForm[activeLang]"
+                :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
                 class="from-ipt-width"
                 :disabled="isDisabled"
                 maxlength="16"
@@ -44,18 +74,18 @@
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="商品封面图：" prop="image">
+            <el-form-item :label="$t('marketing.productCoverLabel')" prop="image">
               <div class="upLoadPicBox acea-row" @click="modalPicTap(false)" :disabled="isDisabled">
                 <div v-if="formValidate.image" class="pictrue"><img :src="formValidate.image" /></div>
                 <div v-else class="upLoad">
                   <i class="el-icon-camera cameraIconfont" />
                 </div>
               </div>
-              <div class="from-tips" v-show="!isDisabled">建议尺寸：800*800px，上传小于500kb的图片</div>
+              <div class="from-tips" v-show="!isDisabled">{{ $t('marketing.sizeTip800') }}</div>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="商品轮播图：" prop="sliderImages">
+            <el-form-item :label="$t('videoChannel.productCarouselLabel')" prop="sliderImages">
               <div class="acea-row">
                 <div
                   v-for="(item, index) in formValidate.sliderImages"
@@ -80,29 +110,29 @@
                   </div>
                 </div>
               </div>
-              <div class="from-tips">建议尺寸：800*800px，上传小于500kb的图片；最多可上传10张图片，拖动可调整顺序</div>
+              <div class="from-tips">{{ $t('marketing.sizeTip800Multi') }}</div>
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="商品关键字：">
+            <el-form-item :label="$t('videoChannel.productKeywordLabel')">
               <keyword
                 @getLabelarr="getLabelarr"
                 :labelarr="labelarr"
                 class="from-ipt-width"
                 :isDisabled="isDisabled"
               ></keyword>
-              <div class="from-tips">用户可以根据关键字进行商品搜索</div>
+              <div class="from-tips">{{ $t('marketing.keywordSearchTip') }}</div>
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="主图视频：" prop="video_link">
+            <el-form-item :label="$t('marketing.mainVideoLabel')" prop="video_link">
               <div class="acea-row">
                 <el-input
                   v-model="videoLink"
                   :disabled="isDisabled"
                   size="small"
                   class="from-ipt-width"
-                  placeholder="请输入MP4格式的视频链接"
+                  :placeholder="$t('marketing.pleaseEnterMp4VideoLink')"
                 >
                   <input ref="refid" type="file" style="display: none" />
                   <el-upload
@@ -117,12 +147,12 @@
                     multiple
                   >
                     <el-button :disabled="isDisabled" size="small">
-                      {{ videoLink ? '确认添加' : '上传视频' }}</el-button
+                      {{ videoLink ? $t('marketing.confirmAdd') : $t('marketing.uploadVideo') }}</el-button
                     >
                   </el-upload>
                 </el-input>
               </div>
-              <div class="from-tips">请上传小于20M的视频</div>
+              <div class="from-tips">{{ $t('marketing.videoSizeLimit') }}</div>
               <div v-if="videoLink" class="iview-video-style">
                 <video
                   class="from-ipt-width"
@@ -130,7 +160,7 @@
                   :src="videoLink"
                   controls="controls"
                 >
-                  您的浏览器不支持 video 标签。
+                  {{ $t('community.browserNotSupportVideo') }}
                 </video>
                 <div class="mark" />
                 <i class="el-icon-delete iconv" @click="delVideo" />
@@ -138,64 +168,76 @@
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="商品简介：" prop="intro">
+            <el-form-item :label="$t('videoChannel.productIntroLabel')" prop="intro">
               <el-input
+                v-if="activeLang === defaultLangCode"
                 class="from-ipt-width"
                 v-model.trim="formValidate.intro"
                 type="textarea"
                 maxlength="100"
                 :rows="3"
-                placeholder="请输入商品简介，最多可输入250字（商品简介用于通过公众号分享商品详情，会展示此简介信息）"
+                :placeholder="$t('marketing.shareIntroTip')"
                 :disabled="isDisabled"
                 show-word-limit
               />
-              <div class="from-tips">通过公众号分享商品详情，会展示此简介信息</div>
+              <el-input
+                v-else
+                class="from-ipt-width"
+                v-model.trim="introJsonForm[activeLang]"
+                type="textarea"
+                maxlength="100"
+                :rows="3"
+                :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+                :disabled="isDisabled"
+                show-word-limit
+              />
+              <div class="from-tips">{{ $t('marketing.shareIntroTip') }}</div>
             </el-form-item>
           </el-col>
           <el-col v-bind="grid2">
-            <el-form-item label="兑换数量限制：" prop="exchangeNum">
+            <el-form-item :label="$t('marketing.exchangeCountLimitLabel')" prop="exchangeNum">
               <el-input-number
                 v-model.trim="formValidate.exchangeNum"
                 :min="0"
                 :max="9999"
                 :step="1"
                 step-strictly
-                placeholder="请输入"
+                :placeholder="$t('marketing.pleaseEnterContent')"
               ></el-input-number>
-              <div class="from-tips">用户可以兑换总数量限制，支持输入0～9999整数，填0代表不限制</div>
+              <div class="from-tips">{{ $t('marketing.exchangeTotalLimitTip') }}</div>
             </el-form-item>
-            <el-form-item label="上架状态：" required>
+            <el-form-item :label="$t('marketing.shelfStatusLabel')" required>
               <el-switch
                 v-model.trim="formValidate.isShow"
                 :active-value="true"
                 :inactive-value="false"
-                active-text="上架"
-                inactive-text="下架"
+                :active-text="$t('product.onShelf')"
+                :inactive-text="$t('product.offShelf')"
                 :disabled="isDisabled"
               />
             </el-form-item>
-            <el-form-item label="热门推荐：" required>
+            <el-form-item :label="$t('product.hotRecommendLabel')" required>
               <el-switch
                 v-model.trim="formValidate.isHot"
                 :active-value="1"
                 :inactive-value="0"
-                active-text="是"
-                inactive-text="否"
+                :active-text="$t('common.yes')"
+                :inactive-text="$t('common.no')"
                 :disabled="isDisabled"
               />
             </el-form-item>
-            <el-form-item label="排序：">
+            <el-form-item :label="$t('product.sortLabel')">
               <el-input-number
                 v-model.trim="formValidate.sort"
                 :min="1"
                 :max="999999"
-                placeholder="请输入排序"
+                :placeholder="$t('user.pleaseEnterSort')"
                 @keyup.native="proving1"
                 :disabled="isDisabled"
                 :step="1"
                 step-strictly
               />
-              <div class="from-tips">请输入0～999999的数字，数字越大越靠前</div>
+              <div class="from-tips">{{ $t('marketing.sortFrontTip') }}</div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -211,6 +253,9 @@
           :ManyAttrValue="ManyAttrValue"
           :OneattrValue="OneattrValue"
           :manyTabTit="manyTabTit"
+          :langOptions="langOptions"
+          :defaultLangCode="defaultLangCode"
+          :activeLang.sync="activeLang"
           @handleBatchDel="handleBatchDel"
           @changeIsEditVal="changeIsEditVal"
           @changeManyAttrValue="changeManyAttrValue"
@@ -218,7 +263,7 @@
         <!-- 商品详情-->
         <el-row v-show="currentTab === '3' && !isDisabled">
           <el-col :span="24">
-            <el-form-item label="商品详情：">
+            <el-form-item :label="$t('videoChannel.productDetailLabel')">
               <Tinymce v-model.trim="formValidate.content" :key="htmlKey"></Tinymce>
             </el-form-item>
           </el-col>
@@ -226,17 +271,17 @@
 
         <el-row v-show="currentTab === '3' && isDisabled">
           <el-col :span="24">
-            <el-form-item label="商品详情：">
-              <span v-html="formValidate.content || '无'"></span>
+            <el-form-item :label="$t('videoChannel.productDetailLabel')">
+              <span v-html="formValidate.content || $t('finance.none')"></span>
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item>
           <el-button v-if="Number(currentTab) > 1" class="submission priamry_border" @click="handleSubmitUp"
-            >上一步</el-button
+            >{{ $t('product.previousStep') }}</el-button
           >
           <el-button v-show="Number(currentTab) < 3" class="priamry_border" @click="handleSubmitNest('formValidate')"
-            >下一步</el-button
+            >{{ $t('product.nextStep') }}</el-button
           >
           <el-button
             v-show="(currentTab === '3' || $route.params.id) && !isDisabled"
@@ -245,7 +290,7 @@
             @click="handleSubmit('formValidate')"
             :loading="loadingBtn"
             v-if="checkPermi(['platform:integral:product:save', 'platform:integral:product:update'])"
-            >保存</el-button
+            >{{ $t('common.save') }}</el-button
           >
         </el-form-item>
       </el-form>
@@ -273,6 +318,9 @@ import product from '@/mixins/product';
 import { objTitlePoints, defaultObj, objTitle } from '@/views/marketing/pointsMall/default';
 import creatAttr from '../components/creatAttr';
 import { productDetailApi } from '@/api/product';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { resolveFormActiveLang, hasI18nNameContent, buildI18nNameJson } from '@/utils/localizedName';
 
 export default {
   name: 'ProductProductAdd',
@@ -299,11 +347,6 @@ export default {
       manyTabTit: {},
       manyTabDate: {}, // 生成规格表格中的头部标题
       htmlKey: 0,
-      headTab: [
-        { tit: '商品信息', name: '1' },
-        { tit: '规格库存', name: '2' },
-        { tit: '商品详情', name: '3' },
-      ],
       form: 2,
       labelarr: [],
       isDisabled: this.$route.params.isDisabled === 'noEdit' ? true : false,
@@ -339,16 +382,6 @@ export default {
         sm: 24,
         xs: 24,
       },
-      ruleValidate: {
-        name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
-        unitName: [{ required: true, message: '请输入单位', trigger: 'blur' }],
-        intro: [{ required: true, message: '请输入商品简介', trigger: 'blur' }],
-        tempId: [{ required: true, message: '请选择运费模板', trigger: 'change' }],
-        image: [{ required: true, message: '请上传商品图', trigger: 'change' }],
-        sliderImages: [{ required: true, message: '请上传商品轮播图', type: 'array', trigger: 'change' }],
-        specType: [{ required: true, message: '请选择商品规格', trigger: 'change' }],
-        exchangeNum: [{ required: true, message: '请输入兑换数量限制', trigger: 'blur' }],
-      },
       attrInfo: {},
       tableFrom: {
         page: 1,
@@ -371,11 +404,6 @@ export default {
       loadingBtn: false,
       isShowGroup: false,
       multiples: true,
-      productType: [
-        { tit: '普通商品', id: 0, tit2: '实体货物' },
-        { tit: '云盘商品', id: 5, tit2: '同一链接发货' },
-        { tit: '卡密商品', id: 6, tit2: '不同充值码发货' },
-      ],
       upload: {
         videoIng: false, // 是否显示进度条；
       },
@@ -394,6 +422,21 @@ export default {
           volume: void 0,
         },
       ],
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
+      unitJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
+      introJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -404,6 +447,59 @@ export default {
     visitedViews() {
       return this.$store.state.tagsView.visitedViews;
     },
+    headTab() {
+      return [
+        { tit: this.$t('product.productInfo'), name: '1' },
+        { tit: this.$t('marketing.specStock'), name: '2' },
+        { tit: this.$t('videoChannel.productDetail'), name: '3' },
+      ];
+    },
+    ruleValidate() {
+      return {
+        name: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(this.formValidate.name, this.nameJsonForm)) callback();
+            else callback(new Error(this.$t('product.pleaseEnterProductName')));
+          },
+          trigger: 'blur',
+        }],
+        unitName: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(this.formValidate.unitName, this.unitJsonForm)) callback();
+            else callback(new Error(this.$t('videoChannel.pleaseEnterUnit')));
+          },
+          trigger: 'blur',
+        }],
+        intro: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(this.formValidate.intro, this.introJsonForm)) callback();
+            else callback(new Error(this.$t('user.pleaseEnterProductIntro')));
+          },
+          trigger: 'blur',
+        }],
+        tempId: [{ required: true, message: this.$t('marketing.pleaseSelectFreightTemplate'), trigger: 'change' }],
+        image: [{ required: true, message: this.$t('marketing.pleaseUploadProductImage'), trigger: 'change' }],
+        sliderImages: [{ required: true, message: this.$t('marketing.pleaseUploadProductCarousel'), type: 'array', trigger: 'change' }],
+        specType: [{ required: true, message: this.$t('marketing.pleaseSelectProductSpec'), trigger: 'change' }],
+        exchangeNum: [{ required: true, message: this.$t('marketing.pleaseEnterExchangeLimit'), trigger: 'blur' }],
+      };
+    },
+    productType() {
+      return [
+        { tit: this.$t('product.normalProduct'), id: 0, tit2: this.$t('marketing.physicalGoods') },
+        { tit: this.$t('product.cloudProduct'), id: 5, tit2: this.$t('marketing.sameLinkShip') },
+        { tit: this.$t('product.cardKeyProduct'), id: 6, tit2: this.$t('marketing.differentRechargeCode') },
+      ];
+    },
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
+    },
+  },
+  watch: {
+    '$i18n.locale'() {
+      this.setTagsViewTitle();
+    },
   },
   created() {
     this.tempRoute = Object.assign({}, this.$route);
@@ -412,17 +508,20 @@ export default {
   },
   async mounted() {
     this.setTagsViewTitle();
+    this.getLanguageList();
     this.formValidate.sliderImages = [];
     this.formValidate.attrs = [];
     if (this.$route.params.id && this.$route.params.id != 0) {
       if (!this.isChoose) {
         // 积分商品详情
         if (checkPermi(['platform:integral:product:detail'])) await this.getPointsProductInfo(this.$route.params.id, 'points');
+        this.applyI18nFormsFromProduct();
       } else {
         //普通商品详情
         await this.getProductInfo(this.$route.params.id, 'normal');
         this.formThead = Object.assign({}, objTitlePoints);
         this.getPointsProductAttrValue(); //获取积分商品规格数据
+        this.applyI18nFormsFromProduct();
       }
     } else {
       this.isShowAttr = true;
@@ -430,6 +529,53 @@ export default {
   },
   methods: {
     checkPermi,
+    emptyI18nForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    parseI18nJson(json) {
+      const form = this.emptyI18nForm();
+      if (!json) return form;
+      try {
+        const obj = typeof json === 'string' ? JSON.parse(json) : json;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // 解析失败时保持为空
+      }
+      return form;
+    },
+    applyI18nFormsFromProduct() {
+      this.nameJsonForm = this.parseI18nJson(this.formValidate && this.formValidate.nameJson);
+      this.unitJsonForm = this.parseI18nJson(this.formValidate && this.formValidate.unitNameJson);
+      this.introJsonForm = this.parseI18nJson(this.formValidate && this.formValidate.introJson);
+      this.activeLang = resolveFormActiveLang(this);
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.applyI18nFormsFromProduct();
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.applyI18nFormsFromProduct();
+        });
+    },
     // 回调规格生成表格数据
     changeManyAttrValue(e) {
       // rows数组第一项 新增默认数据 oneFormBatch
@@ -459,10 +605,10 @@ export default {
       const isLt2M = file.size / 10240 / 10240 < 2;
 
       if (!isJPG) {
-        this.$message.error('上传视频只能是 mp4 格式!');
+        this.$message.error(this.$t('marketing.videoFormatLimit'));
       }
       if (!isLt2M) {
-        this.$message.error('上传视频不能超过 20MB!');
+        this.$message.error(this.$t('marketing.videoSizeLimit'));
       }
       return isJPG && isLt2M;
     },
@@ -475,7 +621,7 @@ export default {
       };
       let loading = this.$loading({
         lock: true,
-        text: '上传中，请稍候...',
+        text: this.$t('finance.uploading'),
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)',
       });
@@ -503,12 +649,19 @@ export default {
     },
     setTagsViewTitle() {
       if (this.$route.params.id && this.$route.params.id != 0) {
-        const title = this.isDisabled ? '商品详情' : '编辑商品';
-        const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.$route.params.id}` });
+        const title = this.isDisabled ? this.$t('videoChannel.productDetail') : this.$t('product.editProduct');
+        const nextTitle = `${title}-${this.$route.params.id}`;
+        const route = Object.assign({}, this.tempRoute, {
+          title: nextTitle,
+          meta: { ...(this.tempRoute.meta || {}), title: nextTitle },
+        });
         this.$store.dispatch('tagsView/updateVisitedView', route);
       } else {
-        const title = '采集商品';
-        const route = Object.assign({}, this.tempRoute, { title: `${title}` });
+        const title = this.isChoose ? this.$t('marketing.collectProduct') : this.$t('marketing.addProduct');
+        const route = Object.assign({}, this.tempRoute, {
+          title: `${title}`,
+          meta: { ...(this.tempRoute.meta || {}), title: `${title}` },
+        });
         this.$store.dispatch('tagsView/updateVisitedView', route);
       }
     },
@@ -529,13 +682,13 @@ export default {
           this.currentTab = (Number(this.currentTab) + 1).toString();
         } else {
           if (
-            !this.formValidate.name ||
-            !this.formValidate.unitName ||
-            !this.formValidate.intro ||
+            !hasI18nNameContent(this.formValidate.name, this.nameJsonForm) ||
+            !hasI18nNameContent(this.formValidate.unitName, this.unitJsonForm) ||
+            !hasI18nNameContent(this.formValidate.intro, this.introJsonForm) ||
             !this.formValidate.image ||
             !this.formValidate.sliderImages
           ) {
-            this.$message.warning('请填写完整商品信息！');
+            this.$message.warning(this.$t('marketing.pleaseFillCompleteProduct'));
           }
         }
       });
@@ -543,7 +696,7 @@ export default {
     //保存接口数据更新
     getFromData() {
       if (this.formValidate.specType && this.formValidate.attrs.length < 1)
-        return this.$message.warning('请填写多规格属性！');
+        return this.$message.warning(this.$t('marketing.pleaseFillMultiSpec'));
       this.formValidate.keyword = this.labelarr.join(',');
       if (this.videoLink) {
         //如果有视频主图，将视频链接插入到轮播图第一的位置
@@ -556,6 +709,7 @@ export default {
         this.formValidate.attrList = this.formValidate.attrs.map((item, index) => {
           return {
             attributeName: item.value,
+            attributeNameJson: buildI18nNameJson(this.langOptions, item.valueJson || {}, this.defaultLangCode, item.value),
             isShowImage: item.add_pic == 1 ? true : false,
             id: 0,
             sort: index + 1,
@@ -563,6 +717,7 @@ export default {
               return {
                 image: arr.image,
                 optionName: arr.value,
+                optionNameJson: buildI18nNameJson(this.langOptions, arr.valueJson || {}, this.defaultLangCode, arr.value),
                 sort: idx + 1,
               };
             }),
@@ -579,7 +734,7 @@ export default {
       } else {
         this.formValidate.attrList = [
           {
-            attributeName: '规格',
+            attributeName: this.$t('marketing.spec'),
             attrValues: '默认',
             isShowImage: false,
             optionList: [
@@ -604,6 +759,9 @@ export default {
         systemFormId: this.formValidate.systemFormId ? this.formValidate.systemFormId : 0,
         attrValueList: this.formValidate.specType ? attrValueListData : this.OneattrValue,
         tempId: this.formValidate.type != 0 ? 0 : this.formValidate.tempId,
+        nameJson: buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, this.formValidate.name),
+        unitNameJson: buildI18nNameJson(this.langOptions, this.unitJsonForm, this.defaultLangCode, this.formValidate.unitName),
+        introJson: buildI18nNameJson(this.langOptions, this.introJsonForm, this.defaultLangCode, this.formValidate.intro),
       };
       return data;
     },
@@ -615,15 +773,15 @@ export default {
           this.postData();
         } else {
           if (
-            !this.formValidate.name ||
+            !hasI18nNameContent(this.formValidate.name, this.nameJsonForm) ||
             !this.formValidate.cateId ||
             !this.formValidate.keyword ||
-            !this.formValidate.unitName ||
-            !this.formValidate.intro ||
+            !hasI18nNameContent(this.formValidate.unitName, this.unitJsonForm) ||
+            !hasI18nNameContent(this.formValidate.intro, this.introJsonForm) ||
             !this.formValidate.image ||
             !this.formValidate.sliderImages
           ) {
-            this.$message.warning('请填写完整商品信息！');
+            this.$message.warning(this.$t('marketing.pleaseFillCompleteProduct'));
           }
         }
       });
@@ -635,7 +793,7 @@ export default {
       parseFloat(this.$route.params.id) > 0 && !this.isChoose && !this.isCopy
         ? productUpdateApi(data)
             .then(async (res) => {
-              this.$message.success('编辑成功');
+              this.$message.success(this.$t('product.editSuccess'));
               setTimeout(() => {
                 this.$router.push({ path: '/marketing/pointsMall/productManage' });
               }, 500);
@@ -647,7 +805,7 @@ export default {
             })
         : productCreateApi(data)
             .then(async (res) => {
-              this.$message.success('新增成功');
+              this.$message.success(this.$t('product.addSuccess'));
               setTimeout(() => {
                 this.$router.push({ path: '/marketing/pointsMall/productManage' });
               }, 500);
@@ -694,6 +852,13 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
 .tabPic {
   width: 100% !important;
   height: 100% !important;

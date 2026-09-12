@@ -91,6 +91,9 @@ public class AttrValueResponse implements Serializable {
     @ApiModelProperty(value = "卡密库名称")
     private String cdkeyLibraryName;
 
+    @ApiModelProperty(value = "多语言卡密库名称(JSON)")
+    private String cdkeyLibraryNameJson;
+
     @ApiModelProperty(value = "会员价格")
     private BigDecimal vipPrice;
 

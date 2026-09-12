@@ -2,20 +2,20 @@
 	<view :data-theme="theme">
 		<view class='wrapper'>
 			<view class='item borRadius14'>
-				<view class="title">￥<text>{{payPrice}}</text></view>
+				<view class="title">฿<text>{{payPrice}}</text></view>
 				<view class='list'>
 					<block v-for="(item,index) in cartArr" :key='index'>
 						<view v-if="item.payStatus === 1" class='payItem acea-row row-middle'
 							:class='active==index ?"on":""' @tap='payItem(index,item)'>
-							<view class='name acea-row row-center-wrapper'>
+							<view class='name acea-row row-middle'>
 								<view class='iconfont animated'
 									:class='(item.icon) + " " + (animated==true&&active==index ?"bounceIn":"")'>
 								</view>
-								{{item.name}}
+								{{$t(item.name)}}
 							</view>
-							<view class="acea-row">
+							<view class="pay-extra acea-row row-middle">
 								<view class='tip'>
-									{{item.title}}
+									{{$t(item.title)}}
 									<block v-if="item.value === 'yue'">
 										{{item.userBalance}}
 									</block>
@@ -34,9 +34,9 @@
 				</view>
 			</view>
 		</view>
-		<view v-if="isShow" class="titleNo">暂无支付方式！</view>
+		<view v-if="isShow" class="titleNo">{{$t('暂无支付方式！')}}</view>
 		<view class="btn-box">
-			<button class='Bnt bg-color' @tap='getOrderPay' :disabled="isBuy">立即支付</button>
+			<button class='Bnt bg-color' @tap='getOrderPay' :disabled="isBuy">{{$t('立即支付')}}</button>
 		</view>
 		<view class="alipaysubmit" v-html="formContent"></view>
 	</view>
@@ -118,7 +118,7 @@
 					} else {
 						this.isShow = true;
 						return this.$util.Tips({
-							title: '暂无支付方式！'
+							title: this.$t('暂无支付方式！')
 						})
 					}
 				});
@@ -141,7 +141,7 @@
 			//选择支付方式的判断，传参
 			getPayCheck() {
 				if (!this.payType) return this.$util.Tips({
-					title: '请选择支付方式'
+					title: this.$t('请选择支付方式')
 				});
 				if (this.payType === 'yue') {
 					this.payChannel = 'yue'
@@ -173,10 +173,10 @@
 			getOrderPay: Debounce(function() {
 				this.getPayCheck();
 				if (Number(this.payPrice)>Number(this.userBalance) && this.payType === 'yue') return this.$util.Tips({
-					title: '余额的金额不够，请切换支付方式'
+					title: this.$t('余额的金额不够，请切换支付方式')
 				});
 				uni.showLoading({
-					title: '加载中...'
+					title: this.$t('加载中...')
 				});
 				this.isBuy = true;
 				if (this.fromType === 'svip') {
@@ -271,21 +271,26 @@
 
 		.payItem {
 			border-bottom: 1px solid #eee;
+			flex-wrap: nowrap;
 			justify-content: space-between;
-			height: 138rpx;
-			line-height: 138rpx;
+			min-height: 138rpx;
+			height: auto;
+			line-height: 1.35;
+			padding: 28rpx 0;
 			width: 100%;
 			box-sizing: border-box;
-			font-size: 32pxrpx;
+			font-size: 28rpx;
 			color: #333333;
 
 			.on {
-				// border-color: #fc5445;
 				@include coupons_border_color(theme);
 				color: $theme-color;
 			}
 
 			.name {
+				flex-shrink: 0;
+				white-space: nowrap;
+				margin-right: 16rpx;
 
 				.iconfont {
 					width: 48rpx;
@@ -296,8 +301,15 @@
 					background-color: #fe960f;
 					color: #fff;
 					font-size: 30rpx;
-					margin-right: 28rpx;
+					margin-right: 20rpx;
 				}
+			}
+
+			.pay-extra {
+				flex: 1;
+				min-width: 0;
+				flex-wrap: nowrap;
+				justify-content: flex-end;
 			}
 
 			.iconfont.icon-weixinzhifu1 {
@@ -309,13 +321,19 @@
 			}
 
 			.tip {
-				text-align: center;
-				font-size: 26rpx;
+				flex: 1;
+				min-width: 0;
+				text-align: right;
+				font-size: 24rpx;
 				color: #aaa;
-				margin-right: 20rpx;
+				margin-right: 16rpx;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 
 			.radio {
+				flex-shrink: 0;
 				.iconfont {
 					font-size: 46rpx;
 				}

@@ -9,11 +9,11 @@
     >
       <div class="padding-add">
         <el-form ref="form" inline :model="form" @submit.native.prevent label-position="right">
-          <el-form-item label="模板名称：">
+          <el-form-item :label="$t('systemSetting.templateNameLabel')">
             <el-input
               @keyup.enter.native="handleSearchList"
               v-model="form.keywords"
-              placeholder="请输入模板名称"
+              :placeholder="$t('systemSetting.pleaseEnterTemplateName')"
               class="selWidth"
               size="small"
               clearable
@@ -21,35 +21,37 @@
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="handleSearchList">查询</el-button>
+            <el-button type="primary" size="small" @click="handleSearchList">{{ $t('common.query') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card shadow="never" :bordered="false" class="box-card mt14" :body-style="{ padding: '20px' }">
       <el-button type="primary" size="small" @click="handleSubmit()" v-hasPermi="['merchant:shipping:templates:save']"
-        >添加运费模板</el-button
+        >{{ $t('systemSetting.addFreightTemplate') }}</el-button
       >
       <el-table v-loading="loading" :data="tableData.list" class="mt20" size="small">
         <el-table-column prop="id" label="ID" min-width="60" />
-        <el-table-column label="模板名称" min-width="200" prop="name" :show-overflow-tooltip="true" />
-        <el-table-column min-width="100" label="计费方式" prop="type">
+        <el-table-column :label="$t('systemSetting.templateName')" min-width="200" :show-overflow-tooltip="true">
+          <template slot-scope="{ row }">{{ getLocalizedName(row, getUiLocale()) }}</template>
+        </el-table-column>
+        <el-table-column min-width="100" :label="$t('systemSetting.billingMethod')" prop="type">
           <template slot-scope="{ row }">
-            <p>{{ row.type | typeFilter }}</p>
+            <p>{{ formatBillingMethod(row.type) }}</p>
           </template>
         </el-table-column>
-        <el-table-column min-width="100" label="包邮方式" prop="appoint">
+        <el-table-column min-width="100" :label="$t('systemSetting.freeShippingMethod')" prop="appoint">
           <template slot-scope="{ row }">
-            <p>{{ row.appoint | statusFilter }}</p>
+            <p>{{ formatFreeShippingMethod(row.appoint) }}</p>
           </template>
         </el-table-column>
-        <el-table-column label="排序" min-width="100" prop="sort" />
-        <el-table-column label="添加时间" min-width="150" prop="createTime" />
-        <el-table-column prop="address" fixed="right" width="100" label="操作">
+        <el-table-column :label="$t('common.sort')" min-width="100" prop="sort" />
+        <el-table-column :label="$t('systemSetting.addTime')" min-width="150" prop="createTime" />
+        <el-table-column prop="address" fixed="right" width="100" :label="$t('common.operate')">
           <template slot-scope="scope">
-            <a @click="bindEdit(scope.row)" v-hasPermi="['merchant:shipping:templates:update']">修改</a>
+            <a @click="bindEdit(scope.row)" v-hasPermi="['merchant:shipping:templates:update']">{{ $t('common.edit') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a @click="bindDelete(scope.row)" v-hasPermi="['merchant:shipping:templates:delete']">删除</a>
+            <a @click="bindDelete(scope.row)" v-hasPermi="['merchant:shipping:templates:delete']">{{ $t('common.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -84,27 +86,9 @@
 import CreatTemplates from './creatTemplates';
 import * as logistics from '@/api/logistics.js';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { getLocalizedName, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'ShippingTemplates',
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        0: '全国包邮',
-        1: '部分包邮',
-        2: '自定义',
-      };
-      return statusMap[status];
-    },
-    typeFilter(status) {
-      const statusMap = {
-        0: '无',
-        1: '按件数',
-        2: '按重量',
-        3: '按体积',
-      };
-      return statusMap[status];
-    },
-  },
   components: { CreatTemplates },
   data() {
     return {
@@ -124,6 +108,21 @@ export default {
   },
   methods: {
     checkPermi,
+    getLocalizedName,
+    getUiLocale() {
+      return getUiLocale(this);
+    },
+    formatFreeShippingMethod(status) {
+      return [this.$t('systemSetting.nationwideFreeShipping'), this.$t('systemSetting.partialFreeShipping'), this.$t('systemSetting.custom')][status];
+    },
+    formatBillingMethod(status) {
+      return [
+        this.$t('common.none'),
+        this.$t('systemSetting.byItemCount'),
+        this.$t('systemSetting.byWeight'),
+        this.$t('systemSetting.byVolume'),
+      ][status];
+    },
     // 添加
     handleSubmit() {
       this.$refs.addTemplates.dialogVisible = true;
@@ -167,7 +166,7 @@ export default {
     bindDelete(item) {
       this.$modalSure().then(() => {
         logistics.shippingDetete({ id: item.id }).then((res) => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('common.deleteSuccess'));
           this.$store.commit('product/SET_ShippingTemplates', []);
           this.getDataList();
         });

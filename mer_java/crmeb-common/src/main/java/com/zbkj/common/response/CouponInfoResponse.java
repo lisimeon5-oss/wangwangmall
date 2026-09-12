@@ -39,6 +39,9 @@ public class CouponInfoResponse implements Serializable {
     @ApiModelProperty(value = "优惠券名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言优惠券名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "类别 1-商家券, 2-商品券, 3-平台券")
     private Integer category;
 

@@ -5,7 +5,7 @@
 			<view class="bg" v-if="isShowBox"></view>
 			<view class="mask-content animated" :class="{slideInUp:isShowBox}">
 				<view class="title-bar">
-					配送方式
+					{{$t('配送方式')}}
 					<view class="close" @click="closeShowBox"><text class="iconfont icon-guanbi"></text></view>
 				</view>
 				<view class="box">
@@ -22,7 +22,7 @@
 					</view>
 				</view>
 				<view class="foot">
-					<view class="btn" @click="confirmBtn">确定</view>
+					<view class="btn" @click="confirmBtn">{{$t('确定')}}</view>
 				</view>
 			</view>
 		</view>

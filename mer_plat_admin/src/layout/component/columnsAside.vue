@@ -14,13 +14,7 @@
         >
           <div :class="setColumnsAsidelayout">
             <i :class="'el-icon-' + v.icon"></i>
-            <div class="font13">
-              {{
-                v.title && v.title.length >= 4
-                  ? v.title.substr(0, setColumnsAsidelayout === 'columns-vertical' ? 4 : 3)
-                  : v.title
-              }}
-            </div>
+            <div class="font13 columns-menu-title">{{ getMenuTitle(v.title) }}</div>
           </div>
         </li>
         <div ref="columnsAsideActiveRef" :class="setColumnsAsideStyle"></div>
@@ -79,6 +73,15 @@ export default {
     //   });
   },
   methods: {
+    // 仅中文名称按字数截断以适配窄栏；英文/泰文/缅文等语言显示完整名称
+    getMenuTitle(title) {
+      if (!title) return title;
+      if (/[\u4e00-\u9fff]/.test(title)) {
+        const limit = this.setColumnsAsidelayout === 'columns-vertical' ? 4 : 3;
+        return title.length > limit ? title.substr(0, limit) : title;
+      }
+      return title;
+    },
     // 设置菜单高亮位置移动
     setColumnsAsideMove(k) {
       if (k === undefined) return false;
@@ -193,8 +196,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.columns-menu-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
 .layout-columns-aside {
-  width: 80px;
+  width: 110px;
   height: 100%;
   background: var(--prev-bg-columnsMenuBar);
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
@@ -213,8 +222,17 @@ export default {
       z-index: 1;
       .columns-vertical {
         margin: auto;
-        .columns-vertical-title {
-          padding-top: 1px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        i {
+          font-size: 18px;
+          line-height: 1;
+        }
+        .columns-menu-title {
+          padding-top: 5px;
         }
       }
       .columns-horizontal {
@@ -222,16 +240,16 @@ export default {
         height: 50px;
         width: 100%;
         align-items: center;
-        justify-content: center;
-        padding: 0 5px;
+        justify-content: flex-start;
+        padding: 0 12px;
+        box-sizing: border-box;
         i {
-          margin-right: 3px;
-        }
-        a {
-          display: flex;
-          .columns-horizontal-title {
-            padding-top: 1px;
-          }
+          flex: 0 0 auto;
+          width: 18px;
+          text-align: center;
+          font-size: 16px;
+          line-height: 1;
+          margin-right: 6px;
         }
       }
       a {

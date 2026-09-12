@@ -8,7 +8,7 @@
 			<view class='swiperTxt skeleton-rect'>
 				<view class="acea-row row-between-wrapper" v-if="direction" @click="moreTab(itemNew[0].chiild[1].val)">
 					<uniNoticeBar scrollable="true" showGetMore="true" background-color="#fff" :color="textColor"
-						moreColor="#888" :speed='50' single="true" :text="itemNew[0].chiild[0].val"></uniNoticeBar>
+						moreColor="#888" :speed='50' single="true" :text="newsTitle(itemNew[0].chiild[0])"></uniNoticeBar>
 					<view class="iconfont icon-xiangyou"></view>
 				</view>
 				<swiper v-else :indicator-dots="indicatorDots" :autoplay="autoplay" interval="2500" :duration="duration"
@@ -19,7 +19,7 @@
 								hover-class='none'>
 								<view class='text acea-row row-between-wrapper'>
 									<view class='newsTitle line1' :style="{color:textColor}">
-										{{item.chiild[0].val}}
+										{{newsTitle(item.chiild[0])}}
 									</view>
 								</view>
 								<view class='iconfont icon-xiangyou'></view>
@@ -43,6 +43,7 @@
 	// | Author: CRMEB Team <admin@crmeb.com>
 	// +----------------------------------------------------------------------
 	import uniNoticeBar from '@/components/uniNoticeBar/uni-notice-bar.vue';
+	import { getLocalizedDiyVal, getLocalizedDiyUrl } from '@/utils/localizedName';
 	export default {
 		components: {
 			uniNoticeBar
@@ -72,7 +73,7 @@
 			},
 			//图标设置
 			logoConfig() {
-				return this.dataConfig.logoConfig.url
+				return getLocalizedDiyUrl(this.dataConfig.logoConfig) || (this.dataConfig.logoConfig && this.dataConfig.logoConfig.url);
 			},
 			//文本滚动方向
 			direction() {
@@ -113,6 +114,9 @@
 			},
 		},
 		methods: {
+			newsTitle(item) {
+				return getLocalizedDiyVal(item);
+			},
 			moreTab(url) {
 				this.$util.navigateTo(url);
 			}

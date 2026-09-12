@@ -4,6 +4,13 @@
     <div class="title" v-if="configData.title">
       {{ configData.title }}
     </div>
+    <div class="lang-name-switch" v-if="showTitleI18n">
+      <el-radio-group v-model="activeLang" size="mini">
+        <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+          {{ lang.label }}
+        </el-radio-button>
+      </el-radio-group>
+    </div>
     <div class="list-box mt20">
       <draggable class="dragArea list-group" :list="configData.list" group="peoples" handle=".move-icon">
         <div class="item" v-for="(item, index) in configData.list" :key="index">
@@ -11,7 +18,7 @@
             <span class="iconfont icon-tuozhuaidian"></span>
           </div>
           <div class="img-box" @click="modalPicTap(item, index)">
-            <img :src="item.img" alt="" v-if="item.img" />
+            <img :src="getItemImg(item)" alt="" v-if="getItemImg(item)" />
             <div class="upload-box" v-else><i class="el-icon-camera-solid" style="font-size: 30px" /></div>
           </div>
           <div class="info">
@@ -27,6 +34,14 @@
                     <el-option v-for="itm in linkList" :key="itm.value" :label="itm.label" :value="itm.value" />
                   </el-select>
                   <el-input
+                    v-else-if="isI18nTitle(infos, key, item)"
+                    size="small"
+                    :value="getTitleInput(infos)"
+                    :placeholder="titlePlaceholder(infos)"
+                    :maxlength="infos.max"
+                    @input="setTitleInput(infos, $event)"
+                  />
+                  <el-input
                     size="small"
                     v-model="infos.value"
                     :readonly="key == item.info.length - 1 ? true : false"
@@ -40,11 +55,11 @@
               </div>
               <!-- 魔方 -->
               <div class="tc-box acea-row row-between mt15" v-if="configData.radioShow && configData.nowIndex">
-                <span class="radio-text">填充方式</span>
+                <span class="radio-text">{{ $t('pagediy.fillWay') }}</span>
                 <el-radio-group v-model="infos.radioVal" @change="radioChange">
-                  <el-radio label="0">拉伸</el-radio>
-                  <el-radio label="1">缩放</el-radio>
-                  <el-radio label="2">填充</el-radio>
+                  <el-radio label="0">{{ $t('pagediy.stretch') }}</el-radio>
+                  <el-radio label="1">{{ $t('pagediy.scale') }}</el-radio>
+                  <el-radio label="2">{{ $t('pagediy.fill') }}</el-radio>
                 </el-radio-group>
               </div>
             </div>
@@ -52,14 +67,14 @@
               v-if="defaults.name !== 'pictureCube' && defaults.name !== 'swiperBg' && defaults.name !== 'homeComb'"
               class="info-item"
             >
-              <span>状态</span>
+              <span>{{ translateText("状态") }}</span>
               <div class="input-box">
                 <el-switch
                   v-model="item.status"
                   :active-value="true"
                   :inactive-value="false"
-                  active-text="显示"
-                  inactive-text="隐藏"
+                  :active-text="translateText('显示')"
+                  :inactive-text="translateText('隐藏')"
                   @change="onchangeIsShow(item.status, index)"
                 />
               </div>
@@ -73,7 +88,7 @@
     </div>
     <template v-if="configData.list">
       <div class="add-btn" v-if="configData.list.length < configData.maxList">
-        <el-button class="button" icon="el-icon-plus" plain @click="addBox">添加版块</el-button>
+        <el-button class="button" icon="el-icon-plus" plain @click="addBox">{{ translateText("添加版块") }}</el-button>
       </div>
     </template>
     <linkaddress ref="linkaddres" @linkUrl="linkUrl"></linkaddress>
@@ -93,6 +108,9 @@
 import vuedraggable from 'vuedraggable';
 import linkaddress from '@/components/linkaddress';
 import { getImageDimensions } from '@/utils';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { parseLangJsonMap, resolveFormActiveLang } from '@/utils/localizedName';
 export default {
   name: 'c_menu_list',
   props: {
@@ -136,9 +154,29 @@ export default {
       indexLast: 0,
       lastObj: {},
       linkList: [],
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
     };
   },
+  computed: {
+    showTitleI18n() {
+      if (this.isCarouselImgI18n) return true;
+      const list = (this.configData && this.configData.list) || [];
+      const first = list[0];
+      return !!(first && first.info && first.info.length > 1);
+    },
+    isCarouselImgI18n() {
+      const name = this.defaults && this.defaults.name;
+      return name === 'swiperBg' || name === 'homeComb' || name === 'pictureCube';
+    },
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
+    },
+  },
   mounted() {
+    this.getLanguageList();
     this.$nextTick(() => {
       this.defaults = this.configObj;
       this.configData = this.configObj[this.configNme];
@@ -154,6 +192,70 @@ export default {
     },
   },
   methods: {
+    getItemImg(item) {
+      if (!item) return '';
+      if (!this.isCarouselImgI18n || this.activeLang === this.defaultLangCode) return item.img || '';
+      return parseLangJsonMap(item.imgJson)[this.activeLang] || '';
+    },
+    setItemImg(item, url) {
+      if (!this.isCarouselImgI18n || this.activeLang === this.defaultLangCode) {
+        this.$set(item, 'img', url);
+        return;
+      }
+      const map = parseLangJsonMap(item.imgJson);
+      if (url) map[this.activeLang] = url;
+      else delete map[this.activeLang];
+      this.$set(item, 'imgJson', Object.keys(map).length ? JSON.stringify(map) : '');
+    },
+    isI18nTitle(infos, key, item) {
+      return !infos.select && Number(key) !== item.info.length - 1;
+    },
+    getTitleInput(infos) {
+      if (this.activeLang === this.defaultLangCode) return infos.value || '';
+      return parseLangJsonMap(infos.valueJson)[this.activeLang] || '';
+    },
+    setTitleInput(infos, val) {
+      if (this.activeLang === this.defaultLangCode) {
+        this.$set(infos, 'value', val);
+        return;
+      }
+      const map = parseLangJsonMap(infos.valueJson);
+      if (String(val || '').trim()) map[this.activeLang] = val;
+      else delete map[this.activeLang];
+      this.$set(infos, 'valueJson', Object.keys(map).length ? JSON.stringify(map) : '');
+    },
+    titlePlaceholder(infos) {
+      if (this.activeLang === this.defaultLangCode) return infos.tips;
+      return this.$t('category.inputNameInLang', { lang: this.activeLangLabel });
+    },
+    resetInfoValues(obj) {
+      if (!obj || !obj.info) return;
+      obj.info.forEach((info, i) => {
+        info.value = '';
+        if (i !== obj.info.length - 1) info.valueJson = '';
+      });
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     //状态切换
     onchangeIsShow(e) {
       this.configData.list[index].status = e;
@@ -175,14 +277,14 @@ export default {
     addBox() {
       if (this.configData.list.length == 0) {
         this.lastObj.img = '';
-        this.lastObj.info[0].value = '';
-        this.lastObj.info[1].value = '';
+        this.lastObj.imgJson = '';
+        this.resetInfoValues(this.lastObj);
         this.configData.list.push(this.lastObj);
       } else {
         let obj = JSON.parse(JSON.stringify(this.configData.list[this.configData.list.length - 1]));
         obj.img = '';
-        obj.info[0].value = '';
-        obj.info[1].value = '';
+        obj.imgJson = '';
+        this.resetInfoValues(obj);
         this.configData.list.push(obj);
       }
     },
@@ -191,7 +293,7 @@ export default {
       let _this = this;
       _this.$modalUpload(function (img) {
         if (!img) return;
-        item.img = img[0].sattDir;
+        _this.setItemImg(item, img[0].sattDir);
         if (_this.isRub) _this.getPic(img[0].sattDir);
       });
     },
@@ -199,15 +301,23 @@ export default {
     async getPic(pc) {
       let imgSizeInfo = await getImageDimensions(pc);
       this.$nextTick(() => {
-        this.configData.list[this.activeIndex].img = pc;
         let data = this.defaults.menuConfig;
         if (data && data.isCube) {
-          this.defaults.picStyle.picList.splice(this.defaults.picStyle.tabVal, 1, {
-            image: pc,
+          const idx = this.defaults.picStyle.tabVal;
+          const prev = this.defaults.picStyle.picList[idx] || {};
+          const cur = Object.assign({}, prev, imgSizeInfo, {
             link: data.list[0].info[0].value,
             radioVal: data.list[0].info[0].radioVal,
-            ...imgSizeInfo,
           });
+          if (this.activeLang === this.defaultLangCode) {
+            cur.image = pc;
+          } else {
+            const map = parseLangJsonMap(cur.imageJson);
+            if (pc) map[this.activeLang] = pc;
+            else delete map[this.activeLang];
+            cur.imageJson = Object.keys(map).length ? JSON.stringify(map) : '';
+          }
+          this.$set(this.defaults.picStyle.picList, idx, cur);
         }
       });
     },
@@ -231,6 +341,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.lang-name-switch {
+  margin-top: 12px;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
 .hot_imgs {
   margin-bottom: 20px;
   .title {
@@ -241,7 +358,8 @@ export default {
   .list-box {
     .item {
       width: 100%;
-      height: 140px;
+      min-height: 140px;
+      height: auto;
       background: #f9f9f9;
       border-radius: 3px 3px 3px 3px;
       opacity: 1;

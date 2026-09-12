@@ -20,6 +20,7 @@ import com.zbkj.common.request.IntegralIntervalAddRequest;
 import com.zbkj.common.request.IntegralIntervalPageSearchRequest;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.utils.CrmebDateUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.vo.DateLimitUtilVo;
 import com.zbkj.service.dao.GroupConfigDao;
 import com.zbkj.service.service.GroupConfigService;
@@ -178,7 +179,8 @@ public class GroupConfigServiceImpl extends ServiceImpl<GroupConfigDao, GroupCon
      */
     @Override
     public Boolean saveIntegralInterval(IntegralIntervalAddRequest request) {
-        if (isExistName(request.getName(), GroupConfigConstants.TAG_INTEGRAL_INTERVAL)) {
+        String intervalName = I18nJsonUtil.emptyToBlank(request.getName());
+        if (StrUtil.isNotBlank(intervalName) && isExistName(intervalName, GroupConfigConstants.TAG_INTEGRAL_INTERVAL)) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "区间名称已存在");
         }
         String value = request.getValue();
@@ -189,7 +191,8 @@ public class GroupConfigServiceImpl extends ServiceImpl<GroupConfigDao, GroupCon
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "积分区间值存在错误");
         }
         GroupConfig groupConfig = new GroupConfig();
-        groupConfig.setName(request.getName());
+        groupConfig.setName(intervalName);
+        groupConfig.setNameJson(request.getNameJson());
         groupConfig.setValue(request.getValue());
         groupConfig.setStatus(request.getStatus());
         groupConfig.setSort(request.getSort());
@@ -210,8 +213,9 @@ public class GroupConfigServiceImpl extends ServiceImpl<GroupConfigDao, GroupCon
         if (!groupConfig.getTag().equals(GroupConfigConstants.TAG_INTEGRAL_INTERVAL)) {
             throw new CrmebException("数据不存在");
         }
-        if (!request.getName().equals(groupConfig.getName())) {
-            if (isExistName(request.getName(), GroupConfigConstants.TAG_INTEGRAL_INTERVAL)) {
+        String intervalName = I18nJsonUtil.emptyToBlank(request.getName());
+        if (StrUtil.isNotBlank(intervalName) && !intervalName.equals(groupConfig.getName())) {
+            if (isExistName(intervalName, GroupConfigConstants.TAG_INTEGRAL_INTERVAL)) {
                 throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "区间名称已存在");
             }
         }
@@ -224,7 +228,8 @@ public class GroupConfigServiceImpl extends ServiceImpl<GroupConfigDao, GroupCon
                 throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "积分区间值存在错误");
             }
         }
-        groupConfig.setName(request.getName());
+        groupConfig.setName(intervalName);
+        groupConfig.setNameJson(request.getNameJson());
         groupConfig.setValue(request.getValue());
         groupConfig.setStatus(request.getStatus());
         groupConfig.setSort(request.getSort());

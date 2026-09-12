@@ -7,6 +7,7 @@
       </div>
       <div class="slider-box ml22">
         <el-cascader
+          :key="'diy-mer-' + currentLocale"
           v-model="merIds"
           class="selWidth"
           :show-all-levels="false"
@@ -33,6 +34,7 @@
 // +----------------------------------------------------------------------
 import * as merchant from '@/api/merchant';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { localizeNamedTree, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'c_merchantName',
   props: {
@@ -56,12 +58,18 @@ export default {
         emitPath: false,
         multiple: true,
       },
+      merchantListRaw: [],
       merchantList: [],
       defaults: {},
       configData: {},
       timeStamp: '',
       merIds: [],
     };
+  },
+  computed: {
+    currentLocale() {
+      return getUiLocale(this);
+    },
   },
   mounted() {
     if (checkPermi(['platform:merchant:page:list'])) this.getMerList();
@@ -83,13 +91,20 @@ export default {
     number(nVal) {
       this.timeStamp = nVal;
     },
+    currentLocale() {
+      this.applyLocalizedMerSelect();
+    },
   },
   methods: {
     checkPermi,
+    applyLocalizedMerSelect() {
+      this.merchantList = localizeNamedTree(this.merchantListRaw, this.currentLocale, 'merchantList');
+    },
     // 列表
     getMerList() {
       merchant.merCategoryListApi().then((res) => {
-        this.merchantList = res;
+        this.merchantListRaw = res || [];
+        this.applyLocalizedMerSelect();
       });
     },
     onChangeMerId(e) {

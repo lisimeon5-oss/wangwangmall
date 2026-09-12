@@ -1,5 +1,8 @@
 package com.zbkj.common.request;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.zbkj.common.jackson.FlexibleJsonStringDeserializer;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -33,8 +36,12 @@ public class ProductGuaranteeGroupAddRequest implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "组合名称")
-    @NotEmpty(message = "组合名称不能为空")
     private String name;
+
+    @ApiModelProperty(value = "多语言组合名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言组合名称不能为空")
+    @JsonDeserialize(using = FlexibleJsonStringDeserializer.class)
+    private String nameJson;
 
     @ApiModelProperty(value = "保障服务id，英文逗号分隔")
     @NotEmpty(message = "请选择保障服务")

@@ -6,42 +6,42 @@
 				v-if="order_pay_info.paid === 1"></view>
 			<view v-if="order_pay_info.paid === 2" class='iconfont icons icon-iconfontguanbi'></view>
 			<!-- 失败时：订单支付失败 -->
-			<view class='status' v-if="order_pay_info.payType != 'offline'">{{status==2 ? '订单取消支付' : errMsg ? '订单支付异常':payResult }}</view>
-			<view class='status' v-else>订单创建成功</view>
+			<view class='status' v-if="order_pay_info.payType != 'offline'">{{status==2 ? $t('订单取消支付') : errMsg ? $t('订单支付异常'): $t(payResult) }}</view>
+			<view class='status' v-else>{{$t('订单创建成功')}}</view>
 			<view class='wrapper'>
 				<view v-show="!fromType" class='item acea-row row-between-wrapper'>
-					<view>订单编号</view>
+					<view>{{$t('订单编号')}}</view>
 					<view class='itemCom'>{{order_pay_info.orderNo}}</view>
 				</view>
 				<view v-show="!fromType" class='item acea-row row-between-wrapper'>
-					<view>下单时间</view>
+					<view>{{$t('下单时间')}}</view>
 					<view class='itemCom'>{{order_pay_info.createTime?order_pay_info.createTime:'-'}}</view>
 				</view>
 				<view v-show="(order_pay_info.payType && order_pay_info.secondType !== ProductTypeEnum.Integral) || (order_pay_info.secondType === ProductTypeEnum.Integral && order_pay_info.payPrice!=0)" class='item acea-row row-between-wrapper'>
-					<view>支付方式</view>
-					<view class='itemCom'>{{order_pay_info.payType | payTypeFilter}}支付</view>
+					<view>{{$t('支付方式')}}</view>
+					<view class='itemCom'>{{order_pay_info.payType | payTypeFilter}}{{$t('支付')}}</view>
 				</view>
 				<view class='item acea-row row-between-wrapper'>
-					<view>支付金额</view>
+					<view>{{$t('支付金额')}}</view>
 					<view class='itemCom'>{{order_pay_info.payPrice}}</view>
 				</view>
 				<view v-show="order_pay_info.secondType === ProductTypeEnum.Integral" class='item acea-row row-between-wrapper'>
-					<view>消耗积分</view>
+					<view>{{$t('消耗积分')}}</view>
 					<view class='itemCom'>{{order_pay_info.redeemIntegral}}</view>
 				</view>
 				<!--失败时加上这个  -->
 				<view class='item acea-row row-between-wrapper'
 					v-if="!order_pay_info.paid && order_pay_info.payType != 'offline'">
-					<view>失败原因</view>
-					<view class='itemCom'>{{status==2 ? '取消支付':msg}}</view>
+					<view>{{$t('失败原因')}}</view>
+					<view class='itemCom'>{{status==2 ? $t('取消支付'):msg}}</view>
 				</view>
 			</view>
 			<!--失败时： 重新购买 -->
 			<view @tap="goOrderDetails">
-				<button formType="submit" class='returnBnt bg_color' hover-class='none'>{{fromType =='svip'?'查看会员':type==2?'查看拼团':'查看订单'}}</button>
+				<button formType="submit" class='returnBnt bg_color' hover-class='none'>{{fromType =='svip'?$t('查看会员'):type==2? $t('查看拼团') : $t('查看订单')}}</button>
 			</view>
 			<button @click="goIndex" class='returnBnt cart-color' formType="submit" hover-class='none'
-				>返回首页</button>
+				>{{$t('返回首页')}}</button>
 		</view>
 	</view>
 </template>
@@ -117,7 +117,7 @@
 				this.order_pay_info.payPrice = options.payPrice
 				if(options.payType !== 'yue'){
 					uni.showLoading({
-						title: '正在加载中'
+						title: this.$t('正在加载中')
 					});
 					setTimeout(()=>{
 						this.wechatQueryPay('svip');
@@ -171,7 +171,7 @@
 			getOrderPayInfo: function() {
 				let that = this;
 				uni.showLoading({
-					title: '正在加载中'
+					title: this.$t('正在加载中')
 				});
 				getOrderDetail(that.orderNo).then(res => {
 					this.type=res.data.type

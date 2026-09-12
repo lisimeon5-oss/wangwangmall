@@ -37,6 +37,9 @@ public class RoleInfoResponse implements Serializable {
     @ApiModelProperty(value = "角色名称")
     private String roleName;
 
+    @ApiModelProperty(value = "多语言角色名称(JSON)")
+    private String roleNameJson;
+
     @ApiModelProperty(value = "状态：0-关闭，1-正常")
     private Boolean status;
 

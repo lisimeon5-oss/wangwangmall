@@ -39,6 +39,9 @@ public class RefundOrderResponse implements Serializable {
     @ApiModelProperty(value = "商户ID")
     private Integer merId;
 
+    @ApiModelProperty(value = "商品ID")
+    private Integer productId;
+
     @ApiModelProperty(value = "商品名称")
     private String productName;
 

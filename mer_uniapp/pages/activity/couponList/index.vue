@@ -1,94 +1,66 @@
 <template>
 	<view class='my-coupon' :data-theme="theme">
 		<view class='header'>
-			<view class='nav acea-row row-around'>
+			<view class='nav acea-row'>
 				<view class='item' :class='type==0 ? "on": ""' @click="statusClick(0)">
-					<view>全部</view>
+					<view>{{$t('全部')}}</view>
 				</view>
 				<view class='item' :class='type==3 ? "on": ""' @click="statusClick(3)">
-					<view>通用</view>
+					<view>{{$t('通用')}}</view>
 				</view>
 				<view class='item' :class='type==4 ? "on": ""' @click="statusClick(4)">
-					<view>品类</view>
+					<view>{{$t('品类')}}</view>
 				</view>
 				<view class='item' :class='type==2 ? "on": ""' @click="statusClick(2)">
-					<view>商品</view>
+					<view>{{$t('商品')}}</view>
 				</view>
 				<view class='item' :class='type==5 ? "on": ""' @click="statusClick(5)">
-					<view>品牌</view>
+					<view>{{$t('品牌')}}</view>
 				</view>
 				<view class='item' :class='type==6 ? "on": ""' @click="statusClick(6)">
-					<view>跨店</view>
+					<view>{{$t('跨店')}}</view>
 				</view>
 			</view>
 		</view>
 		<view class="listBox">
 			<view v-for="item in list" :key='item.id'>
-				<view class="list acea-row row-around"
+				<view class="list acea-row"
 					:style="{'background-image': `url(${urlDomain}crmebimage/presets/get_coupon_bg.png)`}">
-					<view class="left cross" v-if="item.productVoList.length == 1" @click="goList(item)">
-						<view class="cross-left" v-for="(items,index) in item.productVoList" :key='index'>
-							<image :src="items.image" mode=""></image>
-						</view>
-						<view class="tips cross-right">
-							<view class="title line2">{{item.name || ''}}</view>
+					<view class="left" @click="goList(item)">
+						<view class="left-head acea-row row-middle">
 							<view class="couponlogo">{{item.category | couponTypeFilter}}</view>
-							<view class="time"></view>
+							<view class="tips">{{item.name || ''}}</view>
 						</view>
-					</view>
-					<view class="left" v-else-if="item.productVoList.length > 1" @click="goList(item)">
-						<view class="acea-row row-middle">
-							<view class="couponlogo">{{item.category | couponTypeFilter}}</view>
-							<view class="tips line1">{{item.name || ''}}</view>
-						</view>
-						<view class="info">
-							<view class="info-box" v-for="(items,index) in item.productVoList" :key='index'>
+						<view class="info" v-if="productThumbs(item).length">
+							<view class="info-box" v-for="(items,index) in productThumbs(item)" :key='index'>
 								<view class="relative">
-									<view v-show="items.stock===0" class="sellOut">已售罄</view>
-									<image :src="items.image" mode=""></image>
+									<view v-show="items.stock===0" class="sellOut">{{$t('已售罄')}}</view>
+									<image v-if="items.image" :src="items.image" mode="aspectFill"></image>
 								</view>
-								<view class="money">¥ {{items.price}}</view>
+								<view class="money" v-if="items.price !== undefined && items.price !== null && items.price !== ''">฿ {{items.price}}</view>
 							</view>
-						</view>
-					</view>
-					<view class="left cross" v-if="!item.productVoList.length">
-						<view class="cross-left">
-							<view class="_empty acea-row row-column row-center-wrapper">
-								<text class="iconfont icon-fengmian"></text>
-								<text>暂无商品</text>
-							</view>
-						</view>
-						<view class="tips cross-right acea-row row-column row-between">
-							<view class="title line2">{{item.name}}</view>
-							<view class="couponlogo">{{item.category | couponTypeFilter}}</view>
-							<view class="time"></view>
 						</view>
 					</view>
 					<view class="right" :style="{'background-image': `url(${rightBg})`}">
-						<view class="title"
+						<view class="coupon-stamp" v-if="item.lastTotal === 0 && item.isLimited">{{$t('已领完')}}</view>
+						<view class="coupon-stamp" v-else-if="item.isUserReceive">{{$t('已领取')}}</view>
+						<view class="right-inner"
 							:class="item.lastTotal === 0 && item.isLimited?'text--w111-ccc':'font-color'">
-							<view>
-								<p>
-									<text class='font1'>¥</text>
+							<view class="price-wrap">
+								<view class="price-row">
+									<text class='font1'>฿</text>
 									<text class='font2'>{{parsePrice(item.money)}}</text>
-								</p>
-								<p>
-									<text class='font3' v-if="item.minPrice == 0">无使用门槛</text>
-									<text class='font3' v-else>满{{parsePrice(item.minPrice)}}元可用</text>
-								</p>
-							</view>
-							<!-- isLimited是true限量，false不限量-->
-							<view v-if="item.lastTotal === 0 && item.isLimited">
-								<view class='btn bg-color-hui'>已领完</view>
-								<span class="iconfont icon-yilingwan1"></span>
-							</view>
-							<view v-else>
-								<view class="btn bg-color" v-if="!item.isUserReceive" @click="receiveCoupon(item)">立即领取
 								</view>
-								<view v-if="item.lastTotal > 0 && item.isUserReceive">
-									<view class='btn bg-color' @click="goList(item)">去使用</view>
-									<span class="iconfont icon-yilingqu"></span>
+								<view class="font3" v-if="item.minPrice == 0">{{$t('无使用门槛')}}</view>
+								<view class="font3" v-else>{{$t('满')}}{{parsePrice(item.minPrice)}}{{$t('铢可用')}}</view>
+							</view>
+							<view v-if="item.lastTotal === 0 && item.isLimited" class="action-wrap">
+								<view class='btn bg-color-hui'>{{$t('已领完')}}</view>
+							</view>
+							<view v-else class="action-wrap">
+								<view class="btn bg-color" v-if="!item.isUserReceive" @click.stop="receiveCoupon(item)">{{$t('立即领取')}}
 								</view>
+								<view class='btn bg-color' v-if="item.lastTotal > 0 && item.isUserReceive" @click.stop="goList(item)">{{$t('去使用')}}</view>
 							</view>
 						</view>
 					</view>
@@ -99,7 +71,7 @@
 			<text class="loading iconfont icon-jiazai" :hidden="loading == false" style="color:#33;"></text>
 		</view>
 		<view class="empty-boxs noContent" v-if="!list.length && loaded">
-			<emptyPage title="暂无优惠券可领取哦~" mTop="13%" :imgSrc="urlDomain + 'crmebimage/presets/noCoupon.png'">
+			<emptyPage :title="$t('暂无优惠券可领取哦~')" mTop="13%" :imgSrc="urlDomain + 'crmebimage/presets/noCoupon.png'">
 			</emptyPage>
 		</view>
 	</view>
@@ -160,6 +132,10 @@
 			}
 		},
 		methods: {
+			productThumbs(item) {
+				const list = (item && item.productVoList) || [];
+				return list.filter(p => p && p.image).slice(0, 3);
+			},
 			parsePrice(price) {
 				if (price >= 100) {
 					return parseFloat(price)
@@ -173,7 +149,7 @@
 				couponReceiveApi(item.id).then(res => {
 					item.isUserReceive = true;
 					uni.showToast({
-						title: '领取成功',
+						title: this.$t('领取成功'),
 						icon: 'none'
 					})
 				}).catch(err => {
@@ -220,7 +196,7 @@
 </script>
 
 <style lang="scss" scoped>
-	/deep/.sellOut {
+	::v-deep .sellOut {
 		width: 96rpx;
 		height: 32rpx;
 		line-height: 28rpx;
@@ -228,31 +204,33 @@
 	}
 
 	.header {
-		height: 200rpx;
+		min-height: 120rpx;
+		padding-bottom: 88rpx;
 		@include main_bg_color(theme);
 		border-bottom-left-radius: 10%;
 		border-bottom-right-radius: 10%;
 
 		.nav {
 			border-radius: 6rpx;
-			padding-top: 30rpx;
+			padding-top: 16rpx;
 			position: fixed;
 			width: 100%;
-			z-index: 9999999;
+			z-index: 99;
 			@include main_bg_color(theme);
-			padding-bottom: 16rpx;
+			padding-bottom: 8rpx;
+			box-sizing: border-box;
+			overflow-x: auto;
+			flex-wrap: nowrap;
 
 			.item {
+				flex: 0 0 auto;
 				text-align: center;
-				font-size: 30rpx;
+				font-size: 24rpx;
 				color: #FFFFFF;
-				padding: 29rpx 0;
+				padding: 16rpx 20rpx 14rpx;
 				opacity: 0.7;
-				line-height: 2rpx;
-
-				.num {
-					margin-top: 18rpx;
-				}
+				line-height: 1.45;
+				white-space: nowrap;
 			}
 
 			.item.on {
@@ -264,227 +242,204 @@
 	}
 
 	.listBox {
-		margin: -73rpx auto 0 auto;
+		margin: -56rpx auto 0 auto;
 		padding: 0 24rpx;
 
 		.list {
 			width: 100%;
-			height: 260rpx;
+			min-height: 240rpx;
+			height: auto;
 			overflow: hidden;
-			background-size: cover;
+			background-size: 100% 100%;
 			border-radius: 12rpx;
 			margin-bottom: 25rpx;
-			text-align: center;
-
-			.cross {
-				display: flex;
-
-				.cross-left {
-					margin-top: 6rpx;
-
-					image {
-						width: 200rpx;
-						height: 200rpx;
-						border-radius: 12rpx;
-					}
-
-					._empty {
-						width: 200rpx;
-						height: 200rpx;
-						border-radius: 12rpx;
-						@include cate-two-btn(theme);
-						@include main_color(theme);
-						font-size: 24rpx;
-
-						.iconfont {
-							font-size: 48rpx;
-							padding-top: 10rpx;
-						}
-					}
-				}
-
-				.cross-right {
-					margin-left: 20rpx;
-					margin-top: 6rpx;
-					margin-bottom: 14rpx;
-					display: flex;
-					flex-direction: column;
-					justify-content: space-between;
-
-					.title {
-						width: 234rpx;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						display: -webkit-box;
-						-webkit-box-orient: vertical;
-						-webkit-line-clamp: 2;
-					}
-
-					.time {
-						font-size: 20rpx;
-						font-weight: 400;
-						color: #666666;
-					}
-
-					.couponlogo {
-						padding: 0 !important;
-						/* #ifdef MP */
-						width: 66rpx;
-						height: 30rpx;
-						border-radius: 14rpx;
-						/* #endif */
-						/* #ifdef H5 */
-						width: 72rpx;
-						/* #endif */
-						/* #ifdef APP */
-						width: 66rpx;
-						/* #endif */
-						text-align: center;
-					}
-				}
-			}
+			align-items: stretch;
 
 			.left {
-				width: 502rpx;
-				height: 210rpx;
-				margin-top: 20rpx;
+				flex: 1;
+				min-width: 0;
+				min-height: 220rpx;
+				margin: 16rpx 0 16rpx 16rpx;
 				text-align: left;
-				padding-left: 30rpx;
+				padding: 16rpx 12rpx 16rpx 18rpx;
 				background-color: #FFFFFF;
+				border-radius: 12rpx 0 0 12rpx;
+				box-sizing: border-box;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+
+				.left-head {
+					align-items: flex-start;
+				}
 
 				.couponlogo {
-					display: inline-table;
-					height: 32rpx;
-					line-height: 30rpx;
+					flex-shrink: 0;
+					display: inline-block;
+					width: auto;
+					max-width: 46%;
+					height: auto;
+					min-height: 32rpx;
+					line-height: 1.4;
 					border-radius: 16rpx;
-					padding: 0 10rpx;
+					padding: 4rpx 12rpx;
 					font-size: 20rpx;
 					margin-right: 12rpx;
 					font-weight: 400;
+					text-align: center;
+					word-break: break-word;
 					@include main_color(theme);
 					@include coupons_border_color(theme);
 					@include cate-two-btn(theme);
 				}
 
 				.tips {
-					width: 360rpx;
+					flex: 1;
+					min-width: 0;
 					font-size: 26rpx;
 					font-weight: 600;
 					color: #282828;
+					line-height: 1.4;
+					word-break: break-word;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					-webkit-line-clamp: 2;
+					overflow: hidden;
 				}
 
 				.info {
-					margin-top: 18rpx;
+					margin-top: 16rpx;
 					display: flex;
 					justify-content: flex-start;
+					flex-wrap: nowrap;
+					overflow: hidden;
 
 					.info-box {
-						margin-right: 25rpx;
+						margin-right: 16rpx;
+						flex-shrink: 0;
 
 						image {
-							display: inline-block;
-							width: 130rpx;
-							height: 130rpx;
+							display: block;
+							width: 108rpx;
+							height: 108rpx;
 							border-radius: 8rpx;
+							background: #f5f5f5;
 						}
 
 						.money {
 							text-align: center;
-							font-size: 24rpx;
+							font-size: 22rpx;
 							font-weight: 400;
 							color: #666666;
 							margin-top: 4rpx;
+							line-height: 1.3;
 						}
 					}
 				}
 			}
 
 			.right {
-				/* #ifdef APP */
-				width: 188rpx;
-				/* #endif */
-				/* #ifndef APP */
-				width: 200rpx;
-				/* #endif */
-				height: 100%;
+				width: 220rpx;
+				flex-shrink: 0;
+				min-height: 240rpx;
 				background-size: 100% 100%;
 				position: relative;
+				display: flex;
+				align-items: center;
 
-				.icon-yilingqu,
-				.icon-yilingwan1 {
+				.coupon-stamp {
 					position: absolute;
-					opacity: 0.4;
-					font-size: 122rpx;
-					top: -34rpx;
+					right: 8rpx;
+					bottom: 56rpx;
+					z-index: 2;
+					width: 112rpx;
+					height: 112rpx;
+					border-radius: 50%;
+					border: 5rpx solid currentColor;
+					box-sizing: border-box;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					text-align: center;
+					font-size: 22rpx;
+					font-weight: 700;
+					line-height: 1.2;
+					padding: 8rpx;
+					opacity: 0.45;
+					transform: rotate(-18deg);
+					pointer-events: none;
+					word-break: break-word;
+					@include main_color(theme);
 				}
 
-				.title {
+				.right-inner {
 					width: 100%;
-					height: 169rpx;
-					margin: 30rpx auto 0;
-
-					.font1 {
-						font-size: 34rpx;
-						font-weight: 600;
-					}
-
-					.font2 {
-						font-size: 60rpx;
-						font-weight: 600;
-					}
-
-					.font3 {
-						font-size: 20rpx;
-						font-weight: 400;
-					}
-
-					p {
-						margin-top: 10rpx;
-					}
-
-					.btn {
-						width: 142rpx;
-						// @include linear-gradient(theme);
-						border-radius: 26rpx;
-						font-size: 24rpx;
-						font-weight: 400;
-						color: #FFFFFF;
-						line-height: 44rpx;
-						text-align: center;
-						margin: 20rpx auto 0;
-
-						&.disabled {
-							pointer-events: none;
-							background: #ccc;
-							color: #fff;
-							border-color: #ccc;
-							cursor: not-allowed;
-						}
-					}
-
-					.shiyong {
-						border: 2rpx solid #E93323;
-						background: none;
-						color: #E93323;
-						border-radius: 26rpx;
-
-						&.disabled {
-							pointer-events: none;
-							color: #ccc;
-							border-color: #ccc;
-							cursor: not-allowed;
-							background: none;
-						}
-					}
+					position: relative;
+					z-index: 1;
+					padding: 20rpx 10rpx 16rpx;
+					box-sizing: border-box;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
 				}
 
-			}
-		}
+				.price-wrap {
+					text-align: center;
+				}
 
-		.list:nth-child(1) {
-			.right {
-				&::after {
-					background-color: #E93323;
+				.price-row {
+					line-height: 1;
+					margin-bottom: 8rpx;
+				}
+
+				.font1 {
+					font-size: 28rpx;
+					font-weight: 600;
+					margin-right: 2rpx;
+				}
+
+				.font2 {
+					font-size: 52rpx;
+					font-weight: 600;
+				}
+
+				.font3 {
+					font-size: 22rpx;
+					font-weight: 400;
+					line-height: 1.4;
+					padding: 0 6rpx;
+					word-break: break-word;
+				}
+
+				.action-wrap {
+					width: 100%;
+					position: relative;
+					margin-top: 12rpx;
+				}
+
+				.btn {
+					width: auto;
+					min-width: 132rpx;
+					max-width: 92%;
+					margin: 0 auto;
+					padding: 8rpx 14rpx;
+					border-radius: 28rpx;
+					font-size: 22rpx;
+					font-weight: 400;
+					color: #FFFFFF;
+					line-height: 1.35;
+					text-align: center;
+					word-break: break-word;
+					box-sizing: border-box;
+
+					&.disabled {
+						pointer-events: none;
+						background: #ccc;
+						color: #fff;
+						border-color: #ccc;
+						cursor: not-allowed;
+					}
 				}
 			}
 		}

@@ -10,8 +10,8 @@
 import * as store from '@/api/product';
 import * as logistics from '@/api/logistics';
 const state = {
-  merPlatProductClassify: JSON.parse(localStorage.getItem('merPlatProductClassify')) || [] /** 平台商品分类 **/,
-  merProductClassify: JSON.parse(localStorage.getItem('merProductClassify')) || [] /** 商户商品分类 **/,
+  merPlatProductClassify: JSON.parse(localStorage.getItem('merPlatProductClassifyV2') || 'null') || [] /** 平台商品分类 **/,
+  merProductClassify: JSON.parse(localStorage.getItem('merProductClassifyV2') || 'null') || [] /** 商户商品分类 **/,
   productBrand: [] /** 商品品牌 **/,
   shippingTemplates: JSON.parse(localStorage.getItem('shippingTemplates')) || [] /** 运费模板 **/,
 };
@@ -19,11 +19,15 @@ const state = {
 const mutations = {
   SET_AdminProductClassify: (state, merPlatProductClassify) => {
     state.merPlatProductClassify = merPlatProductClassify;
-    if (!merPlatProductClassify.length) localStorage.removeItem('merPlatProductClassify');
+    localStorage.removeItem('merPlatProductClassify');
+    if (!merPlatProductClassify.length) localStorage.removeItem('merPlatProductClassifyV2');
+    else localStorage.setItem('merPlatProductClassifyV2', JSON.stringify(merPlatProductClassify));
   },
   SET_MerProductClassify: (state, merProductClassify) => {
     state.merProductClassify = merProductClassify;
-    if (!merProductClassify.length) localStorage.removeItem('merProductClassify');
+    localStorage.removeItem('merProductClassify');
+    if (!merProductClassify.length) localStorage.removeItem('merProductClassifyV2');
+    else localStorage.setItem('merProductClassifyV2', JSON.stringify(merProductClassify));
   },
   SET_ProductBrand: (state, productBrand) => {
     state.productBrand = productBrand;
@@ -43,7 +47,6 @@ const actions = {
         .categoryApi()
         .then(async (res) => {
           commit('SET_AdminProductClassify', changeNodes(res));
-          localStorage.setItem('merPlatProductClassify', JSON.stringify(changeNodes(res)));
           resolve(res);
         })
         .catch((error) => {
@@ -59,7 +62,6 @@ const actions = {
         .storeCategoryAllApi()
         .then(async (res) => {
           commit('SET_MerProductClassify', changeNodes(res));
-          localStorage.setItem('merProductClassify', JSON.stringify(changeNodes(res)));
           resolve(res);
         })
         .catch((error) => {

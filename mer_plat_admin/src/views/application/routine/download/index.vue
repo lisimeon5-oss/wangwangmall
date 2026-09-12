@@ -2,19 +2,19 @@
   <div class="divBox">
     <el-card class="box-card" :bordered="false" shadow="never">
       <div slot="header" style="font-size: 16px">
-        <div class="page_title">小程序下载</div>
+        <div class="page_title">{{ $t('application.miniProgramDownload') }}</div>
       </div>
       <div>
         <div class="flex">
           <div class="ml-100 flex-1">
-            <div class="header_title">小程序设置</div>
+            <div class="header_title">{{ $t('application.miniProgramSettings') }}</div>
             <div class="content-box">
-              <div class="left">小程序名称：</div>
-              <div class="right">一码秦川</div>
+              <div class="left">{{ $t('application.miniProgramNameLabel') }}</div>
+              <div class="right">{{ $t('application.yimaQinchuan') }}</div>
             </div>
             <div class="content-box" v-hasPermi="['platform:wechat:code:download']">
-              <div class="left">小程序包：</div>
-              <el-button type="primary" @click="downCode()">下载小程序</el-button>
+              <div class="left">{{ $t('application.miniProgramPackageLabel') }}</div>
+              <el-button type="primary" @click="downCode()">{{ $t('application.downloadMiniProgram') }}</el-button>
             </div>
           </div>
         </div>

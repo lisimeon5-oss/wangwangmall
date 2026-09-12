@@ -35,7 +35,7 @@ export default {
   watch: {
     // 监听路由 控制侧边栏显示 标记当前顶栏菜单（如需要）
     $route(to, from) {
-      const onRoutes = to.meta.activeMenu ? to.meta.activeMenu : to.meta.path;
+      const onRoutes = to.meta.activeMenu ? to.meta.activeMenu : to.path;
       this.$store.commit('menu/setActivePath', onRoutes);
       if (to.name == 'crud_crud') {
         this.$store.state.user.oneLvRoutes.map((e) => {
@@ -46,12 +46,22 @@ export default {
       }
       //优惠券、秒杀活动
       if (['creatProduct', 'CreatCoupon', 'CreatSeckill', 'CreatTag', 'border', 'articleCreat'].includes(to.name)) {
-        let route = to.matched[1].path.split(':')[0];
-        this.$store.state.user.oneLvRoutes.map((e) => {
-          if (route.indexOf(e.path) != -1) {
-            to.meta.title = `${e.title} ${to.params.id ? 'ID:' + to.params.id : ''}`;
+        const routes = this.$store.state.user.oneLvRoutes || [];
+        let bestTitle = '';
+        let bestLen = -1;
+        routes.forEach((e) => {
+          if (!e || !e.path || !e.title) return;
+          const p = String(e.path).split('?')[0];
+          if (to.path === p || (p !== '/' && to.path.startsWith(p + '/'))) {
+            if (p.length > bestLen) {
+              bestLen = p.length;
+              bestTitle = e.title;
+            }
           }
         });
+        if (bestTitle) {
+          to.meta.title = `${bestTitle}${to.params.id ? ' ID:' + to.params.id : ''}`;
+        }
       }
       //个人中心、修改密码
       if (['MaintainUser'].includes(to.name)) {
@@ -59,7 +69,7 @@ export default {
         this.$store.state.user.oneLvRoutes.map((e) => {
           if (route.indexOf(e.path) != -1) {
             let params = to.params.type;
-            to.meta.title = params === 'users' ? '个人中心' : '修改密码';
+            to.meta.title = params === 'users' ? this.$t('setting.personalCenter') : this.$t('setting.modifyPassword');
           }
         });
       }

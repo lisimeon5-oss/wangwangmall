@@ -7,9 +7,9 @@
             <div class="full">
               <div class="order_icon"><span class="iconfont icon-shouhou_tuikuan-2"></span></div>
               <div class="text">
-                <div class="title">退款订单</div>
+                <div class="title">{{ $t('order.refundOrder') }}</div>
                 <div>
-                  <span class="mr20">退款单号：{{ refundInfo.refundOrderNo }}</span>
+                  <span class="mr20">{{ $t('order.refundOrderNoLabel') }}{{ refundInfo.refundOrderNo }}</span>
                 </div>
               </div>
             </div>
@@ -27,7 +27,7 @@
                       handleApprovedReview('success');
                     }
                   "
-                  >{{ loadingBtn ? '提交中 ...' : '审核通过' }}</el-button
+                  >{{ loadingBtn ? $t('finance.submitting') : $t('finance.auditPassed') }}</el-button
                 >
                 <el-button
                   type="danger"
@@ -36,7 +36,7 @@
                       handleOrderRefuse('refuse');
                     }
                   "
-                  >拒绝</el-button
+                  >{{ $t('order.reject') }}</el-button
                 >
               </div>
               <!-- 商家收货 -->
@@ -45,44 +45,44 @@
                   v-if="checkPermi(['merchant:refund:order:receiving'])"
                   type="primary"
                   v-debounceClick="handleConfirmReceipt"
-                  >{{ loadingBtn ? '提交中 ...' : '确认收货' }}</el-button
+                  >{{ loadingBtn ? $t('finance.submitting') : $t('order.confirmReceipt') }}</el-button
                 >
                 <el-button
                   v-if="checkPermi(['merchant:refund:order:audit'])"
                   type="danger"
                   v-debounceClick="handleRefuseReceipt"
-                  >拒绝</el-button
+                  >{{ $t('order.reject') }}</el-button
                 >
               </div>
               <el-button size="small" @click.native="onOrderMark()" v-if="checkPermi(['merchant:refund:order:mark'])"
-                >订单备注</el-button
+                >{{ $t('order.orderRemark') }}</el-button
               >
             </div>
           </div>
 
           <ul class="list">
             <li class="item">
-              <div class="title">退款状态</div>
+              <div class="title">{{ $t('order.refundStatus') }}</div>
               <div class="color-warning">{{ refundInfo.refundStatus | refundStatusFilter }}</div>
             </li>
             <li class="item">
-              <div class="title">退款金额</div>
-              <div>¥ {{ refundInfo.refundPrice || '0.0' }}</div>
+              <div class="title">{{ $t('order.refundPrice') }}</div>
+              <div>฿ {{ refundInfo.refundPrice || '0.0' }}</div>
             </li>
             <li class="item">
-              <div class="title">实付金额</div>
+              <div class="title">{{ $t('order.payAmount') }}</div>
               <div>{{ refundInfo.payPrice }}</div>
             </li>
             <li class="item">
-              <div class="title">创建时间</div>
+              <div class="title">{{ $t('order.createTime') }}</div>
               <div>{{ refundInfo.orderInfoVo ? refundInfo.orderInfoVo.createTime : '' }}</div>
             </li>
           </ul>
         </div>
         <el-tabs type="border-card" v-model="activeName">
-          <el-tab-pane label="售后信息" name="refund">
+          <el-tab-pane :label="$t('order.afterSalesInfo')" name="refund">
             <div class="detailSection" style="border: none">
-              <div class="title">退款商品</div>
+              <div class="title">{{ $t('order.refundProduct') }}</div>
               <ul class="list">
                 <li class="item row-middle">
                   <div class="image mr10">
@@ -96,52 +96,52 @@
                     <div class="text666 mb10 productName line-height-15">{{ refundInfo.productName }}</div>
                     <div class="text999">
                       <span>{{ refundInfo.sku }}</span
-                      ><span class="ml30">售价：￥{{ refundInfo.price }}</span>
+                      ><span class="ml30">{{ $t('order.sellingPrice') }}฿{{ refundInfo.price }}</span>
                     </div>
                   </div>
                 </li>
               </ul>
             </div>
             <div class="detailSection">
-              <div class="title">退款明细</div>
+              <div class="title">{{ $t('order.refundDetail') }}</div>
               <ul class="list">
                 <li class="item">
-                  <div class="lang">退款数量：</div>
+                  <div class="lang">{{ $t('order.refundQuantity') }}</div>
                   <div class="value">{{ refundInfo.applyRefundNum }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">购买数量：</div>
+                  <div class="lang">{{ $t('order.purchaseQuantity') }}</div>
                   <div class="value">{{ refundInfo.payNum }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">预计退款方式：</div>
-                  <div class="value">原支付返还</div>
+                  <div class="lang">{{ $t('order.expectedRefundMethod') }}</div>
+                  <div class="value">{{ $t('order.originalPaymentReturn') }}</div>
                 </li>
                 <li v-show="refundInfo.refundStatus === 2 || refundInfo.refundStatus === 3" class="item">
-                  <div class="lang">退回运费：</div>
+                  <div class="lang">{{ $t('order.returnFreight') }}</div>
                   <div class="value">{{ refundInfo.refundFreightFee }}</div>
                 </li>
                 <li v-show="refundInfo.refundStatus === 2 || refundInfo.refundStatus === 3" class="item">
-                  <div class="lang">退一级佣金：</div>
+                  <div class="lang">{{ $t('order.refundFirstBrokerage') }}</div>
                   <div class="value">{{ refundInfo.refundFirstBrokerageFee }}</div>
                 </li>
                 <li v-show="refundInfo.refundStatus === 2 || refundInfo.refundStatus === 3" class="item">
-                  <div class="lang">退回抵扣积分：</div>
+                  <div class="lang">{{ $t('order.refundUseIntegral') }}</div>
                   <div class="value">{{ refundInfo.refundUseIntegral }}</div>
                 </li>
                 <li v-show="refundInfo.refundStatus === 2 || refundInfo.refundStatus === 3" class="item">
-                  <div class="lang">收回赠送积分：</div>
+                  <div class="lang">{{ $t('order.refundGainIntegral') }}</div>
                   <div class="value">{{ refundInfo.refundGainIntegral }}</div>
                 </li>
                 <li v-show="refundInfo.refundStatus === 2 || refundInfo.refundStatus === 3" class="item">
-                  <div class="lang">退二级返佣：</div>
+                  <div class="lang">{{ $t('order.refundSecondBrokerage') }}</div>
                   <div class="value">{{ refundInfo.refundSecondBrokerageFee }}</div>
                 </li>
               </ul>
             </div>
             <!-- 退款流程信息-->
             <div class="detailSection">
-              <div class="title">退款流程信息</div>
+              <div class="title">{{ $t('order.refundFlowInfo') }}</div>
               <div class="detail-centent acea-row">
                 <div>
                   <!--  操作类型：apply-申请退款，audit-商家审核，returning-商品退回，receiving-商家确认收货，refund-退款，compulsory-平台强制退款,revoke-撤销-->
@@ -152,7 +152,7 @@
                     "
                     finish-status="success"
                   >
-                    <el-step title="直接退款-商家" v-if="refundInfo.promoterType === 'merchant'">
+                    <el-step :title="$t('order.directRefundMerchant')" v-if="refundInfo.promoterType === 'merchant'">
                       <template slot="description">
                         <div class="mb10">
                           {{ refundInfo.refundTime }}
@@ -160,7 +160,7 @@
                       </template>
                     </el-step>
                     <el-step
-                      title="申请退款-用户"
+                      :title="$t('order.applyRefundUser')"
                       v-if="
                         refundInfo.statusList &&
                         refundInfo.statusList.length &&
@@ -174,29 +174,29 @@
                         <div class="refundReasonWap">
                           <div class="acea-row">
                             <div class="detail-term" style="width: 58%">
-                              <span class="detail-infoTitle">退款原因：</span
+                              <span class="detail-infoTitle">{{ $t('order.refundReason') }}</span
                               ><span class="detail-info">{{ refundInfo.refundReasonWap }}</span>
                             </div>
                             <div class="detail-term">
-                              <span class="detail-infoTitle">退货方式：</span
+                              <span class="detail-infoTitle">{{ $t('order.returnMethod') }}</span
                               ><span class="detail-info">{{
                                 refundInfo.returnGoodsType === 1
-                                  ? '快递退回'
+                                  ? $t('order.expressReturn')
                                   : refundInfo.returnGoodsType === 2
-                                  ? '到店退货'
-                                  : '不退货'
+                                  ? $t('order.storeReturn')
+                                  : $t('order.noReturn')
                               }}</span>
                             </div>
                           </div>
                           <div class="detail-term acea-row">
-                            <span class="detail-infoTitle">备注说明：</span>
+                            <span class="detail-infoTitle">{{ $t('order.remarkNote') }}</span>
                             <div class="detail-info" style="width: 600px">
                               {{ refundInfo.refundReasonWapExplain | filterEmpty }}
                             </div>
                           </div>
                           <div class="detail-term">
                             <div class="acea-row">
-                              <span class="detail-infoTitle">退款凭证：</span>
+                              <span class="detail-infoTitle">{{ $t('order.refundVoucher') }}</span>
 
                               <div v-if="refundInfo.refundReasonWapImg">
                                 <el-image
@@ -215,7 +215,7 @@
                       </template>
                     </el-step>
                     <el-step
-                      title="商家审核-商家"
+                      :title="$t('order.merchantAudit')"
                       v-if="
                         refundInfo.statusList &&
                         refundInfo.statusList.length &&
@@ -232,18 +232,18 @@
                         </div>
                         <div v-if="refundInfo.refundStatus > 0" class="refundReasonWap">
                           <div class="detail-term">
-                            <span class="detail-infoTitle">审核结果：</span
+                            <span class="detail-infoTitle">{{ $t('order.auditResult') }}</span
                             ><span class="detail-info">{{
                               refundInfo.refundStatus === 1 && refundInfo.statusList.length === 2
-                                ? '拒绝退款'
-                                : '同意退款'
+                                ? $t('order.rejectRefund')
+                                : $t('order.agreeRefund')
                             }}</span>
                           </div>
                           <div
                             v-if="refundInfo.refundStatus === 1 && refundInfo.statusList.length === 2"
                             class="detail-term"
                           >
-                            <span class="detail-infoTitle">拒绝原因：</span>
+                            <span class="detail-infoTitle">{{ $t('order.rejectReason') }}</span>
                             <span class="detail-info">{{ refundInfo.refundReason | filterEmpty }}</span>
                           </div>
                           <div
@@ -251,7 +251,7 @@
                             class="detail-term"
                           >
                             <div>
-                              <span class="detail-infoTitle">退货地址：</span>
+                              <span class="detail-infoTitle">{{ $t('order.returnAddress') }}</span>
                               <span class="detail-info">{{ refundInfo.receiverAddressDetail }}</span>
                             </div>
                             <div>
@@ -263,7 +263,7 @@
                       </template>
                     </el-step>
                     <el-step
-                      title="商品退回信息-用户"
+                      :title="$t('order.goodsReturnInfo')"
                       v-if="
                         refundInfo.statusList &&
                         refundInfo.statusList.length &&
@@ -277,17 +277,17 @@
                         <div v-if="refundInfo.returnGoodsType === 1" class="refundReasonWap">
                           <div class="acea-row">
                             <div class="detail-term" style="width: 58%">
-                              <span class="detail-infoTitle">物流公司：</span
+                              <span class="detail-infoTitle">{{ $t('order.logisticsCompany') }}</span
                               ><span class="detail-info">{{ refundInfo.expressName }}</span>
                             </div>
                             <div class="detail-term">
-                              <span class="detail-infoTitle">物流单号：</span>
+                              <span class="detail-infoTitle">{{ $t('order.logisticsNo') }}</span>
                               <span class="detail-info">{{ refundInfo.trackingNumber }}</span>
                             </div>
                           </div>
                           <div class="detail-term">
                             <div>
-                              <span class="detail-infoTitle">联系电话：</span>
+                              <span class="detail-infoTitle">{{ $t('order.contactPhone') }}</span>
                               <span class="detail-info">{{ refundInfo.telephone }}</span>
                             </div>
                           </div>
@@ -295,7 +295,7 @@
                         <div v-if="refundInfo.returnGoodsType === 2" class="refundReasonWap">
                           <div class="detail-term">
                             <div>
-                              <span class="detail-infoTitle">联系电话：</span>
+                              <span class="detail-infoTitle">{{ $t('order.contactPhone') }}</span>
                               <span class="detail-info">{{ refundInfo.telephone }}</span>
                             </div>
                           </div>
@@ -303,7 +303,7 @@
                       </template>
                     </el-step>
                     <el-step
-                      title="商家确认收货-商家"
+                      :title="$t('order.merchantConfirmReceipt')"
                       v-if="
                         refundInfo.refundStatus !== 1 &&
                         refundInfo.refundStatus !== 6 &&
@@ -323,7 +323,7 @@
                       </template>
                     </el-step>
                     <el-step
-                      title="商品拒绝收货-商家"
+                      :title="$t('order.goodsRejectReceipt')"
                       v-if="
                         refundInfo.statusList &&
                         refundInfo.statusList.length &&
@@ -338,13 +338,13 @@
                         </div>
                         <div v-if="refundInfo.refundStatus > 0" class="refundReasonWap">
                           <div class="detail-term">
-                            <span class="detail-infoTitle">审核结果：</span
+                            <span class="detail-infoTitle">{{ $t('order.auditResult') }}</span
                             ><span class="detail-info">{{
-                              refundInfo.refundStatus === 1 ? '拒绝退款' : '同意退款'
+                              refundInfo.refundStatus === 1 ? $t('order.rejectRefund') : $t('order.agreeRefund')
                             }}</span>
                           </div>
                           <div v-if="refundInfo.refundStatus === 1" class="detail-term">
-                            <span class="detail-infoTitle">拒绝原因：</span>
+                            <span class="detail-infoTitle">{{ $t('order.rejectReason') }}</span>
                             <span class="detail-info">{{ refundInfo.refundReason | filterEmpty }}</span>
                           </div>
                           <div
@@ -352,7 +352,7 @@
                             class="detail-term"
                           >
                             <div>
-                              <span class="detail-infoTitle">退货地址：</span>
+                              <span class="detail-infoTitle">{{ $t('order.returnAddress') }}</span>
                               <span class="detail-info">{{ refundInfo.receiverAddressDetail }}</span>
                             </div>
                             <div>
@@ -364,7 +364,7 @@
                       </template>
                     </el-step>
                     <el-step
-                      title="已撤销"
+                      :title="$t('order.revoked')"
                       v-if="
                         refundInfo.refundStatus === 6 &&
                         refundInfo.statusList &&
@@ -383,7 +383,7 @@
                       </template>
                     </el-step>
                     <el-step
-                      title="平台强制退款成功"
+                      :title="$t('order.platformCompulsoryRefundSuccess')"
                       v-if="
                         refundInfo.statusList &&
                         refundInfo.statusList.length &&
@@ -401,7 +401,7 @@
                       </template>
                     </el-step>
                     <el-step
-                      :title="refundInfo.promoterType === 'user' ? '退款成功' : '退款成功-商家直接退款'"
+                      :title="refundInfo.promoterType === 'user' ? $t('order.refundSuccess') : $t('order.refundSuccessMerchant')"
                       v-if="
                         refundInfo.refundStatus !== 1 &&
                         refundInfo.refundStatus !== 6 &&
@@ -421,7 +421,7 @@
                       </template>
                     </el-step>
                     <el-step
-                      title="商家审核-商家"
+                      :title="$t('order.merchantAudit')"
                       v-if="
                         refundInfo.refundStatus !== 1 &&
                         refundInfo.refundStatus !== 2 &&
@@ -431,7 +431,7 @@
                     >
                     </el-step>
                     <el-step
-                      title="商品退回信息-用户"
+                      :title="$t('order.goodsReturnInfo')"
                       v-if="
                         refundInfo.refundStatus !== 1 &&
                         refundInfo.refundStatus !== 2 &&
@@ -442,7 +442,7 @@
                     >
                     </el-step>
                     <el-step
-                      title="商家确认收货-商家"
+                      :title="$t('order.merchantConfirmReceipt')"
                       v-if="
                         refundInfo.refundStatus !== 1 &&
                         refundInfo.refundStatus !== 2 &&
@@ -455,7 +455,7 @@
                     >
                     </el-step>
                     <el-step
-                      :title="refundInfo.promoterType === 'user' ? '退款成功' : '退款成功-商家直接退款'"
+                      :title="refundInfo.promoterType === 'user' ? $t('order.refundSuccess') : $t('order.refundSuccessMerchant')"
                       v-if="
                         refundInfo.refundStatus !== 1 &&
                         refundInfo.refundStatus !== 6 &&
@@ -471,7 +471,7 @@
               </div>
             </div>
             <div class="detailSection">
-              <div class="title">平台备注</div>
+              <div class="title">{{ $t('order.platformRemark') }}</div>
               <ul class="list">
                 <li class="item">
                   <div>{{ refundInfo.platformRemark | filterEmpty }}</div>
@@ -479,7 +479,7 @@
               </ul>
             </div>
             <div class="detailSection">
-              <div class="title">商家备注</div>
+              <div class="title">{{ $t('order.merchantRemark') }}</div>
               <ul class="list">
                 <li class="item">
                   <div>{{ refundInfo.merRemark | filterEmpty }}</div>
@@ -487,12 +487,12 @@
               </ul>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="订单信息" name="detail" v-if="refundInfo.orderInfoVo">
+          <el-tab-pane :label="$t('order.orderInfo')" name="detail" v-if="refundInfo.orderInfoVo">
             <div class="detailSection">
-              <div class="title">用户信息</div>
+              <div class="title">{{ $t('order.userInfo') }}</div>
               <ul class="list">
                 <li class="item">
-                  <div class="lang">用户昵称：</div>
+                  <div class="lang">{{ $t('order.userNickname') }}</div>
                   <div class="value">
                     <span class="mr5">{{ refundInfo.orderInfoVo.nickname }}</span>
                     <span class="mr5"> | </span>
@@ -500,7 +500,7 @@
                   </div>
                 </li>
                 <li class="item">
-                  <div class="lang">用户电话：</div>
+                  <div class="lang">{{ $t('order.userPhone') }}</div>
                   <div class="value">{{ refundInfo.orderInfoVo.phone }}</div>
                 </li>
               </ul>
@@ -509,109 +509,109 @@
               v-show="refundInfo.orderInfoVo.shippingType < 3 && refundInfo.orderInfoVo.secondType !== 2"
               class="detailSection"
             >
-              <div class="title">配送信息</div>
+              <div class="title">{{ $t('order.deliveryInfo') }}</div>
               <ul class="list">
                 <li class="item">
-                  <div class="lang">配送方式：</div>
-                  <div class="value">{{ refundInfo.orderInfoVo.shippingType === 1 ? '商家配送' : '到店自提' }}</div>
+                  <div class="lang">{{ $t('order.deliveryMethod') }}</div>
+                  <div class="value">{{ refundInfo.orderInfoVo.shippingType === 1 ? $t('order.merchantDelivery') : $t('order.storePickup') }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">收货电话：</div>
+                  <div class="lang">{{ $t('order.receiverPhone') }}</div>
                   <div class="value">{{ refundInfo.orderInfoVo.userPhone | filterEmpty }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">收货人：</div>
+                  <div class="lang">{{ $t('order.receiver') }}</div>
                   <div class="value">{{ refundInfo.orderInfoVo.realName | filterEmpty }}</div>
                 </li>
               </ul>
               <div class="userAddress acea-row">
-                <div class="lang">收货地址：</div>
+                <div class="lang">{{ $t('order.receiverAddress') }}</div>
                 <div class="value">{{ refundInfo.orderInfoVo.userAddress | filterEmpty }}</div>
               </div>
             </div>
             <div class="detailSection">
-              <div class="title">订单信息</div>
+              <div class="title">{{ $t('order.orderInfo') }}</div>
               <ul class="list">
                 <li class="item">
-                  <div class="lang">订单号：</div>
+                  <div class="lang">{{ $t('order.orderNoColon') }}</div>
                   <div class="value">{{ refundInfo.orderInfoVo.orderNo }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">商品总数：</div>
+                  <div class="lang">{{ $t('order.productTotal') }}</div>
                   <div class="value">{{ refundInfo.orderInfoVo.totalNum }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">支付状态：</div>
-                  <div class="value">{{ refundInfo.orderInfoVo.paid ? '已支付' : '未支付' }}</div>
+                  <div class="lang">{{ $t('order.payStatus') }}</div>
+                  <div class="value">{{ refundInfo.orderInfoVo.paid ? $t('order.paid') : $t('order.unpaid') }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">支付方式：</div>
+                  <div class="lang">{{ $t('order.payTypeColon') }}</div>
                   <div class="value">{{ refundInfo.orderInfoVo.payType | payTypeFilter }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">订单状态：</div>
+                  <div class="lang">{{ $t('order.orderStatusColon') }}</div>
                   <div class="value textE93323">
-                    <span v-if="refundInfo.orderInfoVo.refundStatus === 3">已退款</span>
+                    <span v-if="refundInfo.orderInfoVo.refundStatus === 3">{{ $t('order.refunded') }}</span>
                     <span v-else>{{ refundInfo.orderInfoVo.status | orderStatusFilter }}</span>
                   </div>
                 </li>
                 <li class="item">
-                  <div class="lang">已发货数量：</div>
+                  <div class="lang">{{ $t('order.shippedQuantity') }}</div>
                   <div class="value">{{ refundInfo.orderInfoVo.deliveryNum }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">创建时间：</div>
+                  <div class="lang">{{ $t('order.createTimeColon') }}</div>
                   <div class="value">{{ refundInfo.orderInfoVo.createTime }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">支付时间：</div>
+                  <div class="lang">{{ $t('order.payTime') }}</div>
                   <div class="value">{{ refundInfo.orderInfoVo.payTime }}</div>
                 </li>
               </ul>
             </div>
             <div class="detailSection">
-              <div class="title">订单明细</div>
+              <div class="title">{{ $t('order.orderDetail') }}</div>
               <ul class="list">
                 <li class="item">
-                  <div class="lang">商品总价：</div>
-                  <div class="value">￥{{ refundInfo.orderInfoVo.proTotalPrice }}</div>
+                  <div class="lang">{{ $t('order.productTotalPrice') }}</div>
+                  <div class="value">฿{{ refundInfo.orderInfoVo.proTotalPrice }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">平台优惠金额：</div>
-                  <div class="value">￥{{ refundInfo.orderInfoVo.platCouponPrice }}</div>
+                  <div class="lang">{{ $t('order.platformDiscount') }}</div>
+                  <div class="value">฿{{ refundInfo.orderInfoVo.platCouponPrice }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">赠送积分：</div>
-                  <div class="value">￥{{ refundInfo.orderInfoVo.gainIntegral }}</div>
+                  <div class="lang">{{ $t('order.giftIntegral') }}</div>
+                  <div class="value">฿{{ refundInfo.orderInfoVo.gainIntegral }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">实际支付：</div>
-                  <div class="value">￥{{ refundInfo.orderInfoVo.payPrice || '0.0' }}</div>
+                  <div class="lang">{{ $t('order.actualPayColon') }}</div>
+                  <div class="value">฿{{ refundInfo.orderInfoVo.payPrice || '0.0' }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">扣除抵扣积分：</div>
+                  <div class="lang">{{ $t('order.deductIntegral') }}</div>
                   <div class="value">{{ refundInfo.orderInfoVo.useIntegral }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">商家优惠金额：</div>
-                  <div class="value">￥{{ refundInfo.orderInfoVo.merCouponPrice || '0.0' }}</div>
+                  <div class="lang">{{ $t('order.merchantDiscount') }}</div>
+                  <div class="value">฿{{ refundInfo.orderInfoVo.merCouponPrice || '0.0' }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">会员抵扣金额：</div>
-                  <div class="value">￥{{ refundInfo.orderInfoVo.svipDiscountPrice || '0.0' }}</div>
+                  <div class="lang">{{ $t('order.memberDeduct') }}</div>
+                  <div class="value">฿{{ refundInfo.orderInfoVo.svipDiscountPrice || '0.0' }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">支付邮费：</div>
-                  <div class="value">￥{{ refundInfo.orderInfoVo.payPostage || '0.0' }}</div>
+                  <div class="lang">{{ $t('order.payFreight') }}</div>
+                  <div class="value">฿{{ refundInfo.orderInfoVo.payPostage || '0.0' }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">积分抵扣金额：</div>
-                  <div class="value">￥{{ refundInfo.orderInfoVo.integralPrice || '0.0' }}</div>
+                  <div class="lang">{{ $t('order.integralDeduct') }}</div>
+                  <div class="value">฿{{ refundInfo.orderInfoVo.integralPrice || '0.0' }}</div>
                 </li>
               </ul>
             </div>
             <div class="detailSection">
-              <div class="title">用户备注</div>
+              <div class="title">{{ $t('order.userRemark') }}</div>
               <ul class="list">
                 <li class="item">
                   <div class="value productName">{{ refundInfo.orderInfoVo.userRemark | filterEmpty }}</div>
@@ -619,7 +619,7 @@
               </ul>
             </div>
             <div class="detailSection">
-              <div class="title">商家备注</div>
+              <div class="title">{{ $t('order.merchantRemark') }}</div>
               <ul class="list">
                 <li class="item">
                   <div class="value productName">{{ refundInfo.orderInfoVo.merchantRemark | filterEmpty }}</div>
@@ -632,7 +632,7 @@
     </el-drawer>
     <!-- 同意退款,退货退款-->
     <el-dialog
-      title="同意退款"
+      :title="$t('order.agreeRefund')"
       :visible.sync="dialogVisible"
       width="900px"
       :before-close="handleCloseAgreeToReturn"
@@ -694,9 +694,9 @@ export default {
     checkPermi,
     // 备注
     onOrderMark() {
-      this.$modalPrompt('textarea', '备注', this.refundInfo.merRemark, '退款单备注').then((V) => {
+      this.$modalPrompt('textarea', this.$t('common.remark'), this.refundInfo.merRemark, this.$t('order.refundOrderRemark')).then((V) => {
         refundMarkApi({ remark: V, refundOrderNo: this.refundOrderNo }).then(() => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('order.operationSuccess'));
           this.getRefundOrderDetail(this.refundOrderNo);
           this.$emit('getReviewSuccessful');
         });
@@ -704,9 +704,9 @@ export default {
     },
     //拒绝收货
     handleRefuseReceipt() {
-      this.$modalPrompt('textarea', '拒绝收货', null, '拒绝收货原因').then((V) => {
+      this.$modalPrompt('textarea', this.$t('order.rejectReceipt'), null, this.$t('order.rejectReceiptReason')).then((V) => {
         refundOrderReceivingRejectApi({ reason: V, refundOrderNo: this.refundOrderNo }).then(() => {
-          this.$message.success('拒绝收货成功');
+          this.$message.success(this.$t('order.rejectReceiptSuccess'));
           this.getSuccessful();
         });
       });
@@ -748,9 +748,9 @@ export default {
     },
     //审核拒绝
     handleOrderRefuse() {
-      this.$modalPrompt('textarea', '拒绝退款', null, '拒绝退款原因').then((V) => {
+      this.$modalPrompt('textarea', this.$t('order.rejectRefund'), null, this.$t('order.rejectRefundReason')).then((V) => {
         orderAuditApi({ auditType: 'refuse', reason: V, refundOrderNo: this.refundInfo.refundOrderNo }).then(() => {
-          this.$message.success('审核成功');
+          this.$message.success(this.$t('common.auditSuccess'));
           this.getSuccessful();
         });
       });

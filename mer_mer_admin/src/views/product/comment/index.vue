@@ -9,10 +9,10 @@
     >
       <div class="padding-add">
         <el-form inline label-position="right" @submit.native.prevent>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('product.userSearch')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('product.timeSelect')">
             <el-date-picker
               @change="onchangeTime"
               v-model="timeVal"
@@ -21,30 +21,30 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               class="form_content_width"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="回复状态：">
+          <el-form-item :label="$t('product.replyStatus')">
             <el-select
               v-model="tableFrom.isReply"
-              placeholder="请选择回复状态"
+              :placeholder="$t('product.replyStatusPlaceholder')"
               @change="handleSearchList"
               size="small"
               class="form_content_width"
               clearable
             >
-              <el-option label="已回复" :value="1"></el-option>
-              <el-option label="未回复" :value="0"></el-option>
+              <el-option :label="$t('product.replied')" :value="1"></el-option>
+              <el-option :label="$t('product.unreplied')" :value="0"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="评价星级：" class="star">
+          <el-form-item :label="$t('product.ratingStar')" class="star">
             <el-rate v-model="tableFrom.star" @change="handleSearchList"></el-rate>
           </el-form-item>
-          <el-form-item label="商品搜索：">
+          <el-form-item :label="$t('product.productSearch')">
             <el-input
               v-model.trim="productSearch"
-              placeholder="请输入商品名称"
+              :placeholder="$t('product.productNamePlaceholder')"
               class="form_content_width"
               size="small"
               @keyup.enter.native="handleSearchList"
@@ -53,19 +53,19 @@
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="handleSearchList">查询</el-button>
-            <el-button size="small" @click="handleReset">重置</el-button>
+            <el-button type="primary" size="small" @click="handleSearchList">{{ $t('product.query') }}</el-button>
+            <el-button size="small" @click="handleReset">{{ $t('product.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card shadow="never" :bordered="false" class="box-card mt14" :body-style="{ padding: '20px' }">
       <el-button size="small" type="primary" @click="add" v-hasPermi="['merchant:product:reply:virtual']"
-        >添加自评</el-button
+        >{{ $t('product.addSelfReview') }}</el-button
       >
       <el-table :data="tableData.list" size="small" class="mt20">
         <el-table-column prop="id" label="ID" width="50" />
-        <el-table-column label="商品信息" prop="productImage" min-width="300" :show-overflow-tooltip="true">
+        <el-table-column :label="$t('product.productInfo')" prop="productImage" min-width="300" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <div class="demo-image__preview acea-row row-middle line-heightOne" v-if="scope.row.productName">
               <el-image
@@ -77,28 +77,28 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="nickname" label="用户昵称" min-width="120" :show-overflow-tooltip="true">
+        <el-table-column prop="nickname" :label="$t('product.userNickname')" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span :class="scope.row.isLogoff == true ? 'red' : ''">{{ scope.row.nickname }}</span>
             <span :class="scope.row.isLogoff == true ? 'red' : ''" v-if="scope.row.isLogoff == true">|</span>
-            <span v-if="scope.row.isLogoff == true" class="red">(已注销)</span>
+            <span v-if="scope.row.isLogoff == true" class="red">{{ $t('product.loggedOff') }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="star" label="评价星级" min-width="90" />
-        <el-table-column prop="comment" label="评价内容" min-width="120" :show-overflow-tooltip="true" />
-        <el-table-column prop="merchantReplyContent" label="回复内容" min-width="200" :show-overflow-tooltip="true" />
-        <el-table-column label="评价时间" min-width="150">
+        <el-table-column prop="star" :label="$t('product.ratingStarColumn')" min-width="90" />
+        <el-table-column prop="comment" :label="$t('product.commentContent')" min-width="120" :show-overflow-tooltip="true" />
+        <el-table-column prop="merchantReplyContent" :label="$t('product.replyContent')" min-width="200" :show-overflow-tooltip="true" />
+        <el-table-column :label="$t('product.commentTime')" min-width="150">
           <template slot-scope="scope">
             <span> {{ scope.row.createTime || '-' }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column :label="$t('product.operate')" width="100" fixed="right">
           <template slot-scope="scope">
             <template v-if="!scope.row.merchantReplyContent && checkPermi(['merchant:product:reply:comment'])">
-              <a @click="reply(scope.row.id)">回复</a>
+              <a @click="reply(scope.row.id)">{{ $t('product.reply') }}</a>
               <el-divider direction="vertical"></el-divider>
             </template>
-            <a @click="handleDelete(scope.row.id, scope.$index)" v-hasPermi="['merchant:product:reply:delete']">删除</a>
+            <a @click="handleDelete(scope.row.id, scope.$index)" v-hasPermi="['merchant:product:reply:delete']">{{ $t('product.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -116,7 +116,7 @@
     ></el-card>
 
     <el-dialog
-      title="添加自评"
+      :title="$t('product.addSelfReview')"
       :append-to-body="false"
       :visible.sync="dialogVisible"
       :modal-append-to-body="false"
@@ -228,14 +228,14 @@ export default {
     },
     // 回复
     reply(id) {
-      this.$modalPrompt('textarea', '回复', null, '回复内容').then((V) => {
+      this.$modalPrompt('textarea', this.$t('product.reply'), null, this.$t('product.replyContent')).then((V) => {
         replyCommentApi({
           id: id,
           merchantReplyContent: V,
         }).then((res) => {
           this.$message({
             type: 'success',
-            message: '回复成功',
+            message: this.$t('product.replySuccess'),
           });
           this.getList();
         });
@@ -266,7 +266,7 @@ export default {
     handleDelete(id, idx) {
       this.$modalSure().then(() => {
         replyDeleteApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.list.length, this.tableFrom);
           this.getList();
         });

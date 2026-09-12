@@ -31,5 +31,6 @@ export default {
 	merchantEmployeeList:state => state.app.merchantEmployeeList,
 	isEmployee:state => state.app.isEmployee,
 	selectMerId:state => state.app.selectMerId,
-	selectMerchantRole:state => state.app.selectMerchantRole
+	selectMerchantRole: state => state.app.selectMerchantRole,
+	locale: state => state.app.locale
 };

@@ -1,0 +1,61 @@
+REUSE common.save | 保存
+REUSE common.edit | 编辑
+REUSE common.operate | 操作
+REUSE common.query | 查询
+REUSE product.createTime | 创建时间
+REUSE common.no | 否
+REUSE user.updateStatusSuccess | 更新状态成功
+REUSE common.disable | 禁用
+REUSE product.sort | 排序
+REUSE product.sortLabel | 排序：
+REUSE common.enable | 启用
+REUSE el.select.placeholder | 请选择
+REUSE common.delete | 删除
+REUSE common.yes | 是
+REUSE el.messagebox.title | 提示
+REUSE category.typeArticle | 文章分类
+REUSE el.table.resetFilter | 重置
+REUSE common.status | 状态
+NEW  | // +---------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +---------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +---------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +---------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | 编辑文章
+NEW  | 编辑文章成功
+NEW  | 标题
+NEW  | 标题：
+NEW  | 创建文章
+NEW  | 浏览量
+NEW  | 请上传图文封面
+NEW  | 请输入文章标题
+NEW  | 请输入文章作者
+NEW  | 请填写标题
+NEW  | 请填写文章简介
+NEW  | 请填写文章内容
+NEW  | 请填作者
+NEW  | 请选择分类
+NEW  | 请选择文章分类
+NEW  | 删除当前文章
+NEW  | 删除数据成功
+NEW  | 是否热门：
+NEW  | 是否Banner：
+NEW  | 添加文章
+NEW  | 图片
+NEW  | 图文封面：
+NEW  | 文章标题
+NEW  | 文章标题：
+NEW  | 文章分类：
+NEW  | 文章简介
+NEW  | 文章简介：
+NEW  | 文章内容：
+NEW  | 文章作者
+NEW  | 文章作者：
+NEW  | 新增文章成功
+NEW  | 作者
+NEW  | 作者：
+
+TOTAL unique: 52, NEW: 34

@@ -12,7 +12,7 @@
 			</navigator>
 			<view class="score">
 				<text v-if="merchantInfo.isSelf"
-					class="font-bg-red bt-color bg-color mr10 self_min merType">自营</text>
+					class="font-bg-red bt-color bg-color mr10 self_min merType">{{$t('自营')}}</text>
 				<text v-if="isShowTypeId && merchantInfo.typeId"
 					class="bt-color mr10 merType color-FAAD14">{{merchantInfo.typeId | merchantTypeFilter}}</text>
 				<view class='starsList'>
@@ -29,10 +29,10 @@
 		<button v-if="type!=='home'" hover-class="none" class="merCollect"
 			:class="merchantInfoNew.isCollect ? 'care' : ''" @click="followToggle" :style="[isHome || isHomeComb?followColor:'']">
 			<text v-if="!merchantInfoNew.isCollect" class="iconfont icon-guanzhu"></text>
-			{{ merchantInfoNew.isCollect ? '已关注' : '关注' }}
+			{{ merchantInfoNew.isCollect ? $t('已关注') : $t('关注') }}
 		</button>
 		<navigator v-if="!isShowTypeId" :url="`/pages/merchant/${type}/index?merId=${merId}`" hover-class="none">
-			<button class="merCollect" hover-class="none">进店</button>
+			<button class="merCollect" hover-class="none">{{$t('进店')}}</button>
 		</navigator>
 	</view>
 </template>

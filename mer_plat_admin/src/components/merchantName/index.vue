@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-select
+      :key="'merchant-name-' + currentLocale"
       @change="onChangeMerId"
       class="selWidth"
       size="small"
@@ -12,9 +13,14 @@
       remote
       :multiple="multiple"
       :remote-method="remoteMethod"
-      placeholder="请选择商户"
+      :placeholder="$t('merchant.pleaseSelectMerchant')"
     >
-      <el-option v-for="user in merchantList" :key="user.id" :label="user.name" :value="user.id"></el-option>
+      <el-option
+        v-for="user in merchantList"
+        :key="user.id"
+        :label="displayMerchantName(user)"
+        :value="user.id"
+      ></el-option>
     </el-select>
   </div>
 </template>
@@ -31,6 +37,7 @@
 // +----------------------------------------------------------------------
 import * as merchant from '@/api/merchant';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { getLocalizedName } from '@/utils/localizedName';
 export default {
   name: 'index',
   props: {
@@ -61,6 +68,17 @@ export default {
       },
     },
   },
+  computed: {
+    currentLocale() {
+      return (
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn'
+      );
+    },
+  },
   watch: {
     merIdChecked(n) {
       this.merId = n ? n : null;
@@ -82,6 +100,9 @@ export default {
     if (checkPermi(['platform:merchant:page:list'])) this.getMerList();
   },
   methods: {
+    displayMerchantName(row) {
+      return getLocalizedName(row, this.currentLocale);
+    },
     // 下拉加载更多
     selectLoadMore() {
       this.search.page = this.search.page + 1;

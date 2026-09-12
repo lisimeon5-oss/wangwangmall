@@ -3,7 +3,7 @@
 <mapper namespace="com.zbkj.service.dao.ProductRelationDao">
 
     <select id="getUserList" resultType="com.zbkj.common.response.UserProductRelationResponse" parameterType="java.lang.Integer">
-        SELECT r.id,r.product_id,r.create_time,p.name,p.image,p.price,p.is_show,p.stock
+        SELECT r.id,r.product_id,r.create_time,p.name,p.name_json AS nameJson,p.image,p.price,p.is_show,p.stock
         FROM eb_product_relation r
         INNER JOIN eb_product p ON r.product_id = p.id And p.is_show = 1
         where r.`type` = 'collect'

@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
@@ -32,15 +33,21 @@ public class SystemFormTempRequest implements Serializable {
 
     private static final long serialVersionUID=1L;
 
-    @ApiModelProperty(value = "表单名称", required = true)
-    @NotBlank(message = "请填写表单名称")
+    @ApiModelProperty(value = "表单名称")
     @Length(max = 500, message = "表单名称长度不能超过500个字符")
     private String name;
 
-    @ApiModelProperty(value = "表单简介", required = true)
-    @NotBlank(message = "请填写表单简介")
+    @ApiModelProperty(value = "多语言表单名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言表单名称不能为空")
+    private String nameJson;
+
+    @ApiModelProperty(value = "表单简介")
     @Length(max = 500, message = "表单简介长度不能超过500个字符")
     private String info;
+
+    @ApiModelProperty(value = "多语言表单简介(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言表单简介不能为空")
+    private String infoJson;
 
     @ApiModelProperty(value = "表单内容", required = true)
     @NotBlank(message = "请填写表单内容")

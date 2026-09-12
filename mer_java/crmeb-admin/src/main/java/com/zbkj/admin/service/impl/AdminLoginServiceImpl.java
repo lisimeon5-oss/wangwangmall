@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.anji.captcha.model.common.ResponseModel;
 import com.zbkj.admin.filter.TokenComponent;
 import com.zbkj.admin.service.AdminLoginService;
@@ -27,6 +29,7 @@ import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.MerchantResultCode;
 import com.zbkj.common.utils.CrmebUtil;
 import com.zbkj.common.utils.RedisUtil;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.common.vo.LoginUserVo;
 import com.zbkj.common.vo.MenuTree;
@@ -43,6 +46,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -242,18 +246,62 @@ public class AdminLoginServiceImpl implements AdminLoginService {
         } else {
             menuList = systemMenuService.getMenusByUserId(loginUserVo.getUser().getId());
         }
+        String language = getRequestLanguage();
         // 组装前端对象
         List<MenusResponse> responseList = menuList.stream().map(e -> {
             MenusResponse response = new MenusResponse();
             BeanUtils.copyProperties(e, response);
             // 针对管理端UI修改Response数据
             response.setPath(e.getComponent());
-            response.setTitle(e.getName());
+            response.setTitle(getLocalizedMenuName(e, language));
             return response;
         }).collect(Collectors.toList());
 
         MenuTree menuTree = new MenuTree(responseList);
         return menuTree.buildTree();
+    }
+
+    /**
+     * 获取当前请求语言，缺省返回 zh-cn
+     *
+     * @return 语言代码，如 zh-cn / en / th / my
+     */
+    private String getRequestLanguage() {
+        HttpServletRequest request = RequestUtil.getRequest();
+        String language = null;
+        if (request != null) {
+            language = request.getHeader("lang");
+        }
+        return StrUtil.isBlank(language) ? "zh-cn" : language;
+    }
+
+    /**
+     * 根据多语言 JSON 字段解析菜单名称
+     *
+     * @param menu     菜单对象
+     * @param language 语言代码
+     * @return 对应语言的菜单名称，缺失时回退为菜单默认名称
+     */
+    private String getLocalizedMenuName(SystemMenu menu, String language) {
+        String nameJson = menu.getNameJson();
+        if (StrUtil.isBlank(nameJson)) {
+            return menu.getName();
+        }
+        try {
+            JSONObject jsonObject = JSON.parseObject(nameJson);
+            String name = jsonObject.getString(language);
+            if (StrUtil.isNotBlank(name)) {
+                return name;
+            }
+            // 回退到默认中文
+            name = jsonObject.getString("zh-cn");
+            if (StrUtil.isNotBlank(name)) {
+                return name;
+            }
+        } catch (Exception e) {
+            logger.warn("解析菜单多语言名称失败, nameJson = {}", nameJson, e);
+        }
+        return menu.getName();
     }
 
     /**
@@ -283,6 +331,8 @@ public class AdminLoginServiceImpl implements AdminLoginService {
             loginAdminResponse.setMerStarLevel(merchant.getStarLevel());
             loginAdminResponse.setMerReceiptPrintingSwitch(merchant.getReceiptPrintingSwitch());
             loginAdminResponse.setElectrPrintingSwitch(merchant.getElectrPrintingSwitch());
+            loginAdminResponse.setMerName(merchant.getName());
+            loginAdminResponse.setMerNameJson(merchant.getNameJson());
         }
         return loginAdminResponse;
     }

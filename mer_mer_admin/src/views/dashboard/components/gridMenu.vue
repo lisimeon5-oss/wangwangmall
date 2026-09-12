@@ -3,20 +3,20 @@
     <el-row :gutter="14">
       <el-col :xs="24" :sm="24" :md="24" :lg="12">
         <el-card class="box-card" :bordered="false" dis-hover shadow="never">
-          <div class="header_title_line">快捷入口</div>
+          <div class="header_title_line">{{ $t('dashboard.quickEntry') }}</div>
           <div class="nav_grid">
             <div class="nav_grid_item" v-for="(item, index) in permList" :key="index" @click="navigatorTo(item.url)">
               <div class="pic_badge" :style="{ backgroundColor: item.bgColor }">
                 <span class="iconfont" :class="item.icon"></span>
               </div>
-              <p>{{ item.title }}</p>
+              <p>{{ $t(item.title) }}</p>
             </div>
           </div>
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :md="24" :lg="12" v-hasPermi="['merchant:statistics:home:operating:data']">
         <el-card class="box-card" shadow="never" :bordered="false">
-          <div class="header_title_line">经营数据</div>
+          <div class="header_title_line">{{ $t('dashboard.businessData') }}</div>
           <div class="nav_grid">
             <div
               class="nav_grid_item"
@@ -25,7 +25,7 @@
               @click="navigatorTo(item.path)"
             >
               <p class="num_data">{{ item.num || 0 }}</p>
-              <p class="label">{{ item.title }}</p>
+              <p class="label">{{ $t(item.title) }}</p>
             </div>
           </div>
         </el-card>
@@ -64,45 +64,45 @@ export default {
         {
           bgColor: '#E8B500',
           icon: 'icon-youhuiquan',
-          title: '优惠券',
+          title: 'dashboard.coupon',
           url: '/coupon/list',
           perms: ['merchant:coupon:page:list'],
         },
         {
           bgColor: '#4BCAD5',
           icon: 'icon-shangpinguanli',
-          title: '商品管理',
+          title: 'dashboard.productManage',
           url: '/product/list',
           perms: ['merchant:product:page:list'],
         },
         {
           bgColor: '#A277FF',
           icon: 'icon-a-dingdanguanli1',
-          title: '订单管理',
+          title: 'dashboard.orderManage',
           url: '/order/list',
           perms: ['merchant:order:page:list'],
         },
         {
           bgColor: '#1890FF',
           icon: 'icon-xitongshezhi',
-          title: '系统设置',
+          title: 'dashboard.systemSetting',
           url: '/operation/modifyStoreInfo',
           perms: ['merchant:base:info'],
         },
         {
           bgColor: '#EF9C20',
           icon: 'icon-caiwuguanli',
-          title: '财务管理',
+          title: 'dashboard.financeManage',
           url: '/finance/capitalFlow',
           perms: ['merchant:finance:page:capitalFlow'],
         },
       ],
       statisticData: [
-        { title: '在售商品', num: 0, path: '/product/list', perms: ['merchant:product:page:list'] },
-        { title: '待审核商品', num: 0, path: '/product/list', perms: ['merchant:product:page:list'] },
-        { title: '待发货', num: 0, path: '/order/list', perms: ['merchant:order:page:list'] },
-        { title: '待核销', num: 0, path: '/order/list', perms: ['merchant:order:page:list'] },
-        { title: '待退款', num: 0, path: '/order/refund', perms: ['merchant:order:page:refund'] },
+        { title: 'dashboard.onSaleProduct', num: 0, path: '/product/list', perms: ['merchant:product:page:list'] },
+        { title: 'dashboard.awaitAuditProduct', num: 0, path: '/product/list', perms: ['merchant:product:page:list'] },
+        { title: 'dashboard.awaitShipping', num: 0, path: '/order/list', perms: ['merchant:order:page:list'] },
+        { title: 'dashboard.awaitVerification', num: 0, path: '/order/list', perms: ['merchant:order:page:list'] },
+        { title: 'dashboard.awaitRefund', num: 0, path: '/order/refund', perms: ['merchant:order:page:refund'] },
       ],
       optionData: {},
       applyNum: 0,

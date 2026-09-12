@@ -1,5 +1,8 @@
 package com.zbkj.common.request;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.zbkj.common.jackson.FlexibleJsonStringDeserializer;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,7 +11,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -36,10 +38,14 @@ public class ShippingTemplatesRequest implements Serializable {
     @ApiModelProperty(value = "运费模板ID，新增时不填,编辑时必填")
     private Integer id;
 
-    @ApiModelProperty(value = "模板名称", required = true)
-    @NotBlank(message = "模板名称必须填写")
+    @ApiModelProperty(value = "模板名称")
     @Length(max = 200, message = "模板名称不能超过200个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言模板名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言模板名称不能为空")
+    @JsonDeserialize(using = FlexibleJsonStringDeserializer.class)
+    private String nameJson;
 
     @ApiModelProperty(value = "计费方式 0（未选择），1(按件数), 2(按重量)，3(按体积)", example = "0", required = true)
     @NotNull(message = "计费方式必须选择")

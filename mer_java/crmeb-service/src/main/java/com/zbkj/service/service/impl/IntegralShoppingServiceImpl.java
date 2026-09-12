@@ -12,6 +12,7 @@ import com.zbkj.common.request.PageParamRequest;
 import com.zbkj.common.response.IntegralIntervalResponse;
 import com.zbkj.common.response.IntegralProductFrontResponse;
 import com.zbkj.common.result.CommonResultCode;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.vo.MyRecord;
 import com.zbkj.service.service.GroupConfigService;
 import com.zbkj.service.service.IntegralShoppingService;
@@ -73,6 +74,7 @@ public class IntegralShoppingServiceImpl implements IntegralShoppingService {
         List<IntegralIntervalResponse> responseList = configList.stream().map(config -> {
             IntegralIntervalResponse response = new IntegralIntervalResponse();
             BeanUtils.copyProperties(config, response);
+            response.setName(I18nJsonUtil.resolveByRequest(config.getName(), config.getNameJson()));
             return response;
         }).collect(Collectors.toList());
         return responseList;

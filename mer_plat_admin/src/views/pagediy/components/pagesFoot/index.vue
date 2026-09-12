@@ -68,7 +68,7 @@ export default {
       this.bgColor = data.bgColor && data.bgColor.color[0].item;
       this.menuList = [];
       this.$set(this, 'menuList', data.menuList);
-      if (data.status.title == '是否显示') {
+      if (data.status.title == this.$t('product.isShow')) {
         this.isSpecial = 2;
       } else {
         this.isSpecial = 0;

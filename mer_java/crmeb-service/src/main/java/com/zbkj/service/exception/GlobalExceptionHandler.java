@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -61,11 +63,28 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(value = CrmebException.class)
     public CommonResult crmebExceptionHandler(HttpServletRequest request, CrmebException e) {
-        doLog(request, e);
+        if (isBusinessHint(e)) {
+            LOGGER.warn("业务提示 url={}, message={}", request.getRequestURI(), e.getMessage());
+        } else {
+            doLog(request, e);
+        }
         if (ObjectUtil.isNull(e.getCode())) {
             return CommonResult.failed(e.getMessage());
         }
         return CommonResult.failed(e);
+    }
+
+    /** 参数校验等业务提示不写异常日志、不打堆栈 */
+    private boolean isBusinessHint(CrmebException e) {
+        Integer code = e.getCode();
+        if (code == null) {
+            return false;
+        }
+        return Objects.equals(code, CommonResultCode.VALIDATE_FAILED.getCode())
+                || Objects.equals(code, CommonResultCode.UNAUTHORIZED.getCode())
+                || Objects.equals(code, CommonResultCode.PERMISSION_EXPIRATION.getCode())
+                || Objects.equals(code, CommonResultCode.FORBIDDEN.getCode())
+                || Objects.equals(code, CommonResultCode.NOT_FOUND.getCode());
     }
 
     /**
@@ -130,6 +149,18 @@ public class GlobalExceptionHandler {
             }
         }
         return CommonResult.failed(CommonResultCode.VALIDATE_FAILED, "请求参数校验异常");
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public CommonResult constraintViolationExceptionHandler(HttpServletRequest request, ConstraintViolationException e) {
+        doLog(request, e);
+        String msg = e.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse("请求参数校验异常");
+        return CommonResult.failed(CommonResultCode.VALIDATE_FAILED, msg);
     }
 
     /**

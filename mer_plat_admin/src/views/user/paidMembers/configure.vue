@@ -2,9 +2,9 @@
   <div class="divBox">
     <el-card :bordered="false" shadow="never" class="ivu-mt" :body-style="{ padding: '0 20px' }">
       <el-tabs v-model="activeName" class="list-tabs mb5">
-        <el-tab-pane label="基础设置" name="first"></el-tab-pane>
-        <el-tab-pane label="会员权益" name="second"></el-tab-pane>
-        <el-tab-pane label="会员卡" name="three"></el-tab-pane>
+        <el-tab-pane :label="$t('user.baseConfig')" name="first"></el-tab-pane>
+        <el-tab-pane :label="$t('user.memberBenefits')" name="second"></el-tab-pane>
+        <el-tab-pane :label="$t('user.memberCard')" name="three"></el-tab-pane>
       </el-tabs>
       <div v-if="activeName === 'first'">
         <el-form
@@ -14,40 +14,40 @@
           label-width="90px"
           class="demo-ruleForm"
         >
-          <el-form-item label="购买入口：" required>
+          <el-form-item :label="$t('user.purchaseEntrance')" required>
             <el-switch
               v-model="pram.paidMemberPaidEntrance"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('user.on')"
+              :inactive-text="$t('user.off')"
               active-value="1"
               inactive-value="0"
             />
             <div class="from-tips">
-              购买入口关闭之后，已经购买付费会员的且未到期用户仍可继续使用，未购买付费会员的用户，不支持购买。
+              {{ $t('user.purchaseEntranceTip') }}
             </div>
           </el-form-item>
-          <el-form-item label="会员价格：" required>
+          <el-form-item :label="$t('user.memberPrice')" required>
             <el-radio-group v-model="pram.paidMemberPriceDisplay">
-              <el-radio label="all">全部用户可见</el-radio>
-              <el-radio label="paid">仅付费会员可见</el-radio>
+              <el-radio label="all">{{ $t('user.allUsersVisible') }}</el-radio>
+              <el-radio label="paid">{{ $t('user.paidMembersOnly') }}</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="会员专享：" required>
+          <el-form-item :label="$t('user.memberExclusive')" required>
             <el-switch
               v-model="pram.paidMemberProductSwitch"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('user.on')"
+              :inactive-text="$t('user.off')"
               active-value="1"
               inactive-value="0"
             />
-            <div class="from-tips">开启/关闭用户端-付费会员开通页面 会员专享商品列表 模块。</div>
+            <div class="from-tips">{{ $t('user.memberExclusiveTip') }}</div>
           </el-form-item>
           <el-form-item>
             <el-button
               v-if="checkPermi(['platform:paid:member:base:config:edit'])"
               type="primary"
               v-debounceClick="memberConfigSubmitForm"
-              >提交</el-button
+              >{{ $t('common.submit') }}</el-button
             >
           </el-form-item>
         </el-form>
@@ -63,18 +63,19 @@
           class="mb50"
         >
           <el-table-column prop="id" label="ID" :show-overflow-tooltip="true" width="60"></el-table-column>
-          <el-table-column prop="name" label="权益名称" :show-overflow-tooltip="true" min-width="160">
+          <el-table-column prop="name" :label="$t('user.benefitName')" :show-overflow-tooltip="true" min-width="160">
             <template slot-scope="scope">
               <span>{{ scope.row.name | filterMemberBenefits }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="value"
-            label="展示名称"
+            :label="$t('user.displayName')"
             :show-overflow-tooltip="true"
             min-width="160"
-          ></el-table-column>
-          <el-table-column prop="imageUrl" label="权益图标" min-width="160">
+          >
+            <template slot-scope="{ row }">{{ getLocalizedBenefitValue(row) }}</template>
+          </el-table-column>
+          <el-table-column prop="imageUrl" :label="$t('user.benefitIcon')" min-width="160">
             <template slot-scope="scope">
               <div class="demo-image__preview line-heightOne">
                 <el-image :src="scope.row.imageUrl" :preview-src-list="[scope.row.imageUrl]" />
@@ -82,41 +83,42 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="message"
-            label="权益简介"
+            :label="$t('user.benefitIntro')"
             :show-overflow-tooltip="true"
             min-width="160"
-          ></el-table-column>
-          <el-table-column label="状态" min-width="160">
+          >
+            <template slot-scope="{ row }">{{ getLocalizedBenefitMessage(row) }}</template>
+          </el-table-column>
+          <el-table-column :label="$t('common.status')" min-width="160">
             <template slot-scope="scope">
               <el-switch
                 v-if="checkPermi(['platform:paid:member:benefits:switch'])"
                 v-model="scope.row.status"
                 :active-value="true"
                 :inactive-value="false"
-                active-text="显示"
-                inactive-text="隐藏"
+                :active-text="$t('user.show')"
+                :inactive-text="$t('user.hide')"
                 @change="handleStatusChange(scope.row, 'benefits')"
               >
               </el-switch>
-              <div v-else>{{ scope.row.status ? '显示' : '隐藏' }}</div>
+              <div v-else>{{ scope.row.status ? $t('user.show') : $t('user.hide') }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="160" fixed="right">
+          <el-table-column :label="$t('common.operate')" width="160" fixed="right">
             <template slot-scope="scope">
               <a @click="handleCreatBenefits(scope.row)" v-hasPermi="['platform:paid:member:benefits:edit']"
-                >权益设置</a
+                >{{ $t('user.benefitSetting') }}</a
               >
               <el-divider direction="vertical"></el-divider>
               <a @click="handleCreatExplain(scope.row)" v-hasPermi="['platform:paid:member:benefits:statement:edit']"
-                >权益说明</a
+                >{{ $t('user.benefitDescription') }}</a
               >
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div v-if="activeName === 'three'">
-        <el-button size="small" type="primary" @click="handlerCreat()">新增</el-button>
+        <el-button size="small" type="primary" @click="handlerCreat()">{{ $t('user.addNew') }}</el-button>
         <el-table
           ref="table"
           v-loading="listLoading"
@@ -128,56 +130,58 @@
         >
           <el-table-column prop="id" label="ID" :show-overflow-tooltip="true" width="60"></el-table-column>
           <el-table-column
-            prop="name"
-            label="会员卡名称"
+            :label="$t('user.cardName')"
             :show-overflow-tooltip="true"
             min-width="160"
-          ></el-table-column>
-          <el-table-column prop="value" label="会员卡类型" :show-overflow-tooltip="true" min-width="160">
+          >
+            <template slot-scope="{ row }">{{ getLocalizedCardName(row) }}</template>
+          </el-table-column>
+          <el-table-column prop="value" :label="$t('user.cardType')" :show-overflow-tooltip="true" min-width="160">
             <template slot-scope="scope">{{ scope.row.type | filterMemberType }}</template>
           </el-table-column>
-          <el-table-column prop="deadlineDay" label="会员卡期限" :show-overflow-tooltip="true" min-width="160">
-            <template slot-scope="scope">{{ scope.row.type === 2 ? '永久' : scope.row.deadlineDay + '天' }}</template>
+          <el-table-column prop="deadlineDay" :label="$t('user.cardTerm')" :show-overflow-tooltip="true" min-width="160">
+            <template slot-scope="scope">{{ scope.row.type === 2 ? $t('user.permanent') : scope.row.deadlineDay + $t('user.day') }}</template>
           </el-table-column>
           <el-table-column
             prop="price"
-            label="会员卡售价（元）"
+            :label="$t('user.cardPrice')"
             :show-overflow-tooltip="true"
             min-width="160"
           ></el-table-column>
           <el-table-column
             prop="giftBalance"
-            label="赠送余额（元）"
+            :label="$t('user.giftBalance')"
             :show-overflow-tooltip="true"
             min-width="160"
           ></el-table-column>
           <el-table-column
-            prop="label"
-            label="标签文字"
+            :label="$t('user.labelText')"
             :show-overflow-tooltip="true"
             min-width="160"
-          ></el-table-column>
-          <el-table-column label="状态" min-width="160">
+          >
+            <template slot-scope="{ row }">{{ getLocalizedCardLabel(row) }}</template>
+          </el-table-column>
+          <el-table-column :label="$t('common.status')" min-width="160">
             <template slot-scope="scope">
               <el-switch
                 v-if="checkPermi(['platform:paid:member:card:switch'])"
                 v-model="scope.row.status"
                 :active-value="true"
                 :inactive-value="false"
-                active-text="开启"
-                inactive-text="关闭"
+                :active-text="$t('user.on')"
+                :inactive-text="$t('user.off')"
                 @change="handleStatusChange(scope.row, 'card')"
               >
               </el-switch>
-              <div v-else>{{ scope.row.status ? '开启' : '关闭' }}</div>
+              <div v-else>{{ scope.row.status ? $t('user.on') : $t('user.off') }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="160" fixed="right">
+          <el-table-column :label="$t('common.operate')" width="160" fixed="right">
             <template slot-scope="scope">
-              <a @click="handlerCreat(scope.row)" v-hasPermi="['platform:paid:member:card:edit']">编辑</a>
+              <a @click="handlerCreat(scope.row)" v-hasPermi="['platform:paid:member:card:edit']">{{ $t('common.edit') }}</a>
               <el-divider direction="vertical"></el-divider>
               <a @click="handleDelete(scope.$index, scope.row)" v-hasPermi="['platform:paid:member:card:delete']"
-                >删除</a
+                >{{ $t('common.delete') }}</a
               >
             </template>
           </el-table-column>
@@ -228,13 +232,16 @@ import Debounce from '@/libs/debounce';
 import BenefitsEdit from '../components/benefitsCreat..vue';
 import ExplainCreat from '../components/explainCreat.vue';
 import CardCreat from '../components/cardCreat.vue';
+import { getLocalizedText } from '@/utils/localizedName';
 const cardInfo = {
   deadlineDay: 0,
   giftBalance: 0,
   id: 0,
   isFirstChargeGive: false,
   label: '',
+  labelJson: '',
   name: '',
+  nameJson: '',
   originalPrice: 0,
   price: 0,
   sort: 0,
@@ -261,6 +268,17 @@ export default {
       drawerVisibleCard: false, //会员卡
     };
   },
+  computed: {
+    currentLocale() {
+      return (
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn'
+      );
+    },
+  },
   watch: {
     activeName: {
       handler(val) {
@@ -276,10 +294,22 @@ export default {
   },
   methods: {
     checkPermi,
+    getLocalizedBenefitValue(row) {
+      return getLocalizedText(row && row.value, row && row.valueJson, this.currentLocale);
+    },
+    getLocalizedBenefitMessage(row) {
+      return getLocalizedText(row && row.message, row && row.messageJson, this.currentLocale);
+    },
+    getLocalizedCardName(row) {
+      return getLocalizedText(row && row.name, row && row.nameJson, this.currentLocale);
+    },
+    getLocalizedCardLabel(row) {
+      return getLocalizedText(row && row.label, row && row.labelJson, this.currentLocale);
+    },
     //基础设置
     memberConfigSubmitForm(formName) {
       memberConfigEditApi(this.pram).then(async (res) => {
-        this.$message.success('提交成功');
+        this.$message.success(this.$t('user.submitSuccess'));
         this.getMemberConfig();
       });
     },
@@ -300,10 +330,10 @@ export default {
     },
     //行删除
     handleDelete(index, row) {
-      this.$modalSure('要删除此会员卡吗？').then(async () => {
+      this.$modalSure(this.$t('user.deleteCardConfirm')).then(async () => {
         try {
           await memberCardDeleteApi(row.id);
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('user.deleteSuccess'));
           this.tableDataMember.splice(index, 1);
         } catch (e) {}
       });
@@ -342,7 +372,7 @@ export default {
           await memberCardSwitchApi(row.id);
           this.getMemberList();
         }
-        this.$message.success('更新状态成功');
+        this.$message.success(this.$t('user.updateStatusSuccess'));
       } catch (e) {
         row.status = !row.status;
       }

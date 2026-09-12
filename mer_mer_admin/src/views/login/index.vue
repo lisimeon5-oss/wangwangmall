@@ -36,7 +36,7 @@
               ref="account"
               v-model.trim="loginForm.account"
               prefix-icon="el-icon-user"
-              placeholder="用户名"
+              :placeholder="$t('login.username')"
               name="username"
               type="text"
               tabindex="1"
@@ -52,7 +52,7 @@
               v-model.trim="loginForm.pwd"
               prefix-icon="el-icon-lock"
               :type="passwordType"
-              placeholder="密码"
+              :placeholder="$t('login.password')"
               name="pwd"
               tabindex="2"
               auto-complete="on"
@@ -70,7 +70,7 @@
               style="width: 100%; margin-bottom: 30px"
               @click.native.prevent="handleLogin"
               :disabled="disabled"
-              >登录
+              >{{ $t('common.login') }}
             </el-button>
           </div>
         </el-form>
@@ -97,6 +97,7 @@ import '@/assets/js/canvas-nest.min.js';
 import { getLoginPicApi } from '@/api/user';
 import { accountDetectionApi, frontDomainApi, getSystemColorApi } from '@/api/authInformation';
 import VerifitionVerify from './verifition/Verify.vue';
+import getPageTitle from '@/utils/get-page-title';
 export default {
   name: 'Login',
   data() {
@@ -109,7 +110,7 @@ export default {
     };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6 || value.length > 12) {
-        callback(new Error('密码位数为6-12位'));
+        callback(new Error(this.$t('login.passwordLength')));
       } else {
         callback();
       }
@@ -138,9 +139,9 @@ export default {
         captchaVO: {},
       },
       loginRules: {
-        account: [{ required: true, trigger: 'blur', message: '请输入用户名' }],
-        pwd: [{ required: true, trigger: 'blur', message: '请输入密码' }],
-        code: [{ required: true, message: '请输入正确的验证码', trigger: 'blur' }],
+        account: [{ required: true, trigger: 'blur', message: this.$t('login.pleaseEnterUsername') }],
+        pwd: [{ required: true, trigger: 'blur', message: this.$t('login.pleaseEnterPassword') }],
+        code: [{ required: true, message: this.$t('login.pleaseEnterCorrectCaptcha'), trigger: 'blur' }],
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -256,6 +257,7 @@ export default {
         this.loginLogo = res.loginLogo;
         this.backgroundImages = res.backgroundImage;
         localStorage.setItem('platSiteName', res.siteName);
+        document.title = getPageTitle(this.$route.meta.title);
       });
     },
     checkCapslock(e) {
@@ -289,7 +291,7 @@ export default {
       this.loginForm.captcha = this.$store.state.user.captcha;
       const loading = this.$loading({
         lock: true,
-        text: '正在登录中...',
+        text: this.$t('login.loggingIn'),
       });
       this.$store
         .dispatch('user/login', this.loginForm)

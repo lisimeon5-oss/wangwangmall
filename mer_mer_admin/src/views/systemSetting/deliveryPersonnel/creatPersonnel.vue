@@ -9,37 +9,37 @@
       @submit.native.prevent
       label-width="80px"
     >
-      <el-form-item label="配送人员：" prop="personnelName">
+      <el-form-item :label="$t('systemSetting.deliveryPersonnelLabel')" prop="personnelName">
         <el-input
           v-model.trim="formValidate.personnelName"
           :maxlength="16"
-          placeholder="请输入配送人员姓名"
+          :placeholder="$t('systemSetting.pleaseEnterDeliveryPersonnelName')"
           size="small"
           clearable
         >
         </el-input>
-        <div class="from-tips mb5">订单采用商家直接配送的方式发货，根据配送人员的姓名来进行选择。</div>
+        <div class="from-tips mb5">{{ $t('systemSetting.deliveryPersonnelNameTip') }}</div>
       </el-form-item>
-      <el-form-item label="联系电话：" prop="personnelPhone">
-        <el-input v-model.trim="formValidate.personnelPhone" placeholder="请输入配送人员联系电话"></el-input>
-        <div class="from-tips mb5">订单采用商家直接配送的方式发货后，用户可通过手机号码联系该配送员。</div>
+      <el-form-item :label="$t('user.phoneLabel')" prop="personnelPhone">
+        <el-input v-model.trim="formValidate.personnelPhone" :placeholder="$t('systemSetting.pleaseEnterDeliveryPersonnelPhone')"></el-input>
+        <div class="from-tips mb5">{{ $t('systemSetting.deliveryPersonnelPhoneTip') }}</div>
       </el-form-item>
-      <el-form-item label="排序：">
+      <el-form-item :label="$t('user.sortLabel')">
         <el-input-number
           v-model.trim="formValidate.sort"
           :min="0"
           :max="99"
           :step="1"
           step-strictly
-          placeholder="请输入排序"
-          label="排序"
+          :placeholder="$t('user.pleaseEnterSort')"
+          :label="$t('common.sort')"
         ></el-input-number>
-        <div class="from-tips mb5">请输入0~99的数字，数字越大越靠前。</div>
+        <div class="from-tips mb5">{{ $t('systemSetting.sort0To99Tip') }}</div>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="handleResetForm">取 消</el-button>
-      <el-button type="primary" @click="handleSure" :loading="loadingBtn">确 定</el-button>
+      <el-button @click="handleResetForm">{{ $t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="handleSure" :loading="loadingBtn">{{ $t('common.confirm') }}</el-button>
     </span>
   </el-dialog>
 </template>
@@ -66,7 +66,9 @@ export default {
       handler(nVal, oVal) {
         if (nVal) {
           this.formValidate = this.editData;
-          this.title = this.formValidate.id ? '修改配送员' : '新增配送员';
+          this.title = this.formValidate.id
+            ? this.$t('systemSetting.editDeliveryPersonnel')
+            : this.$t('systemSetting.addDeliveryPersonnel');
         }
       },
       deep: true,
@@ -78,7 +80,7 @@ export default {
       formValidate: Object.assign({}, defaultData),
       loadingBtn: false,
       rules: {
-        personnelName: [{ required: true, message: '请输入配送人员姓名', trigger: 'blue' }],
+        personnelName: [{ required: true, message: this.$t('systemSetting.pleaseEnterDeliveryPersonnelName'), trigger: 'blue' }],
         personnelPhone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
       },
     };

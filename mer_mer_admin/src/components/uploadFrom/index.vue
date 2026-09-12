@@ -2,7 +2,7 @@
   <div>
     <!--    此处 特殊需求 title 不显示的 自己额外用icon 实现关闭事件-->
     <el-dialog
-      title="上传图片"
+      :title="$t('upload.uploadImage')"
       :visible.sync="visible"
       width="950px"
       :modal="booleanVal"

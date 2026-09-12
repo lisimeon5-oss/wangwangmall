@@ -5,7 +5,7 @@
     v-if="(configData.isShow && configData.isShow == 1) || (!configData.isShow && configData.isShow != 0)"
   >
     <div class="acea-row row-middle mb20" v-if="configData">
-      <div class="c_label labelwidth">{{ configData.title }}</div>
+      <div class="c_label labelwidth">{{ diyUiText(configData.title) }}</div>
       <div class="color-box ml22">
         <div class="color-item acea-row row-middle" v-for="(color, key) in configData.color" :key="key">
           <el-color-picker
@@ -15,7 +15,7 @@
             :show-alpha="true"
           ></el-color-picker>
           <el-input size="small" v-model="color.item" style="width: 78%" class="ml10"></el-input>
-          <span @click="resetBgA(color, index, key)">重置</span>
+          <span @click="resetBgA(color, index, key)">{{ translateText("重置") }}</span>
           <i v-show="key === 0 && configData.color.length > 1" class="iconfont icon-lianjie"></i>
         </div>
       </div>
@@ -33,6 +33,7 @@
 // +---------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +---------------------------------------------------------------------
+import { diyUiText } from '@/utils/diyCname';
 let restColor = '';
 export default {
   name: 'c_bg_color',
@@ -74,6 +75,7 @@ export default {
     },
   },
   methods: {
+    diyUiText,
     changeColor(e, color) {
       if (!e) {
         color.item = 'rgba(255, 255, 255, 0)';

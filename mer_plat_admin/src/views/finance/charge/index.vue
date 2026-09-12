@@ -9,7 +9,7 @@
     >
       <div class="padding-add">
         <el-form size="small" inline @submit.native.prevent>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('product.timeSelectLabel')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -17,18 +17,18 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               class="selWidth"
               @change="onchangeTime"
             />
           </el-form-item>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('product.userSearchLabel')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
-          <el-form-item label="订单编号：" label-width="66px">
+          <el-form-item :label="$t('order.orderNoLabel')" label-width="66px">
             <el-input
               v-model="tableFrom.keywords"
-              placeholder="请输入订单号"
+              :placeholder="$t('finance.pleaseEnterOrderNo')"
               class="selWidth"
               size="small"
               @keyup.enter.native="getList(1)"
@@ -36,8 +36,8 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('common.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -51,19 +51,19 @@
         class="table"
         highlight-current-row
       >
-        <el-table-column prop="uid" label="用户ID" width="60" />
-        <el-table-column label="头像" min-width="80">
+        <el-table-column prop="uid" :label="$t('finance.userID')" width="60" />
+        <el-table-column :label="$t('user.avatar')" min-width="80">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.avatar" :preview-src-list="[scope.row.avatar]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="nickname" label="用户昵称" min-width="150" :show-overflow-tooltip="true" />
-        <el-table-column prop="orderNo" label="订单编号" min-width="180" />
+        <el-table-column prop="nickname" :label="$t('product.userNickname')" min-width="150" :show-overflow-tooltip="true" />
+        <el-table-column prop="orderNo" :label="$t('order.orderNo')" min-width="180" />
         <el-table-column
           sortable
-          label="支付金额"
+          :label="$t('finance.payAmount')"
           min-width="120"
           :sort-method="
             (a, b) => {
@@ -74,7 +74,7 @@
         />
         <el-table-column
           sortable
-          label="赠送金额"
+          :label="$t('finance.giftAmount')"
           min-width="120"
           prop="givePrice"
           :sort-method="
@@ -83,19 +83,19 @@
             }
           "
         />
-        <el-table-column label="支付方式" min-width="80">
+        <el-table-column :label="$t('order.payType')" min-width="80">
           <template slot-scope="scope">
-            <span>{{ scope.row.payType === 'weixin' ? '微信' : '支付宝' }}</span>
+            <span>{{ scope.row.payType === 'weixin' ? $t('order.wechat') : $t('order.alipay') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="支付渠道" min-width="80">
+        <el-table-column :label="$t('finance.payChannel')" min-width="80">
           <template slot-scope="scope">
             <span>{{ scope.row.payChannel | rechargeTypeFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="支付时间" min-width="150">
+        <el-table-column :label="$t('user.payTimeCol')" min-width="150">
           <template slot-scope="scope">
-            <span class="spBlock">{{ scope.row.payTime || '无' }}</span>
+            <span class="spBlock">{{ scope.row.payTime || $t('finance.none') }}</span>
           </template>
         </el-table-column>
       </el-table>

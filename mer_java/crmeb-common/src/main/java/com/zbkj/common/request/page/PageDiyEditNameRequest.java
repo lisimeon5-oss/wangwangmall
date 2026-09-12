@@ -1,12 +1,9 @@
 package com.zbkj.common.request.page;
 
-import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 /**
  * @Auther: 大粽子
@@ -21,6 +18,8 @@ public class PageDiyEditNameRequest {
     private Integer id;
 
     @ApiModelProperty(value = "页面名称")
-    @NotEmpty(message = "模版名称 不能为空")
     private String name;
+
+    @ApiModelProperty(value = "多语言模板名称(JSON)")
+    private String nameJson;
 }

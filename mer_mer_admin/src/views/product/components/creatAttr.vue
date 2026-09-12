@@ -2,26 +2,26 @@
   <div>
     <el-row :gutter="24">
       <el-col :span="24">
-        <el-form-item label="佣金设置：" props="isSub">
+        <el-form-item :label="$t('product.commissionSetting')" props="isSub">
           <el-radio-group v-model="formValidate.isSub" :disabled="isDisabled" @change="changeAttrVal">
-            <el-radio :label="true" class="radio">单独设置</el-radio>
-            <el-radio :label="false">默认设置</el-radio>
+            <el-radio :label="true" class="radio">{{ $t('product.separateSetting') }}</el-radio>
+            <el-radio :label="false">{{ $t('product.defaultSetting') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="会员商品：" required>
+        <el-form-item :label="$t('product.searchMemberProduct')" required>
           <el-radio-group v-model="formValidate.isPaidMember" :disabled="isDisabled" @change="changeAttrVal">
-            <el-radio :label="true" class="radio">是</el-radio>
-            <el-radio :label="false">否</el-radio>
+            <el-radio :label="true" class="radio">{{ $t('product.yes') }}</el-radio>
+            <el-radio :label="false">{{ $t('product.no') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="规格类型：" props="specType">
+        <el-form-item :label="$t('product.specTypeLabel')" props="specType">
           <el-radio-group
             v-model="formValidate.specType"
             @change="onChangeSpec(formValidate.specType)"
             :disabled="isDisabled"
           >
-            <el-radio :label="false" class="radio">单规格</el-radio>
-            <el-radio :label="true">多规格</el-radio>
+            <el-radio :label="false" class="radio">{{ $t('product.singleSpec') }}</el-radio>
+            <el-radio :label="true">{{ $t('product.multiSpec') }}</el-radio>
           </el-radio-group>
           <el-dropdown
             :disabled="isDisabled"
@@ -30,10 +30,10 @@
             @command="confirm"
             trigger="hover"
           >
-            <span class="el-dropdown-link"> 选择规格模板<i class="el-icon-arrow-down el-icon--right"></i> </span>
+            <span class="el-dropdown-link"> {{ $t('product.selectSpecTemplate') }}<i class="el-icon-arrow-down el-icon--right"></i> </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item v-for="(item, index) in ruleList" :key="index" :command="item.ruleName">{{
-                item.ruleName
+              <el-dropdown-item v-for="(item, index) in ruleList" :key="item.id || index" :command="item.id">{{
+                displayRuleName(item)
               }}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -41,7 +41,14 @@
       </el-col>
       <!-- 多规格添加-->
       <el-col v-if="formValidate.specType && !isDisabled" :span="24" class="noForm">
-        <el-form-item label="商品规格：">
+        <el-form-item :label="$t('product.productSpecLabel')">
+          <div class="lang-name-switch mb10" v-if="langOptions && langOptions.length">
+            <el-radio-group :value="activeLang" size="mini" @input="onSpecLangChange">
+              <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                {{ lang.label }}
+              </el-radio-button>
+            </el-radio-group>
+          </div>
           <div class="specifications">
             <draggable
               group="specifications"
@@ -65,11 +72,22 @@
                   <div class="lineBox"></div>
                   <div class="specifications-item-name mb18">
                     <el-input
+                      v-if="isDefaultSpecLang"
                       size="small"
                       v-model="item.value"
-                      placeholder="规格名称"
+                      :placeholder="$t('product.specNameInput')"
                       @change="attrChangeValue(index, item.value)"
                       @focus="handleFocus(item.value)"
+                      class="specifications-item-name-input"
+                      maxlength="30"
+                      show-word-limit
+                    ></el-input>
+                    <el-input
+                      v-else
+                      size="small"
+                      :value="specNameLangValue(item)"
+                      :placeholder="$t('product.pleaseEnterProductName')"
+                      @input="(val) => onSpecNameLangInput(item, index, val)"
                       class="specifications-item-name-input"
                       maxlength="30"
                       show-word-limit
@@ -81,12 +99,12 @@
                       :true-label="1"
                       :false-label="0"
                       @change="(e) => addPic(e, index)"
-                      >添加规格图</el-checkbox
+                      >{{ $t('product.addSpecImage') }}</el-checkbox
                     >
                     <el-tooltip
                       class="item"
                       effect="dark"
-                      content="添加规格图片, 仅支持打开一个(建议尺寸:800*800)"
+                      :content="$t('product.specImageTip')"
                       placement="right"
                     >
                       <i class="el-icon-info"></i>
@@ -103,15 +121,30 @@
                       <div v-for="(det, indexn) in item.detail" :key="indexn" class="mr10 spec drag">
                         <i class="el-icon-error" @click="handleRemove2(item.detail, indexn, det.value)"></i>
                         <el-input
+                          v-if="isDefaultSpecLang"
                           style="width: 430px"
                           size="small"
                           v-model="det.value"
-                          placeholder="规格值"
+                          :placeholder="$t('product.specValue')"
                           @change="attrDetailChangeValue(det.value, index)"
                           @focus="handleFocus(det.value)"
                           maxlength="30"
                           show-word-limit
                           @blur="handleBlur()"
+                        >
+                          <template slot="prefix">
+                            <span class="iconfont icon-drag2"></span>
+                          </template>
+                        </el-input>
+                        <el-input
+                          v-else
+                          style="width: 430px"
+                          size="small"
+                          :value="specValueLangValue(det)"
+                          :placeholder="$t('product.specValue')"
+                          @input="(val) => onSpecValueLangInput(det, val, index)"
+                          maxlength="30"
+                          show-word-limit
                         >
                           <template slot="prefix">
                             <span class="iconfont icon-drag2"></span>
@@ -136,7 +169,7 @@
                         <el-input
                           :ref="'inputRef_' + index"
                           size="small"
-                          placeholder="请输入规格值"
+                          :placeholder="$t('product.specValuePlaceholder')"
                           v-model="formDynamic.attrsVal"
                           @keyup.enter.native="createAttr(formDynamic.attrsVal, index)"
                           @blur="createAttr(formDynamic.attrsVal, index)"
@@ -144,7 +177,7 @@
                           show-word-limit
                         >
                         </el-input>
-                        <div class="addfont" slot="reference">添加规格值</div>
+                        <div class="addfont" slot="reference">{{ $t('product.addSpecValue') }}</div>
                       </el-popover>
                     </draggable>
                   </div>
@@ -153,9 +186,9 @@
             </draggable>
           </div>
           <div class="flex">
-            <el-button @click="handleAddRole">添加新规格</el-button>
+            <el-button @click="handleAddRole">{{ $t('product.addNewSpec') }}</el-button>
             <el-button v-if="formValidate.attrs.length >= 1" type="text" @click="handleSaveAsTemplate()"
-              >另存为模板</el-button
+              >{{ $t('product.saveAsTemplate') }}</el-button
             >
           </div>
         </el-form-item>
@@ -163,9 +196,9 @@
       <el-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
         <!-- 单规格表格-->
         <el-form-item v-if="formValidate.specType === false">
-          <el-alert title="价格设置范围 0.01~999999.99" type="info"> </el-alert>
+          <el-alert :title="$t('product.priceRange')" type="info"> </el-alert>
           <el-table :data="OneattrValue" border class="tabNumWidth" size="small">
-            <el-table-column label="图片" width="60" align="center">
+            <el-table-column :label="$t('product.image')" width="60" align="center">
               <template slot-scope="scope">
                 <div class="upLoadPicBox" @click="modalPicTap('1', 'dan', 'pi')">
                   <div v-if="scope.row.image" class="pictrue tabPic"><img :src="scope.row.image" /></div>
@@ -176,7 +209,7 @@
               </template>
             </el-table-column>
             <template v-if="formValidate.isSub">
-              <el-table-column label="一级返佣(%)" min-width="120" align="center">
+              <el-table-column :label="$t('product.firstCommission')" min-width="120" align="center">
                 <template slot-scope="scope">
                   <el-input
                     maxlength="6"
@@ -188,7 +221,7 @@
                   />
                 </template>
               </el-table-column>
-              <el-table-column label="二级返佣(%)" min-width="120" align="center">
+              <el-table-column :label="$t('product.secondCommission')" min-width="120" align="center">
                 <template slot-scope="scope">
                   <el-input
                     maxlength="6"
@@ -231,10 +264,10 @@
               </template>
             </el-table-column>
             <template v-if="formValidate.type == 5">
-              <el-table-column label="云盘设置" min-width="120" align="center">
+              <el-table-column :label="$t('product.cloudDiskSettings')" min-width="120" align="center">
                 <template slot-scope="scope">
                   <el-button v-if="!scope.row.expand" size="small" @click="handleAddVirtually(0, 'OneattrValue', 1)"
-                    >添加链接</el-button
+                    >{{ $t('product.addLink') }}</el-button
                   >
                   <el-button
                     v-else
@@ -242,40 +275,40 @@
                     type="text"
                     size="small"
                     @click="seeVirtually(OneattrValue[0], 'OneattrValue', 0, 1)"
-                    >已设置</el-button
+                    >{{ $t('product.set') }}</el-button
                   >
                 </template>
               </el-table-column>
             </template>
             <template v-if="formValidate.type == 6">
-              <el-table-column label="卡密设置" min-width="120" align="center">
+              <el-table-column :label="$t('product.cdkeySettings')" min-width="120" align="center">
                 <template slot-scope="scope">
                   <el-button v-if="!scope.row.cdkeyId" size="small" @click="handleAddVirtually(0, 'OneattrValue', 2)"
-                    >添加卡密</el-button
+                    >{{ $t('product.addCdkey') }}</el-button
                   >
                   <el-button
                     v-else
                     type="text"
                     class="seeCatMy pointer"
                     @click="seeVirtually(OneattrValue[0], 'OneattrValue', 0, 2)"
-                    >{{ scope.row.cdkeyLibraryName }}</el-button
+                    >{{ displayCdkeyLibraryName(scope.row) }}</el-button
                   >
                 </template>
               </el-table-column>
             </template>
           </el-table>
         </el-form-item>
-        <el-form-item label="全部sku：" v-if="$route.params.id && showAll">
-          <el-button type="default" @click="showAllSku()" :disabled="isDisabled">展示</el-button>
+        <el-form-item :label="$t('product.allSku')" v-if="$route.params.id && showAll">
+          <el-button type="default" @click="showAllSku()" :disabled="isDisabled">{{ $t('product.display') }}</el-button>
         </el-form-item>
         <!-- 多规格表格-->
         <el-form-item
           v-if="formValidate.attrs.length > 0 && formValidate.specType"
-          label="商品属性："
+          :label="$t('product.productAttrLabel')"
           class="labeltop"
           :class="isDisabled ? 'disLabel' : 'disLabelmoren'"
         >
-          <el-alert title="价格设置范围 0.01~999999.99" type="info"> </el-alert>
+          <el-alert :title="$t('product.priceRange')" type="info"> </el-alert>
           <el-table
             :data="ManyAttrValue"
             border
@@ -298,11 +331,11 @@
                     <div
                       v-if="formValidate.attrs.length && formValidate.attrs[scope.column.index] && ManyAttrValue.length"
                     >
-                      <el-select v-model="oneFormBatch[0][item.title]" :placeholder="`请选择${item.title}`" clearable>
+                      <el-select v-model="oneFormBatch[0][item.title]" :placeholder="$t('product.pleaseSelect') + item.title" clearable>
                         <el-option
                           v-for="val in formValidate.attrs[scope.column.index].detail"
                           :key="val.value"
-                          :label="val.value"
+                          :label="displaySpecOption(formValidate.attrs[scope.column.index], val.value)"
                           :value="val.value"
                         >
                         </el-option>
@@ -419,14 +452,14 @@
                   </template>
                   <template v-else-if="item.slot === 'isDefault'"> -- </template>
                   <template v-else-if="item.slot === 'action'">
-                    <a type="text" size="mini" @click="batchAdd">批量修改</a>
-                    <a type="text" size="mini" @click="batchDel">清空</a>
+                    <a type="text" size="mini" @click="batchAdd">{{ $t('product.batchModify') }}</a>
+                    <a type="text" size="mini" @click="batchDel">{{ $t('product.clear') }}</a>
                   </template>
                 </template>
                 <template v-else>
                   <template v-if="item.key">
                     <div class="text-center">
-                      <span>{{ scope.row.attrValueShow[item.key] }}</span>
+                      <span>{{ displaySpecOptionByKey(item.key, scope.row.attrValueShow[item.key]) }}</span>
                     </div>
                   </template>
                   <template v-if="item.slot === 'image'">
@@ -531,7 +564,7 @@
                         v-if="!scope.row.expand"
                         size="small"
                         @click="handleAddVirtually(scope.$index, 'ManyAttrValue', 1)"
-                        >添加链接</el-button
+                        >{{ $t('product.addLink') }}</el-button
                       >
                       <el-button
                         v-else
@@ -539,7 +572,7 @@
                         type="text"
                         size="small"
                         @click="seeVirtually(ManyAttrValue[scope.$index], 'ManyAttrValue', scope.$index, 1)"
-                        >已设置</el-button
+                        >{{ $t('product.set') }}</el-button
                       >
                     </div>
                   </template>
@@ -553,14 +586,14 @@
                         v-if="!scope.row.cdkeyId"
                         size="small"
                         @click="handleAddVirtually(scope.$index, 'ManyAttrValue', 2)"
-                        >添加卡密</el-button
+                        >{{ $t('product.addCdkey') }}</el-button
                       >
                       <el-button
                         v-else
                         type="text"
                         class="seeCatMy pointer"
                         @click="seeVirtually(ManyAttrValue[scope.$index], 'ManyAttrValue', scope.$index, 2)"
-                        >{{ scope.row.cdkeyLibraryName }}</el-button
+                        >{{ displayCdkeyLibraryName(scope.row) }}</el-button
                       >
                     </div>
                   </template>
@@ -569,7 +602,7 @@
                       v-model="ManyAttrValue[scope.$index].isDefault"
                       :active-value="true"
                       :inactive-value="false"
-                      active-text="默认"
+                      :active-text="$t('product.default')"
                       @change="(e) => changeDefaultSelect(e, scope.$index)"
                     />
                   </template>
@@ -577,8 +610,8 @@
                     <el-switch
                       class="defineSwitch"
                       v-model="ManyAttrValue[scope.$index].isShow"
-                      active-text="显示"
-                      inactive-text="隐藏"
+                      :active-text="$t('product.show')"
+                      :inactive-text="$t('product.hide')"
                       :active-value="true"
                       :inactive-value="false"
                       @change="changeDefaultShow(scope.$index)"
@@ -614,6 +647,7 @@ import addCloudDisk from '@/views/product/components/addCloudDisk.vue';
 import vuedraggable from 'vuedraggable';
 import { attrCreatApi, templateListApi } from '@/api/product';
 import { arraysEqual } from '@/utils';
+import { parseLangJsonMap, getLocalizedName, getUiLocale, buildI18nNameJson, localizeProductSpecName, localizeProductSpecValue, localizeSpecSku } from '@/utils/localizedName';
 import product from '@/mixins/product';
 import { defaultObj } from '../creatProduct/default';
 import CdkeyLibrary from '@/views/product/components/cdkeyLibrary';
@@ -627,6 +661,7 @@ import {
   VirtualTableHead2,
 } from '../creatProduct/TableHeadList.js';
 import { OrderSecondTypeEnum } from '@/enums/productEnums';
+import i18n from '@/i18n';
 export default {
   name: 'creatAttr',
   mixins: [product], //此js存放商品的部分函数方法
@@ -637,6 +672,9 @@ export default {
     CdkeyLibrary,
   },
   computed: {
+    uiLocale() {
+      return (this.$i18n && this.$i18n.locale) || getUiLocale(this);
+    },
     tableAttrValue() {
       const obj = Object.assign({}, defaultObj.attrValueList[0]);
       delete obj.isShow;
@@ -665,6 +703,13 @@ export default {
         delete obj.itemNumber;
       }
       return obj;
+    },
+    isDefaultSpecLang() {
+      return this.activeLang === this.defaultLangCode;
+    },
+    activeLangLabel() {
+      const lang = (this.langOptions || []).find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
     },
   },
   data() {
@@ -752,6 +797,20 @@ export default {
         return [];
       },
     },
+    langOptions: {
+      type: Array,
+      default: function () {
+        return [];
+      },
+    },
+    defaultLangCode: {
+      type: String,
+      default: 'zh-cn',
+    },
+    activeLang: {
+      type: String,
+      default: 'zh-cn',
+    },
   },
   watch: {
     formValidate: {
@@ -759,6 +818,12 @@ export default {
         this.$emit('input', newVal);
       },
       deep: true,
+    },
+    '$i18n.locale'() {
+      this.refreshSpecHeader();
+    },
+    activeLang() {
+      this.refreshSpecHeader();
     },
   },
   mounted() {
@@ -770,7 +835,12 @@ export default {
       this.formValidate.attrs = this.formValidate.attrList.map((i) => {
         return {
           value: i.attributeName,
-          detail: i.optionList.map((val) => ({ value: val.optionName, image: val.image })),
+          valueJson: parseLangJsonMap(i.attributeNameJson),
+          detail: i.optionList.map((val) => ({
+            value: val.optionName,
+            valueJson: parseLangJsonMap(val.optionNameJson),
+            image: val.image,
+          })),
           add_pic: i.isShowImage ? 1 : 0,
         };
       });
@@ -784,6 +854,31 @@ export default {
     }
   },
   methods: {
+    displayCdkeyLibraryName(row) {
+      return getLocalizedName({ name: row.cdkeyLibraryName, nameJson: row.cdkeyLibraryNameJson }, this.uiLocale);
+    },
+    displayRuleName(item) {
+      return getLocalizedName({ name: item.ruleName, nameJson: item.ruleNameJson }, this.uiLocale) || item.ruleName;
+    },
+    specLang() {
+      return this.activeLang || this.uiLocale;
+    },
+    refreshSpecHeader() {
+      if (this.formValidate && this.formValidate.attrs && this.formValidate.attrs.length) {
+        this.generateHeader(this.formValidate.attrs);
+      }
+    },
+    displaySpecAttrTitle(attr) {
+      return localizeProductSpecName(attr, this.specLang()) || (attr && attr.value) || '';
+    },
+    displaySpecOption(attr, optionValue) {
+      const text = localizeProductSpecValue(attr, optionValue, this.specLang());
+      return localizeSpecSku(text, this.$t.bind(this));
+    },
+    displaySpecOptionByKey(specKey, optionValue) {
+      const attr = (this.formValidate.attrs || []).find((item) => item.value === specKey);
+      return this.displaySpecOption(attr, optionValue);
+    },
     handleShowPop(index) {
       this.$refs['inputRef_' + index][0].focus();
     },
@@ -796,10 +891,38 @@ export default {
     handleAddRole() {
       let data = {
         value: this.formDynamic.attrsName,
+        valueJson: {},
         add_pic: 0,
         detail: [],
       };
       this.formValidate.attrs.push(data);
+    },
+    onSpecLangChange(lang) {
+      this.$emit('update:activeLang', lang);
+    },
+    specNameLangValue(item) {
+      if (!item.valueJson) this.$set(item, 'valueJson', {});
+      return item.valueJson[this.activeLang] || '';
+    },
+    specValueLangValue(det) {
+      if (!det.valueJson) this.$set(det, 'valueJson', {});
+      return det.valueJson[this.activeLang] || '';
+    },
+    onSpecNameLangInput(item, index, val) {
+      if (!item.valueJson) this.$set(item, 'valueJson', {});
+      this.$set(item.valueJson, this.activeLang, val);
+      if (!item.value && val) {
+        item.value = val;
+        this.attrChangeValue(index, item.value);
+      }
+    },
+    onSpecValueLangInput(det, val, index) {
+      if (!det.valueJson) this.$set(det, 'valueJson', {});
+      this.$set(det.valueJson, this.activeLang, val);
+      if (!det.value && val) {
+        det.value = val;
+        this.attrDetailChangeValue(det.value, index);
+      }
     },
     // 规格名称改变
     attrChangeValue(i, val) {
@@ -980,9 +1103,9 @@ export default {
     // 生成商品规格表头
     generateHeader(data) {
       let specificationsColumns = data.map((item) => ({
-        title: item.value,
+        title: this.displaySpecAttrTitle(item),
         key: item.value,
-        minWidth: 120,
+        minWidth: 140,
         fixed: 'left',
       }));
       let arr;
@@ -992,23 +1115,23 @@ export default {
         if (this.formValidate.isSub && this.formValidate.isPaidMember) {
           arr = [
             ...specificationsColumns,
-            ...imageTableHead,
-            ...commissionTableHead,
-            ...vipPriceTableHead,
-            ...VirtualTableHead,
+            ...imageTableHead(),
+            ...commissionTableHead(),
+            ...vipPriceTableHead(),
+            ...VirtualTableHead(),
           ];
         } else if (this.formValidate.isSub) {
-          arr = [...specificationsColumns, ...imageTableHead, ...commissionTableHead, ...VirtualTableHead];
+          arr = [...specificationsColumns, ...imageTableHead(), ...commissionTableHead(), ...VirtualTableHead()];
         } else if (this.formValidate.isPaidMember) {
           //开启会员
-          arr = [...specificationsColumns, ...imageTableHead, ...vipPriceTableHead, ...VirtualTableHead];
+          arr = [...specificationsColumns, ...imageTableHead(), ...vipPriceTableHead(), ...VirtualTableHead()];
         } else {
-          arr = [...specificationsColumns, ...imageTableHead, ...VirtualTableHead];
+          arr = [...specificationsColumns, ...imageTableHead(), ...VirtualTableHead()];
         }
         // 找到slot 等于 fictitious 将title改为规格名称
         this.formValidate.header.map((item) => {
           if (item.slot === 'fictitious') {
-            item.title = '云盘设置';
+            item.title = i18n.t('product.cloudDiskSettings');
           }
         });
       } else if (this.formValidate.type == this.OrderSecondTypeEnum.CardPassword) {
@@ -1017,18 +1140,18 @@ export default {
         if (this.formValidate.isSub && this.formValidate.isPaidMember) {
           arr = [
             ...specificationsColumns,
-            ...imageTableHead,
-            ...commissionTableHead,
-            ...vipPriceTableHead,
-            ...VirtualTableHead2,
+            ...imageTableHead(),
+            ...commissionTableHead(),
+            ...vipPriceTableHead(),
+            ...VirtualTableHead2(),
           ];
         } else if (this.formValidate.isSub) {
-          arr = [...specificationsColumns, ...imageTableHead, ...commissionTableHead, ...VirtualTableHead2];
+          arr = [...specificationsColumns, ...imageTableHead(), ...commissionTableHead(), ...VirtualTableHead2()];
         } else if (this.formValidate.isPaidMember) {
           //开启会员
-          arr = [...specificationsColumns, ...imageTableHead, ...vipPriceTableHead, ...VirtualTableHead2];
+          arr = [...specificationsColumns, ...imageTableHead(), ...vipPriceTableHead(), ...VirtualTableHead2()];
         } else {
-          arr = [...specificationsColumns, ...imageTableHead, ...VirtualTableHead2];
+          arr = [...specificationsColumns, ...imageTableHead(), ...VirtualTableHead2()];
         }
       } else if (this.formValidate.type == this.OrderSecondTypeEnum.Fictitious) {
         //虚拟商品
@@ -1036,36 +1159,36 @@ export default {
         if (this.formValidate.isSub && this.formValidate.isPaidMember) {
           arr = [
             ...specificationsColumns,
-            ...imageTableHead,
-            ...commissionTableHead,
-            ...vipPriceTableHead,
-            ...FictitiousTableHead,
+            ...imageTableHead(),
+            ...commissionTableHead(),
+            ...vipPriceTableHead(),
+            ...FictitiousTableHead(),
           ];
         } else if (this.formValidate.isSub) {
-          arr = [...specificationsColumns, ...imageTableHead, ...commissionTableHead, ...FictitiousTableHead];
+          arr = [...specificationsColumns, ...imageTableHead(), ...commissionTableHead(), ...FictitiousTableHead()];
         } else if (this.formValidate.isPaidMember) {
           //开启会员
-          arr = [...specificationsColumns, ...imageTableHead, ...vipPriceTableHead, ...FictitiousTableHead];
+          arr = [...specificationsColumns, ...imageTableHead(), ...vipPriceTableHead(), ...FictitiousTableHead()];
         } else {
-          arr = [...specificationsColumns, ...imageTableHead, ...FictitiousTableHead];
+          arr = [...specificationsColumns, ...imageTableHead(), ...FictitiousTableHead()];
         }
       } else {
         // 开启分佣设置
         if (this.formValidate.isSub && this.formValidate.isPaidMember) {
           arr = [
             ...specificationsColumns,
-            ...imageTableHead,
-            ...commissionTableHead,
-            ...vipPriceTableHead,
-            ...GoodsTableHead,
+            ...imageTableHead(),
+            ...commissionTableHead(),
+            ...vipPriceTableHead(),
+            ...GoodsTableHead(),
           ];
         } else if (this.formValidate.isSub) {
-          arr = [...specificationsColumns, ...imageTableHead, ...commissionTableHead, ...GoodsTableHead];
+          arr = [...specificationsColumns, ...imageTableHead(), ...commissionTableHead(), ...GoodsTableHead()];
         } else if (this.formValidate.isPaidMember) {
           //开启会员
-          arr = [...specificationsColumns, ...imageTableHead, ...vipPriceTableHead, ...GoodsTableHead];
+          arr = [...specificationsColumns, ...imageTableHead(), ...vipPriceTableHead(), ...GoodsTableHead()];
         } else {
-          arr = [...specificationsColumns, ...imageTableHead, ...GoodsTableHead];
+          arr = [...specificationsColumns, ...imageTableHead(), ...GoodsTableHead()];
         }
       }
       this.$set(this.formValidate, 'header', arr);
@@ -1082,31 +1205,40 @@ export default {
     },
     // 另存为模板
     handleSaveAsTemplate() {
-      this.$prompt('', '请输入模板名称', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$prompt('', this.$t('product.templateName'), {
+        confirmButtonText: this.$t('product.confirm'),
+        cancelButtonText: this.$t('product.cancel'),
         inputValidator: (value) => {
           if (value === null) {
-            return '输入不能为空';
+            return this.$t('product.inputRequired');
           }
-          if (value.length > 30) return '输入限制30字以内';
+          if (value.length > 30) return this.$t('product.inputLimit30');
         },
       })
         .then(({ value }) => {
           let spec = this.formValidate.attrs.map((item) => {
             return {
               value: item.value,
+              valueJson: item.valueJson && typeof item.valueJson === 'object' ? { ...item.valueJson } : {},
               detail: item.detail.map((e) => e.value),
+              detailJson: item.detail.map((e) =>
+                e.valueJson && typeof e.valueJson === 'object' ? { ...e.valueJson } : {},
+              ),
             };
           });
+          const extra = {};
+          if (this.activeLang && this.activeLang !== this.defaultLangCode) {
+            extra[this.activeLang] = value;
+          }
           const data = {
             id: 0,
             ruleName: value,
+            ruleNameJson: buildI18nNameJson(this.langOptions, extra, this.defaultLangCode, value),
             ruleValue: JSON.stringify(spec),
           };
           attrCreatApi(data)
             .then((res) => {
-              this.$message.success('提交成功');
+              this.$message.success(this.$t('product.submitSuccess'));
               this.productGetRule();
               this.clear();
               this.loading = false;
@@ -1143,9 +1275,9 @@ export default {
         }
       }
       if (isHas) {
-        this.$confirm('可以同步修改下方该规格图片，确定要替换吗？', '提示', {
-          confirmButtonText: '替换',
-          cancelButtonText: '暂不',
+        this.$confirm(this.$t('product.replaceSpecImageConfirm'), this.$t('product.tip'), {
+          confirmButtonText: this.$t('product.replace'),
+          cancelButtonText: this.$t('product.notNow'),
           type: 'warning',
         })
           .then(() => {
@@ -1218,37 +1350,46 @@ export default {
       }
     },
     // 选择属性确认
-    confirm(name) {
+    confirm(ruleId) {
       this.createBnt = true;
       this.canSel = true;
-      this.formValidate.selectRule = name;
-      if (!this.formValidate.selectRule) {
-        return this.$message.warning('请选择属性');
+      const selected = this.ruleList.find((item) => item.id === ruleId) || this.ruleList.find((item) => item.ruleName === ruleId);
+      this.formValidate.selectRule = selected ? selected.ruleName : ruleId;
+      if (!selected) {
+        return this.$message.warning(this.$t('product.selectAttr'));
       }
       const dataAttrList = [];
       const dataAttrs = [];
-      this.ruleList.forEach((item) => {
-        if (item.ruleName === this.formValidate.selectRule) {
-          item.ruleValue.forEach((i) => {
-            dataAttrList.push({
-              attributeName: i.value,
-              optionList: i.detail.map((val) => ({ optionName: val, image: '', sort: 0 })),
-              id: 0,
-              isShowImage: false,
-              sort: i + 1,
-            });
-            dataAttrs.push({
-              value: i.value,
-              detail: i.detail.map((val) => ({ value: val, image: '' })),
-              id: 0,
-              add_pic: 0,
-              sort: i + 1,
-            });
-          });
-        }
-        this.formValidate.attrList = dataAttrList;
-        this.formValidate.attrs = dataAttrs;
+      selected.ruleValue.forEach((i, idx) => {
+        const valueJson = parseLangJsonMap(i.valueJson);
+        dataAttrList.push({
+          attributeName: i.value,
+          attributeNameJson: valueJson,
+          optionList: (i.detail || []).map((val, vi) => ({
+            optionName: val,
+            optionNameJson: parseLangJsonMap(i.detailJson && i.detailJson[vi]),
+            image: '',
+            sort: 0,
+          })),
+          id: 0,
+          isShowImage: false,
+          sort: idx + 1,
+        });
+        dataAttrs.push({
+          value: i.value,
+          valueJson,
+          detail: (i.detail || []).map((val, vi) => ({
+            value: val,
+            valueJson: parseLangJsonMap(i.detailJson && i.detailJson[vi]),
+            image: '',
+          })),
+          id: 0,
+          add_pic: 0,
+          sort: idx + 1,
+        });
       });
+      this.formValidate.attrList = dataAttrList;
+      this.formValidate.attrs = dataAttrs;
       // this.attrs.map((item, ii) => {
       //   this.$set(item, 'isShowImage', false);
       // });
@@ -1304,7 +1445,7 @@ export default {
       // 如果默认选中开启 则不可隐藏
       if (this.ManyAttrValue[index].isDefault === true) {
         this.ManyAttrValue[index].isShow = true;
-        this.$message.error('默认规格不可隐藏');
+        this.$message.error(this.$t('product.defaultSpecCannotHide'));
       }
     },
     // 清空批量规格信息
@@ -1375,11 +1516,15 @@ export default {
         // 判断是否存在同样熟悉
         var isExist = this.formValidate.attrs[idx].detail.some((item) => item.value === num);
         if (isExist) {
-          this.$message.error('规格值已存在');
+          this.$message.error(this.$t('product.specValueExists'));
           return;
         }
 
-        this.formValidate.attrs[idx].detail.push({ value: num, image: '' });
+        this.formValidate.attrs[idx].detail.push({
+          value: num,
+          valueJson: this.isDefaultSpecLang ? {} : { [this.activeLang]: num },
+          image: '',
+        });
         if (this.ManyAttrValue.length) {
           this.addOneAttr(this.formValidate.attrs[idx].value, num);
         } else {
@@ -1420,6 +1565,7 @@ export default {
     //选择卡密库回调
     handlerChangeCdkeyIdSubSuccess(row) {
       this[this.carMytabName][this.carMytabIndex].cdkeyLibraryName = row.name;
+      this[this.carMytabName][this.carMytabIndex].cdkeyLibraryNameJson = row.nameJson;
       this[this.carMytabName][this.carMytabIndex].cdkeyId = row.id;
       this[this.carMytabName][this.carMytabIndex].stock = row.stock;
     },
@@ -1435,6 +1581,7 @@ export default {
         this.cdkeyLibraryInfo = {
           id: data.cdkeyId,
           name: data.cdkeyLibraryName,
+          nameJson: data.cdkeyLibraryNameJson,
         };
         this.$refs.cdkeyLibraryRef.cdkeyShow = true;
       }
@@ -1457,6 +1604,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
 .el-dropdown-menu {
   border-color: #ebeef5;
   max-height: 650px !important;

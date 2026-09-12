@@ -38,6 +38,9 @@ public class ProductCategory implements Serializable {
     @ApiModelProperty(value = "名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言分类名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "icon")
     private String icon;
 

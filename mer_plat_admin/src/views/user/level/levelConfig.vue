@@ -4,13 +4,13 @@
       <el-alert type="warning" effect="light" class="mb20" :closable="false" show-icon>
         <slot name="title">
           <div class="acea-row">
-            <div>关闭会员后，需要在页面设计中隐藏「我的等级」；</div>
-            <el-link type="primary" @click="handlerToLink('/page/design/viewDesign')" class="font12">立即前往</el-link>
+            <div>{{ $t('user.closeMemberTip') }}</div>
+            <el-link type="primary" @click="handlerToLink('/page/design/viewDesign')" class="font12">{{ $t('user.goNow') }}</el-link>
           </div>
           <div class="acea-row row-middle mt10">
-            <div class="line-heightOne">签到可获得经验值，在「签到配置」页面操作；</div>
+            <div class="line-heightOne">{{ $t('user.signExperienceTip') }}</div>
             <el-link type="primary" @click="handlerToLink('/marketing/sign/config')" class="font12 line-heightOne"
-            >立即前往</el-link
+            >{{ $t('user.goNow') }}</el-link
             >
           </div>
         </slot>
@@ -61,14 +61,14 @@ export default {
       if (checkPermi(['platform:system:user:level:config:update'])) {
         systemUserLevelUpdateConfigApi(formValue)
           .then((res) => {
-            this.$message.success('操作成功');
+            this.$message.success(this.$t('user.operationSuccess'));
             this.getConfigInfo();
           })
           .catch(() => {
             this.loading = false;
           });
       } else {
-        this.$message.warning('暂无操作权限');
+        this.$message.warning(this.$t('user.noPermission'));
       }
     },
     // 获取配置信息

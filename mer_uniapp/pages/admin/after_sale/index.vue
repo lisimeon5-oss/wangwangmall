@@ -1,13 +1,13 @@
 <template>
 	<view class="pos-order-list" ref="container">
 		<!-- #ifdef MP || APP-PLUS -->
-		<NavBar titleText="售后订单" bagColor="#F5F5F5" :iconColor="iconColor" :textColor="iconColor"
+		<NavBar :titleText="$t('售后订单')" bagColor="#F5F5F5" :iconColor="iconColor" :textColor="iconColor"
 			:isScrolling="isScrolling" showBack></NavBar>
 		<!-- #endif -->
 		<view class="searchCon acea-row">
 			<view class="search acea-row row-middle">
 				<text class="iconfont icon-ic_search"></text>
-				<input class="inputs" placeholder='请输入要查询的退款单号' placeholder-class='placeholder' placeholder-style="font-size:28rpx" confirm-type='search'
+				<input class="inputs" :placeholder="$t('请输入要查询的退款单号')" placeholder-class='placeholder' placeholder-style="font-size:28rpx" confirm-type='search'
 					name="search" v-model="where.refundOrderNo" @confirm="searchSubmit"></input>
 			</view>
 			<view class="btn" @click="filterShow = true">
@@ -19,35 +19,35 @@
 		}">
 			<scroll-view scroll-x="true" class="scroll_view">
 				<view class="item" :class="state == 9 ? 'on' : ''" @click="changeStatus(9)">
-					全部({{refundStatusNum['all']?refundStatusNum['all']:'0'}})
+					{{$t('全部')}}({{refundStatusNum['all']?refundStatusNum['all']:'0'}})
 					<image src="../static/adorn.png" v-if="state == 9"></image>
 				</view>
 				<view class="item" :class="state == 0 ? 'on' : ''" @click="changeStatus(0)">
-					待审核({{refundStatusNum['await']?refundStatusNum['await']:'0'}})
+					{{$t('待审核')}}({{refundStatusNum['await']?refundStatusNum['await']:'0'}})
 					<image src="../static/adorn.png" v-if="state == 0"></image>
 				</view>
 				<view class="item" :class="state == 2 ? 'on' : ''" @click="changeStatus(2)">
-					退款中({{refundStatusNum['refunding']?refundStatusNum['refunding']:'0'}})
+					{{$t('退款中')}}({{refundStatusNum['refunding']?refundStatusNum['refunding']:'0'}})
 					<image src="../static/adorn.png" v-if="state == 2"></image>
 				</view>
 				<view class="item" :class="state == 4 ? 'on' : ''" @click="changeStatus(4)">
-					用户退货({{refundStatusNum['awaitReturning']?refundStatusNum['awaitReturning']:'0'}})
+					{{$t('用户退货')}}({{refundStatusNum['awaitReturning']?refundStatusNum['awaitReturning']:'0'}})
 					<image src="../static/adorn.png" v-if="state == 4"></image>
 				</view>
 				<view class="item" :class="state == 5 ? 'on' : ''" @click="changeStatus(5)">
-					商家待收货({{refundStatusNum['awaitReceiving']?refundStatusNum['awaitReceiving']:'0'}})
+					{{$t('商家待收货')}}({{refundStatusNum['awaitReceiving']?refundStatusNum['awaitReceiving']:'0'}})
 					<image src="../static/adorn.png" v-if="state == 5"></image>
 				</view>
 				<view class="item" :class="state == 6 ? 'on' : ''" @click="changeStatus(6)">
-					已撤销({{refundStatusNum['revoke']?refundStatusNum['revoke']:'0'}})
+					{{$t('已撤销')}}({{refundStatusNum['revoke']?refundStatusNum['revoke']:'0'}})
 					<image src="../static/adorn.png" v-if="state == 6"></image>
 				</view>
 				<view class="item" :class="state == 1 ? 'on' : ''" @click="changeStatus(1)">
-					商家拒绝({{refundStatusNum['reject']?refundStatusNum['reject']:'0'}})
+					{{$t('商家拒绝')}}({{refundStatusNum['reject']?refundStatusNum['reject']:'0'}})
 					<image src="../static/adorn.png" v-if="state == 1"></image>
 				</view>
 				<view class="item" :class="state == 3 ? 'on' : ''" @click="changeStatus(3)">
-					已退款({{refundStatusNum['refunded']?refundStatusNum['refunded']:'0'}})
+					{{$t('已退款')}}({{refundStatusNum['refunded']?refundStatusNum['refunded']:'0'}})
 					<image src="../static/adorn.png" v-if="state == 3"></image>
 				</view>
 			</scroll-view>
@@ -56,7 +56,7 @@
 			<view class="item" v-for="(item, index) in list" :key="index">
 				<view class="order-num acea-row row-between-wrapper" @click="toDetail(item)">
 					<view>
-						<view>售后单号：{{ item.refundOrderNo }}</view>
+						<view>{{$t('售后单号')}}：{{ item.refundOrderNo }}</view>
 					</view>
 					<view class="state">{{statusArr[item.refundStatus]}}</view>
 				</view>
@@ -85,31 +85,31 @@
 						<view class="money">
 							<baseMoney color="#333333" :money="item.refundPrice" symbolSize="20" integerSize="32" decimalSize="20">
 							</baseMoney>
-							<view class="num">共{{ item.totalNum }}件</view>
+							<view class="num">{{$t('共')}}{{ item.totalNum }}{{$t('件')}}</view>
 						</view>
 					</view>
 				</view>
 				<view class="operation acea-row row-between-wrapper">
 					<view v-if="item.afterSalesType == 1" class="more acea-row row-middle">
-						<text class="iconfont icon-ic_returnmoney"></text>仅退款
+						<text class="iconfont icon-ic_returnmoney"></text>{{$t('仅退款')}}
 					</view>
 					<view v-else-if="item.afterSalesType == 2 " class="more acea-row row-middle">
-						<text class="iconfont icon-ic_returnofgoods"></text>退货退款
+						<text class="iconfont icon-ic_returnofgoods"></text>{{$t('退货退款')}}
 					</view>
 					<view class="acea-row row-middle">
-						<view class="btn" @click="modify(item, 7)">退款单备注</view>
+						<view class="btn" @click="modify(item, 7)">{{$t('退款单备注')}}</view>
 						<view class="btn on" v-if="item.refundStatus==0&&(item.returnGoodsType==0||item.returnGoodsType==2)" :class="openErp?'on':''" @click="modify(item,'2',1,0)">
-							退款审核
+							{{$t('退款审核')}}
 						</view>
 						<view class="btn on" v-if="item.refundStatus==0&&item.returnGoodsType==1" :class="openErp?'on':''" @click="modify(item,'2',0,1)">
-							退款审核
+							{{$t('退款审核')}}
 						</view>
-						<view class="btn on" v-if="item.refundStatus==5" @click="modify(item, 2, 8,2)">确认收货</view>
+						<view class="btn on" v-if="item.refundStatus==5" @click="modify(item, 2, 8,2)">{{$t('确认收货')}}</view>
 					</view>
 				</view>
 			</view>
 		</view>
-		<emptyPage v-else title="暂无订单～" mTop="35%" :imgSrc="urlDomain+'crmebimage/presets/nodingdan.png'"></emptyPage>
+		<emptyPage v-else :title="$t('暂无订单～')" mTop="35%" :imgSrc="urlDomain+'crmebimage/presets/nodingdan.png'"></emptyPage>
 		<!-- <Loading :loaded="loaded" :loading="loading"></Loading> -->
 		<PriceChange :change="change" :orderInfo="orderInfo" :isRefund="isRefund"
 			v-on:statusChange="statusChange($event)" v-on:closechange="changeclose($event)" v-on:savePrice="savePrice"
@@ -125,11 +125,11 @@
 			<view class="content">
 				<view class="search acea-row row-middle">
 					<text class="iconfont icon-ic_search"></text>
-					<input class="inputs popup-input" placeholder='请输入要查询的退款单号' placeholder-style="font-size:28rpx" placeholder-class='placeholder' confirm-type='search'
+					<input class="inputs popup-input" :placeholder="$t('请输入要查询的退款单号')" placeholder-style="font-size:28rpx" placeholder-class='placeholder' confirm-type='search'
 						name="search" v-model="where.refundOrderNo" @confirm="searchSubmit"></input>
 				</view>
 				<view class="item">
-					<view class="title">按售后时间</view>
+					<view class="title">{{$t('按售后时间')}}</view>
 					<view class="acea-row list">
 						<view class="cell" v-for="(item, index) in dateList" :key="index"
 							:class="{ on: item.val == dateType }" @click="dateChange(item.val)">{{ item.label }}
@@ -137,8 +137,8 @@
 					</view>
 				</view>
 				<view class="bottom">
-					<view class="no_view" @click="resetBtn">重置</view>
-					<view class="yes_view" @click="submitBtn">确定</view>
+					<view class="no_view" @click="resetBtn">{{$t('重置')}}</view>
+					<view class="yes_view" @click="submitBtn">{{$t('确定')}}</view>
 				</view>
 			</view>
 		</view>
@@ -310,7 +310,7 @@
 				if (that.apiModalType == 0) {
 					if(opt.type==2&&!opt.refuse_reason){
 						return this.$util.Tips({
-							title: '请输入拒绝理由'
+							title: this.$t('请输入拒绝理由')
 						})
 					}
 					let requestObj = {
@@ -321,7 +321,7 @@
 					refundOrderAudit(requestObj).then(res=>{
 						if(res.code==200){
 							this.$util.Tips({
-								title: '审核成功'
+								title: this.$t('审核成功')
 							})
 							this.init();
 							this.change = false
@@ -335,12 +335,12 @@
 					//退货退款审核
 					if(opt.type==2&&!opt.refuse_reason){
 						return this.$util.Tips({
-							title: '请输入拒绝理由'
+							title: this.$t('请输入拒绝理由')
 						})
 					}
 					if(opt.type==1&&!opt.merAddressId){
 						return this.$util.Tips({
-							title: '请选择退货地址'
+							title: this.$t('请选择退货地址')
 						})
 					}
 					//退货退款拒绝
@@ -353,7 +353,7 @@
 						refundOrderAudit(requestObj).then(res=>{
 							if(res.code==200){
 								this.$util.Tips({
-									title: '操作成功'
+									title: this.$t('操作成功')
 								})
 								this.init();
 								this.change = false
@@ -374,7 +374,7 @@
 						refundOrderAudit(requestObj).then(res=>{
 							if(res.code==200){
 								this.$util.Tips({
-									title: '操作成功'
+									title: this.$t('操作成功')
 								})
 								this.init();
 								this.change = false
@@ -389,7 +389,7 @@
 					//确认收货
 					if(opt.type==2&&!opt.refuse_reason){
 						return this.$util.Tips({
-							title: '请输入拒绝理由'
+							title: this.$t('请输入拒绝理由')
 						})
 					}
 					if(opt.type==1){
@@ -397,7 +397,7 @@
 						refundReceiving(that.orderInfo.refundOrderNo).then(res=>{
 							if(res.code==200){
 								this.$util.Tips({
-									title: '操作成功'
+									title: this.$t('操作成功')
 								})
 								this.init();
 								this.change = false
@@ -417,7 +417,7 @@
 						refundReceivingReject(requestObj).then(res=>{
 							if(res.code==200){
 								this.$util.Tips({
-									title: '操作成功'
+									title: this.$t('操作成功')
 								})
 								this.init();
 								this.change = false
@@ -432,13 +432,13 @@
 					data.remark=opt.remark
 					if (!data.remark) {
 						return this.$util.Tips({
-							title: '请输入备注'
+							title: this.$t('请输入备注')
 						})
 					}
 					refundOrderMark(data).then(res=>{
 						if(res.code==200){
 							this.$util.Tips({
-								title: '备注成功'
+								title: this.$t('备注成功')
 							})
 							this.change = false
 						}else{

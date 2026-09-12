@@ -1,10 +1,10 @@
 <template>
   <div class="divBox">
     <el-form label-width="150px">
-      <el-form-item label="服务类目：">
+      <el-form-item :label="$t('videoChannel.serviceCategoryLabel')">
         {{ catTitle }}
       </el-form-item>
-      <el-form-item label="营业执照或组织机构证件：" prop="license">
+      <el-form-item :label="$t('videoChannel.businessLicenseLabel')" prop="license">
         <div class="upLoadPicBox" @click="modalPicTap(false)">
           <div v-if="catImages.license" class="pictrue">
             <img :src="catImages.license" />
@@ -14,7 +14,7 @@
           </div>
         </div>
       </el-form-item>
-      <el-form-item label="类目资质：" prop="certificate">
+      <el-form-item :label="$t('videoChannel.categoryQualificationLabel')" prop="certificate">
         <div class="acea-row">
           <div
             v-for="(item, index) in catImages.certificate"
@@ -37,12 +37,12 @@
         </div>
       </el-form-item>
       <el-form-item align="right">
-        <el-button @click.native="$emit('closeDia')">取消</el-button>
+        <el-button @click.native="$emit('closeDia')">{{ $t('el.messagebox.cancel') }}</el-button>
         <el-button
           type="primary"
           v-hasPermi="['platform:pay:component:shop:category:audit']"
           @click.native="handleSubmitCatAudit()"
-          >提交</el-button
+          >{{ $t('common.submit') }}</el-button
         >
       </el-form-item>
     </el-form>
@@ -95,7 +95,7 @@ export default {
     // 提交类目审核
     async handleSubmitCatAudit() {
       if (!this.catImages.license && this.catImages.certificate.length === 0) {
-        this.$message.warning('正确填写类目审核表单');
+        this.$message.warning(this.$t('videoChannel.fillCategoryAuditForm'));
       }
       const license_wximg = await this.getShopImgUpload([this.catImages.license], []);
       const certificate_wximg = await this.getShopImgUpload(this.catImages.certificate, []);
@@ -103,7 +103,7 @@ export default {
       this.params.audit_req.category_info.certificate = certificate_wximg;
       catAuditApi(this.params)
         .then((res) => {
-          this.$message.success('提交类目审核成功');
+          this.$message.success(this.$t('videoChannel.submitCategoryAuditSuccess'));
           this.$emit('auditSuccess');
         })
         .catch((e) => {

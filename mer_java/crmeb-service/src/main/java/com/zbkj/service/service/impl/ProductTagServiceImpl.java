@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -25,6 +26,7 @@ import com.zbkj.common.response.productTag.ProductTagsForSearchResponse;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.ProductResultCode;
 import com.zbkj.common.utils.CrmebDateUtil;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.service.dao.OrderDao;
 import com.zbkj.service.dao.OrderDetailDao;
 import com.zbkj.service.dao.ProductTagDao;
@@ -36,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,7 +83,9 @@ public class ProductTagServiceImpl extends ServiceImpl<ProductTagDao, ProductTag
         //带 ProductTag 类的多条件查询
         LambdaQueryWrapper<ProductTag> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (StrUtil.isNotBlank(request.getKeywords())) {
-            lambdaQueryWrapper.like(ProductTag::getTagName, URLUtil.decode(request.getKeywords()));
+            String keywords = URLUtil.decode(request.getKeywords());
+            lambdaQueryWrapper.and(w -> w.like(ProductTag::getTagName, keywords)
+                    .or().like(ProductTag::getTagNameJson, keywords));
         }
         lambdaQueryWrapper.orderByDesc(ProductTag::getSort);
         return dao.selectList(lambdaQueryWrapper);
@@ -107,6 +112,10 @@ public class ProductTagServiceImpl extends ServiceImpl<ProductTagDao, ProductTag
         }
 
         checkProductTagStatusOnLimit(productTag, productTag.getStatus(), Boolean.TRUE);
+        ProductTag oldProductTag = getById(productTag.getId());
+        if (ObjectUtil.isNotNull(oldProductTag) && ObjectUtil.isNull(productTag.getTagNameJson())) {
+            productTag.setTagNameJson(oldProductTag.getTagNameJson());
+        }
         ProductTag forProductTagUpdate = new ProductTag();
         forProductTagUpdate.setId(productTag.getId());
         forProductTagUpdate.setPosition(productTag.getPosition());
@@ -115,10 +124,14 @@ public class ProductTagServiceImpl extends ServiceImpl<ProductTagDao, ProductTag
         forProductTagUpdate.setStatus(productTag.getStatus());
         forProductTagUpdate.setStartTime(productTag.getStartTime());
         forProductTagUpdate.setEndTime(productTag.getEndTime());
+        forProductTagUpdate.setTagNameJson(productTag.getTagNameJson());
         // owner = 0 的是系统内置的，内置的只能修改配置数据不能修改标签名称
         if (productTag.getOwner() > 0) {
             forProductTagUpdate.setTagName(productTag.getTagName());
             forProductTagUpdate.setTagNote(productTag.getTagNote());
+        } else if (ObjectUtil.isNotNull(oldProductTag)) {
+            productTag.setTagName(oldProductTag.getTagName());
+            productTag.setTagNote(oldProductTag.getTagNote());
         }
         return updateById(productTag);
     }
@@ -224,6 +237,7 @@ public class ProductTagServiceImpl extends ServiceImpl<ProductTagDao, ProductTag
 
             }
         }
+        applyLocalizedTagNames(tagsFront);
         return tagsFront;
     }
 
@@ -366,12 +380,14 @@ public class ProductTagServiceImpl extends ServiceImpl<ProductTagDao, ProductTag
             item.setSort(productTag.getSort());
             item.setPosition(productTag.getPosition());
             item.setTagName(productTag.getTagName());
+            item.setTagNameJson(productTag.getTagNameJson());
             if (cacheProduct.containsKey(item.getId())) {
                 cacheProduct.get(item.getId()).add(item);
             } else {
                 List<ProductTagTaskItem> tagResponse = new ArrayList<>();
                 item.setPosition(productTag.getPosition());
                 item.setTagName(productTag.getTagName());
+                item.setTagNameJson(productTag.getTagNameJson());
                 tagResponse.add(item);
                 cacheProduct.put(item.getId(), tagResponse);
             }
@@ -386,6 +402,7 @@ public class ProductTagServiceImpl extends ServiceImpl<ProductTagDao, ProductTag
             if (Integer.valueOf(s).equals(playTypeConfig)) {
                 ProductTagTaskItem tagTaskItem = new ProductTagTaskItem();
                 tagTaskItem.setTagName(productTag.getTagName());
+                tagTaskItem.setTagNameJson(productTag.getTagNameJson());
                 tagTaskItem.setSort(productTag.getSort());
                 tagTaskItem.setId(productTag.getId());
                 tagTaskItem.setPosition(productTag.getPosition());
@@ -581,9 +598,55 @@ public class ProductTagServiceImpl extends ServiceImpl<ProductTagDao, ProductTag
      * @param productTag 待检查的商品标签对象
      */
     private List<ProductTag> checkTagNameOnlyOne(ProductTag productTag) {
+        if (StrUtil.isBlank(productTag.getTagName())) {
+            return CollUtil.newArrayList();
+        }
         LambdaQueryWrapper<ProductTag> queryForTagNameOnlyOne = Wrappers.lambdaQuery();
         queryForTagNameOnlyOne.eq(ProductTag::getTagName, productTag.getTagName());
         return dao.selectList(queryForTagNameOnlyOne);
+    }
+
+    private void applyLocalizedTagNames(ProductTagsFrontResponse tagsFront) {
+        if (tagsFront == null) {
+            return;
+        }
+        applyLocalizedTagNames(tagsFront.getLocationLeftTitle());
+        applyLocalizedTagNames(tagsFront.getLocationUnderTitle());
+    }
+
+    private void applyLocalizedTagNames(List<ProductTagTaskItem> items) {
+        if (CollUtil.isEmpty(items)) {
+            return;
+        }
+        for (ProductTagTaskItem item : items) {
+            item.setTagName(resolveLocalizedName(item.getTagName(), item.getTagNameJson()));
+        }
+    }
+
+    private String getRequestLanguage() {
+        HttpServletRequest request = RequestUtil.getRequest();
+        String language = null;
+        if (request != null) {
+            language = request.getHeader("lang");
+        }
+        return StrUtil.isBlank(language) ? "zh-cn" : language;
+    }
+
+    private String resolveLocalizedName(String name, String nameJson) {
+        String language = getRequestLanguage();
+        if (StrUtil.isBlank(language) || "zh-cn".equals(language) || StrUtil.isBlank(nameJson)) {
+            return name;
+        }
+        try {
+            JSONObject jsonObject = JSON.parseObject(nameJson);
+            String localized = jsonObject.getString(language);
+            if (StrUtil.isNotBlank(localized)) {
+                return localized;
+            }
+        } catch (Exception ignored) {
+            // 解析失败时保留默认名称
+        }
+        return name;
     }
 }
 

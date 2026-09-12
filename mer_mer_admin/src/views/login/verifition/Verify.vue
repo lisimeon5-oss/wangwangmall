@@ -9,7 +9,7 @@
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :before-close="closeBox"
-    title="请完成安全验证"
+    :title="$t('login.pleaseCompleteVerification')"
   >
     <div :class="mode == 'pop' ? 'verifybox' : ''" :style="{ 'max-width': parseInt(imgSize.width) + 30 + 'px' }">
       <div class="verifybox-bottom">

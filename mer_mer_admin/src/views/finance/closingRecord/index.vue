@@ -9,7 +9,7 @@
     >
       <div class="padding-add">
         <el-form size="small" inline label-position="right" @submit.native.prevent>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('order.timeSelect')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -18,30 +18,30 @@
               type="daterange"
               placement="bottom-end"
               range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
+              :start-placeholder="$t('finance.startDate')"
+              :end-placeholder="$t('finance.endDate')"
               class="selWidth"
               @change="onchangeTime"
             />
           </el-form-item>
-          <el-form-item label="审核状态：">
+          <el-form-item :label="$t('finance.auditStatusLabel')">
             <el-select
               v-model="tableFrom.auditStatus"
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="filter-item selWidth"
               clearable
               @change="getList(1)"
             >
-              <el-option label="全部" value=""> </el-option>
-              <el-option label="待审核" value="0"></el-option>
-              <el-option label="已审核" value="1"></el-option>
-              <el-option label="审核失败" value="2"></el-option>
+              <el-option :label="$t('common.all')" value=""> </el-option>
+              <el-option :label="$t('order.pendingAudit')" value="0"></el-option>
+              <el-option :label="$t('finance.audited')" value="1"></el-option>
+              <el-option :label="$t('common.auditFailed')" value="2"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="到账状态：">
+          <el-form-item :label="$t('finance.accountStatusLabel')">
             <el-select
               v-model="tableFrom.accountStatus"
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="filter-item selWidth"
               clearable
               @change="getList(1)"
@@ -49,10 +49,10 @@
               <el-option v-for="item in arrivalStatusList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="结算类型：">
+          <el-form-item :label="$t('finance.closingTypeLabel')">
             <el-select
               v-model="tableFrom.closingType"
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               class="filter-item selWidth"
               clearable
               @change="getList(1)"
@@ -60,20 +60,20 @@
               <el-option v-for="item in closingTypeList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="结算单号：">
+          <el-form-item :label="$t('finance.closingNoLabel')">
             <el-input
               v-model.trim="tableFrom.closingNo"
               @keyup.enter.native="getList(1)"
-              placeholder="请输入结算单号"
+              :placeholder="$t('finance.pleaseEnterSettlementNo')"
               class="selWidth"
               size="small"
             ></el-input>
             <!--<el-button size="small" type="primary" icon="el-icon-top" @click="exportRecord">列表导出</el-button>-->
-            <!--<el-button size="small" type="primary" @click="getExportFileList">导出记录</el-button>-->
+            <!--<el-button size="small" type="primary" @click="getExportFileList">{{ $t('finance.exportRecords') }}</el-button>-->
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="handleReset">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="handleReset">{{ $t('common.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -85,7 +85,7 @@
         @click="applyTransfer"
         v-hasPermi="['merchant:finance:closing:base:info', 'merchant:finance:closing:apply']"
       >
-        申请结算
+        {{ $t('finance.applySettlement') }}
       </el-button>
       <el-table
         v-loading="listLoading"
@@ -95,48 +95,48 @@
         class="table mt20"
       >
         <el-table-column prop="id" label="ID" min-width="60" />
-        <el-table-column prop="amount" label="转账金额（元）" min-width="120" />
-        <el-table-column label="审核员姓名" min-width="120" :show-overflow-tooltip="true">
+        <el-table-column prop="amount" :label="$t('finance.transferAmountYuan')" min-width="120" />
+        <el-table-column :label="$t('finance.auditorName')" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.auditName | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="结算类型" min-width="100">
+        <el-table-column :label="$t('finance.closingType')" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.closingType | transferTypeFilter }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="审核状态" min-width="120">
+        <el-table-column :label="$t('finance.auditStatusLabel')" min-width="120">
           <template slot-scope="scope">
             <span
               class="tag-background tag-padding"
               :class="scope.row.auditStatus == 0 ? 'doingTag' : scope.row.auditStatus == 1 ? 'endTag' : 'notStartTag'"
-              >{{ scope.row.auditStatus == 0 ? '待审核' : scope.row.auditStatus == 1 ? '审核通过' : '审核失败' }}</span
+              >{{ scope.row.auditStatus == 0 ? $t('order.pendingAudit') : scope.row.auditStatus == 1 ? $t('finance.auditPassed') : $t('common.auditFailed') }}</span
             >
             <span v-if="scope.row.auditStatus === 2 && scope.row.refusal" style="font-size: 12px">
               <br />
-              原因：{{ scope.row.refusal }}
+              {{ $t('common.reasonLabel') }}{{ scope.row.refusal }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="到账状态" min-width="120">
+        <el-table-column :label="$t('finance.accountStatus')" min-width="120">
           <template slot-scope="scope">
             <span class="tag-background tag-padding" :class="scope.row.accountStatus == 1 ? 'endTag' : 'notStartTag'">{{
-              scope.row.accountStatus == 1 ? '已到账' : '未到账'
+              scope.row.accountStatus == 1 ? $t('finance.arrived') : $t('finance.notArrived')
             }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="审核时间" min-width="120" :show-overflow-tooltip="true">
+        <el-table-column :label="$t('finance.auditTimeLabel')" min-width="120" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.auditTime | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="申请时间" min-width="120" :show-overflow-tooltip="true" />
-        <el-table-column label="操作" width="70" fixed="right">
+        <el-table-column prop="createTime" :label="$t('finance.applyTime')" min-width="120" :show-overflow-tooltip="true" />
+        <el-table-column :label="$t('common.operate')" width="70" fixed="right">
           <template slot-scope="scope">
             <a v-hasPermi="['merchant:finance:transfer:base:info']" @click="transferDetail(scope.row.closingNo)"
-              >结算信息</a
+              >{{ $t('finance.settlementInfo') }}</a
             >
           </template>
         </el-table-column>
@@ -155,29 +155,29 @@
       </div>
     </el-card>
     <!--结算信息-->
-    <el-dialog v-if="dialogVisible" title="结算信息" :visible.sync="dialogVisible" width="700px">
+    <el-dialog v-if="dialogVisible" :title="$t('finance.settlementInfo')" :visible.sync="dialogVisible" width="700px">
       <div class="box-container" v-loading="loading">
         <div class="acea-row">
-          <div class="list sp100"><label class="name">结算金额：</label>{{ closingData.amount || '-' }}</div>
+          <div class="list sp100"><label class="name">{{ $t('finance.closingAmountLabel') }}</label>{{ closingData.amount || '-' }}</div>
           <div class="list sp100">
-            <label class="name">商户收款方式：</label>{{ closingData.closingType | transferTypeFilter }}
+            <label class="name">{{ $t('finance.merchantCollectionMethodLabel') }}</label>{{ closingData.closingType | transferTypeFilter }}
           </div>
           <template v-if="closingData.closingType === 'bank'">
-            <div class="list sp100"><label class="name">开户银行：</label>{{ closingData.closingBank || '-' }}</div>
-            <div class="list sp100"><label class="name">银行账号：</label>{{ closingData.closingBankCard || '-' }}</div>
-            <div class="list sp100"><label class="name">开户户名：</label>{{ closingData.closingName || '-' }}</div>
+            <div class="list sp100"><label class="name">{{ $t('finance.bankNameLabel') }}</label>{{ closingData.closingBank || '-' }}</div>
+            <div class="list sp100"><label class="name">{{ $t('finance.bankAccountLabel') }}</label>{{ closingData.closingBankCard || '-' }}</div>
+            <div class="list sp100"><label class="name">{{ $t('finance.accountHolderLabel') }}</label>{{ closingData.closingName || '-' }}</div>
           </template>
           <div class="list sp100" v-if="closingData.closingType !== 'bank'">
-            <label class="name">真实姓名：</label>{{ closingData.realName || '-' }}
+            <label class="name">{{ $t('finance.realNameLabel') }}</label>{{ closingData.realName || '-' }}
           </div>
           <div class="list sp100" v-if="closingData.closingType === 'wechat'">
-            <label class="name">微信号：</label>{{ closingData.wechatNo || '-' }}
+            <label class="name">{{ $t('finance.wechatNoLabel') }}</label>{{ closingData.wechatNo || '-' }}
           </div>
           <div class="list sp100" v-if="closingData.closingType === 'alipay'">
-            <label class="name">支付宝账号：</label>{{ closingData.alipayAccount || '-' }}
+            <label class="name">{{ $t('finance.alipayAccountLabel') }}</label>{{ closingData.alipayAccount || '-' }}
           </div>
           <div v-if="closingData.closingType !== 'bank' && closingData.paymentCode" class="list sp100 acea-row">
-            <label class="name">收款二维码：</label>
+            <label class="name">{{ $t('finance.collectionQrCodeLabel') }}</label>
             <div class="demo-image__preview">
               <el-image
                 v-if="closingData.closingType !== 'bank'"
@@ -187,14 +187,14 @@
             </div>
           </div>
           <div class="list sp100">
-            <label class="name">审核状态：</label
-            >{{ closingData.auditStatus == 0 ? '待审核' : closingData.auditStatus == 1 ? '已审核' : '审核失败' }}
+            <label class="name">{{ $t('finance.auditStatusLabel') }}</label
+            >{{ closingData.auditStatus == 0 ? $t('order.pendingAudit') : closingData.auditStatus == 1 ? $t('finance.audited') : $t('common.auditFailed') }}
           </div>
           <div v-if="closingData.auditStatus == 1 && closingData.auditTime" class="list sp100">
-            <label class="name">审核时间：</label>{{ closingData.auditTime || '-' }}
+            <label class="name">{{ $t('finance.auditTimeLabel') }}</label>{{ closingData.auditTime || '-' }}
           </div>
           <div v-if="closingData.closingProof" class="list sp100 acea-row">
-            <label class="name">结算凭证：</label>
+            <label class="name">{{ $t('finance.closingVoucherLabel') }}</label>
             <div v-if="closingData.closingProof" class="acea-row">
               <div v-for="(item, index) in closingData.closingProof" :key="index" class="pictrue">
                 <img @click="getPicture(item)" :src="item" />
@@ -202,55 +202,55 @@
             </div>
           </div>
           <div v-if="closingData.auditStatus == 1 && closingData.transferTime" class="list sp100">
-            <label class="name">结算时间：</label>{{ closingData.closingTime || '-' }}
+            <label class="name">{{ $t('finance.closingTimeLabel') }}</label>{{ closingData.closingTime || '-' }}
           </div>
           <div v-if="closingData.auditStatus == 2 && closingData.refusalReason" class="list sp100">
-            <label class="name">审核未通过原因：</label>{{ closingData.refusalReason || '-' }}
+            <label class="name">{{ $t('finance.rejectReasonLabel') }}</label>{{ closingData.refusalReason || '-' }}
           </div>
           <div class="list sp100" v-show="closingData.mark">
-            <label class="name">备注：</label>{{ closingData.mark || '-' }}
+            <label class="name">{{ $t('common.remark') }}：</label>{{ closingData.mark || '-' }}
           </div>
         </div>
       </div>
     </el-dialog>
     <!--申请结算-->
-    <el-dialog v-if="transferDialogVisible" title="申请结算" :visible.sync="transferDialogVisible" width="700px">
+    <el-dialog v-if="transferDialogVisible" :title="$t('finance.applySettlement')" :visible.sync="transferDialogVisible" width="700px">
       <div class="box-container" v-loading="loadingBaseInfo">
         <div class="acea-row">
           <div class="list el-form-item el-form-item--mini sp100">
-            <label class="el-form-item__label wid112">商户余额：</label>
-            <div class="el-form-item__content ml100">{{ transferBaseInfo.balance || '-' }}元</div>
+            <label class="el-form-item__label wid112">{{ $t('finance.merchantBalanceLabel') }}</label>
+            <div class="el-form-item__content ml100">{{ transferBaseInfo.balance || '-' }}{{ $t('finance.yuan') }}</div>
           </div>
           <div class="list el-form-item el-form-item--mini sp100">
-            <label class="el-form-item__label wid112">可提现金额：</label>
-            <div class="el-form-item__content ml100">{{ transferBaseInfo.transferBalance || '-' }}元</div>
+            <label class="el-form-item__label wid112">{{ $t('finance.withdrawableAmountLabel') }}</label>
+            <div class="el-form-item__content ml100">{{ transferBaseInfo.transferBalance || '-' }}{{ $t('finance.yuan') }}</div>
           </div>
           <div class="list el-form-item el-form-item--mini sp100">
-            <label class="el-form-item__label wid112">冻结金额：</label>
-            <div class="el-form-item__content ml100">{{ transferBaseInfo.freezeAmount || '-' }}元</div>
+            <label class="el-form-item__label wid112">{{ $t('finance.frozenAmountLabel') }}</label>
+            <div class="el-form-item__content ml100">{{ transferBaseInfo.freezeAmount || '-' }}{{ $t('finance.yuan') }}</div>
           </div>
           <div class="list el-form-item el-form-item--mini sp100">
-            <label class="el-form-item__label wid112">保证金额：</label>
-            <div class="el-form-item__content ml100">{{ transferBaseInfo.guaranteedAmount || '-' }}元</div>
+            <label class="el-form-item__label wid112">{{ $t('finance.guaranteedAmountLabel') }}</label>
+            <div class="el-form-item__content ml100">{{ transferBaseInfo.guaranteedAmount || '-' }}{{ $t('finance.yuan') }}</div>
           </div>
           <div class="list el-form-item el-form-item--mini sp100">
-            <label class="el-form-item__label wid112">结算类型：</label>
+            <label class="el-form-item__label wid112">{{ $t('finance.closingTypeLabel') }}</label>
             <div class="el-form-item__content ml100">
               {{ transferBaseInfo.settlementType | transferTypeFilter }}
             </div>
           </div>
           <el-form ref="baseInfoform" :model="baseInfoform" label-width="112px" size="mini">
             <div class="sp100">
-              <el-form-item label="结算类型：">
+              <el-form-item :label="$t('finance.closingTypeLabel')">
                 <el-radio-group v-model="transferBaseInfo.settlementType">
-                  <el-radio label="bank">银行卡</el-radio>
-                  <el-radio label="wechat">微信</el-radio>
-                  <el-radio label="alipay">支付宝</el-radio>
+                  <el-radio label="bank">{{ $t('finance.bankCard') }}</el-radio>
+                  <el-radio label="wechat">{{ $t('order.wechat') }}</el-radio>
+                  <el-radio label="alipay">{{ $t('order.alipay') }}</el-radio>
                 </el-radio-group>
               </el-form-item>
             </div>
             <div v-if="transferBaseInfo.settlementType !== 'bank'" class="list el-form-item el-form-item--mini sp100">
-              <label class="el-form-item__label wid112">真实姓名：</label>
+              <label class="el-form-item__label wid112">{{ $t('finance.realNameLabel') }}</label>
               <div class="el-form-item__content ml100">
                 {{ transferBaseInfo.realName || '-' }}
               </div>
@@ -258,19 +258,19 @@
           </el-form>
           <template v-if="transferBaseInfo.settlementType === 'bank'">
             <div class="list el-form-item el-form-item--mini sp100">
-              <label class="el-form-item__label wid112">开户户名：</label>
+              <label class="el-form-item__label wid112">{{ $t('finance.accountHolderLabel') }}</label>
               <div class="el-form-item__content ml100">
                 {{ transferBaseInfo.bankUserName || '-' }}
               </div>
             </div>
             <div class="list el-form-item el-form-item--mini sp100">
-              <label class="el-form-item__label wid112">开户银行：</label>
+              <label class="el-form-item__label wid112">{{ $t('finance.bankNameLabel') }}</label>
               <div class="el-form-item__content ml100">
                 {{ transferBaseInfo.bankName || '-' }}
               </div>
             </div>
             <div class="list el-form-item el-form-item--mini sp100">
-              <label class="el-form-item__label wid112">银行账号：</label>
+              <label class="el-form-item__label wid112">{{ $t('finance.bankAccountLabel') }}</label>
               <div class="el-form-item__content ml100">
                 {{ transferBaseInfo.bankCard || '-' }}
               </div>
@@ -278,13 +278,13 @@
           </template>
           <template v-else-if="transferBaseInfo.settlementType === 'alipay'">
             <div class="list el-form-item el-form-item--mini sp100">
-              <label class="el-form-item__label wid112">支付宝账号：</label>
+              <label class="el-form-item__label wid112">{{ $t('finance.alipayAccountLabel') }}</label>
               <div class="el-form-item__content ml100">
                 {{ transferBaseInfo.alipayCode || '-' }}
               </div>
             </div>
             <div class="list el-form-item el-form-item--mini sp100">
-              <label class="el-form-item__label wid112">支付宝二维码：</label>
+              <label class="el-form-item__label wid112">{{ $t('finance.alipayQrLabel') }}</label>
               <div class="el-form-item__content ml100">
                 <div class="demo-image__preview">
                   <el-image
@@ -298,13 +298,13 @@
           </template>
           <template v-else>
             <div class="list el-form-item el-form-item--mini sp100">
-              <label class="el-form-item__label wid112">微信账号：</label>
+              <label class="el-form-item__label wid112">{{ $t('finance.wechatAccountLabel') }}</label>
               <div class="el-form-item__content ml100">
                 {{ transferBaseInfo.wechatCode || '-' }}
               </div>
             </div>
             <div class="list el-form-item el-form-item--mini sp100">
-              <label class="el-form-item__label wid112">微信二维码：</label>
+              <label class="el-form-item__label wid112">{{ $t('finance.wechatQrLabel') }}</label>
               <div class="el-form-item__content ml100">
                 <div class="demo-image__preview">
                   <el-image
@@ -319,23 +319,24 @@
           <el-form ref="baseInfoform" :model="baseInfoform" label-width="112px" size="mini">
             <div class="sp100">
               <el-form-item
-                label="申请金额："
-                :rules="[{ required: true, message: '请输入申请金额', trigger: 'blur' }]"
+                :label="$t('finance.applicationAmountLabel')"
+                :rules="[{ required: true, message: $t('finance.pleaseEnterApplicationAmount'), trigger: 'blur' }]"
               >
                 <el-input-number v-model.trim="baseInfoform.amount" :min="1" :max="99999"></el-input-number>
               </el-form-item>
             </div>
             <div class="sp100">
-              <el-form-item label="金额说明：" class="transferMinAmount">
+              <el-form-item :label="$t('finance.amountDescriptionLabel')" class="transferMinAmount">
                 <el-alert
                   effect="dark"
                   :closable="false"
                   :title="
                     transferBaseInfo.transferMinAmount || transferBaseInfo.transferMaxAmount
-                      ? `最低可提现额度${transferBaseInfo.transferMinAmount || 0}元;最高可提现额度${
-                          transferBaseInfo.transferMaxAmount || 0
-                        }元`
-                      : '最高/最低提现额度未限制'
+                      ? $t('finance.withdrawalLimitRange', {
+                          min: transferBaseInfo.transferMinAmount || 0,
+                          max: transferBaseInfo.transferMaxAmount || 0,
+                        })
+                      : $t('finance.withdrawalLimitUnlimited')
                   "
                   type="warning"
                 >
@@ -343,7 +344,7 @@
               </el-form-item>
             </div>
             <div class="sp100">
-              <el-form-item label="备注: " label-width="105px">
+              <el-form-item :label="`${$t('common.remark')}: `" label-width="105px">
                 <el-input
                   v-model.trim="baseInfoform.mark"
                   style="margin-left: 7px"
@@ -362,7 +363,7 @@
           @click="submitForm('baseInfoform')"
           :loading="btnLoading"
           v-hasPermi="['merchant:finance:closing:apply']"
-          >立即申请</el-button
+          >{{ $t('finance.applyNow') }}</el-button
         >
       </div>
     </el-dialog>
@@ -400,15 +401,6 @@ export default {
         data: [],
         total: 0,
       },
-      arrivalStatusList: [
-        { label: '已到账', value: 1 },
-        { label: '未到账', value: 0 },
-      ],
-      closingTypeList: [
-        { label: '银行卡', value: 'bank' },
-        { label: '微信', value: 'wechat' },
-        { label: '支付宝', value: 'alipay' },
-      ],
       listLoading: false,
       tableFrom: {
         dateLimit: '',
@@ -436,6 +428,21 @@ export default {
       btnLoading: false,
     };
   },
+  computed: {
+    arrivalStatusList() {
+      return [
+        { label: this.$t('finance.arrived'), value: 1 },
+        { label: this.$t('finance.notArrived'), value: 0 },
+      ];
+    },
+    closingTypeList() {
+      return [
+        { label: this.$t('finance.bankCard'), value: 'bank' },
+        { label: this.$t('order.wechat'), value: 'wechat' },
+        { label: this.$t('order.alipay'), value: 'alipay' },
+      ];
+    },
+  },
   mounted() {
     if (checkPermi(['merchant:finance:closing:page:list'])) this.getList(1);
   },
@@ -462,17 +469,23 @@ export default {
     },
     submitForm(formName) {
       this.baseInfoform.closingType = this.transferBaseInfo.settlementType;
+      if (parseFloat(this.baseInfoform.amount) < parseFloat(this.transferBaseInfo.transferMinAmount))
+        return this.$message.warning(
+          this.$t('finance.minWithdrawalWarning', { min: this.transferBaseInfo.transferMinAmount }),
+        );
       if (parseFloat(this.baseInfoform.amount) > parseFloat(this.transferBaseInfo.transferMaxAmount))
-        return this.$message.warning(`最高提现额度为${this.transferBaseInfo.transferMaxAmount},请修改提现金额`);
+        return this.$message.warning(
+          this.$t('finance.maxWithdrawalWarning', { max: this.transferBaseInfo.transferMaxAmount }),
+        );
       if (parseFloat(this.baseInfoform.amount) > parseFloat(this.transferBaseInfo.transferBalance)) {
-        return this.$message.warning('提现金额不能超过可提现金额');
+        return this.$message.warning(this.$t('finance.exceedsWithdrawable'));
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.btnLoading = true;
           closingApplyApi(this.baseInfoform)
             .then((res) => {
-              this.$message.success('申请成功');
+              this.$message.success(this.$t('finance.applicationSuccess'));
               this.btnLoading = false;
               this.transferDialogVisible = false;
               this.closeFrom();
@@ -525,13 +538,13 @@ export default {
         .then((res) => {
           const h = this.$createElement;
           this.$msgbox({
-            title: '提示',
+            title: this.$t('common.tip'),
             message: h('p', null, [
-              h('span', null, '文件正在生成中，请稍后点击"'),
-              h('span', { style: 'color: teal' }, '导出记录'),
-              h('span', null, '"查看~ '),
+              h('span', null, this.$t('finance.fileGenerating')),
+              h('span', { style: 'color: teal' }, this.$t('finance.exportRecords')),
+              h('span', null, this.$t('finance.viewSuffix')),
             ]),
-            confirmButtonText: '我知道了',
+            confirmButtonText: this.$t('finance.gotIt'),
           }).then((action) => {});
         })
         .catch((res) => {

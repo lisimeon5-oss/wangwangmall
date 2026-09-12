@@ -8,7 +8,7 @@
           <div v-else class="titleFont" :style="headerTitleConfig">{{ titleConfig }}</div>
         </div>
         <div class="group-top-right" :style="headerBtnColor">
-          更多
+          {{ $t('user.more') }}
           <span class="iconfont icon-xuanze" :style="headerBtnColor"></span>
         </div>
       </div>
@@ -35,7 +35,7 @@
                   :style="priceColor"
                 >
                   <img class="priceNum-img" src="@/assets/imgs/intergral-icon.png" alt="" />
-                  <span>688800</span><span class="txtColor">+</span><span>67000</span><span class="txtColor">元</span>
+                  <span>688800</span><span class="txtColor">+</span><span>67000</span><span class="txtColor">{{ $t('dashboard.yuan') }}</span>
                 </div>
               </div>
             </div>
@@ -59,7 +59,7 @@
                   :style="priceColor"
                 >
                   <img class="priceNum-img" src="@/assets/imgs/intergral-icon.png" alt="" />
-                  <span>688800</span><span class="txtColor">+</span><span>670</span><span class="txtColor">元</span>
+                  <span>688800</span><span class="txtColor">+</span><span>670</span><span class="txtColor">{{ $t('dashboard.yuan') }}</span>
                 </div>
               </div>
             </div>
@@ -89,7 +89,7 @@
                   :style="priceColor"
                 >
                   <img class="priceNum-img" src="@/assets/imgs/intergral-icon.png" alt="" />
-                  <span>688800</span><span class="txtColor">+</span><span>6700</span><span class="txtColor">元</span>
+                  <span>688800</span><span class="txtColor">+</span><span>6700</span><span class="txtColor">{{ $t('dashboard.yuan') }}</span>
                 </div>
               </div>
             </div>
@@ -111,9 +111,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapGetters } from 'vuex';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
+import { getFormLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'home_intergral',
-  cname: '积分商城',
+  ...diyCname('pagediy.pointsMall'),
   icon: 't-icon-zujian-jifenshangcheng',
   configName: 'c_home_intergral',
   type: 1, // 0 基础组件 1 营销组件 2工具组件
@@ -129,6 +131,28 @@ export default {
   computed: {
     ...mapState('mobildConfig', ['defaultArray']),
     ...mapGetters(['mobileTheme']),
+    previewLang() {
+      return (this.configObj && this.configObj.diyMediaLang) || getUiLocale(this);
+    },
+    logoUrl() {
+      if (!this.configObj || !this.configObj.logoConfig) return '';
+      const picked = getFormLocalizedText(
+        this.configObj.logoConfig.url,
+        this.configObj.logoConfig.urlJson,
+        this.previewLang,
+      );
+      if (picked) return picked;
+      if (this.previewLang === 'zh-cn') return this.configObj.logoConfig.url || '';
+      return '';
+    },
+    titleConfig() {
+      if (!this.configObj || !this.configObj.titleConfig) return '';
+      return getFormLocalizedText(this.configObj.titleConfig.val, this.configObj.titleConfig.valJson, this.previewLang);
+    },
+    bgImgUrl() {
+      if (!this.configObj || !this.configObj.bgImg) return '';
+      return this.configObj.bgImg.url || '';
+    },
     //容器样式
     //最外层盒子的样式
     boxStyle() {
@@ -283,80 +307,82 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '积分商城',
+          cname: this.$t('pagediy.pointsMall'),
         },
         itemStyle: {
-          title: '展示样式',
-          tabTitle: '布局设置',
+          title: this.$t('pagediy.displayStyle'),
+          tabTitle: this.$t('pagediy.layoutSettings'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '样式1',
+              val: this.$t('pagediy.styleOne'),
               icon: 'icon-yangshisan',
             },
             {
-              val: '样式2',
+              val: this.$t('pagediy.styleTwo'),
               icon: 'icon-dianpujie-yangshiyi',
             },
             {
-              val: '样式3',
+              val: this.$t('pagediy.styleThree'),
               icon: 'icon-ic_layout4',
             },
           ],
         },
         selectStyle: {
           cname: 'selectStyle',
-          title: '标题类型',
+          title: this.$t('pagediy.titleType'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '图片',
+              val: this.$t('pagediy.asImage'),
             },
             {
-              val: '文字',
+              val: this.$t('pagediy.asText'),
             },
           ],
         },
         logoConfig: {
           isShow: 1,
-          tabTitle: '头部设置',
-          title: '标题图片',
-          tips: '建议：154px*32px',
+          tabTitle: this.$t('pagediy.headerSettings'),
+          title: this.$t('pagediy.titleImage'),
+          tips: this.$t('pagediy.suggestSize', { size: '154px*32px' }),
           url: localStorage.getItem('mediaDomain') + '/crmebimage/presets/intergralTitle.png',
+          urlJson: '',
         },
         selectBgImg: {
           cname: 'selectBgImg',
-          title: '选择风格',
+          title: this.$t('pagediy.selectStyle'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '背景图片',
+              val: this.$t('pagediy.backgroundImg'),
             },
             {
-              val: '背景色',
+              val: this.$t('pagediy.backgroundColor'),
             },
           ],
         },
         bgImg: {
           isShow: 1,
-          title: '背景图片',
-          tips: '建议：710px*96px',
+          title: this.$t('pagediy.backgroundImg'),
+          tips: this.$t('pagediy.suggestSize', { size: '710px*96px' }),
           url: localStorage.getItem('mediaDomain') + '/crmebimage/presets/intergralBg.png',
         },
         titleConfig: {
-          title: '标题文字',
-          val: '积分兑好礼',
-          place: '请输入标题',
+          title: this.$t('pagediy.titleText'),
+          val: this.$t('pagediy.pointsRedeemGift'),
+          valJson: '',
+          place: this.$t('pagediy.pleaseEnterTitle'),
           isShow: 1,
-          max: 6,
+          max: 20,
         },
         // 背景颜色
         bgColor: {
-          tabTitle: '颜色设置',
-          title: '背景颜色',
+          tabTitle: this.$t('pagediy.colorSettings'),
+          title: this.$t('pagediy.backgroundColor'),
           isShow: 1,
           color: [
             {
@@ -377,8 +403,8 @@ export default {
         },
         // 内容背景颜色
         contentBgColor: {
-          tabTitle: '颜色设置',
-          title: '内容背景',
+          tabTitle: this.$t('pagediy.colorSettings'),
+          title: this.$t('pagediy.contentBackground'),
           isShow: 1,
           color: [
             {
@@ -399,23 +425,23 @@ export default {
         },
         headerTitleStyle: {
           cname: 'headerTitleStyle',
-          title: '标题文字',
+          title: this.$t('pagediy.titleText'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '加粗',
+              val: this.$t('pagediy.bold'),
             },
             {
-              val: '正常',
+              val: this.$t('pagediy.normal'),
             },
             {
-              val: '倾斜',
+              val: this.$t('pagediy.italic'),
             },
           ],
         },
         headerTitleColor: {
-          title: '标题颜色',
+          title: this.$t('pagediy.titleColor'),
           isShow: 1,
           color: [
             {
@@ -429,7 +455,7 @@ export default {
           ],
         },
         headerBtnColor: {
-          title: '按钮颜色',
+          title: this.$t('pagediy.headerButtonColor'),
           color: [
             {
               item: '#FFFFFF',
@@ -443,7 +469,7 @@ export default {
         },
         nameColor: {
           isShow: 1,
-          title: '商品名称颜色',
+          title: this.$t('pagediy.productNameColor'),
           color: [
             {
               item: '#000000',
@@ -457,21 +483,21 @@ export default {
         },
         //色调
         themeStyleConfig: {
-          title: '色调',
+          title: this.$t('pagediy.colorTone'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '跟随主题风格',
+              val: this.$t('pagediy.followTheme'),
             },
             {
-              val: '自定义',
+              val: this.$t('pagediy.customStyle'),
             },
           ],
         },
         priceColor: {
           isShow: 0,
-          title: '价格颜色',
+          title: this.$t('pagediy.priceColor'),
           color: [
             {
               item: '#E93323',
@@ -484,15 +510,15 @@ export default {
           ],
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 7,
           min: 0,
           max: 30,
         },
         contentStyle: {
-          title: '图片圆角',
+          title: this.$t('pagediy.imageRadius'),
           name: 'contentStyle',
           val: 5,
           min: 0,
@@ -500,32 +526,32 @@ export default {
         },
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          title: '下边距',
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 15,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 0,
           min: 0,
         },
         contentConfig: {
-          title: '内容间距',
+          title: this.$t('pagediy.contentSpacing'),
           val: 12,
           min: 0,
           max: 20,
@@ -533,12 +559,9 @@ export default {
       },
       listStyle: 0,
       configObj: null,
-      logoUrl: null,
       typeShow: [0, 1, 2, 3],
       selectStyle: '',
-      titleConfig: '',
       selectBgImg: '',
-      bgImgUrl: '',
       headerTitleStyle: 0,
       themeStyle: 0,
       themeColor: '',
@@ -556,13 +579,16 @@ export default {
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
+        if (!Object.prototype.hasOwnProperty.call(this.configObj.titleConfig || {}, 'valJson')) {
+          this.$set(this.configObj.titleConfig, 'valJson', '');
+        }
+        if (!Object.prototype.hasOwnProperty.call(this.configObj.logoConfig || {}, 'urlJson')) {
+          this.$set(this.configObj.logoConfig, 'urlJson', '');
+        }
         this.listStyle = this.configObj.itemStyle.tabVal;
-        this.logoUrl = this.configObj.logoConfig.url;
         this.selectStyle = this.configObj.selectStyle.tabVal;
-        this.titleConfig = this.configObj.titleConfig.val;
         this.selectBgImg = this.configObj.selectBgImg.tabVal;
-        this.bgImgUrl = this.configObj.bgImg.url;
         this.headerTitleStyle = this.configObj.headerTitleStyle.tabVal;
         this.themeStyle = data.themeStyleConfig.tabVal;
         this.themeColor = this.$options.filters.filterTheme(this.mobileTheme - 1);

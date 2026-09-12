@@ -10,6 +10,7 @@
 
 //小程序 微信过滤器
 import Cookies from 'js-cookie';
+import i18n from '@/i18n';
 /**
  * @description 小程序所属类目
  */
@@ -32,8 +33,8 @@ export function wxCategoryFilter(status) {
  */
 export function wxTypeFilter(status) {
   const statusMap = {
-    2: '一次性订阅',
-    3: '长期订阅',
+    2: i18n.t('wx.oneTimeSubscribe'),
+    3: i18n.t('wx.longTermSubscribe'),
   };
   return statusMap[status];
 }

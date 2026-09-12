@@ -1,9 +1,9 @@
 package com.zbkj.front.controller;
 
 import com.zbkj.common.constants.SysConfigConstants;
-import com.zbkj.common.constants.UserLevelConstants;
 import com.zbkj.common.result.CommonResult;
 import com.zbkj.service.service.SystemConfigService;
+import com.zbkj.service.service.SystemUserLevelService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +32,9 @@ public class AgreementController {
 
     @Autowired
     private SystemConfigService systemConfigService;
+
+    @Autowired
+    private SystemUserLevelService systemUserLevelService;
 
     @ApiOperation(value = "关于我们协议 详情")
     @RequestMapping(value = "/aboutusinfo", method = RequestMethod.GET)
@@ -84,7 +87,7 @@ public class AgreementController {
     @ApiOperation(value = "用户等级规则说明")
     @RequestMapping(value = "/user/level/rule", method = RequestMethod.GET)
     public String userLevelRule() {
-        return systemConfigService.getValueByKey(UserLevelConstants.SYSTEM_USER_LEVEL_RULE);
+        return systemUserLevelService.resolveDisplayRule();
     }
 
     @ApiOperation(value = "优惠券规则 详情")

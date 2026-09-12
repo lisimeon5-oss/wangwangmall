@@ -1,5 +1,6 @@
 package com.zbkj.common.request;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -31,10 +32,13 @@ public class IntegralIntervalAddRequest implements Serializable {
     @ApiModelProperty(value = "区间id|添加时不填，修改时必填")
     private Integer id;
 
-    @ApiModelProperty(value = "区间名称", required = true)
-    @NotBlank(message = "区间名称不能为空")
-    @Length(max = 128, message = "商品名称长度不能超过16个字符")
+    @ApiModelProperty(value = "区间名称")
+    @Length(max = 128, message = "区间名称长度不能超过16个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言区间名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言区间名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "区间值", required = true)
     @NotBlank(message = "区间值不能为空")

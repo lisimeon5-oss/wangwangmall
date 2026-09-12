@@ -90,8 +90,8 @@ public class SystemUserLevelController {
     @PreAuthorize("hasAuthority('platform:system:user:level:rule')")
     @ApiOperation(value = "获取用户等级规则")
     @RequestMapping(value = "/get/rule", method = RequestMethod.GET)
-    public String getRule() {
-        return systemUserLevelService.getRule();
+    public SystemUserLevelRuleRequest getRule() {
+        return systemUserLevelService.getRuleForEdit();
     }
 
     @PreAuthorize("hasAuthority('platform:system:user:level:rule:update')")

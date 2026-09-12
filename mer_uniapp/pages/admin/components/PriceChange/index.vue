@@ -5,7 +5,7 @@
 			<view class="priceChange-box">
 				<view class="priceTitle">
 					{{
-					status == 7?'退款单备注':status == 8?'退款原因': status == 0?"一键改价": status == 1?'订单备注': isRefund==8?'确认收货':'退款审核'
+					status == 7?$t('退款单备注'):status == 8?$t('退款原因'): status == 0?$t('一键改价'): status == 1?$t('订单备注'): isRefund==8? $t('确认收货') : $t('退款审核')
         }}
 					<view class="btn acea-row row-center row-middle" @click="close">
 						<span class="iconfont icon-guanbi"></span>
@@ -14,19 +14,19 @@
 				<!-- 一键改价 -->
 				<view class="listChange" v-if="status == 0">
 					<view class="item acea-row row-between-wrapper" v-if="orderInfo.refundStatus === 0">
-						<view>商品原价</view>
+						<view>{{$t('商品原价')}}</view>
 						<view class="money">
-							¥{{ orderInfo.totalPrice }}
+							฿{{ orderInfo.totalPrice }}
 						</view>
 					</view>
 					<view class="item acea-row row-between-wrapper" v-if="orderInfo.refundStatus === 0">
-						<view>商品邮费</view>
+						<view>{{$t('商品邮费')}}</view>
 						<view class="money">
-							¥{{ orderInfo.totalPostage }}
+							฿{{ orderInfo.totalPostage }}
 						</view>
 					</view>
 					<view class="item acea-row row-between-wrapper" v-if="orderInfo.refundStatus === 0">
-						<view>修改价格</view>
+						<view>{{$t('修改价格')}}</view>
 						<view class="money">
 							<input type="text" v-model="price" :cursor-spacing="40" always-embed
 								:class="focus === true ? 'on' : ''" @focus="priceChange" />
@@ -37,39 +37,39 @@
 				<!-- 立即退款 -->
 				<!-- <view class="listChange" v-if="status == 2">
 					<view v-if="isRefund" class="item acea-row row-between-wrapper">
-						<view>实际支付(¥)</view>
+						<view>{{$t('实际支付(฿)')}}</view>
 						<view class="money">
 							{{ orderInfo.pay_price }}<span class="iconfont icon-suozi"></span>
 						</view>
 					</view>
 					<view v-if="isRefund" class="item acea-row row-between-wrapper">
-						<view>退款金额(¥)</view>
+						<view>{{$t('退款金额(฿)')}}</view>
 						<view class="money">
 							<input type="text" v-model="refund_price" :class="focus === true ? 'on' : ''" @focus="priceChange" />
 						</view>
 					</view>
-					<view class="title" v-if="!isRefund">同意退货退款</view>
+					<view class="title" v-if="!isRefund">{{$t('同意退货退款')}}</view>
 				</view> -->
 				<!-- 退款审核 -->
 				<view class="listChange" v-if="status == 2">
 					<view class="item acea-row row-between-wrapper">
-						<view>审核状态</view>
+						<view>{{$t('审核状态')}}</view>
 						<view class="money acea-row row-right">
 							<view class="radio-item acea-row row-middle" :class="{ on: isAgree }"
 								@click="agreeChange(true)">
 								<text class="iconfont"
-									:class="isAgree?'icon-a-ic_CompleteSelect':'icon-weixuanzhong'"></text>同意退{{isRefund?'款':'货'}}
+									:class="isAgree?'icon-a-ic_CompleteSelect':'icon-weixuanzhong'"></text>{{$t('同意退')}}{{isRefund? $t('款') : $t('货')}}
 							</view>
 							<view v-if="orderInfo.refund_type != 4 && orderInfo.refund_type != 5"
 								class="radio-item acea-row row-middle" :class="{ on: !isAgree }"
 								@click="agreeChange(false)">
 								<text class="iconfont"
-									:class="isAgree?'icon-weixuanzhong':'icon-a-ic_CompleteSelect'"></text>拒绝退款
+									:class="isAgree?'icon-weixuanzhong':'icon-a-ic_CompleteSelect'"></text>{{$t('拒绝退款')}}
 							</view>
 						</view>
 					</view>
 					<view class="item acea-row row-between-wrapper agree-box" v-if="isAgree && !isRefund">
-						<view class="agree-title">同意退款后，用户会根据下方地址将商品退回</view>
+						<view class="agree-title">{{$t('同意退款后，用户会根据下方地址将商品退回')}}</view>
 						<view class="address-list">
 							<radio-group @change="radioChange">
 								<view class="address-list-item acea-row row-between-wrapper"
@@ -78,7 +78,7 @@
 										<view class="name-phone">
 											<text class="name">{{item.receiverName}}</text>
 											<text class="phone">{{item.receiverPhone}}</text>
-											<text class="normal" v-if="item.isDefault">默认</text>
+											<text class="normal" v-if="item.isDefault">{{$t('默认')}}</text>
 										</view>
 										<view class="address line1">
 											{{item.detail}}
@@ -95,25 +95,25 @@
 						</view>
 					</view>
 					<view class="item acea-row row-between" v-if="!isAgree">
-						<view>拒绝原因</view>
+						<view>{{$t('拒绝原因')}}</view>
 						<view class="money acea-row row-right">
-							<textarea class="reason" placeholder="请输入" v-model="refuse_reason" fixed
+							<textarea class="reason" :placeholder="$t('请输入')" v-model="refuse_reason" fixed
 								:cursor-spacing="100"></textarea>
 						</view>
 					</view>
 				</view>
 				<view class="listChange" v-if="status == 1||status == 7">
-					<textarea placeholder="请填写备注信息..." @input="inputChange(orderInfo.merchantRemark)" v-model="orderInfo.merchantRemark" fixed :cursor-spacing="100"></textarea>
+					<textarea :placeholder="$t('请填写备注信息...')" @input="inputChange(orderInfo.merchantRemark)" v-model="orderInfo.merchantRemark" fixed :cursor-spacing="100"></textarea>
 				</view>
 				<!-- <view class="listChange" v-if="status == 8">
-					<textarea placeholder="请填写退款原因..." v-model="refuse_reason"></textarea>
+					<textarea :placeholder="$t('请填写退款原因...')" v-model="refuse_reason"></textarea>
 				</view> -->
 				<view class="modify-box acea-row">
-					<view class="cancel btn-box" @click="close">取消</view>
-					<view class="modify btn-box" @click="refuse" v-if="status == 8">确定</view>
-					<view class="modify btn-box" @click="onConfirm" v-if="status == 2 && !isRefund">确定</view>
-					<view class="modify btn-box" @click="save" v-if="status == 1 || status == 0||status == 7">确定</view>
-					<view class="modify btn-box" @click="onConfirm" v-if="status == 2 && isRefund">确定</view>
+					<view class="cancel btn-box" @click="close">{{$t('取消')}}</view>
+					<view class="modify btn-box" @click="refuse" v-if="status == 8">{{$t('确定')}}</view>
+					<view class="modify btn-box" @click="onConfirm" v-if="status == 2 && !isRefund">{{$t('确定')}}</view>
+					<view class="modify btn-box" @click="save" v-if="status == 1 || status == 0||status == 7">{{$t('确定')}}</view>
+					<view class="modify btn-box" @click="onConfirm" v-if="status == 2 && isRefund">{{$t('确定')}}</view>
 				</view>
 				<slot name="bottom"></slot>
 			</view>

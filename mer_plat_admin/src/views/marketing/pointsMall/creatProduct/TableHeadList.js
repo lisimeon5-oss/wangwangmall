@@ -7,7 +7,7 @@ export const GoodsTableHead = [
     minWidth: 60,
   },
   {
-    title: '兑换金额（元）',
+    title: '兑换金额（铢）',
     slot: 'price',
     align: 'center',
     minWidth: 120,

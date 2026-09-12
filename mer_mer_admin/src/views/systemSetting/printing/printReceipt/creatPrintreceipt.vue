@@ -1,59 +1,59 @@
 <template>
   <div>
-    <pages-header ref="pageHeader" title="小票配置" backUrl="/operation/printing/printreceipt"></pages-header>
+    <pages-header ref="pageHeader" :title="$t('systemSetting.receiptConfig')" backUrl="/operation/printing/printreceipt"></pages-header>
     <el-card :bordered="false" shadow="never" class="ivu-mt mt14" :body-style="{ padding: '40px 50px' }">
       <div class="acea-row row-between warpper">
         <el-form :model="formItem" label-width="120px">
-          <el-form-item label="小票头部：">
-            <el-checkbox v-model="formItem.smallTickerHeader" :true-label="1" :false-label="0">商家名称</el-checkbox>
+          <el-form-item :label="$t('systemSetting.receiptHeaderLabel')">
+            <el-checkbox v-model="formItem.smallTickerHeader" :true-label="1" :false-label="0">{{ $t('systemSetting.merchantName') }}</el-checkbox>
           </el-form-item>
-          <el-form-item label="配送信息：">
-            <el-checkbox v-model="formItem.deliveryInfo" :true-label="1" :false-label="0">配送信息</el-checkbox>
+          <el-form-item :label="$t('systemSetting.deliveryInfoLabel')">
+            <el-checkbox v-model="formItem.deliveryInfo" :true-label="1" :false-label="0">{{ $t('systemSetting.deliveryInfo') }}</el-checkbox>
           </el-form-item>
-          <el-form-item label="买家备注：">
-            <el-checkbox v-model="formItem.buyerRemark" :true-label="1" :false-label="0">买家备注</el-checkbox>
+          <el-form-item :label="$t('systemSetting.buyerRemarkLabel')">
+            <el-checkbox v-model="formItem.buyerRemark" :true-label="1" :false-label="0">{{ $t('systemSetting.buyerRemark') }}</el-checkbox>
           </el-form-item>
-          <el-form-item label="商品信息：">
-            <el-checkbox v-model="formItem.productInfo" :true-label="1" :false-label="0">商品基础信息</el-checkbox>
+          <el-form-item :label="$t('systemSetting.productInfoLabel')">
+            <el-checkbox v-model="formItem.productInfo" :true-label="1" :false-label="0">{{ $t('systemSetting.basicProductInfo') }}</el-checkbox>
           </el-form-item>
-          <el-form-item label="运费信息：">
-            <el-checkbox v-model="formItem.freightInfo" :true-label="1" :false-label="0">运费</el-checkbox>
+          <el-form-item :label="$t('systemSetting.freightInfoLabel')">
+            <el-checkbox v-model="formItem.freightInfo" :true-label="1" :false-label="0">{{ $t('systemSetting.freight') }}</el-checkbox>
           </el-form-item>
-          <el-form-item label="优惠信息：">
-            <el-checkbox v-model="formItem.discountInfo" :true-label="1" :false-label="0">优惠总计</el-checkbox>
+          <el-form-item :label="$t('systemSetting.discountInfoLabel')">
+            <el-checkbox v-model="formItem.discountInfo" :true-label="1" :false-label="0">{{ $t('systemSetting.totalDiscount') }}</el-checkbox>
           </el-form-item>
-          <el-form-item label="支付信息：">
+          <el-form-item :label="$t('systemSetting.paymentInfoLabel')">
             <el-checkbox-group v-model="formItem.payInfo">
-              <el-checkbox :label="1">支付方式</el-checkbox>
-              <el-checkbox :label="2">实收金额</el-checkbox>
+              <el-checkbox :label="1">{{ $t('systemSetting.paymentMethod') }}</el-checkbox>
+              <el-checkbox :label="2">{{ $t('systemSetting.amountReceived') }}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item label="其他订单信息：">
+          <el-form-item :label="$t('systemSetting.otherOrderInfoLabel')">
             <el-checkbox-group v-model="formItem.orderInfo">
-              <el-checkbox :label="1">订单编号</el-checkbox>
-              <el-checkbox :label="2">下单时间</el-checkbox>
-              <el-checkbox :label="3">支付时间</el-checkbox>
-              <el-checkbox :label="4">打印时间</el-checkbox>
+              <el-checkbox :label="1">{{ $t('systemSetting.orderNumber') }}</el-checkbox>
+              <el-checkbox :label="2">{{ $t('systemSetting.orderTime') }}</el-checkbox>
+              <el-checkbox :label="3">{{ $t('systemSetting.paymentTime') }}</el-checkbox>
+              <el-checkbox :label="4">{{ $t('systemSetting.printTime') }}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item label="推广二维码：">
-            <el-checkbox v-model="formItem.codeUrlSwitch" :true-label="1" :false-label="0">选择系统链接</el-checkbox>
+          <el-form-item :label="$t('systemSetting.promotionQrCodeLabel')">
+            <el-checkbox v-model="formItem.codeUrlSwitch" :true-label="1" :false-label="0">{{ $t('systemSetting.selectSystemLink') }}</el-checkbox>
             <div v-show="formItem.codeUrlSwitch === 1" class="link">
               <div class="select-link">
-                链接：{{ formItem.codeUrl }}
-                <span class="change" @click="getLink">{{ formItem.codeUrl ? '修改' : '选择' }}</span>
+                {{ $t('systemSetting.linkLabel') }}{{ formItem.codeUrl }}
+                <span class="change" @click="getLink">{{ formItem.codeUrl ? $t('common.edit') : $t('common.pleaseSelect') }}</span>
               </div>
             </div>
           </el-form-item>
-          <el-form-item label="底部公告：">
-            <el-checkbox v-model="formItem.bottomNoticeSwitch" :true-label="1" :false-label="0">底部公告</el-checkbox>
+          <el-form-item :label="$t('systemSetting.bottomNoticeLabel')">
+            <el-checkbox v-model="formItem.bottomNoticeSwitch" :true-label="1" :false-label="0">{{ $t('systemSetting.bottomNotice') }}</el-checkbox>
             <div v-show="formItem.bottomNoticeSwitch === 1">
               <el-input
                 v-model="formItem.bottomNotice"
                 maxlength="50"
                 show-word-limit
                 type="textarea"
-                placeholder="请输入公告内容"
+                :placeholder="$t('systemSetting.pleaseEnterNoticeContent')"
                 style="width: 500px"
               />
             </div>
@@ -62,53 +62,53 @@
         <div class="ticket-preview">
           <div class="out-line"></div>
           <div class="ticket-content">
-            <div v-show="formItem.smallTickerHeader === 1" class="ticket-header">商家名称</div>
+            <div v-show="formItem.smallTickerHeader === 1" class="ticket-header">{{ $t('systemSetting.merchantName') }}</div>
             <!-- 配送方式 -->
             <div v-show="formItem.deliveryInfo == 1" class="delivery btn-line">
               <div class="form-box">
-                <div class="label">配送方式：</div>
-                <div class="content">商家配送</div>
+                <div class="label">{{ $t('systemSetting.deliveryMethodLabel') }}</div>
+                <div class="content">{{ $t('systemSetting.merchantDelivery') }}</div>
               </div>
               <div class="form-box">
-                <div class="label">客户姓名：</div>
-                <div class="content">收货人姓名</div>
+                <div class="label">{{ $t('systemSetting.customerNameLabel') }}</div>
+                <div class="content">{{ $t('systemSetting.recipientName') }}</div>
               </div>
               <div class="form-box">
-                <div class="label">客户电话：</div>
+                <div class="label">{{ $t('systemSetting.customerPhoneLabel') }}</div>
                 <div class="content">13023354455</div>
               </div>
               <div class="form-box">
-                <div class="label">收货地址：</div>
-                <div class="content">上海市浦东新区世界大道25号B座309室</div>
+                <div class="label">{{ $t('systemSetting.receivingAddressLabel') }}</div>
+                <div class="content">{{ $t('systemSetting.sampleAddress') }}</div>
               </div>
             </div>
             <!-- 备注 -->
             <div v-show="formItem.buyerRemark == 1" class="buyer-remarks btn-line">
               <div class="form-box">
-                <div class="label">买家备注：</div>
-                <div class="content">请在收货时向商家留言，谢谢！</div>
+                <div class="label">{{ $t('systemSetting.buyerRemarkLabel') }}</div>
+                <div class="content">{{ $t('systemSetting.sampleBuyerRemark') }}</div>
               </div>
             </div>
             <!-- 商品 -->
             <div v-show="formItem.productInfo === 1">
               <div class="goods btn-line">
-                <div class="star-line">商品</div>
+                <div class="star-line">{{ $t('menu.product') }}</div>
                 <div class="flex justify-between">
-                  <span>商品</span>
-                  <span>单价</span>
-                  <span>数量</span>
-                  <span>金额</span>
+                  <span>{{ $t('menu.product') }}</span>
+                  <span>{{ $t('systemSetting.unitPrice') }}</span>
+                  <span>{{ $t('systemSetting.quantity') }}</span>
+                  <span>{{ $t('systemSetting.amount') }}</span>
                 </div>
               </div>
               <div class="goods-msg btn-line">
                 <div class="flex justify-between">
-                  <span>商品1</span>
+                  <span>{{ $t('systemSetting.sampleProduct', { index: 1 }) }}</span>
                   <span>100.0</span>
                   <span>2</span>
                   <span>200.0</span>
                 </div>
                 <div class="flex justify-between">
-                  <span>(规格1)</span>
+                  <span>({{ $t('systemSetting.sampleSpecification', { index: 1 }) }})</span>
                   <span></span>
                   <span></span>
                   <span></span>
@@ -116,13 +116,13 @@
               </div>
               <div class="goods-msg pb-10 pt-10">
                 <div class="flex justify-between">
-                  <span>商品2</span>
+                  <span>{{ $t('systemSetting.sampleProduct', { index: 2 }) }}</span>
                   <span>100.0</span>
                   <span>2</span>
                   <span>200.0</span>
                 </div>
                 <div class="flex justify-between">
-                  <span>(规格2)</span>
+                  <span>({{ $t('systemSetting.sampleSpecification', { index: 2 }) }})</span>
                   <span></span>
                   <span></span>
                   <span></span>
@@ -131,23 +131,23 @@
               <div class="star-line">********</div>
             </div>
             <div class="pay flex flex-col align-end btn-line">
-              <div v-show="formItem.freightInfo == 1">运费：10.00元</div>
+              <div v-show="formItem.freightInfo == 1">{{ $t('systemSetting.sampleFreight') }}</div>
               <div v-show="formItem.discountInfo == 1">
-                <div>优惠：-80.00元</div>
-                <div>抵扣：-20.00元</div>
+                <div>{{ $t('systemSetting.sampleDiscount') }}</div>
+                <div>{{ $t('systemSetting.sampleDeduction') }}</div>
               </div>
             </div>
             <!-- 支付信息 -->
             <div v-show="formItem.payInfo.length > 0" class="pay flex flex-col align-end btn-line">
-              <div v-show="formItem.payInfo.includes(1)">支付方式：微信支付</div>
-              <div v-show="formItem.payInfo.includes(2)" class="fw-500">实际支付：310.00元</div>
+              <div v-show="formItem.payInfo.includes(1)">{{ $t('systemSetting.samplePaymentMethod') }}</div>
+              <div v-show="formItem.payInfo.includes(2)" class="fw-500">{{ $t('systemSetting.sampleActualPayment') }}</div>
             </div>
             <!-- 订单信息 -->
             <div v-show="formItem.orderInfo.length > 0" class="order pt-10 btn-line">
-              <div v-show="formItem.orderInfo.includes(1)">订单编号：wx1234567890</div>
-              <div v-show="formItem.orderInfo.includes(2)">下单时间：2022/06/18 12:00:00</div>
-              <div v-show="formItem.orderInfo.includes(3)">支付时间：2022/06/18 12:00:00</div>
-              <div v-show="formItem.orderInfo.includes(4)">打印时间：2022/06/18 14:20:00</div>
+              <div v-show="formItem.orderInfo.includes(1)">{{ $t('systemSetting.sampleOrderNumber') }}</div>
+              <div v-show="formItem.orderInfo.includes(2)">{{ $t('systemSetting.sampleOrderTime') }}</div>
+              <div v-show="formItem.orderInfo.includes(3)">{{ $t('systemSetting.samplePaymentTime') }}</div>
+              <div v-show="formItem.orderInfo.includes(4)">{{ $t('systemSetting.samplePrintTime') }}</div>
             </div>
             <!-- 二维码 -->
             <div class="code">
@@ -169,7 +169,7 @@
       class="fixed-card"
       :style="{ left: `${collapseShow && !sideBar1 ? '78px' : collapseShow && sideBar1 ? '54px' : '130px'}` }"
     >
-      <el-button type="primary" class="submission" @click="save">保存</el-button>
+      <el-button type="primary" class="submission" @click="save">{{ $t('common.save') }}</el-button>
     </el-card>
     <linkaddress :isHotSpot="true" ref="linkaddres" fromType="printreceipt" @linkUrl="linkUrl"></linkaddress>
   </div>
@@ -231,7 +231,7 @@ export default {
       this.formItem.id = this.id;
       savePrintContentApi(this.formItem, this.formItem.id)
         .then((res) => {
-          this.$message.success('保存成功');
+          this.$message.success(this.$t('user.saveSuccess'));
         })
         .catch((err) => {
           this.$message.error(err);

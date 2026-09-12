@@ -2,12 +2,12 @@
   <!--多选框组-->
   <div class="acea-row borderPadding row-middle" style="margin-bottom: 20px">
     <div class="title-tips labelwidth" v-if="configData.title">
-      <span>{{ configData.title }}</span>
+      <span>{{ diyUiText(configData.title) }}</span>
     </div>
     <div class="radio-boxs ml22">
       <el-checkbox-group v-model="configData.activeValue" size="large" @change="radioChange($event)">
         <el-checkbox :label="index" v-for="(item, index) in configData.list" :key="index">
-          {{ item.val }}
+          {{ diyUiText(item.val) }}
         </el-checkbox>
       </el-checkbox-group>
     </div>
@@ -24,6 +24,7 @@
 // +---------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +---------------------------------------------------------------------
+import { diyUiText } from '@/utils/diyCname';
 export default {
   name: 'c_checkbox_group',
   props: {
@@ -59,6 +60,7 @@ export default {
     });
   },
   methods: {
+    diyUiText,
     radioChange(e) {
       this.$emit('getConfig', { name: 'checkbox_group', values: e });
     },

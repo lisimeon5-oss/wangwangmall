@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :visible.sync="dialogVisible"
-    title="直接退款"
+    :title="$t('order.directRefund')"
     destroy-on-close
     :close-on-click-modal="false"
     width="1100px"
@@ -9,12 +9,12 @@
     class="dialog-bottom"
   >
     <el-form ref="pram" size="small" :model="pram" label-width="95px" @submit.native.prevent>
-      <el-form-item label="退款类型：" prop="returnType">
+      <el-form-item :label="$t('order.refundTypeLabel')" prop="returnType">
         <el-radio-group v-model="pram.returnType" :disabled="type == 2">
-          <el-radio :label="1">整单退款</el-radio>
-          <el-radio :label="2">分单退款</el-radio>
+          <el-radio :label="1">{{ $t('order.fullOrderRefund') }}</el-radio>
+          <el-radio :label="2">{{ $t('order.splitRefund') }}</el-radio>
         </el-radio-group>
-        <div v-show="pram.returnType === 2" class="from-tips">可选择下方表格中的商品进行退款，退款后不能撤回！</div>
+        <div v-show="pram.returnType === 2" class="from-tips">{{ $t('order.splitRefundTip') }}</div>
       </el-form-item>
       <el-table
         v-if="pram.returnType === 2"
@@ -33,7 +33,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" :reserve-selection="true" min-width="50" />
-        <el-table-column label="商品信息" width="200">
+        <el-table-column :label="$t('order.productInfo')" width="200">
           <template slot-scope="scope">
             <div class="acea-row" style="align-items: center">
               <div class="demo-image__preview mr5 line-heightOne refundImg">
@@ -43,29 +43,29 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="规格" min-width="60">
+        <el-table-column :label="$t('order.spec')" min-width="60">
           <template slot-scope="scope">
             <span class="priceBox">{{ scope.row.sku }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="总数（件）" min-width="80">
+        <el-table-column :label="$t('order.totalQuantity')" min-width="80">
           <template slot-scope="scope">
-            <span class="priceBox">购买数量：{{ scope.row.payNum }}</span>
+            <span class="priceBox">{{ $t('order.purchaseQuantity') }}{{ scope.row.payNum }}</span>
             (
-            <span class="priceBox">已发货{{ scope.row.deliveryNum }}</span
+            <span class="priceBox">{{ $t('order.shippedCount') }}{{ scope.row.deliveryNum }}</span
             >)
 
             <div class="priceBox textE93323 mt3">
-              可退款{{ scope.row.payNum - scope.row.refundNum - scope.row.applyRefundNum }}
+              {{ $t('order.refundableCount') }}{{ scope.row.payNum - scope.row.refundNum - scope.row.applyRefundNum }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="可退总额（元）" min-width="60">
+        <el-table-column :label="$t('order.refundableTotal')" min-width="60">
           <template slot-scope="scope">
             <span class="priceBox">{{ scope.row.payPrice - scope.row.refundPrice }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="退款数量（件）" min-width="100">
+        <el-table-column :label="$t('order.refundQuantityUnits')" min-width="100">
           <template slot-scope="scope">
             <el-input-number
               v-model.trim="scope.row['num']"
@@ -78,14 +78,14 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-form-item label="预计退款金额：" prop="resource">
-        <div>{{ refundPrice }} 元</div>
-        <div class="from-tips">具体退款金额以实际为准</div>
+      <el-form-item :label="$t('order.estimatedRefundAmountLabel')" prop="resource">
+        <div>{{ refundPrice }} {{ $t('order.yuan') }}</div>
+        <div class="from-tips">{{ $t('order.actualRefundTip') }}</div>
       </el-form-item>
     </el-form>
     <div class="acea-row row-right dialog-footer-inner dialog-btn-top">
-      <el-button size="small" @click="handlerClose">取 消</el-button>
-      <el-button size="small" type="primary" @click="handlerSubmit">确 定</el-button>
+      <el-button size="small" @click="handlerClose">{{ $t('common.cancel') }}</el-button>
+      <el-button size="small" type="primary" @click="handlerSubmit">{{ $t('finance.confirmSpaced') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -209,13 +209,13 @@ export default {
     //提交
     handlerSubmit() {
       if (this.pram.returnType === 2 && this.multipleSelection.length === 0)
-        return this.$message.warning('分单退款请选择商品！');
+        return this.$message.warning(this.$t('order.selectProductsForSplitRefund'));
       this.pram.orderNo = this.orderNo;
       this.multipleSelection.map((item) => {
         this.pram.detailList.push({ num: item.num, orderDetailId: item.id });
       });
       orderDirectRefundApi(this.pram).then(() => {
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('order.operationSuccess'));
         this.$emit('handlerSuccessSubmit');
       });
     },

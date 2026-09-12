@@ -33,9 +33,11 @@ public class PcBottomQrCodeVo implements Serializable {
     @ApiModelProperty(value = "ID")
     private Integer id;
 
-    @ApiModelProperty(value = "二维码名称", required = true)
-    @NotBlank(message = "请填写二维码名称")
+    @ApiModelProperty(value = "二维码名称")
     private String name;
+
+    @ApiModelProperty(value = "多语言二维码名称(JSON)")
+    private String nameJson;
 
     @ApiModelProperty(value = "二维码地址", required = true)
     @NotBlank(message = "二维码地址不能为空")

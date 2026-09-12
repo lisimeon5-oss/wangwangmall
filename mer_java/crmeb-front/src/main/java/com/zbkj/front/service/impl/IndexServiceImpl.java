@@ -14,6 +14,7 @@ import com.zbkj.common.page.CommonPage;
 import com.zbkj.common.request.PageParamRequest;
 import com.zbkj.common.response.*;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.vo.MyRecord;
 import com.zbkj.common.vo.SplashAdConfigVo;
 import com.zbkj.common.vo.SplashAdDataVo;
@@ -133,6 +134,7 @@ public class IndexServiceImpl implements IndexService {
         Map<Integer, Merchant> merchantMap = merchantService.getMapByIdList(merIdList);
         List<ProductCommonResponse> productResponseArrayList = new ArrayList<>();
         for (Product product : productList) {
+            I18nJsonUtil.applyProductDisplay(product);
             ProductCommonResponse productResponse = new ProductCommonResponse();
             BeanUtils.copyProperties(product, productResponse);
             productResponse.setIsSelf(merchantMap.get(product.getMerId()).getIsSelf());

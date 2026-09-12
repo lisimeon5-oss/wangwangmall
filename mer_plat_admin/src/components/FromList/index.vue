@@ -3,7 +3,14 @@
   <!--  tips提示语，list列表数据， title文本输入框标题-->
   <div class="hot_imgs">
     <div class="from-tips" v-if="configData.tips">
-      {{ configData.tips }}
+      {{ $t(configData.tips) }}
+    </div>
+    <div class="lang-name-switch" v-if="showLangSwitch">
+      <el-radio-group v-model="activeLang" size="mini">
+        <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+          {{ lang.label }}
+        </el-radio-button>
+      </el-radio-group>
     </div>
     <div class="list-box mt20">
       <draggable class="dragArea list-group" :list="configData.list" group="peoples" handle=".move-icon">
@@ -12,42 +19,43 @@
             <span class="iconfont icon-tuozhuaidian"></span>
           </div>
           <div v-if="configData.isShowImageUrl" class="img-box" @click="modalPicTap(item, index)">
-            <img :src="item.imageUrl" alt="" v-if="item.imageUrl" />
+            <img :src="getItemImage(item)" alt="" v-if="getItemImage(item)" />
             <div class="upload-box" v-else><i class="el-icon-camera-solid" style="font-size: 30px" /></div>
           </div>
           <div class="info">
             <div v-if="configData.title" class="info-item">
-              <span class="text-14px">{{ configData.title }}</span>
+              <span class="text-14px">{{ $t(configData.title) }}</span>
               <div class="input-box">
                 <el-input
                   size="small"
-                  v-model="item.name"
-                  :placeholder="configData.placeWords"
+                  :value="getItemName(item)"
+                  @input="setItemName(item, $event)"
+                  :placeholder="namePlaceholder"
                   :maxlength="configData.maxLength"
                 ></el-input>
               </div>
             </div>
             <div v-if="configData.isShowLinkUrl" class="info-item">
-              <span class="text-14px">链接</span>
+              <span class="text-14px">{{ $t('pagediy.link') }}</span>
               <div v-if="configData.isShowLinkUrlChose" class="input-box" @click="getLink(index, item.linkUrl)">
-                {{ configData.linkPlaceWords }}
-                <el-input size="small" v-model="item.linkUrl" :placeholder="configData.linkPlaceWords || '请输入链接'">
+                {{ configData.linkPlaceWords ? $t(configData.linkPlaceWords) : '' }}
+                <el-input size="small" v-model="item.linkUrl" :placeholder="configData.linkPlaceWords ? $t(configData.linkPlaceWords) : $t('pagediy.pleaseEnterLink')">
                   <el-button slot="append" icon="el-icon-arrow-right"></el-button>
                 </el-input>
               </div>
               <div v-else class="input-box">
-                <el-input size="small" v-model="item.linkUrl" placeholder="请输入链接"></el-input>
+                <el-input size="small" v-model="item.linkUrl" :placeholder="$t('pagediy.pleaseEnterLink')"></el-input>
               </div>
             </div>
             <div v-if="configData.isShowStatus" class="info-item">
-              <span class="text-14px">状态</span>
+              <span class="text-14px">{{ $t('common.status') }}</span>
               <div class="input-box">
                 <el-switch
                   v-model="item.status"
                   :active-value="true"
                   :inactive-value="false"
-                  active-text="显示"
-                  inactive-text="隐藏"
+                  :active-text="$t('common.show')"
+                  :inactive-text="$t('menu.hide')"
                   @change="onchangeIsShow(item.status, index)"
                 />
               </div>
@@ -65,15 +73,16 @@
                   <el-input
                     style="width: 155px"
                     size="small"
-                    v-model="items.name"
-                    placeholder="链接名称，最多8个字"
+                    :value="getItemName(items)"
+                    @input="setItemName(items, $event)"
+                    :placeholder="namePlaceholder"
                     :maxlength="configData.linkNameMaxLength"
                   ></el-input>
                   <el-input
                     size="small"
                     style="width: 479px"
                     v-model="items.linkUrl"
-                    placeholder="请输入链接地址"
+                    :placeholder="$t('pagediy.pleaseEnterLink')"
                   ></el-input>
                   <div class="delect-btn-link" @click.stop="handleLinkDelete(items, indexs, index)">
                     <i class="el-icon-error" style="font-size: 20px" />
@@ -81,7 +90,9 @@
                 </div>
               </div>
               <div class="add-btn" v-if="item.linkList.length < configData.modelLinkMaxLength">
-                <el-button class="button" icon="el-icon-plus" plain @click="handleAddLink(index)">添加链接</el-button>
+                <el-button class="button" icon="el-icon-plus" plain @click="handleAddLink(index)">{{
+                  $t('common.addLink')
+                }}</el-button>
               </div>
             </div>
             <div v-if="configData.isShowEdit" class="delect-btn" @click.stop="handleDelete(item, index)">
@@ -93,7 +104,7 @@
     </div>
     <template v-if="configData.isShowAddBtn">
       <div class="add-btn mt20" v-if="configData.list.length < configData.modelMaxLength || !configData.modelMaxLength">
-        <el-button class="button" icon="el-icon-plus" plain @click="handleAddBox">添加板块</el-button>
+        <el-button class="button" icon="el-icon-plus" plain @click="handleAddBox">{{ $t('pagediy.addSection') }}</el-button>
       </div>
     </template>
     <linkaddress ref="linkaddres" @linkUrl="linkUrl"></linkaddress>
@@ -112,6 +123,9 @@
 // +---------------------------------------------------------------------
 import vuedraggable from 'vuedraggable';
 import linkaddress from '@/components/linkaddress';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { parseLangJsonMap, resolveFormActiveLang } from '@/utils/localizedName';
 export default {
   name: 'c_menu_list',
   props: {
@@ -154,9 +168,28 @@ export default {
       activeIndex: 0, //索引
       indexLast: 0,
       lastObj: {},
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
     };
   },
+  computed: {
+    showLangSwitch() {
+      return !!(this.configData && (this.configData.isNameI18n || this.configData.isImageI18n));
+    },
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
+    },
+    namePlaceholder() {
+      if (this.configData.isNameI18n && this.activeLang !== this.defaultLangCode) {
+        return this.$t('category.inputNameInLang', { lang: this.activeLangLabel });
+      }
+      return this.configData.placeWords ? this.$t(this.configData.placeWords) : '';
+    },
+  },
   mounted() {
+    this.getLanguageList();
     this.$nextTick(() => {
       this.configData = this.configObj;
     });
@@ -170,6 +203,58 @@ export default {
     },
   },
   methods: {
+    getItemName(item) {
+      if (!item) return '';
+      if (!this.configData.isNameI18n || this.activeLang === this.defaultLangCode) return item.name || '';
+      return parseLangJsonMap(item.nameJson)[this.activeLang] || '';
+    },
+    setItemName(item, val) {
+      if (!this.configData.isNameI18n || this.activeLang === this.defaultLangCode) {
+        this.$set(item, 'name', val);
+        return;
+      }
+      const map = parseLangJsonMap(item.nameJson);
+      if (String(val || '').trim()) map[this.activeLang] = val;
+      else delete map[this.activeLang];
+      this.$set(item, 'nameJson', Object.keys(map).length ? JSON.stringify(map) : '');
+    },
+    getItemImage(item) {
+      if (!item) return '';
+      if (!this.configData.isImageI18n || this.activeLang === this.defaultLangCode) return item.imageUrl || '';
+      return parseLangJsonMap(item.imageUrlJson)[this.activeLang] || '';
+    },
+    setItemImage(item, url) {
+      if (!this.configData.isImageI18n || this.activeLang === this.defaultLangCode) {
+        this.$set(item, 'imageUrl', url);
+        return;
+      }
+      const map = parseLangJsonMap(item.imageUrlJson);
+      if (url) map[this.activeLang] = url;
+      else delete map[this.activeLang];
+      this.$set(item, 'imageUrlJson', Object.keys(map).length ? JSON.stringify(map) : '');
+    },
+    getLanguageList() {
+      if (!(this.configObj && (this.configObj.isImageI18n || this.configObj.isNameI18n))) return;
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     //状态切换
     onchangeIsShow(e, index) {
       this.activeIndex = index;
@@ -185,6 +270,7 @@ export default {
     handleAddLink(index) {
       let data = {
         name: '',
+        nameJson: '',
         linkUrl: '',
         id: 0,
         sort: 0,
@@ -215,7 +301,9 @@ export default {
     // 获取图片信息
     getPic(pc) {
       this.$nextTick(() => {
-        this.configData.list[this.activeIndex].imageUrl = pc;
+        const item = this.configData.list[this.activeIndex];
+        if (!item) return;
+        this.setItemImage(item, pc);
       });
     },
     onBlur() {
@@ -294,7 +382,7 @@ export default {
         margin-bottom: 10px;
 
         span {
-          width: 60px;
+          width: 80px;
           font-size: 12px;
           color: #999999;
         }
@@ -352,5 +440,13 @@ export default {
 
 .el-select {
   display: block;
+}
+.lang-name-switch {
+  width: 100%;
+  margin-bottom: 10px;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 </style>

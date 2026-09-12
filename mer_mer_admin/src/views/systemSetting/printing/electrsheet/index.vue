@@ -1,50 +1,50 @@
 <template>
   <div class="divBox">
     <el-card class="box-card mt14" :body-style="{ padding: '20px' }" shadow="never" :bordered="false">
-    <el-form :model="editDataLocal" ref="editDataLocal" label-width="100px" class="demo-dynamic">
-      <el-form-item label="打印机选择：">
+    <el-form :model="editDataLocal" ref="editDataLocal" :key="'elect-' + uiLocale" label-width="140px" class="demo-dynamic">
+      <el-form-item :label="$t('systemSetting.printerSelectionLabel')">
         <el-radio-group v-model="editDataLocal.op">
-          <el-radio :label="0">通用打印机(仅支持单张打印)</el-radio>
-          <el-radio :label="1">快递100打印机(支持批量打印)</el-radio>
+          <el-radio :label="0">{{ $t('systemSetting.generalPrinter') }}</el-radio>
+          <el-radio :label="1">{{ $t('systemSetting.kuaidi100Printer') }}</el-radio>
         </el-radio-group>
-        <div class="line-heightOne from-tips">通用打印机不限型号，在电脑浏览器界面右上角选择打印机并设置即可; 快送100电子面单打印机型号:快送100云打印机二代3寸 电脑Wi-Fi两用</div>
+        <div class="line-heightOne from-tips">{{ $t('systemSetting.printerSelectionTip') }}</div>
       </el-form-item>
       <div v-if="editDataLocal.op === 1">
         <el-form-item
-          label="云打印机编号："
+          :label="$t('systemSetting.cloudPrinterNumberLabel')"
           prop="cloudPrintNo"
-          :rules="{ required: true, message: '云打印机编号', trigger: 'blur' }"
+          :rules="cloudPrintRules"
         >
-          <el-input v-model="editDataLocal.cloudPrintNo" placeholder="云打印机编号"></el-input>
-          <div class="line-heightOne from-tips">快递100电子面单打印机编号,在打印机背面查看</div>
+          <el-input v-model="editDataLocal.cloudPrintNo" :placeholder="$t('systemSetting.cloudPrinterNumber')"></el-input>
+          <div class="line-heightOne from-tips">{{ $t('systemSetting.cloudPrinterNumberTip') }}</div>
         </el-form-item>
       </div>
         <el-form-item
-          label="发货地址："
+          :label="$t('systemSetting.shippingAddressLabel')"
           prop="senderAddr"
-          :rules="{ required: true, message: '发货地址', trigger: 'blur' }"
+          :rules="senderAddrRules"
         >
-          <el-input v-model="editDataLocal.senderAddr" placeholder="发货地址"></el-input>
-          <div class="line-heightOne from-tips">电子面单默认发货地址</div>
+          <el-input v-model="editDataLocal.senderAddr" :placeholder="$t('order.pleaseEnterSenderAddress')"></el-input>
+          <div class="line-heightOne from-tips">{{ $t('systemSetting.defaultWaybillShippingAddress') }}</div>
         </el-form-item>
         <el-form-item
-          label="寄件人姓名："
+          :label="$t('systemSetting.senderNameLabel')"
           prop="senderUsername"
-          :rules="{ required: true, message: '寄件人姓名', trigger: 'blur' }"
+          :rules="senderNameRules"
         >
-          <el-input v-model="editDataLocal.senderUsername" placeholder="寄件人姓名"></el-input>
-          <div class="line-heightOne from-tips">电子面单默认寄件人姓名</div>
+          <el-input v-model="editDataLocal.senderUsername" :placeholder="$t('order.pleaseEnterSenderName')"></el-input>
+          <div class="line-heightOne from-tips">{{ $t('systemSetting.defaultWaybillSenderName') }}</div>
         </el-form-item>
         <el-form-item
-          label="寄件人电话："
+          :label="$t('systemSetting.senderPhoneLabel')"
           prop="senderPhone"
-          :rules="{ required: true, validator: validatePhone,message: '电话号码不正确', trigger: 'blur' }"
+          :rules="senderPhoneRules"
         >
-          <el-input v-model="editDataLocal.senderPhone" placeholder="寄件人电话"></el-input>
-          <div class="line-heightOne from-tips">电子面单默认寄件人电话</div>
+          <el-input v-model="editDataLocal.senderPhone" :placeholder="$t('order.pleaseEnterSenderPhone')"></el-input>
+          <div class="line-heightOne from-tips">{{ $t('systemSetting.defaultWaybillSenderPhone') }}</div>
         </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleSubmitClickUp('editDataLocal')">提交</el-button>
+        <el-button type="primary" @click="handleSubmitClickUp('editDataLocal')">{{ $t('common.submit') }}</el-button>
       </el-form-item>
     </el-form>
     </el-card>
@@ -71,6 +71,27 @@ export default {
       validatePhone:validatePhone
     };
   },
+  computed: {
+    uiLocale() {
+      return (this.$i18n && this.$i18n.locale) || 'zh-cn';
+    },
+    cloudPrintRules() {
+      this.uiLocale;
+      return [{ required: true, message: this.$t('systemSetting.cloudPrinterNumber'), trigger: 'blur' }];
+    },
+    senderAddrRules() {
+      this.uiLocale;
+      return [{ required: true, message: this.$t('order.pleaseEnterSenderAddress'), trigger: 'blur' }];
+    },
+    senderNameRules() {
+      this.uiLocale;
+      return [{ required: true, message: this.$t('order.pleaseEnterSenderName'), trigger: 'blur' }];
+    },
+    senderPhoneRules() {
+      this.uiLocale;
+      return [{ required: true, validator: this.validatePhone, message: this.$t('systemSetting.invalidPhone'), trigger: 'blur' }];
+    },
+  },
   created() {
     this.initData();
   },
@@ -89,7 +110,7 @@ export default {
     },
     handledEditElectrConfig(param) {
       merchantElectrSheetEdit(param).then((data) => {
-        this.$message.success('保存成功');
+        this.$message.success(this.$t('user.saveSuccess'));
         this.handledGetElectrInfo();
       });
     },

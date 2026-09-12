@@ -1,0 +1,894 @@
+﻿保存
+保存
+    handleSubmit(name)
+保存
+    submitForm
+保存
+    submitForm(formName)
+保存并审核
+    handleSubmitAndAudit(name)
+保存并提审
+保存接口数据更新
+    getFromData()
+保障服务：
+保障服务列表
+    getProductGuarantee()
+保障服务详情
+备注
+备注：订单交易成功后给推广员返佣的比例，例
+编辑
+编辑
+        prent
+编辑
+    handleEdit(row)
+编辑
+    handleEdit(val)
+编辑保障服务
+编辑成功
+编辑卡密
+编辑卡密--
+编辑卡密
+    handlerEeditCdkey(index
+编辑卡密回调
+    handlerEditSubSuccess()
+编辑卡密库
+编辑库存
+编辑库存--
+编辑库存true，免审编辑false
+    stockEdit
+编辑库存成功回调
+    subSuccess()
+编辑链接
+编辑商品
+编辑商品
+    onEdit(row)
+编辑云盘链接
+    editVirtually(index
+标签名称
+标签名称：
+表单验证
+    validate(prop
+表格数据
+        let ManyAttrValues
+并不是自由软件，未经许可不能去掉CRMEB相关版权
+补充卡密
+补充卡密
+    handlerToAddCdkey(row)
+不同充值码发货
+不用了
+采集商品
+采集商品配置（如配置一号通采集，请先登录一号通账号，无一号通，请选择99Api设置）
+采集商品只有规格，没有规格列表，这里判断使用 方法，attrValueList
+仓库中
+操作
+操作成功
+操作上下架禁用
+    IsShow()
+操作之后是否自动上架？
+查看已设置的虚拟商品
+    seeVirtually(data
+查询
+产品
+产品分类
+成本价
+成本价（元）
+出售情况
+出售中
+初始销量：
+创建，1
+创建、编辑表单
+    handlerCreatFrom(id
+创建商品分类
+创建时间
+此js存放商品的部分函数方法
+  components
+此处手动实现后台原本value0 value1的逻辑
+        info
+打开的
+待审核
+待提审
+待提审--
+单独设置
+单独设置保障服务
+单规格
+单规格
+      ManyAttrValue
+单规格
+    OneattrValue
+单规格表格--
+单位：
+导出
+    exports()
+导出TableHead 数据
+export const GoodsTableHead
+导入成功
+导入卡密
+导入卡密前校验
+    beforeUpload(file)
+到店自提
+的商品
+的商品加入回收站吗
+第三方接口设置
+点击商品图
+    modalPicTap(tit)
+店铺免审
+          if (this
+调用关闭按钮的方法
+调用取消按钮的方法
+顶层目录
+对比两个数组是否完全相等
+            if (k
+多规格
+多规格
+      manyTabTit
+多规格
+    ManyAttrValue
+多规格表格--
+多规格设置
+多规格添加--
+二级返佣(%)
+二级佣金比例：
+返佣输入
+    keyupEventBrokerage(val
+方法检查数组中是否包含该对象
+          let isObjectFound
+分佣设置 会员商品操作
+    changeAttrVal()
+否
+服务列表
+服务内容描述
+服务条款
+服务组合列表
+    getGuaranteeGroupList()
+父级对象
+        data
+复制商品图片路径请求接口
+复制商品转图片路径
+赋能开发者，助力企业发展
+该数据已无效
+改变是否显示
+    changeDefaultShow(index)
+更多
+关闭
+关闭的
+关闭的
+        this
+关联表单：
+关联卡密库
+关联商品
+关联商品规格
+管理卡密
+管理卡密，卡密库跳转--
+规格
+规格
+      manyTabTit
+规格类型：
+规格名称
+规格名称：
+规格名称改变
+    attrChangeValue(i
+规格数据
+规格数据
+      formDynamic
+规格图片添加开关
+    addPic(e
+规格图片添加判断
+规格图片添加判断
+      tableKey
+规格拖拽排序后
+    onMoveSpec()
+规格值
+规格值
+        this
+规格值改变
+    attrDetailChangeValue(val
+规格值已存在
+合并单元格
+    objectSpanMethod(
+后缀获取
+      let suffix
+划线价
+划线价（元）
+恢复商品
+恢复商品
+    handleRestore(row)
+恢复商品成功
+回调规格生成表格数据
+    changeManyAttrValue(e)
+回复
+回复
+    reply(id)
+回复成功
+回复内容
+回复状态：
+回收站
+会员价
+会员价
+export const vipPriceTableHead
+会员价（元）
+会员商品：
+获取element-ui定义好的scroll盒子
+        const SELECTWRAP
+获取类型结果
+      let result
+获取商户端商户商品审核开关信息
+    getProductAuditSwitchInfo()
+获取商品表单头数量
+    goodHeade()
+获取商品属性模板；
+    productGetRule()
+计算是否滚动到最下面
+    selectLoadMore
+加入购物车
+加入回收站
+加入回收站 操作
+    RecycleBin()
+加载商品规格选项
+    if (
+      this
+价格设置范围 0
+检查 set2 中的每个元素是否都在 set1 中
+      for (let elem of set2)
+建议尺寸：800
+将数组转换为 Set，以便进行高效的包含检查
+      const set1
+仅支持打开一个(建议尺寸
+进度条默认0
+      myHeaders
+进行图片匹配
+      result
+京东
+警戒库存
+拒绝原因：
+具体日期
+    onchangeTime(e)
+卡号
+卡号不能为空
+卡密
+卡密
+          this
+卡密ID
+卡密不能为空
+卡密对象
+      btnloading
+卡密库ID
+卡密库id
+      cdkeyLibraryInfo
+卡密库不能为空
+卡密库对象
+卡密库对象
+      cloudDisk
+卡密库名称
+卡密列表
+    getCdkeyLibraryList()
+卡密名称：
+卡密商品
+卡密设置
+卡密设置
+export const VirtualTableHead2
+卡密详情
+      cardUrl
+卡密总数
+开启
+开启分佣设置
+        if (this
+开启会员
+          arr
+开启之后用户可进行退款申请；关闭之后仅支持商家直接退款，用户不能申请退款
+可以同步修改下方该规格图片，确定要替换吗？
+库存
+类型
+    productType
+利用单元格的 className 的回调方法，给行列索引赋值
+      row
+链接设置
+列表--
+列表
+    getList()
+列表
+    getList(num)
+另存为模板
+另存为模板
+    handleSaveAsTemplate()
+轮播图
+密码
+免审编辑
+免审商品，保存的时候弹出上架弹窗，条件：店铺开启
+默认
+默认规格不可隐藏
+默认设置
+默认选中规格
+您当前剩余
+您的浏览器不支持 video 标签。
+排序
+排序：
+判断该段Js执行时间
+      this
+判断勾选
+    selectable(row)
+判断商品类型是卡密
+判断是否存在规格图
+      let isHas
+判断是否存在同样熟悉
+        var isExist
+配送方式：
+批量恢复
+批量恢复商品成功
+批量加入回收站
+    handleRecycleBin(type)
+批量加入回收站
+    onBatchRecycle()
+批量加入回收站成功
+批量清空规格中的批量数据
+    handleBatchDel()
+批量删除
+批量删除
+    handleBatchDel()
+批量删除
+    onBatchDelete()
+批量删除成功
+批量上架
+批量上架成功
+批量设置
+批量设置 --
+批量设置佣金成功
+批量设置佣金弹窗--
+批量设置运费模板成功
+批量数据
+    batchData(val)
+批量提交审核成功
+批量添加
+    batchAdd()
+批量添加规格
+    oneFormBatch
+批量添加规格的值
+      oneFormBatch
+批量添加回馈券成功
+批量下架
+批量下架
+    batchDelisting(type)
+批量下架成功
+批量修改
+匹配 视频
+      const videolist
+拼多多
+品牌：
+品牌列表
+    getbrandList()
+平台分类：
+平台商品分类
+      productType
+平台商品分类：
+评价内容
+评价时间
+评价图片：
+评价文字：
+评价星级
+评价星级：
+评价星级不能为空
+普通商品
+其他
+其他 文件类型
+      return
+其他设置--
+切换默认选中规格
+    changeDefault(e
+切换默认选中规格
+    changeDefaultSelect(e
+清空
+清空卡密
+    virtualListClear()
+清空批量规格信息
+    batchDel()
+请求接口
+请求头部信息
+      carMyValidateForm
+请上传商品轮播图
+请上传商品图
+请上传小于20M的视频
+请输入MP4格式的视频链接
+请输入备注，最多可输入200字
+请输入标签名称
+请输入单位
+请输入二级佣金
+请输入规格名称
+请输入规格值
+请输入卡号
+请输入卡密
+请输入卡密库名称
+请输入卡密库名称，最多32字
+请输入库存
+请输入链接地址
+请输入链接地址！
+请输入模板名称
+请输入排序
+请输入平台商品分类
+请输入商户商品分类
+请输入商品简介
+请输入商品名称
+请输入商品名称关键字
+请输入一级佣金
+请输入云盘链接及提取码
+请填写多规格属性！
+请填写卡密库名称
+请填写评价内容
+请填写完整商品信息！
+请填写用户昵称
+请填写组合名称
+请先配置店铺地址之后，再开启到店自提；若店铺统一关闭到店自提功能，商品配送方式选中到店自提，用户购买不支持到店自提！
+请选择
+请选择保障服务
+请选择关联表单
+请选择关联卡密库
+请选择回复状态
+请选择配送方式
+请选择品牌
+请选择平台商品分类
+请选择评价图片
+请选择商户商品分类
+请选择商品
+请选择商品规格
+请选择商品品牌
+请选择商品属性
+请选择属性
+请选择用户头像
+请选择运费模板
+请至少选择一个服务选项
+请至少选择一个商品
+请至少选择一项卡密
+取 消
+取消
+取消
+    handleClose()
+取消运费
+    handleClose()
+权限判断函数
+
+import creatAttr from
+权限判断函数
+export default
+权限判断函数
+import
+权限判断函数
+import CdkeyLibrary from
+全部sku：
+全选
+确 定
+确定
+确定恢复商品吗？
+确定批量恢复商品吗？
+确定批量加入回收站吗？
+确定批量删除商品吗？
+确定删除此卡密吗？
+确定要将此商品提交平台审核吗？
+确定要将选中卡密删除吗？
+确定要将选中商品批量上架吗
+确定要将选中商品批量下架吗
+确认保存云盘链接
+    handlerSubSuccessCloudDisk(e)
+确认提交卡密
+    handlerSubSuccess(e)
+确认提交云盘链接
+    handlerSubSuccessCloudDisk(e)
+确认添加
+如果manyFormValidate中存在该属性值，则赋值
+          for (let k
+如果默认选中开启 则不可隐藏
+      if (this
+如果数组中不包含该对象，则将其添加到数组中
+            res
+如果有视频主图，将视频链接插入到轮播图第一的位置
+        this
+如何配置密钥
+删除
+删除 id 为
+删除
+    handleDelete(id
+删除
+    handleDelete(id)
+删除表格中的属性
+    delAttrTable(val)
+删除成功
+删除成功
+    delSuccess()
+删除当前保障服务吗
+删除规格
+    handleRemoveRole(index)
+删除视频；
+    delVideo()
+删除属性
+    handleRemove2(item
+商户分类：
+商户开关
+      productSwitch
+商户商品分类：
+商家配送
+商品：
+商品id，isDisabled：是否能编辑(1不能，2能)，isCopy：是否是采集商品(1是，2不是)--
+商品id，isDisabled：是否能编辑(1不能，2能)，isCopy：是否是采集商品(1是，2不是)
+      i
+商品id，isDisabled：是否能编辑(1不能，2能)，isCopy：是否是采集商品(1是，2不是)
+      t
+商品编码
+商品采集
+商品采集设置：设置
+商品分类
+      isSwitch
+商品分类id
+            cateId
+商品分类id
+  cateId
+商品分类id传值
+            attrList
+商品分类id传值
+  attrValue
+商品分类id传值
+  unitName
+商品封面图：
+商品关键字：
+商品规格
+商品规格--
+商品规格：
+商品简介：
+商品类型
+      drawer
+商品类型
+      isSub
+商品类型
+      proTypedialogVisible
+商品类型
+    this
+商品类型
+  isAutoSubmitAudit
+商品类型：
+商品轮播图：
+商品名称
+商品名称：
+商品是否需要审核 true需要审核，false免审
+      canSel
+商品售价
+商品属性
+商品属性：
+商品搜索：
+商品添加选择--
+商品条码
+商品图
+商品详情
+商品详情--
+商品详情
+      productType
+商品详情：
+商品信息
+商品信息--
+上传
+    async handleUploadForm(param)
+上传
+    handleUploadForm(param)
+上传参数
+上传视频
+上传视频不能超过 20MB
+上传视频只能是 mp4 格式
+上传小于500kb的图片
+上传小于500kb的图片；最多可上传10张图片，拖动可调整顺序
+上传中，请稍候
+上架
+上架成功
+上一步
+上一步
+    handleSubmitUp()
+设置卡密
+设置选中的方法
+    handleSelectionChange(val)
+设置佣金
+设置佣金
+    handleSetCommission(row)
+设置佣金表单
+      commisionRule
+设置佣金成功
+设置佣金提交
+    submitCommisionForm(name)
+设置优惠券提交
+    onSetCoupons(couponIds)
+设置云盘链接弹窗
+设置运费
+设置运费
+    async handleSetFreight(row)
+设置运费模板--
+设置运费模板成功
+设置运费提交
+    handleSubmit(name)
+审核失败
+审核通过之后是否自动上架？
+生成表格的头部标题
+    manyTabTit
+生成的商品默认是没有上架的，请手动上架商品！
+生成规格表格中的头部标题
+      grid2
+生成规格表格中的头部标题
+    manyTabDate
+生成规格的表格中填写的值
+    formThead
+生成规格组合
+    generateCombinations(arr
+生成列表 行 列 数据
+    tableCellClassName(
+生成商品表单
+    addProduct()
+生成商品规格表头
+    generateHeader(data)
+生成属性
+失败原因
+时间选择：
+实体货物
+使用 Array
+使用保障服务组合
+视频地址
+      progress
+视频上传前
+    beforeAvatarUpload(file)
+是
+是否默认
+是否是采集
+      props2
+是否显示进度条；
+是否展示
+是否自动上架
+    automaticListing()
+是否自动上架
+  deliveryMethodList
+是否自动提审
+  isAutoUp
+收藏：
+售价
+售价（元）
+输入不能为空
+输入限制30字以内
+数据提交用
+  attrList
+数据提交用
+  attrs
+数据渲染用
+  selectRule
+数组第一项 新增默认数据 oneFormBatch
+        this
+数组第一项 新增默认数据 oneFormBatch
+      this
+刷新
+搜索条件--
+苏宁
+索引
+      cdkeyLibraryInfo
+淘宝
+提交
+提交
+    handleSubmit
+提交成功
+提交审核
+提交审核
+    handlePendingReview(row)
+提交中
+提审商品吗
+提审提交
+    productAudit(data)
+提审之后是否自动上架？
+提示
+体积(m
+替换
+天猫
+添加
+    handleAdd()
+添加
+    handleAdd(row)
+添加按钮
+    addBtn()
+添加保障服务
+添加标签
+添加表单
+添加倒入卡密的值
+    changeVirtual(e)
+添加分类
+添加规格图
+添加规格图片
+添加规格值
+添加规则；
+    addRule()
+添加回馈券
+添加回馈券
+    handleAddCoupon(row)
+添加回馈券成功
+添加卡密
+添加卡密--
+添加卡密
+    handleAdd()
+添加卡密库
+添加链接
+添加商品
+添加商品
+    handleAdd(type)
+添加商品分类--
+添加商品分类
+    handleAddMenu(rowData)
+添加商品规格
+添加属性
+    createAttr(num
+添加新规格
+添加行
+添加行
+    handleAddCard()
+添加虚拟链接
+    handleAddVirtually(index
+添加云盘--
+添加自评
+条采集次数。
+通过公众号分享商品详情，会展示此简介信息
+同一链接发货
+统一主业务中的目录类型
+图片
+图片
+export const imageTableHead
+图片格式
+      const imglist
+为
+为0，走生成规格方法
+      if (this
+未出售
+未回复
+未使用
+无
+无后缀返回 false
+      if (
+系统表单数据
+    async getSystemFormList()
+系统设置
+下架
+下架成功
+下架该商品吗？出售商品需下架之后可编辑。
+下拉加载更多
+    selectLoadMore()
+下一步
+下一步
+    handleSubmitNest(name)
+下载模板
+下载模板
+    handleDownload()
+显示
+限制平台商品分类只能选择第三级
+    addDisabled(dropdownList)
+详情
+详情
+    getInfo()
+详情
+    getInfo(id)
+详情
+    handleInfo(id
+销量
+新增保存数据
+    postData()
+新增成功
+新增规格
+    handleAddRole()
+新增卡密库
+新增一条属性
+    addOneAttr(val
+修改的规格值
+      currentIndex
+修改卡密库--
+虚拟发货
+虚拟商品
+虚拟商品
+export const FictitiousTableHead
+选择
+选择保障服务模式
+    onchangeIsShow()
+选择的id集合
+      cdkeyInfo
+选择规格
+    onChangeSpec(num)
+选择规格模板
+选择卡密库--
+选择卡密库回调
+    handlerChangeCdkeyIdSubSuccess(row)
+选择商品类型
+选择商品类型
+    handleChangeProductType(id)
+选择商品类型弹窗
+选择商品类型弹窗--
+选择商品类型确定
+    handleSureType()
+选择时间
+    selectChange()
+选择属性确认
+    confirm(name)
+选择优惠券
+选中的id
+      ruleValidate
+一个开启 其他关闭
+一个开启 其他关闭
+      this
+一级返佣(%)
+一级佣金比例：
+一级佣金比例设置5，则返订单金额的5%
+移动
+    handleDragStart(e
+已出售
+已回复
+已设置
+已售罄
+已售罄、警戒库存操作判断
+    operation()
+已售罄或者警戒库存
+    SoldOutAndAlertInventory()
+已注销)
+隐藏
+佣金
+export const commissionTableHead
+佣金弹窗
+      commisionForm
+佣金设置：
+佣金设置是否单独设置
+      addType
+佣金设置是否单独设置
+    isSub
+用户购买此商品时，必须填写关联表单中设置的字段内容才能够进行订单支付，例如：部分商品购买必须填写身份证号、预约时间等
+用户购买商品后赠送的优惠券
+用户可以根据关键字进行商品搜索
+用户昵称
+用户昵称：
+用户申请退款：
+用户搜索：
+用户头像：
+优惠券
+        let virtualType
+优惠券集合
+      productInfo
+远程搜索
+    remoteMethod(query)
+云盘
+          this
+云盘
+export const VirtualTableHead
+云盘地址
+      showAll
+云盘地址
+      virtuallyIndex
+云盘链接
+云盘链接不能为空
+云盘链接设置--
+云盘商品
+云盘商品
+      if (this
+云盘商品、卡密商品不支持售后，一经出售，概不退换
+云盘商品、卡密商品不支持用户申请售后。
+云盘设置
+运费模板：
+在规格中选择规格图片
+    handleSelImg(item)
+暂不
+增加库存
+增加库存--
+增加库存不能为空
+赠送优惠券：
+展示
+找到slot 等于 fictitious 将title改为规格名称
+        this
+这里判断第几列需要合并
+        const tagFamily
+正在保存到本地，请稍候
+中的value是规格值 存在与 manyItem
+中的某一项
+              data
+重点是以上两句
+重点是以下两句
+            this
+重量（KG）
+重要！！！
+重置
+重置
+    handleReset()
+主图视频：
+注：店铺统一关闭到店自提功能，该商品必须选中
+注：关联系统表单之后，该商品则不可进行
+注意这里是解构
+状态
+自定义时间
+组合名称

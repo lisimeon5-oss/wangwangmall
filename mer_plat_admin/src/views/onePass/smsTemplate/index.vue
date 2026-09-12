@@ -5,7 +5,7 @@
       <div slot="header" class="clearfix">
         <div class="container">
           <router-link :to="{ path: '/operation/onePass/index' }">
-            <el-button class="mb35" size="mini" icon="el-icon-arrow-left">返回</el-button>
+            <el-button class="mb35" size="mini" icon="el-icon-arrow-left">{{ $t('common.back') }}</el-button>
           </router-link>
         </div>
         <div class="acea-row">
@@ -15,11 +15,11 @@
             type="primary"
             @click="add"
             class="mr20"
-            >申请短信模板</el-button
+            >{{ $t('onePass.applySmsTemplate') }}</el-button
           >
           <el-alert
             style="width: 80%"
-            title="短信模板申请后通过审核才能看到，审核时间3-5个工作日。"
+            :title="$t('onePass.smsTemplateTip')"
             type="warning"
             :closable="false"
             effect="light"
@@ -29,20 +29,20 @@
       </div>
       <el-table v-loading="listLoading" :data="tableData.data" style="width: 100%" size="small" highlight-current-row>
         <el-table-column prop="id" label="ID" min-width="50" />
-        <el-table-column prop="temp_id" label="模板ID" min-width="80" />
-        <el-table-column prop="title" label="模板名称" min-width="120" />
-        <el-table-column prop="content" label="模板内容" min-width="500" />
-        <el-table-column label="模板类型" min-width="100">
+        <el-table-column prop="temp_id" :label="$t('onePass.templateId')" min-width="80" />
+        <el-table-column prop="title" :label="$t('onePass.templateName')" min-width="120" />
+        <el-table-column prop="content" :label="$t('onePass.templateContent')" min-width="500" />
+        <el-table-column :label="$t('onePass.templateType')" min-width="100">
           <template slot-scope="{ row }">
             <span>{{ row.temp_type | typesFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="模板状态">
+        <el-table-column :label="$t('onePass.templateStatus')">
           <template slot-scope="{ row }">
             <span>{{ row.status | statusFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="mark" label="审核结果" min-width="100" />
+        <el-table-column prop="mark" :label="$t('onePass.auditResult')" min-width="100" />
       </el-table>
       <div class="block">
         <el-pagination
@@ -57,6 +57,39 @@
         />
       </div>
     </el-card>
+    <el-dialog
+      :title="$t('onePass.applySmsTemplate')"
+      :visible.sync="dialogVisible"
+      width="560px"
+      :close-on-click-modal="false"
+      @closed="resetForm"
+    >
+      <el-form ref="dataForm" :model="formData" :rules="rules" label-width="120px">
+        <el-form-item :label="$t('onePass.templateName')" prop="title">
+          <el-input v-model.trim="formData.title" maxlength="50" :placeholder="$t('onePass.pleaseEnterTemplateName')" />
+        </el-form-item>
+        <el-form-item :label="$t('onePass.templateTypeLabel')" prop="type">
+          <el-select v-model="formData.type" :placeholder="$t('el.select.placeholder')" class="selWidth">
+            <el-option :label="$t('onePass.verificationCode')" :value="1" />
+            <el-option :label="$t('onePass.notification')" :value="2" />
+            <el-option :label="$t('onePass.promotion')" :value="3" />
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('onePass.templateContent')" prop="content">
+          <el-input
+            v-model.trim="formData.content"
+            type="textarea"
+            :rows="4"
+            maxlength="500"
+            :placeholder="$t('onePass.pleaseEnterTemplateContent')"
+          />
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
+        <el-button @click="dialogVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" :loading="loading" @click="submitForm">{{ $t('common.save') }}</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -72,24 +105,22 @@
 // +---------------------------------------------------------------------
 import { smsTempLstApi, tempCreateApi } from '@/api/sms';
 import { mapGetters } from 'vuex';
-import zbParser from '@/components/FormGenerator/components/parser/ZBParser';
 import { Debounce } from '@/utils/validate';
 export default {
   name: 'SmsTemplate',
-  components: { zbParser },
   filters: {
     statusFilter(status) {
       const statusMap = {
-        0: '不可用',
-        1: '可用',
+        0: this.$t('onePass.unavailable'),
+        1: this.$t('onePass.available'),
       };
       return statusMap[status];
     },
     typesFilter(status) {
       const statusMap = {
-        1: '验证码',
-        2: '通知',
-        3: '推广',
+        1: this.$t('onePass.verificationCode'),
+        2: this.$t('onePass.notification'),
+        3: this.$t('onePass.promotion'),
       };
       return statusMap[status];
     },
@@ -107,10 +138,24 @@ export default {
         page: 1,
         limit: 20,
       },
+      dialogVisible: false,
+      loading: false,
+      formData: {
+        title: '',
+        type: 1,
+        content: '',
+      },
     };
   },
   computed: {
     ...mapGetters(['isLogin']),
+    rules() {
+      return {
+        title: [{ required: true, message: this.$t('onePass.pleaseEnterTemplateName'), trigger: 'blur' }],
+        type: [{ required: true, message: this.$t('el.select.placeholder'), trigger: 'change' }],
+        content: [{ required: true, message: this.$t('onePass.pleaseEnterTemplateContent'), trigger: 'blur' }],
+      };
+    },
   },
   mounted() {
     if (!this.isLogin) {
@@ -120,25 +165,31 @@ export default {
     }
   },
   methods: {
-    submit: Debounce(function (formValue) {
-      tempCreateApi(formValue).then((data) => {
-        this.$message.success('新增成功');
-        this.$msgbox.close();
-        this.getList();
+    submitForm: Debounce(function () {
+      this.$refs.dataForm.validate((valid) => {
+        if (!valid) return;
+        this.loading = true;
+        tempCreateApi(this.formData)
+          .then(() => {
+            this.$message.success(this.$t('product.addSuccess'));
+            this.dialogVisible = false;
+            this.getList();
+          })
+          .finally(() => {
+            this.loading = false;
+          });
       });
     }),
     add() {
-      const _this = this;
-      this.$modalParserFrom(
-        '添加短信模板',
-        '申请短信模板',
-        0,
-        {},
-        function (formValue) {
-          _this.submit(formValue);
-        },
-        (this.keyNum += 1),
-      );
+      this.formData = { title: '', type: 1, content: '' };
+      this.dialogVisible = true;
+      this.$nextTick(() => {
+        this.$refs.dataForm && this.$refs.dataForm.clearValidate();
+      });
+    },
+    resetForm() {
+      this.formData = { title: '', type: 1, content: '' };
+      this.loading = false;
     },
     // 查看是否登录
     onIsLogin() {
@@ -148,7 +199,7 @@ export default {
         .then(async (res) => {
           const data = res;
           if (!data.status) {
-            this.$message.warning('请先登录');
+            this.$message.warning(this.$t('onePass.pleaseLoginFirst'));
             this.$router.push('/operation/onePass/index?url=' + this.$route.path);
           } else {
             this.getList();

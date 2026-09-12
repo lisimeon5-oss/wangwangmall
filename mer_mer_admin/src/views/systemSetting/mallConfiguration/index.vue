@@ -3,16 +3,16 @@
     <el-card class="box-card" shadow="never" :bordered="false" :body-style="{ padding: '40px 50px' }">
       <div class="form-data">
         <el-form :model="pcConfigForm" :rules="rules" ref="pcConfigForm" label-width="129px" class="demo-ruleForm">
-          <el-form-item label="PC商城商户logo：" prop="pcLogo">
+          <el-form-item :label="$t('systemSetting.pcMerchantLogoLabel')" prop="pcLogo">
             <div class="upLoadPicBox acea-row" @click="modalPicTap('1', 'pcLogo')">
               <div v-if="pcConfigForm.pcLogo" class="pictrue"><img :src="pcConfigForm.pcLogo" /></div>
               <div v-else class="upLoad">
                 <i class="el-icon-camera cameraIconfont" />
               </div>
-              <div class="line-heightOne from-tips">请上传小于500kb的图片（60*60 px）</div>
+              <div class="line-heightOne from-tips">{{ $t('systemSetting.uploadImageUnder500kb60') }}</div>
             </div>
           </el-form-item>
-          <el-form-item label="品牌好店商户封面：" prop="pcGoodStoreCoverImage">
+          <el-form-item :label="$t('systemSetting.brandStoreCoverLabel')" prop="pcGoodStoreCoverImage">
             <div class="upLoadPicBox acea-row" @click="modalPicTap('1', 'pcGoodStoreCoverImage')">
               <div v-if="pcConfigForm.pcGoodStoreCoverImage" class="pictrue">
                 <img :src="pcConfigForm.pcGoodStoreCoverImage" />
@@ -20,13 +20,13 @@
               <div v-else class="upLoad">
                 <i class="el-icon-camera cameraIconfont" />
               </div>
-              <div class="line-heightOne from-tips">请上传小于500kb的图片（228*228 px）</div>
+              <div class="line-heightOne from-tips">{{ $t('systemSetting.uploadImageUnder500kb228') }}</div>
             </div>
           </el-form-item>
-          <el-form-item label="店铺banner：">
+          <el-form-item :label="$t('systemSetting.storeBannerLabel')">
             <FromList :configObj="bannerListConfig"></FromList>
           </el-form-item>
-          <el-form-item label="店铺推荐商品：">
+          <el-form-item :label="$t('systemSetting.storeRecommendedProductsLabel')">
             <div class="goods-box borderPadding">
               <div class="wrapper">
                 <div class="dragArea list-group upLoadPicBox">
@@ -40,7 +40,7 @@
                 </div>
               </div>
             </div>
-            <div class="from-tips" style="margin-top: 0">最多可选择20个商品</div>
+            <div class="from-tips" style="margin-top: 0">{{ $t('systemSetting.max20Products') }}</div>
           </el-form-item>
           <el-form-item v-hasPermi="['merchant:config:pc:shopping:save']">
             <el-button
@@ -50,7 +50,7 @@
                   handlePcConfigSave('pcConfigForm');
                 }
               "
-              >{{ loadingBtn ? '提交中 ...' : '保存' }}</el-button
+              >{{ loadingBtn ? $t('common.submitting') : $t('common.save') }}</el-button
             >
           </el-form-item>
         </el-form>
@@ -86,13 +86,13 @@ export default {
         recommendProductStr: '',
       },
       rules: {
-        pcLogo: [{ required: true, message: '请上传商户PCLogo', trigger: 'change' }],
-        pcGoodStoreCoverImage: [{ required: true, message: '请上传品牌好店封面图片', trigger: 'change' }],
+        pcLogo: [{ required: true, message: this.$t('systemSetting.pleaseUploadMerchantPcLogo'), trigger: 'change' }],
+        pcGoodStoreCoverImage: [{ required: true, message: this.$t('systemSetting.pleaseUploadBrandStoreCover'), trigger: 'change' }],
       },
       // 店铺banner
       bannerListConfig: {
-        tips: '最多可添加10张图片，建议1200px宽；鼠标拖拽左侧圆点可调整图片 顺序',
-        title: '链接名称',
+        tips: this.$t('systemSetting.storeBannerTip'),
+        title: this.$t('systemSetting.linkName'),
         isShowAddBtn: true, //添加按钮
         isShowEdit: true, //删除按钮
         isShowStatus: true, //开启状态
@@ -188,7 +188,7 @@ export default {
           this.getSaveData();
           savePcConfigApi(this.pcConfigForm)
             .then((res) => {
-              this.$message.success('保存成功');
+              this.$message.success(this.$t('user.saveSuccess'));
               this.loadingBtn = false;
               this.getPcConfig();
             })

@@ -42,6 +42,9 @@ public class UserProductRelationResponse implements Serializable {
     @ApiModelProperty(value = "商品名称")
     private String name;
 
+    @ApiModelProperty(value = "商品名称多语言")
+    private String nameJson;
+
     @ApiModelProperty(value = "商品图片")
     private String image;
 

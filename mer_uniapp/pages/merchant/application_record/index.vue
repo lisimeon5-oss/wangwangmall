@@ -4,8 +4,8 @@
 			<view class="card-list" v-for="item in listData" :key="item.id">
 				<view class="card-top">
 					<view class="title">{{item.name}}</view>
-					<view class="time">提交时间：{{item.createTime}}</view>
-					<view v-if="item.denialReason" class="reason">原因：{{item.denialReason}}</view>
+					<view class="time">{{$t('提交时间')}}：{{item.createTime}}</view>
+					<view v-if="item.denialReason" class="reason">{{$t('原因')}}：{{item.denialReason}}</view>
 				</view>
 				<view class="line"></view>
 				<view class="card-bottom">
@@ -20,8 +20,8 @@
 							<text class="status-text">{{statusText(item.auditStatus)}}</text>
 						</view>
 						<view @click="goDetal(item)">
-							<text v-if="item.auditStatus === 2 || item.auditStatus === 1" class="btn">查看</text>
-							<text v-else class="btn">重新提交</text>
+							<text v-if="item.auditStatus === 2 || item.auditStatus === 1" class="btn">{{$t('查看')}}</text>
+							<text v-else class="btn">{{$t('重新提交')}}</text>
 						</view>
 					</view>
 				</view>
@@ -30,7 +30,7 @@
 		<view class='no-shop' v-if="!listData.length && !loading">
 			<view class='pictrue' style="margin: 0 auto;" @click="menusTap()">
 				<image :src="urlDomain+'crmebimage/presets/noJilu.png'"></image>
-				<text class="text-ccc">暂无申请记录，快去申请入驻吧</text>
+				<text class="text-ccc">{{$t('暂无申请记录，快去申请入驻吧')}}</text>
 			</view>
 		</view>
 	</view>
@@ -68,7 +68,7 @@
 		onReachBottom() {
 			if (this.count == this.listData.length) {
 				uni.showToast({
-					title: '没有更多啦',
+					title: this.$t('没有更多啦'),
 					icon: 'none',
 					duration: 1000
 				});
@@ -95,7 +95,7 @@
 			getListData() {
 				this.loading = true
 				uni.showLoading({
-					title: '加载中...'
+					title: this.$t('加载中...')
 				});
 				getMerSettledRecordApi(this.pageData).then(res => {
 					this.count = res.data.total;

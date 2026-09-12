@@ -18,7 +18,7 @@
             :class="v.icon"
             v-if="v.path !== tagsRoutePath && getThemeConfig.isTagsviewIcon"
           ></i>
-          <span>{{ v.meta.title }}</span>
+          <span>{{ getTagTitle(v) }}</span>
           <i
             class="el-icon-close layout-navbars-tagsview-ul-li-icon ml5"
             v-if="!isAffix(v)"
@@ -44,6 +44,7 @@
 <script>
 import Contextmenu from '@/layout/navBars/tagsView/contextmenu';
 import { mapMutations } from 'vuex';
+import { resolveNavTitle } from '@/utils/i18nText';
 
 export default {
   name: 'tagsView',
@@ -58,37 +59,18 @@ export default {
       },
       tagsRefsIndex: 0,
       tagsRoutePath: this.$route.path,
-      // tagsViewRoutesList: [],
-      dropdownList: [
-        {
-          id: 0,
-          txt: '刷新',
-          affix: false,
-          icon: 'el-icon-refresh-right',
-        },
-        {
-          id: 1,
-          txt: '关闭',
-          affix: false,
-          icon: 'el-icon-close',
-        },
-        {
-          id: 2,
-          txt: '关闭其他',
-          affix: false,
-          icon: 'el-icon-circle-close',
-        },
-        {
-          id: 3,
-          txt: '全部关闭',
-          affix: false,
-          icon: 'el-icon-folder-delete',
-        },
-      ],
       scrollTagIcon: false,
     };
   },
   computed: {
+    dropdownList() {
+      return [
+        { id: 0, txt: this.$t('common.refresh'), affix: false, icon: 'el-icon-refresh-right' },
+        { id: 1, txt: this.$t('common.close'), affix: false, icon: 'el-icon-close' },
+        { id: 2, txt: this.$t('common.closeOthers'), affix: false, icon: 'el-icon-circle-close' },
+        { id: 3, txt: this.$t('common.closeAll'), affix: false, icon: 'el-icon-folder-delete' },
+      ];
+    },
     // 获取布局配置信息
     getThemeConfig() {
       return this.$store.state.themeConfig.themeConfig;
@@ -135,6 +117,16 @@ export default {
     ...mapMutations('menu', ['setBreadCrumb', 'setTagNavList', 'addTag', 'setLocal', 'setHomeRoute', 'closeTag']),
     isAffix(tag) {
       return tag.meta && tag.meta.isAffix;
+    },
+    // 翻译标签页标题，支持 '{{ menu.dashboard }}' 形式的 i18n 键
+    getTagTitle(tag) {
+      this.$i18n.locale;
+      return resolveNavTitle(
+        (tag && tag.meta && tag.meta.title) || (tag && tag.title),
+        tag && tag.path,
+        this.$store.state.user.menuList,
+        this.$store.state.user.oneLvRoutes,
+      );
     },
     clickDropdown(e) {
       let data = { id: e, path: this.$route.path };

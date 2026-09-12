@@ -97,7 +97,9 @@ export default {
     },
     explain: {
       type: String,
-      default: '向右滑动完成验证',
+      default: function () {
+        return this.$t('login.slideRightToVerify');
+      },
     },
     imgSize: {
       type: Object,
@@ -311,7 +313,7 @@ export default {
               }, 1500);
             }
             this.passFlag = true;
-            this.tipWords = `${((this.endMovetime - this.startMoveTime) / 1000).toFixed(2)}s验证成功`;
+            this.tipWords = `${((this.endMovetime - this.startMoveTime) / 1000).toFixed(2)}s`;
             var captchaVerification = this.secretKey
               ? aesEncrypt(this.backToken + '---' + JSON.stringify({ x: moveLeftDistance, y: 5.0 }), this.secretKey)
               : this.backToken + '---' + JSON.stringify({ x: moveLeftDistance, y: 5.0 });
@@ -329,7 +331,7 @@ export default {
               _this.refresh();
             }, 1000);
             this.$emit('error', this);
-            this.tipWords = '验证失败';
+            this.tipWords = this.$t('login.verifyFailed');
             setTimeout(() => {
               this.tipWords = '';
             }, 1000);

@@ -9,17 +9,17 @@
     >
       <div class="padding-add">
         <el-form inline size="small" label-position="right" @submit.native.prevent>
-          <el-form-item label="商品搜索：">
+          <el-form-item :label="$t('product.productSearchLabel')">
             <el-input
               v-model.trim="keywords"
-              placeholder="请输入商品名称关键字"
+              :placeholder="$t('product.pleaseEnterProductNameKeyword')"
               class="form_content_width"
               size="small"
               @keyup.enter.native="handleSeachList"
               clearable
             ></el-input>
           </el-form-item>
-          <el-form-item label="创建日期：">
+          <el-form-item :label="$t('marketing.createDateLabel')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -27,16 +27,16 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               class="selWidth"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
+              :start-placeholder="$t('product.startDate')"
+              :end-placeholder="$t('product.endDate')"
               @change="onchangeTime"
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="handleSeachList">查询</el-button>
-            <el-button size="small" @click="handleReset">重置</el-button>
+            <el-button type="primary" size="small" @click="handleSeachList">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="handleReset">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -45,21 +45,21 @@
       <div class="clearfix" ref="headerBox" v-if="checkPermi(['platform:integral:product:page'])">
         <el-tabs class="list-tabs mb5" v-model="tableFrom.isShow" @tab-click="handleSeachList">
           <el-tab-pane
-            :label="item.name + '(' + item.count + ')'"
+            v-for="item in headerTabs"
+            :key="item.type"
+            :label="item.label"
             :name="item.type"
-            v-for="(item, index) in headeNum"
-            :key="index"
           />
         </el-tabs>
       </div>
       <el-button size="small" type="primary" v-hasPermi="['platform:integral:product:save']" @click="handleAdd('isAdd')"
-        >添加商品</el-button
+        >{{ $t('marketing.addProduct') }}</el-button
       >
       <el-button
         size="small"
         v-hasPermi="['platform:integral:product:save', 'platform:product:marketing:search:page']"
         @click="handleQuickAdd('isAdd')"
-        >快速添加</el-button
+        >{{ $t('marketing.quickAdd') }}</el-button
       >
       <el-table
         v-loading="listLoading"
@@ -71,51 +71,53 @@
         highlight-current-row
       >
         <el-table-column prop="id" label="ID" min-width="50" />
-        <el-table-column label="商品图" min-width="80">
+        <el-table-column :label="$t('product.productImage')" min-width="80">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="商品名称" min-width="200" :show-overflow-tooltip="true"> </el-table-column>
-        <el-table-column prop="redeemIntegral" label="兑换积分" min-width="90" />
-        <el-table-column prop="price" label="兑换金额（元）" min-width="130" />
-        <el-table-column prop="sales" label="已兑换数" min-width="90" />
-        <el-table-column prop="stock" label="剩余库存" min-width="90" />
-        <el-table-column prop="sort" label="排序" min-width="90" />
-        <el-table-column prop="createTime" label="创建时间" min-width="130" />
-        <el-table-column label="状态" min-width="80" fixed="right">
+        <el-table-column :label="$t('product.productName')" min-width="200" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ localizedProductName(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column prop="redeemIntegral" :label="$t('marketing.exchangePoints')" min-width="90" />
+        <el-table-column prop="price" :label="$t('marketing.exchangeAmount')" min-width="130" />
+        <el-table-column prop="sales" :label="$t('marketing.exchangedCount')" min-width="90" />
+        <el-table-column prop="stock" :label="$t('marketing.remainingStock')" min-width="90" />
+        <el-table-column prop="sort" :label="$t('product.sort')" min-width="90" />
+        <el-table-column prop="createTime" :label="$t('product.createTime')" min-width="130" />
+        <el-table-column :label="$t('common.status')" min-width="80" fixed="right">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:integral:product:update:show'])"
               v-model="scope.row.isShow"
               :active-value="true"
               :inactive-value="false"
-              active-text="上架"
-              inactive-text="下架"
+              :active-text="$t('product.onShelf')"
+              :inactive-text="$t('product.offShelf')"
               @change="onchangeIsShow(scope.row)"
             />
-            <div v-else>{{ scope.row.isShow ? '上架' : '下架' }}</div>
+            <div v-else>{{ scope.row.isShow ? $t('product.onShelf') : $t('product.offShelf') }}</div>
           </template>
         </el-table-column>
-        <el-table-column width="190" fixed="right" label="操作">
+        <el-table-column width="190" fixed="right" :label="$t('common.operate')">
           <template slot-scope="scope">
             <!--id:商品id，isDisabled：是否能编辑(noEdit不能，edit能)，isChoose：是否是选择商品(choose是，noChoose不是)-->
             <template v-if="checkPermi(['platform:integral:product:detail'])">
-              <a @click="handleView(scope.row.id)">详情</a>
+              <a @click="handleView(scope.row.id)">{{ $t('common.detail') }}</a>
             </template>
             <template v-if="checkPermi(['platform:integral:product:update'])">
               <el-divider direction="vertical"></el-divider>
-              <a @click="onEdit(scope.row,'edit')">编辑</a>
+              <a @click="onEdit(scope.row,'edit')">{{ $t('common.edit') }}</a>
             </template>
             <template v-if="checkPermi(['platform:integral:product:save'])">
               <el-divider direction="vertical"></el-divider>
-              <a @click="onEdit(scope.row, 'copy')">复制</a>
+              <a @click="onEdit(scope.row, 'copy')">{{ $t('marketing.copy') }}</a>
             </template>
             <template v-if="checkPermi(['platform:integral:product:delete'])">
               <el-divider direction="vertical"></el-divider>
-              <a @click="handleDelete(scope.row.id, tableFrom.type)">删除</a>
+              <a @click="handleDelete(scope.row.id, tableFrom.type)">{{ $t('common.delete') }}</a>
             </template>
           </template>
         </el-table-column>
@@ -168,7 +170,7 @@ import BatchAudit from '@/views/product/batchAudit';
 import merchantName from '@/components/merchantName';
 import previewBox from '@/views/product/previewBox';
 import product from '@/mixins/product';
-const objTitle = ['已上架', '未上架'];
+import { getLocalizedName, getUiLocale } from '@/utils/localizedName';
 const tableFroms = {
   page: 1,
   limit: $constants.page.limit[0],
@@ -177,7 +179,7 @@ const tableFroms = {
   isShow: '1',
 };
 export default {
-  name: 'ProductList',
+  name: 'ProductManage',
   components: { infoFrom },
   mixins: [product],
   data() {
@@ -210,7 +212,16 @@ export default {
       addType: 'isAdd',
     };
   },
-  computed: {},
+  computed: {
+    headerTabs() {
+      const up = (this.headeNum[0] && this.headeNum[0].count) || 0;
+      const down = (this.headeNum[1] && this.headeNum[1].count) || 0;
+      return [
+        { type: '1', label: this.$t('marketing.tabOnShelfCount', { count: up }) },
+        { type: '0', label: this.$t('marketing.tabOffShelfCount', { count: down }) },
+      ];
+    },
+  },
   activated() {
     this.handleSeachList();
   },
@@ -220,6 +231,9 @@ export default {
   },
   methods: {
     checkPermi,
+    localizedProductName(row) {
+      return getLocalizedName(row, getUiLocale(this));
+    },
     // 查看详情
     handleView(id) {
       this.productId = id;
@@ -256,7 +270,7 @@ export default {
     onEdit(row, copy) {
       //id:商品id，isDisabled：是否能编辑(noEdit不能，edit能)，isChoose：是否是选择商品(choose是，noChoose不是)
       if (this.tableFrom.type === '1') {
-        this.$modalSure('下架该商品吗？出售商品需下架之后可编辑。').then(() => {
+        this.$modalSure(this.$t('marketing.offShelfProductConfirm')).then(() => {
           offShellApi(row.id).then(() => {
             this.$router.push({
               path: `/marketing/pointsMall/productManage/creatProduct/${row.id}/edit/noChoose/${copy}`,
@@ -289,16 +303,8 @@ export default {
       delete data.limit;
       productHeadersApi(data).then((res) => {
         this.headeNum = [
-          {
-            name: objTitle[0],
-            type: '1',
-            count: res.upNum,
-          },
-          {
-            name: objTitle[1],
-            type: '0',
-            count: res.downNum,
-          },
+          { type: '1', count: res.upNum },
+          { type: '0', count: res.downNum },
         ];
       });
     },
@@ -331,9 +337,9 @@ export default {
     },
     // 删除
     handleDelete(id, type) {
-      this.$modalSure(`删除 id 为 ${id} 的积分商品`).then(() => {
+      this.$modalSure(this.$t('marketing.deleteIntegralProductConfirm', { id })).then(() => {
         productDeleteApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           this.delSuccess();
         });
       });
@@ -342,7 +348,7 @@ export default {
     onchangeIsShow(row) {
       putOnShellApi(row.id)
         .then(() => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('product.operateSuccess'));
           this.getList();
           this.goodHeade();
         })

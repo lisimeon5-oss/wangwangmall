@@ -9,10 +9,10 @@
     >
       <div class="padding-add">
         <el-form inline size="small" @submit.native.prevent>
-          <el-form-item label="关键字：">
+          <el-form-item :label="$t('distribution.keywordLabel')">
             <el-input
               v-model.trim="listPram.keywords"
-              placeholder="请输入id，名称，描述"
+              :placeholder="$t('maintain.pleaseEnterIdNameDescription')"
               clearable
               class="selWidth"
               size="small"
@@ -20,7 +20,7 @@
             ></el-input>
           </el-form-item>
           <el-form-item class="search-form-sub">
-            <el-button type="primary" size="small" @click="handlerSearch">搜索</el-button>
+            <el-button type="primary" size="small" @click="handlerSearch">{{ $t('common.search') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -32,10 +32,10 @@
           type="primary"
           @click="handlerEditData({}, 0)"
           v-if="!selectModel && checkPermi(['platform:system:form:save'])"
-          >创建表单</el-button
+          >{{ $t('maintain.createForm') }}</el-button
         >
         <el-button v-if="selectModel" type="primary" :disabled="!selectedConfigData.id" @click="handlerConfimSelect"
-          >确定选择</el-button
+          >{{ $t('maintain.confirmSelect') }}</el-button
         >
       </div>
       <el-table
@@ -47,17 +47,21 @@
         @current-change="handleCurrentRowChange"
       >
         <el-table-column label="ID" prop="id" width="80" />
-        <el-table-column label="名称" prop="name" min-width="180" />
-        <el-table-column label="描述" prop="info" min-width="220" />
-        <el-table-column label="更新时间" prop="updateTime" min-width="200" />
+        <el-table-column :label="$t('category.name')" min-width="180">
+          <template slot-scope="scope">{{ getLocalizedFormName(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('maintain.description')" min-width="220">
+          <template slot-scope="scope">{{ getLocalizedFormInfo(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('maintain.updateTime')" prop="updateTime" min-width="200" />
         <el-table-column
           v-if="!selectModel && checkPermi(['platform:system:form:update'])"
-          label="操作"
+          :label="$t('common.operate')"
           width="70"
           fixed="right"
         >
           <template slot-scope="scope">
-            <a @click="handlerEditData(scope.row, 1)">编辑</a>
+            <a @click="handlerEditData(scope.row, 1)">{{ $t('common.edit') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -74,7 +78,7 @@
     <el-dialog
       :visible.sync="editDialogConfig.visible"
       fullscreen
-      :title="editDialogConfig.isCreate === 0 ? '创建表单' : '编辑表单'"
+      :title="editDialogConfig.isCreate === 0 ? $t('maintain.createForm') : $t('maintain.editForm')"
       destroy-on-close
       :close-on-click-modal="false"
 
@@ -103,6 +107,7 @@
 import * as systemFormConfigApi from '@/api/systemFormConfig.js';
 import edit from './edit';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { getLocalizedName, getLocalizedText } from '@/utils/localizedName';
 export default {
   // name: "index"
   components: { edit },
@@ -134,6 +139,21 @@ export default {
   },
   methods: {
     checkPermi,
+    currentLocale() {
+      return (
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn'
+      );
+    },
+    getLocalizedFormName(row) {
+      return getLocalizedName(row, this.currentLocale());
+    },
+    getLocalizedFormInfo(row) {
+      return getLocalizedText(row ? row.info : '', row ? row.infoJson : '', this.currentLocale());
+    },
     handlerSearch() {
       this.listPram.page = 1;
       this.handlerGetList(this.listPram);

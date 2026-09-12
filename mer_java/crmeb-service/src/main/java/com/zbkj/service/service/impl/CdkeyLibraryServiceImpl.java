@@ -25,6 +25,8 @@ import com.zbkj.common.response.CdkeyLibraryPageResponse;
 import com.zbkj.common.response.CdkeyLibrarySimpleResponse;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.ProductResultCode;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.I18nSearchUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.service.dao.CdkeyLibraryDao;
 import com.zbkj.service.service.CardSecretService;
@@ -82,8 +84,8 @@ public class CdkeyLibraryServiceImpl extends ServiceImpl<CdkeyLibraryDao, CdkeyL
         SystemAdmin admin = SecurityUtil.getLoginUserVo().getUser();
         LambdaQueryWrapper<CdkeyLibrary> lqw = Wrappers.lambdaQuery();
         if (StrUtil.isNotBlank(request.getName())) {
-            String kerwords = URLUtil.decode(request.getName());
-            lqw.like(CdkeyLibrary::getName, kerwords);
+            String keywords = URLUtil.decode(request.getName());
+            I18nSearchUtil.likeName(lqw, CdkeyLibrary::getName, CdkeyLibrary::getNameJson, keywords);
         }
         if (StrUtil.isNotBlank(request.getProductName())) {
             String productName = URLUtil.decode(request.getProductName());
@@ -110,7 +112,9 @@ public class CdkeyLibraryServiceImpl extends ServiceImpl<CdkeyLibraryDao, CdkeyL
             CdkeyLibraryPageResponse response = new CdkeyLibraryPageResponse();
             response.setId(cdkeyLibrary.getId());
             response.setName(cdkeyLibrary.getName());
+            response.setNameJson(cdkeyLibrary.getNameJson());
             response.setRemark(cdkeyLibrary.getRemark());
+            response.setRemarkJson(cdkeyLibrary.getRemarkJson());
             response.setUsedNum(cdkeyLibrary.getUsedNum());
             response.setTotalNum(cdkeyLibrary.getTotalNum());
             response.setCreateTime(cdkeyLibrary.getCreateTime());
@@ -135,12 +139,14 @@ public class CdkeyLibraryServiceImpl extends ServiceImpl<CdkeyLibraryDao, CdkeyL
     @Override
     public Boolean add(CdkeyLibrarySaveRequest request) {
         SystemAdmin admin = SecurityUtil.getLoginUserVo().getUser();
-        if (isExistName(request.getName(), 0, admin.getMerId())) {
+        if (StrUtil.isNotBlank(request.getName()) && isExistName(request.getName(), 0, admin.getMerId())) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "卡密库名称已存在");
         }
         CdkeyLibrary cdkeyLibrary = new CdkeyLibrary();
-        cdkeyLibrary.setName(request.getName());
-        cdkeyLibrary.setRemark(StrUtil.isNotBlank(request.getRemark()) ? request.getRemark() : "");
+        cdkeyLibrary.setName(I18nJsonUtil.emptyToBlank(request.getName()));
+        cdkeyLibrary.setNameJson(request.getNameJson());
+        cdkeyLibrary.setRemark(I18nJsonUtil.emptyToBlank(request.getRemark()));
+        cdkeyLibrary.setRemarkJson(request.getRemarkJson());
         cdkeyLibrary.setMerId(admin.getMerId());
         return save(cdkeyLibrary);
     }
@@ -185,13 +191,16 @@ public class CdkeyLibraryServiceImpl extends ServiceImpl<CdkeyLibraryDao, CdkeyL
         if (!admin.getMerId().equals(cdkeyLibrary.getMerId())) {
             throw new CrmebException(ProductResultCode.PRODUCT_CDKEY_LIBRARY_NOT_EXIST);
         }
-        if (!cdkeyLibrary.getName().equals(request.getName())) {
-            if (isExistName(request.getName(), cdkeyLibrary.getId(), cdkeyLibrary.getMerId())) {
+        String name = I18nJsonUtil.emptyToBlank(request.getName());
+        if (StrUtil.isNotBlank(name) && !name.equals(cdkeyLibrary.getName())) {
+            if (isExistName(name, cdkeyLibrary.getId(), cdkeyLibrary.getMerId())) {
                 throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "卡密库名称已存在");
             }
-            cdkeyLibrary.setName(request.getName());
         }
-        cdkeyLibrary.setRemark(StrUtil.isNotBlank(request.getRemark()) ? request.getRemark() : "");
+        cdkeyLibrary.setName(name);
+        cdkeyLibrary.setNameJson(request.getNameJson());
+        cdkeyLibrary.setRemark(I18nJsonUtil.emptyToBlank(request.getRemark()));
+        cdkeyLibrary.setRemarkJson(request.getRemarkJson());
         return updateById(cdkeyLibrary);
     }
 
@@ -202,7 +211,7 @@ public class CdkeyLibraryServiceImpl extends ServiceImpl<CdkeyLibraryDao, CdkeyL
     public List<CdkeyLibrarySimpleResponse> findUnrelatedList() {
         SystemAdmin admin = SecurityUtil.getLoginUserVo().getUser();
         LambdaQueryWrapper<CdkeyLibrary> lqw = Wrappers.lambdaQuery();
-        lqw.select(CdkeyLibrary::getId, CdkeyLibrary::getName, CdkeyLibrary::getTotalNum, CdkeyLibrary::getUsedNum);
+        lqw.select(CdkeyLibrary::getId, CdkeyLibrary::getName, CdkeyLibrary::getNameJson, CdkeyLibrary::getTotalNum, CdkeyLibrary::getUsedNum);
         lqw.eq(CdkeyLibrary::getProductId, 0);
         lqw.eq(CdkeyLibrary::getMerId, admin.getMerId());
         lqw.eq(CdkeyLibrary::getIsDel, 0);
@@ -215,6 +224,7 @@ public class CdkeyLibraryServiceImpl extends ServiceImpl<CdkeyLibraryDao, CdkeyL
             CdkeyLibrarySimpleResponse response = new CdkeyLibrarySimpleResponse();
             response.setId(library.getId());
             response.setName(library.getName());
+            response.setNameJson(library.getNameJson());
             response.setStock(library.getTotalNum() - library.getUsedNum());
             return response;
         }).collect(Collectors.toList());

@@ -2,20 +2,20 @@
 	<view :data-theme="theme">
 		<view class='nav acea-row row-around'>
 			<view class='item' :class='refundTypeStatus==-1 ? "on": ""' @click="statusClick(-1)">
-				<view>售后申请</view>
+				<view>{{$t('售后申请')}}</view>
 			</view>
 			<view class='item' :class='refundTypeStatus==0 ? "on": ""' @click="statusClick(0)">
-				<view>处理中</view>
+				<view>{{$t('处理中')}}</view>
 			</view>
 			<view class='item' :class='refundTypeStatus==9 ? "on": ""' @click="statusClick(9)">
-				<view>申请记录</view>
+				<view>{{$t('申请记录')}}</view>
 			</view>
 		</view>
 		<view class="borderPad mt20">
 			<view class='search acea-row row-middle'>
 				<text class='iconfont icon-sousuo2 mr20'></text>
 				<input type='text' v-model='keywords' confirm-type="search" :focus="focus"
-					placeholder='根据商品名称/退款订单号/订单编号搜索' placeholder-class='placeholder' @blur="handleSeach"
+					:placeholder="$t('根据商品名称/退款订单号/订单编号搜索')" placeholder-class='placeholder' @blur="handleSeach"
 					maxlength="50"></input>
 			</view>
 		</view>
@@ -27,12 +27,12 @@
 				</view>
 				<view v-else class='orderNum acea-row row-between'>
 					<view class="acea-row">
-						<view class="tit mr10">退款单号: </view>
+						<view class="tit mr10">{{$t('退款单号:')}} </view>
 						<view class="no">{{items.refundOrderNo}}</view>
 					</view>
 					<view class="afterSalesType">
-						<span class="iconfont" :class="items.afterSalesType===1?'icon-jintuikuan':'icon-tuihuotuikuan'"></span>
-						<span>{{items.afterSalesType===1?'仅退款':'退货退款'}}</span>
+						<refund-type-icon class="refund-type-icon-inline" :kind="items.afterSalesType===1?'money':'goods'" size="sm"></refund-type-icon>
+						<span>{{items.afterSalesType===1? $t('仅退款') : $t('退货退款')}}</span>
 					</view>
 				</view>
 				<view @click='goOrderDetails(items)'
@@ -45,10 +45,10 @@
 						<view class="f-s-20 text-999 mb24">{{items.sku}}</view>
 						<view class='acea-row row-between-wrapper'>
 							<view class='num mr20 line-heightOne'>
-								{{refundTypeStatus ==-1?'数量:'+items.payNum:'申请数量:'+items.applyRefundNum}}
+								{{refundTypeStatus ==-1?$t('数量:')+items.payNum:$t('申请数量:')+items.applyRefundNum}}
 							</view>
 							<view v-show="refundTypeStatus !==-1" class='attr font-color line-heightOne'>
-								{{items.refundStatus===3?'已退款':'申请退款'}}：{{items.refundPrice}}
+								{{items.refundStatus===3? $t('已退款') : $t('申请退款')}}：{{items.refundPrice}}
 							</view>
 
 						</view>
@@ -56,10 +56,10 @@
 				</view>
 				<view v-if="refundTypeStatus===-1" class="btn-box acea-row row-between">
 					<view @click.stop="handlerToRecord(items.orderNo)" v-if="items.applyRefundNum+items.refundNum>0" class="applyRefundNum">
-						<text>有{{items.applyRefundNum+items.refundNum}}件商品已申请售后</text><span class="iconfont icon-gengduo3 ml10" style="font-size: 20rpx;"></span>
+						<text>{{$t('有')}}{{items.applyRefundNum+items.refundNum}}{{$t('件商品已申请售后')}}</text><span class="iconfont icon-gengduo3 ml10" style="font-size: 20rpx;"></span>
 					</view>
 					<view v-else></view>
-					<view class="btn bg-color acea-row row-center" style="color: #fff;" @click="goRefund(items)">申请售后</view>
+					<view class="btn bg-color acea-row row-center" style="color: #fff;" @click="goRefund(items)">{{$t('申请售后')}}</view>
 				</view>
 				<view v-else>
 					<view class="refundTypeStatus line1">
@@ -69,21 +69,21 @@
 					<view class="btn-box acea-row" style="justify-content: flex-end;">
 						<view></view>
 						<view v-if="items.refundStatus === 0 || items.refundStatus === 4 || items.refundStatus === 5"
-							class="btn btn-999 acea-row row-center line-heightOne" @click="handleRevokeRefund(items.refundOrderNo)">撤销售后</view>
+							class="btn btn-999 acea-row row-center line-heightOne" @click="handleRevokeRefund(items.refundOrderNo)">{{$t('撤销售后')}}</view>
 						<view v-if="items.refundStatus === 4 && items.afterSalesType === 2" style="color: #fff;"
-							class="btn bg-color acea-row row-center line-heightOne ml20" @click="handleReturningRefund(items)">退回商品</view>
+							class="btn bg-color acea-row row-center line-heightOne ml20" @click="handleReturningRefund(items)">{{$t('退回商品')}}</view>
 					</view>
 				</view>
 			</view>
 		</view>
 		<view class='loadingicon acea-row row-center-wrapper'>
 			<text class='loading iconfont icon-jiazai'
-				:hidden='loading==false'></text>{{orderList.length>0?loadTitle:''}}
+				:hidden='loading==false'></text>{{orderList.length>0?$t(loadTitle):''}}
 		</view>
 		<view class='noCart' v-if="orderList.length == 0 && !loading">
 			<view class='pictrue text-center'>
         <image :src="urlDomain+'crmebimage/presets/nodingdan.png'"></image>
-				<view class="default_txt">暂无售后订单哦~</view>
+				<view class="default_txt">{{$t('暂无售后订单哦~')}}</view>
 			</view>
 		</view>
 	</view>
@@ -113,8 +113,12 @@
 		mapGetters
 	} from "vuex";
 	import animationType from '@/utils/animationType.js'
+	import RefundTypeIcon from '@/pages/goods/components/refundTypeIcon/index.vue'
 	let app = getApp();
 	export default {
+		components: {
+			RefundTypeIcon
+		},
 		data() {
 			return {
         urlDomain: this.$Cache.get("imgHost"),
@@ -322,11 +326,12 @@
 		font-weight: 400;
 		color: #666666;
 		font-size: 26rpx;
+		display: flex;
+		align-items: center;
 
-		.iconfont {
+		.refund-type-icon-inline {
 			@include main_color(theme);
 			margin-right: 12rpx;
-			font-size: 26rpx;
 		}
 	}
 

@@ -1,6 +1,9 @@
 package com.zbkj.service.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -14,6 +17,7 @@ import com.zbkj.common.request.merchant.MerchantTypeRequest;
 import com.zbkj.common.request.PageParamRequest;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.MerchantResultCode;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.service.dao.MerchantTypeDao;
 import com.zbkj.service.service.MerchantService;
 import com.zbkj.service.service.MerchantTypeService;
@@ -22,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -94,6 +99,12 @@ public class MerchantTypeServiceImpl extends ServiceImpl<MerchantTypeDao, Mercha
         }
         merchantType.setName(request.getName());
         merchantType.setInfo(request.getInfo());
+        if (ObjectUtil.isNotNull(request.getNameJson())) {
+            merchantType.setNameJson(request.getNameJson());
+        }
+        if (ObjectUtil.isNotNull(request.getInfoJson())) {
+            merchantType.setInfoJson(request.getInfoJson());
+        }
         return dao.updateById(merchantType) > 0;
     }
 
@@ -119,7 +130,7 @@ public class MerchantTypeServiceImpl extends ServiceImpl<MerchantTypeDao, Mercha
     @Override
     public List<MerchantType> allList() {
         LambdaQueryWrapper<MerchantType> lqw = Wrappers.lambdaQuery();
-        lqw.select(MerchantType::getId, MerchantType::getName, MerchantType::getInfo);
+        lqw.select(MerchantType::getId, MerchantType::getName, MerchantType::getNameJson, MerchantType::getInfo, MerchantType::getInfoJson);
         lqw.eq(MerchantType::getIsDel, false);
         lqw.orderByDesc(MerchantType::getId);
         return dao.selectList(lqw);
@@ -130,6 +141,9 @@ public class MerchantTypeServiceImpl extends ServiceImpl<MerchantTypeDao, Mercha
      * @param name 分类名称
      */
     private Boolean checkName(String name) {
+        if (StrUtil.isBlank(name)) {
+            return Boolean.FALSE;
+        }
         LambdaQueryWrapper<MerchantType> lqw = Wrappers.lambdaQuery();
         lqw.select(MerchantType::getId);
         lqw.eq(MerchantType::getName, name);
@@ -150,6 +164,48 @@ public class MerchantTypeServiceImpl extends ServiceImpl<MerchantTypeDao, Mercha
             throw new CrmebException(MerchantResultCode.MERCHANT_TYPE_NOT_EXIST);
         }
         return merchantType;
+    }
+
+    @Override
+    public String resolveDisplayName(MerchantType merchantType) {
+        if (ObjectUtil.isNull(merchantType)) {
+            return "";
+        }
+        return resolveLocalizedText(merchantType.getName(), merchantType.getNameJson());
+    }
+
+    @Override
+    public String resolveDisplayInfo(MerchantType merchantType) {
+        if (ObjectUtil.isNull(merchantType)) {
+            return "";
+        }
+        return resolveLocalizedText(merchantType.getInfo(), merchantType.getInfoJson());
+    }
+
+    private String getRequestLanguage() {
+        HttpServletRequest request = RequestUtil.getRequest();
+        String language = null;
+        if (request != null) {
+            language = request.getHeader("lang");
+        }
+        return StrUtil.isBlank(language) ? "zh-cn" : language;
+    }
+
+    private String resolveLocalizedText(String text, String json) {
+        String language = getRequestLanguage();
+        if (StrUtil.isBlank(language) || "zh-cn".equals(language) || StrUtil.isBlank(json)) {
+            return text;
+        }
+        try {
+            JSONObject jsonObject = JSON.parseObject(json);
+            String localized = jsonObject.getString(language);
+            if (StrUtil.isNotBlank(localized)) {
+                return localized;
+            }
+        } catch (Exception ignored) {
+            // 解析失败时保留默认文案
+        }
+        return text;
     }
 }
 

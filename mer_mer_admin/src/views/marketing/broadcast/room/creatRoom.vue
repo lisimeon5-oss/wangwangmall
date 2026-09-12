@@ -1,34 +1,34 @@
 <template>
   <div class="divBox">
     <div class="container_box">
-      <pages-header ref="pageHeader" title="添加直播间" backUrl="/marketing/broadcast/room"></pages-header>
+      <pages-header ref="pageHeader" :title="$t('marketing.addLiveRoom')" backUrl="/marketing/broadcast/room"></pages-header>
     </div>
     <el-card class="box-card mt14" v-loading="listLoading" shadow="never" :bordered="false">
       <el-form :model="formData" :rules="rules" ref="formData" label-width="150px" class="demo-ruleForm">
-        <el-form-item label="直播间名字" prop="roomName">
+        <el-form-item :label="$t('marketing.liveRoomName')" prop="roomName">
           <el-input
             :disabled="isDetail"
             v-model.trim="formData.roomName"
-            placeholder="最短3个汉字，最长17个汉字"
+            :placeholder="$t('marketing.roomNameLengthPlaceholder')"
           ></el-input>
         </el-form-item>
-        <el-form-item label="主播昵称" prop="anchorName">
+        <el-form-item :label="$t('marketing.hostNickname')" prop="anchorName">
           <el-input
             :disabled="isDetail"
             v-model.trim="formData.anchorName"
-            placeholder="最短2个汉字，最长15个汉字"
+            :placeholder="$t('marketing.hostNameLengthPlaceholder')"
           ></el-input>
         </el-form-item>
-        <el-form-item label="主播微信号" prop="anchorWechat">
+        <el-form-item :label="$t('marketing.hostWechat')" prop="anchorWechat">
           <el-input :disabled="isDetail" v-model.trim="formData.anchorWechat"></el-input>
         </el-form-item>
-        <el-form-item label="主播副号微信号">
+        <el-form-item :label="$t('marketing.hostSubWechat')">
           <el-input :disabled="isDetail" v-model.trim="formData.subAnchorWechat"></el-input>
         </el-form-item>
-        <el-form-item label="创建者微信号">
+        <el-form-item :label="$t('marketing.creatorWechat')">
           <el-input :disabled="isDetail" v-model.trim="formData.createrWechat"></el-input>
         </el-form-item>
-        <el-form-item label="背景图：" prop="coverImgLocal">
+        <el-form-item :label="$t('user.backgroundImage')" prop="coverImgLocal">
           <div class="upLoadPicBox acea-row" @click="modalPicTap('1', 'coverImgLocal')">
             <div v-if="formData.coverImgLocal" class="pictrue">
               <img v-if="formData.coverImgLocal && !isDetail" :src="formData.coverImgLocal" />
@@ -42,10 +42,10 @@
             <div v-else class="upLoad">
               <i class="el-icon-camera cameraIconfont" />
             </div>
-            <span class="from-tips">建议像素1080*1920，大小不超过2M</span>
+            <span class="from-tips">{{ $t('marketing.imageTip1080') }}</span>
           </div>
         </el-form-item>
-        <el-form-item label="分享图：" prop="shareImgLocal">
+        <el-form-item :label="$t('marketing.shareImageLabel')" prop="shareImgLocal">
           <div class="upLoadPicBox acea-row" @click="modalPicTap('1', 'shareImgLocal')">
             <div v-if="formData.shareImgLocal" class="pictrue">
               <img v-if="formData.shareImgLocal && !isDetail" :src="formData.shareImgLocal" />
@@ -59,10 +59,10 @@
             <div v-else class="upLoad">
               <i class="el-icon-camera cameraIconfont" />
             </div>
-            <span class="from-tips">建议像素800*640，大小不超过1M</span>
+            <span class="from-tips">{{ $t('marketing.imageTip800x640') }}</span>
           </div>
         </el-form-item>
-        <el-form-item label="直播频道封面图：" prop="feedsImgLocal">
+        <el-form-item :label="$t('marketing.liveChannelCoverLabel')" prop="feedsImgLocal">
           <div class="upLoadPicBox acea-row" @click="modalPicTap('1', 'feedsImgLocal')">
             <div v-if="formData.feedsImgLocal" class="pictrue">
               <img v-if="formData.feedsImgLocal && !isDetail" :src="formData.feedsImgLocal" />
@@ -76,10 +76,10 @@
             <div v-else class="upLoad">
               <i class="el-icon-camera cameraIconfont" />
             </div>
-            <span class="from-tips">建议像素800*800，大小不超过100KB</span>
+            <span class="from-tips">{{ $t('marketing.imageTip800') }}</span>
           </div>
         </el-form-item>
-        <el-form-item label="直播时间：" prop="timeVal">
+        <el-form-item :label="$t('marketing.liveTimeLabel')" prop="timeVal">
           <el-date-picker
             :disabled="isDetail"
             style="width: 550px"
@@ -88,110 +88,108 @@
             range-separator="-"
             value-format="yyyy-MM-dd HH:mm:ss"
             :default-time="['00:00:00', '23:59:59']"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
+            :start-placeholder="$t('product.startDate')"
+            :end-placeholder="$t('product.endDate')"
             :picker-options="pickerOptions0"
             @change="onchangeTime"
             @blur="$forceUpdate()"
           >
           </el-date-picker>
-          <p class="from-tips">
-            开播时间需要在当前时间的10分钟后，并且开始时间不能在6个月之后。开播时间和结束时间间隔不得短于30分钟，不得超过24小时
-          </p>
+          <p class="from-tips">{{ $t('marketing.liveTimeTip') }}</p>
         </el-form-item>
-        <el-form-item label="直播间类型：" prop="type">
+        <el-form-item :label="$t('marketing.liveTypeLabel')" prop="type">
           <el-radio-group :disabled="isDetail" v-model="formData.type">
-            <el-radio :label="1">推流</el-radio>
-            <el-radio :label="0">手机直播</el-radio>
+            <el-radio :label="1">{{ $t('marketing.streamPush') }}</el-radio>
+            <el-radio :label="0">{{ $t('marketing.phoneLive') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="直播间点赞：" prop="closeLike">
+        <el-form-item :label="$t('marketing.liveLikeLabel')" prop="closeLike">
           <el-radio-group :disabled="isDetail" v-model="formData.closeLike">
-            <el-radio :label="1">开启</el-radio>
-            <el-radio :label="0">关闭</el-radio>
+            <el-radio :label="1">{{ $t('common.open') }}</el-radio>
+            <el-radio :label="0">{{ $t('common.close') }}</el-radio>
           </el-radio-group>
-          <p class="from-tips">若关闭，观众端将隐藏点赞按钮，直播开始后不允许开启</p>
+          <p class="from-tips">{{ $t('marketing.disableLikeTip') }}</p>
         </el-form-item>
-        <el-form-item label="直播间货架：" prop="closeLike">
+        <el-form-item :label="$t('marketing.liveShelfLabel')" prop="closeLike">
           <el-radio-group :disabled="isDetail" v-model="formData.closeGoods">
-            <el-radio :label="1">开启</el-radio>
-            <el-radio :label="0">关闭</el-radio>
+            <el-radio :label="1">{{ $t('common.open') }}</el-radio>
+            <el-radio :label="0">{{ $t('common.close') }}</el-radio>
           </el-radio-group>
-          <p class="from-tips">若关闭，观众端将隐藏商品货架，直播开始后不允许开启</p>
+          <p class="from-tips">{{ $t('marketing.disableShelfTip') }}</p>
         </el-form-item>
-        <el-form-item label="直播间评论：" prop="closeLike">
+        <el-form-item :label="$t('marketing.liveCommentLabel')" prop="closeLike">
           <el-radio-group :disabled="isDetail" v-model="formData.closeComment">
-            <el-radio :label="1">开启</el-radio>
-            <el-radio :label="0">关闭</el-radio>
+            <el-radio :label="1">{{ $t('common.open') }}</el-radio>
+            <el-radio :label="0">{{ $t('common.close') }}</el-radio>
           </el-radio-group>
-          <p class="from-tips">若关闭，观众端将隐藏评论入口，直播开始后不允许开启</p>
+          <p class="from-tips">{{ $t('marketing.disableCommentTip') }}</p>
         </el-form-item>
-        <el-form-item label="直播间收录：">
+        <el-form-item :label="$t('marketing.liveInclusionLabel')">
           <el-radio-group :disabled="isDetail" v-model="formData.isFeedsPublic">
-            <el-radio :label="1">开启</el-radio>
-            <el-radio :label="0">关闭</el-radio>
+            <el-radio :label="1">{{ $t('common.open') }}</el-radio>
+            <el-radio :label="0">{{ $t('common.close') }}</el-radio>
           </el-radio-group>
-          <p class="from-tips">默认开启收录</p>
+          <p class="from-tips">{{ $t('marketing.inclusionDefaultOn') }}</p>
         </el-form-item>
-        <el-form-item label="直播间回放：">
+        <el-form-item :label="$t('marketing.liveReplayLabel')">
           <el-radio-group :disabled="isDetail" v-model="formData.closeReplay">
-            <el-radio :label="1">开启</el-radio>
-            <el-radio :label="0">关闭</el-radio>
+            <el-radio :label="1">{{ $t('common.open') }}</el-radio>
+            <el-radio :label="0">{{ $t('common.close') }}</el-radio>
           </el-radio-group>
-          <p class="from-tips">直播开始后允许开启</p>
+          <p class="from-tips">{{ $t('marketing.canEnableAfterStart') }}</p>
         </el-form-item>
-        <el-form-item label="直播间分享：">
+        <el-form-item :label="$t('marketing.liveShareLabel')">
           <el-radio-group :disabled="isDetail" v-model="formData.closeShare">
-            <el-radio :label="1">开启</el-radio>
-            <el-radio :label="0">关闭</el-radio>
+            <el-radio :label="1">{{ $t('common.open') }}</el-radio>
+            <el-radio :label="0">{{ $t('common.close') }}</el-radio>
           </el-radio-group>
-          <p class="from-tips">直播开始后不允许修改</p>
+          <p class="from-tips">{{ $t('marketing.cannotEditAfterStart') }}</p>
         </el-form-item>
-        <el-form-item label="直播间客服：">
+        <el-form-item :label="$t('marketing.liveServiceLabel')">
           <el-radio-group :disabled="isDetail" v-model="formData.closeKf">
-            <el-radio :label="1">开启</el-radio>
-            <el-radio :label="0">关闭</el-radio>
+            <el-radio :label="1">{{ $t('common.open') }}</el-radio>
+            <el-radio :label="0">{{ $t('common.close') }}</el-radio>
           </el-radio-group>
-          <p class="from-tips">直播开始后允许开启</p>
+          <p class="from-tips">{{ $t('marketing.canEnableAfterStart') }}</p>
         </el-form-item>
-        <el-form-item v-if="isDetail" label="已导入的直播商品：">
+        <el-form-item v-if="isDetail" :label="$t('marketing.importedLiveProductsLabel')">
           <el-table ref="table" :data="tableData.data" style="width: 100%" size="samll" highlight-current-row>
             <el-table-column prop="id" label="ID" min-width="50" />
-            <el-table-column label="商品图" min-width="100">
+            <el-table-column :label="$t('product.productImage')" min-width="100">
               <template slot-scope="scope">
                 <div class="demo-image__preview line-heightOne">
                   <el-image :src="scope.row.coverImgUrlLocal" :preview-src-list="[scope.row.coverImgUrlLocal]" />
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="name" label="商品名称" min-width="120" />
-            <el-table-column label="价格类型" min-width="80">
+            <el-table-column prop="name" :label="$t('product.listProductName')" min-width="120" />
+            <el-table-column :label="$t('marketing.priceType')" min-width="80">
               <template slot-scope="scope">
                 <span>{{ scope.row.priceType | priceTypeFilter }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="价格" min-width="100">
+            <el-table-column :label="$t('marketing.price')" min-width="100">
               <template slot-scope="scope">
                 <span v-if="scope.row.priceType === 1">{{ scope.row.price }}</span>
                 <span v-else>{{ scope.row.price + '~' + scope.row.price2 }}</span>
               </template>
             </el-table-column>
-            <!--<el-table-column prop="goods.pay_num" label="销售数量" min-width="50" />-->
+            <!--<el-table-column prop="goods.pay_num" :label="$t('marketing.salesCount')" min-width="50" />-->
             <!--<el-table-column label="上下架" min-width="80">-->
             <!--<template slot-scope="scope">-->
             <!--<el-switch-->
             <!--v-model="scope.row.onSale"-->
             <!--:active-value="1"-->
             <!--:inactive-value="0"-->
-            <!--active-text="上架"-->
-            <!--inactive-text="下架"-->
+            <!--:active-text="$t('product.onShelf')"-->
+            <!--:inactive-text="$t('product.offShelf')"-->
             <!--@change="onchangeIsShow(scope.row)"-->
             <!--/>-->
             <!--</template>-->
             <!--</el-table-column>-->
-            <el-table-column v-hasPermi="['merchant:mp:live:room:deletegoods']" label="操作" width="70" fixed="right">
+            <el-table-column v-hasPermi="['merchant:mp:live:room:deletegoods']" :label="$t('common.operate')" width="70" fixed="right">
               <template slot-scope="scope">
-                <a @click="handleDelete(scope.row, scope.$index)">删除</a>
+                <a @click="handleDelete(scope.row, scope.$index)">{{ $t('common.delete') }}</a>
               </template>
             </el-table-column>
           </el-table>
@@ -205,7 +203,7 @@
                 submitForm('formData');
               }
             "
-            >立即提交</el-button
+            >{{ $t('coupon.submitNow') }}</el-button
           >
         </el-form-item>
       </el-form>
@@ -281,18 +279,18 @@ export default {
       listLoading: false,
       rules: {
         roomName: [
-          { required: true, message: '请输入直播间名称', trigger: 'blur' },
-          { min: 3, max: 17, message: '最短3个汉字，最长17个汉字，1个汉字相当于2个字符', trigger: 'blur' },
+          { required: true, message: this.$t('marketing.roomNameRequired'), trigger: 'blur' },
+          { min: 3, max: 17, message: this.$t('marketing.roomNameLengthRule'), trigger: 'blur' },
         ],
         anchorName: [
-          { required: true, message: '请输入直播间名称', trigger: 'blur' },
-          { min: 2, max: 15, message: '最短2个汉字，最长15个汉字，1个汉字相当于2个字符', trigger: 'blur' },
+          { required: true, message: this.$t('marketing.roomNameRequired'), trigger: 'blur' },
+          { min: 2, max: 15, message: this.$t('marketing.hostNameLengthRule'), trigger: 'blur' },
         ],
-        anchorWechat: [{ required: true, message: '请输入主播微信号', trigger: 'blur' }],
-        coverImgLocal: [{ required: true, message: '请选择上传背景图', trigger: 'change' }],
-        feedsImgLocal: [{ required: true, message: '请上传频道封面图', trigger: 'change' }],
-        shareImgLocal: [{ required: true, message: '请上传分享图', trigger: 'change' }],
-        timeVal: [{ type: 'array', required: true, message: '请选择时间', trigger: 'change' }],
+        anchorWechat: [{ required: true, message: this.$t('marketing.hostWechatRequired'), trigger: 'blur' }],
+        coverImgLocal: [{ required: true, message: this.$t('marketing.uploadBackgroundRequired'), trigger: 'change' }],
+        feedsImgLocal: [{ required: true, message: this.$t('marketing.uploadChannelCoverRequired'), trigger: 'change' }],
+        shareImgLocal: [{ required: true, message: this.$t('marketing.uploadShareImageRequired'), trigger: 'change' }],
+        timeVal: [{ type: 'array', required: true, message: this.$t('marketing.selectTimeRequired'), trigger: 'change' }],
         tempRoute: {},
       },
     };
@@ -314,7 +312,7 @@ export default {
   },
   methods: {
     setTagsViewTitle() {
-      const title = this.$route.params.roomId ? (this.isDetail ? '直播间详情' : '编辑直播间') : '添加直播间';
+      const title = this.$route.params.roomId ? (this.isDetail ? this.$t('marketing.liveRoomDetail') : this.$t('marketing.editLiveRoom')) : this.$t('marketing.addLiveRoom');
       const route = Object.assign({}, this.tempRoute, {
         title: this.$route.params.roomId ? `${title}-${this.$route.params.roomId}` : `${title}`,
       });
@@ -323,15 +321,15 @@ export default {
     // 上下架 goodsId, roomId 取的是微信返回的id
     onchangeIsShow(row) {
       liveRoomGoodsonsaleApi({ goodsId: row.goodsId, roomId: this.formData.roomId, onSale: row.onSale }).then(() => {
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('product.operateSuccess'));
         if (this.isDetail) this.getList();
       });
     },
     // 删除goodsId取的是微信返回的id
     handleDelete(item, idx) {
-      this.$modalSure('删除该直播商品吗？').then(() => {
+      this.$modalSure(this.$t('marketing.deleteLiveProductConfirm')).then(() => {
         liveRoomDeletegoodsinroomApi(this.$route.params.roomId, item.goodsId).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           if (this.isDetail) this.getList();
         });
       });
@@ -400,7 +398,7 @@ export default {
           this.$route.params.roomId
             ? liveRoomEditApi(this.formData)
                 .then((res) => {
-                  this.$message.success('编辑成功');
+                  this.$message.success(this.$t('product.editSuccess'));
                   this.$router.push({ path: `/marketing/broadcast/room` });
                 })
                 .catch(() => {
@@ -408,7 +406,7 @@ export default {
                 })
             : liveRoomCreateApi(this.formData)
                 .then((res) => {
-                  this.$message.success('添加成功');
+                  this.$message.success(this.$t('user.addSuccess'));
                   this.$router.push({ path: `/marketing/broadcast/room` });
                 })
                 .catch(() => {

@@ -64,6 +64,8 @@ export function groupSave(pram) {
     formId: pram.formId,
     info: pram.info,
     name: pram.name,
+    nameJson: pram.nameJson,
+    infoJson: pram.infoJson,
   };
   return request({
     url: '/admin/platform/system/group/save',
@@ -77,6 +79,8 @@ export function groupEdit(pram) {
     formId: pram.formId,
     info: pram.info,
     name: pram.name,
+    nameJson: pram.nameJson,
+    infoJson: pram.infoJson,
     id: pram.id,
   };
   return request({

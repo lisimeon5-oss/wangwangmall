@@ -210,6 +210,7 @@ table img {
 .upload-form {
   min-width: 900px;
   max-height: 620px;
+  overflow-y: auto;
 }
 
 .upload-form-temp {
@@ -656,15 +657,20 @@ table img {
   }
 
   .tips {
-    width: 78px;
+    min-width: 110px;
+    flex-shrink: 0;
+    margin-right: 8px;
+    white-space: nowrap;
     text-align: right;
     font-size: 13px;
     color: #606266;
+    line-height: 1.4;
   }
 
   .item {
     flex: 0 0 calc(100% / 3);
     display: flex;
+    align-items: flex-start;
     margin-top: 16px;
     font-size: 13px;
     color: #606266;
@@ -681,10 +687,17 @@ table img {
     &:nth-child(3n + 3) {
       //  padding-left: 20px;
     }
+
+    &.item-block {
+      flex: 0 0 100%;
+      width: 100%;
+    }
   }
 
   .value {
     flex: 1;
+    min-width: 0;
+    word-break: break-word;
     color: #303133;
 
     image {

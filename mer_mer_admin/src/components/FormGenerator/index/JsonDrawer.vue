@@ -66,15 +66,15 @@ export default {
     const clipboard = new ClipboardJS('.copy-json-btn', {
       text: (trigger) => {
         this.$notify({
-          title: '成功',
-          message: '代码已复制到剪切板，可粘贴。',
+          title: this.translateText('成功'),
+          message: this.translateText('代码已复制到剪切板，可粘贴。'),
           type: 'success',
         });
         return this.beautifierJson;
       },
     });
     clipboard.on('error', (e) => {
-      this.$message.error('代码复制失败');
+      this.$message.error(this.translateText('代码复制失败'));
     });
   },
   beforeDestroy() {
@@ -128,10 +128,10 @@ export default {
       }
     },
     exportJsonFile() {
-      this.$prompt('文件名:', '导出文件', {
+      this.$prompt(this.translateText('文件名:'), this.translateText('导出文件'), {
         inputValue: `${+new Date()}.json`,
         closeOnClickModal: false,
-        inputPlaceholder: '请输入文件名',
+        inputPlaceholder: this.translateText('请输入文件名'),
       }).then(({ value }) => {
         if (!value) value = `${+new Date()}.json`;
         const codeStr = this.jsonEditor.getValue();
@@ -144,8 +144,8 @@ export default {
         this.$emit('refresh', JSON.parse(this.jsonEditor.getValue()));
       } catch (error) {
         this.$notify({
-          title: '错误',
-          message: 'JSON格式错误，请检查',
+          title: this.translateText('错误'),
+          message: this.translateText('JSON格式错误，请检查'),
           type: 'error',
         });
       }

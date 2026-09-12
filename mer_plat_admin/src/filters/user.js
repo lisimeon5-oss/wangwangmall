@@ -9,17 +9,19 @@
 // +----------------------------------------------------------------------
 
 //会员过滤器
+import i18n from '@/i18n';
+import { getLocalizedName } from '@/utils/localizedName';
 
 /**
  * 用户注册类型
  */
 export function registerTypeFilter(status) {
   const statusMap = {
-    wechat: '公众号',
-    routine: '小程序',
+    wechat: i18n.t('user.registerWechat'),
+    routine: i18n.t('user.registerRoutine'),
     h5: 'H5',
-    iosWx: '微信ios',
-    androidWx: '微信安卓',
+    iosWx: i18n.t('user.registerIosWx'),
+    androidWx: i18n.t('user.registerAndroidWx'),
     ios: 'ios',
   };
   return statusMap[status];
@@ -30,8 +32,8 @@ export function registerTypeFilter(status) {
  */
 export function filterIsPromoter(status) {
   const statusMap = {
-    true: '推广员',
-    false: '普通用户',
+    true: i18n.t('user.promoter'),
+    false: i18n.t('user.normalUser'),
   };
   return statusMap[status];
 }
@@ -53,7 +55,7 @@ export function tagFilter(status) {
   let newArr = [];
   for (let item of strArr) {
     if (obj[item]) {
-      newArr.push(obj[item].name);
+      newArr.push(getLocalizedName(obj[item], i18n.locale));
     }
   }
   return newArr.join(',');
@@ -64,10 +66,10 @@ export function tagFilter(status) {
  */
 export function filterMemberBenefits(status) {
   const statusMap = {
-    experienceDoubling: '经验值翻倍',
-    integralDoubling: '积分翻倍',
-    memberExclusivePrice: '会员专享价',
-    exclusiveCustomer: '专属客服',
+    experienceDoubling: i18n.t('user.benefitExperienceDoubling'),
+    integralDoubling: i18n.t('user.benefitIntegralDoubling'),
+    memberExclusivePrice: i18n.t('user.benefitMemberExclusivePrice'),
+    exclusiveCustomer: i18n.t('user.benefitExclusiveCustomer'),
   };
   return statusMap[status];
 }
@@ -77,9 +79,9 @@ export function filterMemberBenefits(status) {
  */
 export function filterMemberType(status) {
   const statusMap = {
-    0: '试用',
-    1: '期限',
-    2: '永久',
+    0: i18n.t('user.trial'),
+    1: i18n.t('user.term'),
+    2: i18n.t('user.permanent'),
   };
   return statusMap[status];
 }
@@ -89,10 +91,10 @@ export function filterMemberType(status) {
  */
 export function filterCardPayType(status) {
   const statusMap = {
-    weixin: '微信',
-    alipay: '支付宝',
-    give: '平台赠送',
-    yue: '余额',
+    weixin: i18n.t('order.wechat'),
+    alipay: i18n.t('order.alipay'),
+    give: i18n.t('user.platformGift'),
+    yue: i18n.t('order.balance'),
   };
   return statusMap[status];
 }
@@ -102,9 +104,9 @@ export function filterCardPayType(status) {
  */
 export function filterCardType(status) {
   const statusMap = {
-    0: '试用',
-    1: '期限',
-    2: '永久',
+    0: i18n.t('user.trial'),
+    1: i18n.t('user.term'),
+    2: i18n.t('user.permanent'),
   };
   return statusMap[status];
 }

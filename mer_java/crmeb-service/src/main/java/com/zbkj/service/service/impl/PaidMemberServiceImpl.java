@@ -129,7 +129,9 @@ public class PaidMemberServiceImpl implements PaidMemberService {
         }
         groupConfig.setImageUrl(systemAttachmentService.clearPrefix(voRequest.getImageUrl()));
         groupConfig.setValue(voRequest.getValue());
+        groupConfig.setValueJson(voRequest.getValueJson());
         groupConfig.setMessage(voRequest.getMessage());
+        groupConfig.setMessageJson(voRequest.getMessageJson());
         groupConfig.setStatus(voRequest.getStatus());
         groupConfig.setSort(voRequest.getSort());
         return groupConfigService.updateById(groupConfig);
@@ -153,6 +155,8 @@ public class PaidMemberServiceImpl implements PaidMemberService {
         GroupConfig groupConfig = getBenefitsGroupConfigById(request.getId());
         String expand = StrUtil.isNotBlank(request.getExpand()) ? request.getExpand() : "";
         groupConfig.setExpand(systemAttachmentService.clearPrefix(expand));
+        String expandJson = StrUtil.isNotBlank(request.getExpandJson()) ? request.getExpandJson() : "";
+        groupConfig.setExpandJson(systemAttachmentService.clearPrefix(expandJson));
         return groupConfigService.updateById(groupConfig);
     }
 

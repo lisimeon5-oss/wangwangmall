@@ -41,31 +41,31 @@
 						<view class="flex-1 pl-20 flex-col justify-between">
 							<view class="w-full">
 								<view class="w-410 fs-28 lh-40rpx line2">
-									<text v-if="item.isSelf" class="font-bg-red bt-color mr10 self_min merType bg-red">自营</text>
+									<text v-if="item.isSelf" class="font-bg-red bt-color mr10 self_min merType bg-red">{{$t('自营')}}</text>
 									{{item.name}}
 								</view>
 							</view>
 							<view class="flex items-baseline">
-								<text class="fs-22 lh-30rpx text-primary pr-8">秒杀价:</text>
+								<text class="fs-22 lh-30rpx text-primary pr-8">{{$t('秒杀价:')}}</text>
 								<baseMoney :money="item.seckillPrice" symbolSize="24" integerSize="40" decimalSize="24"
 									incolor="E93323" weight></baseMoney>
-								<text class="fs-22 lh-30rpx text--w111-999 pl-16 text-line regular">¥{{item.price}}</text>
+								<text class="fs-22 lh-30rpx text--w111-999 pl-16 text-line regular">฿{{item.price}}</text>
 							</view>
 							<view class="w-full progress-box flex-between-center" v-if="status == 1">
 								<view class="flex-y-center">
 									<view class="progress ml-16">
 										<view class="active" :style="'width:'+item.payRange"></view>
 									</view>
-									<text class="fs-22 text-primary pl-8">已抢{{item.payRange}}</text>
+									<text class="fs-22 text-primary pl-8">{{$t('已抢')}}{{item.payRange}}</text>
 								</view>
 								<view class="qiang"></view>
 							</view>
 							<view class="w-full yuyue-box flex-between-center" v-if="status == 2 || status ==3">
-								<view class="flex-y-center fs-22 pl-16">活动即将开始</view>
+								<view class="flex-y-center fs-22 pl-16">{{$t('活动即将开始')}}</view>
 								<view class="yuyue"></view>
 							</view>
 							<view class="w-full over-box flex-between-center" v-if="status == 0">
-								<view class="flex-y-center fs-22 pl-16">活动已结束</view>
+								<view class="flex-y-center fs-22 pl-16">{{$t('活动已结束')}}</view>
 								<view class="over"></view>
 							</view>
 						</view>
@@ -73,7 +73,7 @@
 					<view class="abs-lt cir" v-show="active > 0"></view>
 				</view>
 				<view class="bg--w111-f5f5f5 p-20" v-if="!seckillList.length && !loading">
-					<emptyPage title="暂无秒杀商品，去看看其他商品吧～" :imgSrc="urlDomain+'crmebimage/presets/noShopper.png'">
+					<emptyPage :title="$t('暂无秒杀商品，去看看其他商品吧～')" :imgSrc="urlDomain+'crmebimage/presets/noShopper.png'">
 					</emptyPage>
 				</view>
 			</view>
@@ -264,7 +264,7 @@
 	}
 
 	.sel-last {
-		/deep/.uni-scroll-view {
+		::v-deep .uni-scroll-view {
 
 			margin-right: -10rpx;
 		}

@@ -1,0 +1,40 @@
+================================================================================
+APP.JS context for shopImgUpload
+CHUNK context for shopImgUpload
+rn t.abrupt("return",a);case 10:case"end":return t.stop()}}),t,this)})));function e(e,a){return t.apply(this,arguments)}return e}(),getImgData:function(t){var e=this;return new Promise((function(a,i){shopImgUploadApi({imgUrl:t,respType:1,uploadType:1}).then((function(t){t.errcode>0?(e.fullscreenLoading=!1,e.$message.error(t.errmsg),a("")):a(t.img_info.temp_img_url)}))}))},getCopyConfig:function(){var t=this;Object(o["g"])().then((function(e){t.copyConfig=e}))},changeGuarantee:function(t){var e=this;if(t){if(
+----------------------------------------
+================================================================================
+APP.JS context for img/upload
+get"})}function f(e){return Object(r["a"])({url:"/admin/merchant/pay/component/draftproduct/update",method:"post",data:e})}function m(e){return Object(r["a"])({url:"/admin/merchant/pay/component/shop/img/upload",method:"post",data:e})}function h(e){return Object(r["a"])({url:"/admin/merchant/pay/component/draftproduct/review",method:"post",data:e})}function p(){return Object(r["a"])({url:"/admin/merchant/pay/component/shop/brand/usable/list",method:"get"})}function g(e){return Object(r["a"])({url:"/admin/
+----------------------------------------
+CHUNK context for img/upload
+================================================================================
+APP.JS context for uploadType
+CHUNK context for uploadType
+nd":return t.stop()}}),t,this)})));function e(e,a){return t.apply(this,arguments)}return e}(),getImgData:function(t){var e=this;return new Promise((function(a,i){shopImgUploadApi({imgUrl:t,respType:1,uploadType:1}).then((function(t){t.errcode>0?(e.fullscreenLoading=!1,e.$message.error(t.errmsg),a("")):a(t.img_info.temp_img_url)}))}))},getCopyConfig:function(){var t=this;Object(o["g"])().then((function(e){t.copyConfig=e}))},changeGuarantee:function(t){var e=this;if(t){if(this.guaranteeName=[],"combination"
+----------------------------------------
+================================================================================
+APP.JS context for sattDir
+ple?"2":"1"},methods:{getImage:function(e){var t=this;if(this.multiple){var n={},r=[];r=e.reduce((function(e,t){return!n[t.attId]&&(n[t.attId]=e.push(t)),e}),[]),r.map((function(e){t.imageList.push(e.sattDir)})),this.$emit("input",JSON.stringify(this.imageList))}else this.image=e[0].sattDir,this.$emit("input",this.image)},modalPicTap:function(e,t,n){var r=this;this.$modalUpload((function(e){e&&r.getImage(e)}),e,"selfUpload")},handleRemove:function(e){this.imageList.splice(e,1),this.$emit("input",JSON.s
+----------------------------------------
+];r=e.reduce((function(e,t){return!n[t.attId]&&(n[t.attId]=e.push(t)),e}),[]),r.map((function(e){t.imageList.push(e.sattDir)})),this.$emit("input",JSON.stringify(this.imageList))}else this.image=e[0].sattDir,this.$emit("input",this.image)},modalPicTap:function(e,t,n){var r=this;this.$modalUpload((function(e){e&&r.getImage(e)}),e,"selfUpload")},handleRemove:function(e){this.imageList.splice(e,1),this.$emit("input",JSON.stringify(this.imageList))},handleDragStart:function(e,t){this.dragging=t},handleDrag
+----------------------------------------
+eturn e.handleMouse(t,!1)}}},[t.num>0?n("span",{staticClass:"num_badge",style:{right:0}},[e._v(e._s(t.num))]):e._e(),"video/mp4"!==t.attType?n("img",{directives:[{name:"lazy",rawName:"v-lazy",value:t.sattDir?t.sattDir:e.localImg,expression:"item.sattDir ? item.sattDir : localImg"}],class:t.isSelect?"on":"",style:{width:e.pictureType?"100%":"90px",height:e.pictureType?"146px":"90px","object-fit":"contain"},on:{click:function(n){return e.changImage(t,r,e.pictrueList.list)}}}):e._e(),n("img"),"video/mp4"=
+----------------------------------------
+CHUNK context for sattDir
+.$selfUtil.setDomain(a.image)):this.OneattrValue=a.attrValueList},modalPicTap:function(t,e,r,i){var a=this;a.isDisabled||this.$modalUpload((function(i){if(i){if("1"!==t||e||(a.formValidate.image=i[0].sattDir,a.OneattrValue[0].image=i[0].sattDir),"2"===t&&!e){if(i.length>10)return this.$message.warning("最多选择10张图片！");if(i.length+a.formValidate.sliderImages.length>10)return this.$message.warning("最多选择10张图片！");i.map((function(t){a.formValidate.sliderImages.push(t.sattDir)}))}"1"===t&&"dan"===e&&(a.OneattrV
+----------------------------------------
+neattrValue=a.attrValueList},modalPicTap:function(t,e,r,i){var a=this;a.isDisabled||this.$modalUpload((function(i){if(i){if("1"!==t||e||(a.formValidate.image=i[0].sattDir,a.OneattrValue[0].image=i[0].sattDir),"2"===t&&!e){if(i.length>10)return this.$message.warning("最多选择10张图片！");if(i.length+a.formValidate.sliderImages.length>10)return this.$message.warning("最多选择10张图片！");i.map((function(t){a.formValidate.sliderImages.push(t.sattDir)}))}"1"===t&&"dan"===e&&(a.OneattrValue[0].image=i[0].sattDir),"1"===t&&
+----------------------------------------
+length>10)return this.$message.warning("最多选择10张图片！");if(i.length+a.formValidate.sliderImages.length>10)return this.$message.warning("最多选择10张图片！");i.map((function(t){a.formValidate.sliderImages.push(t.sattDir)}))}"1"===t&&"dan"===e&&(a.OneattrValue[0].image=i[0].sattDir),"1"===t&&"duo"===e&&(a.ManyAttrValue[r].image=i[0].sattDir),"1"===t&&"pi"===e&&(a.oneFormBatch[0].image=i[0].sattDir)}}),t,"content")},handleDragStart:function(t,e){this.isDisabled||(this.dragging=e)},handleDragEnd:function(t,e){this.is
+----------------------------------------
+================================================================================
+APP.JS context for respType
+CHUNK context for respType
+e 10:case"end":return t.stop()}}),t,this)})));function e(e,a){return t.apply(this,arguments)}return e}(),getImgData:function(t){var e=this;return new Promise((function(a,i){shopImgUploadApi({imgUrl:t,respType:1,uploadType:1}).then((function(t){t.errcode>0?(e.fullscreenLoading=!1,e.$message.error(t.errmsg),a("")):a(t.img_info.temp_img_url)}))}))},getCopyConfig:function(){var t=this;Object(o["g"])().then((function(e){t.copyConfig=e}))},changeGuarantee:function(t){var e=this;if(t){if(this.guaranteeName=[],
+----------------------------------------
+================================================================================
+APP.JS context for shop/img/upload
+hod:"get"})}function f(e){return Object(r["a"])({url:"/admin/merchant/pay/component/draftproduct/update",method:"post",data:e})}function m(e){return Object(r["a"])({url:"/admin/merchant/pay/component/shop/img/upload",method:"post",data:e})}function h(e){return Object(r["a"])({url:"/admin/merchant/pay/component/draftproduct/review",method:"post",data:e})}function p(){return Object(r["a"])({url:"/admin/merchant/pay/component/shop/brand/usable/list",method:"get"})}function g(e){return Object(r["a"])({url:"/admin/
+----------------------------------------
+CHUNK context for shop/img/upload

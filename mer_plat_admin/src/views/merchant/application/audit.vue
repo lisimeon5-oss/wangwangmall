@@ -2,7 +2,7 @@
   <div class="box">
     <el-drawer
       :visible.sync="dialogVisible"
-      :title="isSHOW ? '商户入驻审核' : '商户详情'"
+      :title="isSHOW ? $t('merchant.merchantOnboardingAudit') : $t('merchant.merchantDetail')"
       :direction="direction"
       @close="close"
       size="1000px"
@@ -13,7 +13,7 @@
             <div class="full">
               <div class="order_icon"><span class="iconfont icon-shanghuliebiao"></span></div>
               <div class="text">
-                <div class="title">商户</div>
+                <div class="title">{{ $t('merchant.merchant') }}</div>
                 <span class="mr20">{{ dataForm.name }}</span>
               </div>
             </div>
@@ -25,7 +25,7 @@
                   }
                 "
                 style="margin-left: 0"
-                >{{ loadingBtn ? '提交中 ...' : '审核拒绝' }}</el-button
+                >{{ loadingBtn ? $t('finance.submitting') : $t('product.auditRejected') }}</el-button
               >
               <el-button
                 type="primary"
@@ -34,53 +34,53 @@
                     onSubmit(2);
                   }
                 "
-                >{{ loadingBtn ? '提交中 ...' : '审核通过' }}</el-button
+                >{{ loadingBtn ? $t('finance.submitting') : $t('finance.auditPassed') }}</el-button
               >
             </div>
           </div>
         </div>
         <div class="detailSection padBox">
-          <div class="title">商户详情</div>
+          <div class="title">{{ $t('merchant.merchantDetail') }}</div>
           <ul class="list">
             <li class="item">
-              <div class="tips">商户账号：</div>
+              <div class="tips">{{ $t('merchant.merchantAccountLabel') }}</div>
               <div class="value">{{ dataForm.phone }}</div>
             </li>
             <li class="item">
-              <div class="tips">商户分类：</div>
+              <div class="tips">{{ $t('merchant.merchantCategoryLabel') }}</div>
               <div class="value">{{ dataForm.categoryId | merCategoryFilter }}</div>
             </li>
             <li class="item">
-              <div class="tips">店铺类型：</div>
+              <div class="tips">{{ $t('merchant.storeTypeLabel') }}</div>
               <div class="value">{{ dataForm.typeId | merchantTypeFilter }}</div>
             </li>
             <li v-show="dataForm.password" class="item">
-              <div class="tips">登录密码：</div>
+              <div class="tips">{{ $t('merchant.loginPassword') }}</div>
               <div class="value">{{ dataForm.password }}</div>
             </li>
             <li class="item">
-              <div class="tips">商户姓名：</div>
+              <div class="tips">{{ $t('merchant.merchantRealNameLabel') }}</div>
               <div class="value">{{ dataForm.realName }}</div>
             </li>
             <li class="item">
-              <div class="tips">商户手机号：</div>
+              <div class="tips">{{ $t('merchant.merchantPhoneLabel') }}</div>
               <div class="value">{{ dataForm.phone | filterEmpty }}</div>
             </li>
             <li class="item">
-              <div class="tips">手续费(%)：</div>
+              <div class="tips">{{ $t('merchant.handlingFeePercentLabel') }}</div>
               <div class="value">{{ dataForm.handlingFee }}</div>
             </li>
           </ul>
           <div class="ivu-mt-16 acea-row">
-            <div class="tips">简介：</div>
-            <div class="value">{{ dataForm.keywords || '无' }}</div>
+            <div class="tips">{{ $t('merchant.introLabel') }}</div>
+            <div class="value">{{ dataForm.keywords || $t('finance.none') }}</div>
           </div>
           <div class="ivu-mt-16 acea-row">
-            <div class="tips">备注：</div>
-            <div class="value">{{ dataForm.remark || '无' }}</div>
+            <div class="tips">{{ $t('user.remarkLabel') }}</div>
+            <div class="value">{{ dataForm.remark || $t('finance.none') }}</div>
           </div>
           <div class="ivu-mt-16 acea-row">
-            <div class="tips">资质图片：</div>
+            <div class="tips">{{ $t('merchant.qualificationLabel') }}</div>
             <div class="acea-row">
               <div v-for="(item, index) in dataForm.qualificationPictureData" :key="index" class="pictrue">
                 <el-image :src="item" :preview-src-list="dataForm.qualificationPictureData"> </el-image>
@@ -98,7 +98,7 @@
         <!--                  }-->
         <!--                "-->
         <!--                style="margin-left: 0"-->
-        <!--                >{{ loadingBtn ? '提交中 ...' : '审核拒绝' }}</el-button-->
+        <!--                >{{ loadingBtn ? $t('finance.submitting') : $t('product.auditRejected') }}</el-button-->
         <!--              >-->
         <!--              <el-button-->
         <!--                type="primary"-->
@@ -107,7 +107,7 @@
         <!--                    onSubmit(2);-->
         <!--                  }-->
         <!--                "-->
-        <!--                >{{ loadingBtn ? '提交中 ...' : '审核通过' }}</el-button-->
+        <!--                >{{ loadingBtn ? $t('finance.submitting') : $t('finance.auditPassed') }}</el-button-->
         <!--              >-->
         <!--            </div>-->
         <!--          </div>-->
@@ -139,8 +139,8 @@ export default {
       direction: 'rtl',
       isDisabled: true,
       rules: {
-        auditStatus: [{ required: true, message: '请选择审核状态', trigger: 'change' }],
-        denialReason: [{ required: true, message: '请填写拒绝原因', trigger: 'blur' }],
+        auditStatus: [{ required: true, message: this.$t('product.pleaseSelectAuditStatus'), trigger: 'change' }],
+        denialReason: [{ required: true, message: this.$t('product.pleaseEnterRejectReason'), trigger: 'blur' }],
       },
       ruleForm: {
         denialReason: '',
@@ -183,7 +183,7 @@ export default {
     },
     //审核拒绝
     cancelForm() {
-      this.$modalPrompt('textarea', '拒绝原因').then((V) => {
+      this.$modalPrompt('textarea', this.$t('product.rejectReason')).then((V) => {
         this.ruleForm.denialReason = V;
         this.submit();
       });
@@ -192,7 +192,7 @@ export default {
     onSubmit(type) {
       this.ruleForm.auditStatus = type;
       if (type === 2) {
-        this.$modalSure('审核通过该商户吗？').then(() => {
+        this.$modalSure(this.$t('merchant.approveMerchantConfirm')).then(() => {
           this.submit();
         });
       } else {
@@ -204,7 +204,7 @@ export default {
       this.ruleForm.id = this.dataForm.id;
       merApplyAuditApi(this.ruleForm)
         .then((res) => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('product.operateSuccess'));
           this.dialogVisible = false;
           this.$emit('subSuccess');
           this.loadingBtn = false;

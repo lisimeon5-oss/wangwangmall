@@ -6,23 +6,23 @@
 					@click="swichNav(index,item)">
 					<view class='line bg_color' :class='currentTab==index ? "on":""'></view>
 					<view class='iconfont' :class='item.icon+" "+(currentTab==index ? "on":"")'></view>
-					<view class="tab_text">{{item.name}}</view>
+					<view class="tab_text">{{$t(item.name)}}</view>
 				</view>
 			</view>
 			<view class='wrapper'>
 				<view :hidden='currentTab != 0' class='list'>
 					<form @submit="subCash" report-submit='true'>
 						<view class='item acea-row row-between-wrapper'>
-							<view class='name'>姓名</view>
+							<view class='name'>{{$t('姓名')}}</view>
 							<view class='input'>
-								<input placeholder='请输入持卡人姓名' placeholder-class='placeholder' name="cardholder"
+								<input :placeholder="$t('请输入持卡人姓名')" placeholder-class='placeholder' name="cardholder"
 									maxlength="20"></input>
 							</view>
 						</view>
 						<view class='item acea-row row-between-wrapper'>
-							<view class='name'>卡号</view>
+							<view class='name'>{{$t('卡号')}}</view>
 							<view class='input'>
-								<input type='number' placeholder='请填写卡号' placeholder-class='placeholder'
+								<input type='number' :placeholder="$t('请填写卡号')" placeholder-class='placeholder'
 									name="bankCardNo" maxlength="19"></input>
 							</view>
 						</view>
@@ -36,33 +36,33 @@
 							</view>
 						</view>
 						<view class='item acea-row row-between-wrapper'>
-							<view class='name'>结算</view>
+							<view class='name'>{{$t('结算')}}</view>
 							<view class='input'><input
 									:placeholder='settlementConfig.minPrice? "最低结算金额"+ settlementConfig.minPrice:"最低结算金额"+ 0'
 									placeholder-class='placeholder' name="closingPrice" type='digit'></input></view>
 						</view>
 						<button formType="submit" class='bnt'
-							:class="parseFloat(settlementConfig.brokerage)>parseFloat(settlementConfig.minPrice) ?'bg-color': 'bg-color-hui'">结算申请</button>
+							:class="parseFloat(settlementConfig.brokerage)>parseFloat(settlementConfig.minPrice) ?'bg-color': 'bg-color-hui'">{{$t('结算申请')}}</button>
 					</form>
 				</view>
 				<view :hidden='currentTab != 1' class='list'>
 					<form @submit="subCash" report-submit='true'>
 						<view class='item acea-row row-between-wrapper'>
-							<view class='name'>姓名</view>
+							<view class='name'>{{$t('姓名')}}</view>
 							<view class='input'>
-								<input placeholder='请填写您的真实姓名' placeholder-class='placeholder' name="realName"
+								<input :placeholder="$t('请填写您的真实姓名')" placeholder-class='placeholder' name="realName"
 									maxlength="20"></input>
 							</view>
 						</view>
 						<view class='item acea-row row-between-wrapper'>
-							<view class='name'>账号</view>
+							<view class='name'>{{$t('账号')}}</view>
 							<view class='input'>
-								<input placeholder='请填写您的微信账号' placeholder-class='placeholder' name="wechatNo"
+								<input :placeholder="$t('请填写您的微信账号')" placeholder-class='placeholder' name="wechatNo"
 									maxlength="20"></input>
 							</view>
 						</view>
 						<view class='item acea-row row-between-wrapper'>
-							<view class='name'>结算</view>
+							<view class='name'>{{$t('结算')}}</view>
 							<view class='input'>
 								<input :placeholder='"最低结算金额"+ settlementConfig.minPrice|| 0'
 									placeholder-class='placeholder' name="closingPrice" type='digit'
@@ -70,7 +70,7 @@
 							</view>
 						</view>
 						<view class='item acea-row row-top row-between'>
-							<view class='name'>收款码</view>
+							<view class='name'>{{$t('收款码')}}</view>
 							<view class="input acea-row">
 								<view class="picEwm" v-if="qrcodeUrlW">
 									<image :src="qrcodeUrlW"></image>
@@ -79,39 +79,39 @@
 								<view class='pictrue acea-row row-center-wrapper row-column' @click='uploadpic("W")'
 									v-else>
 									<text class='iconfont icon-icon25201'></text>
-									<view>上传图片</view>
+									<view>{{$t('上传图片')}}</view>
 								</view>
 							</view>
 						</view>
 						<button formType="submit" class='bnt'
-							:class="parseFloat(settlementConfig.brokerage)>parseFloat(settlementConfig.minPrice) ?'bg-color': 'bg-color-hui'">结算申请</button>
+							:class="parseFloat(settlementConfig.brokerage)>parseFloat(settlementConfig.minPrice) ?'bg-color': 'bg-color-hui'">{{$t('结算申请')}}</button>
 					</form>
 				</view>
 				<view :hidden='currentTab != 2' class='list'>
 					<form @submit="subCash" report-submit='true'>
 						<view class='item acea-row row-between-wrapper'>
-							<view class='name'>姓名</view>
+							<view class='name'>{{$t('姓名')}}</view>
 							<view class='input'>
-								<input placeholder='请填写您的真实姓名' placeholder-class='placeholder' name="realName"
+								<input :placeholder="$t('请填写您的真实姓名')" placeholder-class='placeholder' name="realName"
 									maxlength="20"></input>
 							</view>
 						</view>
 						<view class='item acea-row row-between-wrapper'>
-							<view class='name'>账号</view>
+							<view class='name'>{{$t('账号')}}</view>
 							<view class='input'>
-								<input placeholder='请填写您的支付宝账号' placeholder-class='placeholder' name="alipayAccount"
+								<input :placeholder="$t('请填写您的支付宝账号')" placeholder-class='placeholder' name="alipayAccount"
 									maxlength="20"></input>
 							</view>
 						</view>
 						<view class='item acea-row row-between-wrapper'>
-							<view class='name'>结算</view>
+							<view class='name'>{{$t('结算')}}</view>
 							<view class='input'>
 								<input :placeholder='"最低结算金额"+settlementConfig.minPrice' placeholder-class='placeholder'
 									name="closingPrice" type='digit' maxlength="5"></input>
 							</view>
 						</view>
 						<view class='item acea-row row-top row-between'>
-							<view class='name'>收款码</view>
+							<view class='name'>{{$t('收款码')}}</view>
 							<view class="input acea-row">
 								<view class="picEwm" v-if="qrcodeUrlZ">
 									<image :src="qrcodeUrlZ"></image>
@@ -120,20 +120,20 @@
 								<view class='pictrue acea-row row-center-wrapper row-column' @click='uploadpic("Z")'
 									v-else>
 									<text class='iconfont icon-icon25201'></text>
-									<view>上传图片</view>
+									<view>{{$t('上传图片')}}</view>
 								</view>
 							</view>
 						</view>
 						<button formType="submit" class='bnt'
-							:class="parseFloat(settlementConfig.brokerage)>parseFloat(settlementConfig.minPrice) ?'bg-color': 'bg-color-hui'">结算申请</button>
+							:class="parseFloat(settlementConfig.brokerage)>parseFloat(settlementConfig.minPrice) ?'bg-color': 'bg-color-hui'">{{$t('结算申请')}}</button>
 					</form>
 				</view>
 				<view class='tip'>
-					当前可提现金额: <text
-						class="price">￥{{settlementConfig.brokerage?settlementConfig.brokerage:0}},</text>冻结佣金：￥{{settlementConfig.freezeBrokerage?settlementConfig.freezeBrokerage:0}}
+					{{$t('当前可提现金额:')}} <text
+						class="price">฿{{settlementConfig.brokerage?settlementConfig.brokerage:0}},</text>{{$t('冻结佣金')}}：฿{{settlementConfig.freezeBrokerage?settlementConfig.freezeBrokerage:0}}
 				</view>
 				<view class='tip'>
-					说明: 每笔佣金的冻结期为{{settlementConfig.freezeDay?settlementConfig.freezeDay:0}}天，到期后可提现
+					{{$t('说明')}}: {{$t('每笔佣金的冻结期为')}}{{settlementConfig.freezeDay?settlementConfig.freezeDay:0}}{{$t('天，到期后可提现')}}
 				</view>
 			</view>
 		</view>
@@ -274,54 +274,54 @@
 				switch (that.currentTab) {
 					case 0:
 						if (value.cardholder.length == 0) return this.$util.Tips({
-							title: '请填写持卡人姓名'
+							title: this.$t('请填写持卡人姓名')
 						});
 						if (value.bankCardNo.length == 0) return this.$util.Tips({
-							title: '请填写卡号'
+							title: this.$t('请填写卡号')
 						});
 						value.bankName = that.bankList[that.index];
 						break;
 					case 1:
 						if (value.wechatNo.length == 0) return this.$util.Tips({
-							title: '请填写微信号'
+							title: this.$t('请填写微信号')
 						});
 						if (value.realName.length == 0) return this.$util.Tips({
-							title: '请填写真实姓名'
+							title: this.$t('请填写真实姓名')
 						});
 						if (!that.qrcodeUrlW) return this.$util.Tips({
-							title: '请填写微信收款码'
+							title: this.$t('请填写微信收款码')
 						});
 						value.paymentCode = that.qrcodeUrlW;
 						break;
 					default:
 						if (value.alipayAccount.length == 0) return this.$util.Tips({
-							title: '请填写支付宝账号'
+							title: this.$t('请填写支付宝账号')
 						});
 						if (value.realName.length == 0) return this.$util.Tips({
-							title: '请填写真实姓名'
+							title: this.$t('请填写真实姓名')
 						});
 						if (!that.qrcodeUrlZ) return this.$util.Tips({
-							title: '请填写支付宝收款码'
+							title: this.$t('请填写支付宝收款码')
 						});
 						value.paymentCode = that.qrcodeUrlZ;
 						break;
 				}
 				value.type = this.type;
 				if (value.closingPrice.length == 0) return this.$util.Tips({
-					title: '请填写结算金额'
+					title: this.$t('请填写结算金额')
 				});
 				if (!(/^(\d?)+(\.\d{0,2})?$/.test(value.closingPrice))) return this.$util.Tips({
-					title: '结算金额保留2位小数'
+					title: this.$t('结算金额保留2位小数')
 				});
 				if (parseFloat(value.closingPrice) < parseFloat(that.settlementConfig.minPrice)) return this.$util
 					.Tips({
-						title: '结算金额不能低于' + that.settlementConfig.minPrice
+						title: this.$t('结算金额不能低于') + that.settlementConfig.minPrice
 					});
 				if (this.isCommitted == false) {
 					this.isCommitted = true;
 					extractCash(value).then(res => {
 						return this.$util.Tips({
-							title: "申请成功",
+							title: this.$t('申请成功'),
 							icon: 'success'
 						}, {
 							tab: 2,

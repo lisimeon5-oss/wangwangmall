@@ -24,7 +24,7 @@
 import { mapState } from 'vuex';
 export default {
   name: 'home_checkbox',
-  cname: '多选框',
+  cname: 'maintain.checkbox',
   icon: 'icon-biaodanzujian-duoxuankuang',
   configName: 'c_home_checkbox',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -68,23 +68,23 @@ export default {
         name: 'checkboxs',
         timestamp: this.num,
         titleConfig: {
-          title: '标题',
-          val: '多选框',
-          place: '请输入标题',
+          title: this.$t('formGenerator.title'),
+          val: this.$t('maintain.checkbox'),
+          place: this.$t('formGenerator.pleaseEnterTitle'),
           max: 10,
           type: 'form',
           isShow: 1,
         },
         wordsConfig: {
-          title: '选项',
+          title: this.$t('formGenerator.options'),
           list: [
-            { val: '选项一', show: false },
-            { val: '选项二', show: false },
+            { val: this.$t('formGenerator.optionOne'), show: false },
+            { val: this.$t('formGenerator.optionTwo'), show: false },
           ],
           isShow: 1,
         },
         titleShow: {
-          title: '是否必填',
+          title: this.$t('formGenerator.required'),
           val: true,
           type: 'form',
           isShow: 1,

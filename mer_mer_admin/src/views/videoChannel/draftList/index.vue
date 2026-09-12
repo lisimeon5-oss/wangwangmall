@@ -9,18 +9,18 @@
     >
       <div class="padding-add">
         <el-form inline label-position="right" @submit.native.prevent>
-          <el-form-item label="商品名称：">
+          <el-form-item :label="$t('videoChannel.productNameLabel')">
             <el-input
               v-model="search"
               @keyup.enter.native="getList(1)"
-              placeholder="请输入商品名称"
+              :placeholder="$t('product.pleaseEnterProductName')"
               class="selWidth"
               clearable
             >
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -28,12 +28,12 @@
     <el-card class="box-card mt14" :body-style="{ padding: '20px' }" shadow="never" :bordered="false">
       <router-link :to="{ path: '/videoChannel/creatVideoChannel' }">
         <el-button size="small" type="primary" class="mb20" v-hasPermi="['merchant:pay:component:product:draft:add']"
-          >添加视频号商品</el-button
+          >{{ $t('videoChannel.addVideoChannelProduct') }}</el-button
         >
       </router-link>
       <el-table v-loading="listLoading" :data="tableData.data" style="width: 100%" size="mini" ref="multipleTable">
         <el-table-column prop="id" label="Id" width="40" />
-        <el-table-column label="名称" prop="title" min-width="300">
+        <el-table-column :label="$t('category.name')" prop="title" min-width="300">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="right" :open-delay="800">
               <div class="text_overflow" slot="reference">{{ scope.row.title }}</div>
@@ -41,37 +41,37 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column label="商品图" min-width="60">
+        <el-table-column :label="$t('videoChannel.productImage')" min-width="60">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="JSON.parse(scope.row.headImg)[0]" :preview-src-list="JSON.parse(scope.row.headImg)" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="类目" min-width="150" prop="thirdCatName" />
-        <el-table-column prop="sales" label="销量" min-width="80" />
-        <el-table-column prop="stock" label="库存" min-width="80" />
-        <el-table-column label="微信审核" min-width="90">
+        <el-table-column :label="$t('videoChannel.category')" min-width="150" prop="thirdCatName" />
+        <el-table-column prop="sales" :label="$t('product.sales')" min-width="80" />
+        <el-table-column prop="stock" :label="$t('product.stock')" min-width="80" />
+        <el-table-column :label="$t('videoChannel.wechatAudit')" min-width="90">
           <template slot-scope="scope">
             <span>{{ scope.row.editStatus | editStatusFilter }}</span>
             <div v-show="scope.row.editStatus === 3" class="textE93323">
-              拒绝原因：{{ scope.row.platformStatusReason }}
+              {{ $t('product.rejectReason') }}：{{ scope.row.platformStatusReason }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="平台审核" min-width="140">
+        <el-table-column :label="$t('videoChannel.platformAudit')" min-width="140">
           <template slot-scope="scope">
             <span>{{ scope.row.platformEditStatus | platformStatusFilter }}</span>
             <div v-show="scope.row.platformEditStatus === 3" class="textE93323">
-              拒绝原因：{{ scope.row.platformStatusReason }}
+              {{ $t('product.rejectReason') }}：{{ scope.row.platformStatusReason }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" prop="addTime" min-width="140" />
-        <el-table-column label="操作" width="130" fixed="right">
+        <el-table-column :label="$t('product.createTime')" prop="addTime" min-width="140" />
+        <el-table-column :label="$t('common.operate')" width="130" fixed="right">
           <template slot-scope="scope">
             <router-link :to="{ path: '/videoChannel/creatVideoChannel/' + scope.row.id + '/1' }">
-              <a v-hasPermi="['merchant:pay:component:product:draft:info']">详情</a>
+              <a v-hasPermi="['merchant:pay:component:product:draft:info']">{{ $t('common.detail') }}</a>
             </router-link>
             <template
               v-show="
@@ -83,14 +83,14 @@
             >
               <el-divider direction="vertical"></el-divider>
               <router-link :to="{ path: '/videoChannel/creatVideoChannel/' + scope.row.id }">
-                <a>编辑</a>
+                <a>{{ $t('common.edit') }}</a>
               </router-link>
             </template>
             <template
               v-show="scope.row.platformEditStatus !== 2 && checkPermi(['merchant:pay:component:product:draft:delete'])"
             >
               <el-divider direction="vertical"></el-divider>
-              <a @click="handlerOpenDel(scope.row)">删除</a>
+              <a @click="handlerOpenDel(scope.row)">{{ $t('common.delete') }}</a>
             </template>
             <template
               v-show="
@@ -99,13 +99,13 @@
               "
             >
               <el-divider direction="vertical"></el-divider>
-              <a @click="handlerReview(scope.row, 2)">提审</a>
+              <a @click="handlerReview(scope.row, 2)">{{ $t('videoChannel.submitForReview') }}</a>
             </template>
             <template
               v-show="scope.row.platformEditStatus === 2 && checkPermi(['merchant:pay:component:product:draft:review'])"
             >
               <el-divider direction="vertical"></el-divider>
-              <a @click="handlerReview(scope.row, 1)">撤回申请</a>
+              <a @click="handlerReview(scope.row, 1)">{{ $t('videoChannel.withdrawApplication') }}</a>
             </template>
           </template>
         </el-table-column>
@@ -167,9 +167,9 @@ export default {
      * @param rowData
      */
     handlerOpenDel(rowData) {
-      this.$modalSure('删除当前数据').then(() => {
+      this.$modalSure(this.$t('maintain.deleteCurrentDataConfirm')).then(() => {
         draftDelApi(rowData.id).then((data) => {
-          this.$message.success('删除数据成功');
+          this.$message.success(this.$t('content.deleteDataSuccess'));
           this.getList();
         });
       });
@@ -178,9 +178,9 @@ export default {
      * 提审 platformStatus：2提审，1撤回
      */
     handlerReview(rowData, num) {
-      this.$modalSure(num === 2 ? '提审商品至平台吗？' : '撤回申请吗？').then(() => {
+      this.$modalSure(num === 2 ? this.$t('videoChannel.submitProductReviewConfirm') : this.$t('videoChannel.withdrawApplicationConfirm')).then(() => {
         draftReviewApi({ draftProductId: rowData.id, platformEditStatus: num }).then((data) => {
-          this.$message.success('提交成功');
+          this.$message.success(this.$t('user.submitSuccess'));
           this.getList();
         });
       });

@@ -1,14 +1,14 @@
 <template>
   <div>
-    <el-alert title="同意退款后，用户会根据下方地址将商品退回！" type="warning" show-icon class="mb20"> </el-alert>
+    <el-alert :title="$t('order.agreeRefundReturnTip')" type="warning" show-icon class="mb20"> </el-alert>
     <div>
       <div class="detail-term mb20">
-        <span class="detail-infoTitle">退货方式：</span
-        ><span class="detail-info">{{ refundInfo.afterSalesType === 1 ? '仅退款' : '退货退款' }}</span>
+        <span class="detail-infoTitle">{{ $t('order.returnMethod') }}</span
+        ><span class="detail-info">{{ refundInfo.afterSalesType === 1 ? $t('order.onlyRefund') : $t('order.returnRefund') }}</span>
       </div>
       <div class="detail-term acea-row">
-        <span class="detail-infoTitle">退回地址：</span>
-        <div v-if="!addressList.length">请先去设置-商家地址管理中添加售后地址</div>
+        <span class="detail-infoTitle">{{ $t('order.returnAddressLabel') }}</span>
+        <div v-if="!addressList.length">{{ $t('order.addAfterSalesAddressFirst') }}</div>
         <div v-else v-loading="listLoading" class="h-82%">
           <div v-for="item in addressList" :key="item.id">
             <div v-if="item.isShow" class="">
@@ -17,7 +17,7 @@
                   <div class="text-14 text-666 address">
                     <div class="mb10">
                       {{ item.province }}{{ item.city }}{{ item.district }}{{ item.street }}{{ item.detail }}
-                      <span v-show="item.isDefault" style="color: #409eff" class="ml10">[默认退货]</span>
+                      <span v-show="item.isDefault" style="color: #409eff" class="ml10">[{{ $t('order.defaultReturn') }}]</span>
                     </div>
                     <div class="">
                       <span class="w-70px inline-block mr15">{{ item.receiverName }}</span
@@ -27,7 +27,7 @@
                   <div>
                     <el-radio-group v-model="defaultId" @change="handleChecked">
                       <el-radio :label="item.id" size="large">
-                        <span class="text-14px text-#666">选择地址</span>
+                        <span class="text-14px text-#666">{{ $t('order.selectAddress') }}</span>
                       </el-radio>
                     </el-radio-group>
                   </div>
@@ -39,8 +39,8 @@
       </div>
     </div>
     <div class="dialog-footer-inner">
-      <el-button @click="handleCancel">取 消</el-button>
-      <el-button type="primary" @click="handleSubmit" :loading="loading">确 定</el-button>
+      <el-button @click="handleCancel">{{ $t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="handleSubmit" :loading="loading">{{ $t('finance.confirmSpaced') }}</el-button>
     </div>
   </div>
 </template>
@@ -90,7 +90,7 @@ export default {
       })
         .then((res) => {
           this.loading = false;
-          this.$message.success('审核成功');
+          this.$message.success(this.$t('common.auditSuccess'));
           this.$emit('onHandleSuccess');
         })
         .catch((res) => {

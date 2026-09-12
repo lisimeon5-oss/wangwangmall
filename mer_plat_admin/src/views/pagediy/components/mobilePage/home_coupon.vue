@@ -10,10 +10,10 @@
             :style="contentConfig"
           >
             <div class="left">
-              <div :style="priceColorStyle"><span class="price-icon">￥</span><span class="price">80</span></div>
-              <div class="title">满500元可用</div>
+              <div :style="priceColorStyle"><span class="price-icon">฿</span><span class="price">80</span></div>
+              <div class="title">{{ $t('pagediy.couponMinSpendYuan', { amount: 500 }) }}</div>
             </div>
-            <div class="right">领取</div>
+            <div class="right">{{ $t('pagediy.receive') }}</div>
           </div>
         </div>
       </template>
@@ -23,10 +23,10 @@
             <div class="list acea-row row-middle">
               <div class="item" v-for="(item, index) in numShow" :key="index" :style="contentConfig">
                 <div class="money" :style="priceColorStyle">
-                  <div><span class="lable">¥</span>70</div>
-                  <div class="tips">满500可用</div>
+                  <div><span class="lable">฿</span>70</div>
+                  <div class="tips">{{ $t('pagediy.couponMinSpend', { amount: 500 }) }}</div>
                 </div>
-                <div class="sill" :style="btnColorStyle">去领取</div>
+                <div class="sill" :style="btnColorStyle">{{ $t('pagediy.goReceive') }}</div>
                 <img src="../../../../assets/imgs/newVip02.png" />
               </div>
             </div>
@@ -42,10 +42,10 @@
             :style="contentConfig"
           >
             <div class="left">
-              <div :style="priceColorStyle"><span class="price-icon">￥</span><span class="price">80</span></div>
-              <div class="title">满500元可用</div>
+              <div :style="priceColorStyle"><span class="price-icon">฿</span><span class="price">80</span></div>
+              <div class="title">{{ $t('pagediy.couponMinSpendYuan', { amount: 500 }) }}</div>
             </div>
-            <div class="right">立<br />即<br />领<br />取</div>
+            <div class="right">{{ $t('pagediy.claimImmediately') }}</div>
           </div>
         </div>
       </template>
@@ -60,11 +60,11 @@
                 :style="contentConfig"
               >
                 <div class="left">
-                  <div :style="priceColorStyle" class="money"><span class="label">¥</span>50</div>
-                  <div class="tips">满5000可用</div>
+                  <div :style="priceColorStyle" class="money"><span class="label">฿</span>50</div>
+                  <div class="tips">{{ $t('pagediy.couponMinSpend', { amount: 5000 }) }}</div>
                 </div>
                 <div class="right acea-row row-center">
-                  <div class="rightCon">领取</div>
+                  <div class="rightCon">{{ $t('pagediy.receive') }}</div>
                 </div>
                 <div class="roll" :style="boxBg"></div>
               </div>
@@ -87,9 +87,10 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapGetters } from 'vuex';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
 export default {
   name: 'home_coupon',
-  cname: '优惠券',
+  ...diyCname('pagediy.couponComponent'),
   icon: 't-icon-zujian-youhuiquan',
   configName: 'c_home_coupon',
   type: 1, // 0 基础组件 1 营销组件 2工具组件
@@ -241,58 +242,58 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '优惠券',
+          cname: this.$t('pagediy.couponComponent'),
         },
         tabConfig: {
-          title: '展示样式',
-          tabTitle: '布局设置',
+          title: this.$t('pagediy.displayStyle'),
+          tabTitle: this.$t('pagediy.layoutSettings'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '样式1',
+              val: this.$t('pagediy.styleOne'),
               icon: 'icon-pintuanyangshiyi',
             },
             {
-              val: '样式2',
+              val: this.$t('pagediy.styleTwo'),
               icon: 'icon-youhuiquanyangshier',
             },
             {
-              val: '样式3',
+              val: this.$t('pagediy.styleThree'),
               icon: 'icon-youhuiquanyangshisan',
             },
             {
-              val: '样式4',
+              val: this.$t('pagediy.styleFour'),
               icon: 'icon-youhuiquanyangshisi',
             },
           ],
         },
         logoConfig: {
           isShow: 1,
-          tabTitle: '图标设置',
-          title: '上传图标',
-          tips: '建议：124px*32px',
+          tabTitle: this.$t('pagediy.iconSettings'),
+          title: this.$t('pagediy.uploadIcon'),
+          tips: this.$t('pagediy.suggestIconSize124'),
           url: localStorage.getItem('mediaDomain') + '/crmebimage/perset/202412/yhq.png',
         },
         linkConfig: {
-          title: '更多链接',
+          title: this.$t('pagediy.moreLink'),
           val: '/pages/activity/couponList/index',
-          place: '请选择链接',
+          place: this.$t('pagediy.pleaseSelectLink'),
           isShow: 1,
           max: 100,
         },
         //数量
         numConfig: {
-          tabTitle: '展示内容',
-          title: '展示数量',
+          tabTitle: this.$t('pagediy.displayContent'),
+          title: this.$t('pagediy.displayQuantity'),
           strictly: 1,
           val: 5,
           isShow: 1,
         },
         // 背景颜色
         bgColor: {
-          tabTitle: '颜色设置',
-          title: '背景颜色',
+          tabTitle: this.$t('pagediy.colorSettings'),
+          title: this.$t('pagediy.backgroundColor'),
           isShow: 1,
           color: [
             {
@@ -313,22 +314,22 @@ export default {
         },
         //色调
         themeStyleConfig: {
-          title: '色调',
+          title: this.$t('pagediy.colorTone'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '跟随主题风格',
+              val: this.$t('pagediy.followTheme'),
             },
             {
-              val: '自定义',
+              val: this.$t('pagediy.customStyle'),
             },
           ],
         },
         // 背景颜色
         bgColorNew: {
-          tabTitle: '颜色设置',
-          title: '背景颜色',
+          tabTitle: this.$t('pagediy.colorSettings'),
+          title: this.$t('pagediy.backgroundColor'),
           isShow: 0,
           color: [
             {
@@ -342,8 +343,8 @@ export default {
           ],
         },
         priceColor: {
+          title: this.$t('pagediy.discountAmountColor'),
           isShow: 0,
-          title: '优惠金额颜色',
           color: [
             {
               item: '#FFFFFF',
@@ -357,7 +358,7 @@ export default {
         },
         btnColor: {
           isShow: 0,
-          title: '领取按钮颜色',
+          title: this.$t('pagediy.receiveButtonColor'),
           color: [
             {
               item: '#FF7931',
@@ -378,7 +379,7 @@ export default {
         //优惠券背景
         itemBgColor: {
           isShow: 0,
-          title: '优惠券背景',
+          title: this.$t('pagediy.couponBackground'),
           color: [
             {
               item: '#E93323',
@@ -391,8 +392,8 @@ export default {
           ],
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
@@ -400,33 +401,33 @@ export default {
         },
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          title: '下边距',
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 25,
         },
         contentConfig: {
-          title: '内容间距',
+          title: this.$t('pagediy.contentSpacing'),
           val: 5,
           min: 0,
           max: 30,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },
@@ -447,7 +448,7 @@ export default {
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
         this.listStyle = this.configObj.tabConfig.tabVal;
         this.themeStyle = data.themeStyleConfig.tabVal;
         this.themeColor = this.$options.filters.filterTheme(this.mobileTheme - 1);
@@ -500,7 +501,9 @@ export default {
     width: 13%;
     color: #e93323;
     font-weight: 400;
-    font-size: 13px;
+    font-size: 11px;
+    writing-mode: vertical-rl;
+    letter-spacing: 1px;
   }
   .title {
     color: #e93323;

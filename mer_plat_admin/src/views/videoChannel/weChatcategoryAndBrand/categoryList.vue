@@ -3,11 +3,11 @@
     <el-card class="box-card" :bordered="false" shadow="never">
       <div>
         <el-form inline>
-          <el-form-item label="类目名称:">
-            <el-input v-model.trim="tableFrom.catName" placeholder="类目名称" size="small" class="selWidth" clearable />
+          <el-form-item :label="$t('videoChannel.categoryNameLabel')">
+            <el-input v-model.trim="tableFrom.catName" :placeholder="$t('videoChannel.categoryName')" size="small" class="selWidth" clearable />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="search()">查询</el-button>
+            <el-button type="primary" size="small" @click="search()">{{ $t('common.query') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -20,7 +20,7 @@
         ref="multipleTable"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       >
-        <el-table-column prop="" label="类目" min-width="200">
+        <el-table-column prop="" :label="$t('videoChannel.category')" min-width="200">
           <template slot-scope="scope">
             <el-popover
               v-if="scope.row.productQualificationType > 0 || scope.row.qualificationType > 0"
@@ -42,35 +42,35 @@
             <span> < {{ scope.row.secondCatName }} < {{ scope.row.firstCatName }} </span>
           </template>
         </el-table-column>
-        <el-table-column label="类目资质" prop="">
+        <el-table-column :label="$t('videoChannel.categoryQualification')" prop="">
           <template slot-scope="scope">
-            <el-link type="success" :underline="false" v-if="scope.row.qualificationType === 0">不需要</el-link>
-            <el-link type="warning" :underline="false" v-if="scope.row.qualificationType === 1">选填</el-link>
-            <el-link type="danger" :underline="false" v-if="scope.row.qualificationType === 2">必须</el-link>
+            <el-link type="success" :underline="false" v-if="scope.row.qualificationType === 0">{{ $t('product.notRequired') }}</el-link>
+            <el-link type="warning" :underline="false" v-if="scope.row.qualificationType === 1">{{ $t('product.optional') }}</el-link>
+            <el-link type="danger" :underline="false" v-if="scope.row.qualificationType === 2">{{ $t('videoChannel.must') }}</el-link>
           </template>
         </el-table-column>
-        <el-table-column label="商品资质" prop="">
+        <el-table-column :label="$t('videoChannel.productQualification')" prop="">
           <template slot-scope="scope">
-            <el-link type="success" :underline="false" v-if="scope.row.productQualificationType === 0">不需要</el-link>
-            <el-link type="warning" :underline="false" v-if="scope.row.productQualificationType === 1">选填</el-link>
-            <el-link type="danger" :underline="false" v-if="scope.row.productQualificationType === 2">必须</el-link>
+            <el-link type="success" :underline="false" v-if="scope.row.productQualificationType === 0">{{ $t('product.notRequired') }}</el-link>
+            <el-link type="warning" :underline="false" v-if="scope.row.productQualificationType === 1">{{ $t('product.optional') }}</el-link>
+            <el-link type="danger" :underline="false" v-if="scope.row.productQualificationType === 2">{{ $t('videoChannel.must') }}</el-link>
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column :label="$t('common.status')">
           <template slot-scope="scope">
             <span v-if="scope.row.productQualificationType === 0 && scope.row.qualificationType === 0">-</span>
-            <span v-else-if="scope.row.status === 0"> 待提审 </span>
-            <span v-else-if="scope.row.status === 1"> 微信审核中 </span>
-            <span v-else-if="scope.row.status === 2"> 微信审核失败 </span>
-            <span v-else-if="scope.row.status === 3"> 微信审核成功 </span>
+            <span v-else-if="scope.row.status === 0"> {{ $t('videoChannel.pendingSubmission') }} </span>
+            <span v-else-if="scope.row.status === 1"> {{ $t('videoChannel.wechatAuditing') }} </span>
+            <span v-else-if="scope.row.status === 2"> {{ $t('product.wechatAuditFailed') }} </span>
+            <span v-else-if="scope.row.status === 3"> {{ $t('product.wechatAuditSuccess') }} </span>
           </template>
         </el-table-column>
-        <el-table-column label="审核时间" prop="auditTime">
+        <el-table-column :label="$t('videoChannel.auditTime')" prop="auditTime">
           <template slot-scope="scope">
             {{ scope.row.auditTime | filterEmpty }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="150" fixed="right">
           <template slot-scope="scope">
             <el-button
               v-if="
@@ -81,7 +81,7 @@
               size="small"
               type="text"
               @click="handleAudit(scope.row, true)"
-              >上传资质</el-button
+              >{{ $t('videoChannel.uploadQualification') }}</el-button
             >
             <el-button
               v-else-if="
@@ -92,7 +92,7 @@
               size="small"
               type="text"
               @click="handleAudit(scope.row.id, false)"
-              >查看资质</el-button
+              >{{ $t('videoChannel.viewQualification') }}</el-button
             >
             <span v-else>-</span>
           </template>
@@ -161,7 +161,7 @@ export default {
       },
       forSubmitAuditCat: {
         dialog: {
-          title: '上传微信类目资质',
+          title: this.$t('videoChannel.uploadWechatCategoryQualification'),
           visible: false,
         },
         catTitle: null, // 当前选择的三级目录
@@ -216,7 +216,7 @@ export default {
       this.forSubmitAuditCat.params.audit_req.category_info.level1 = row.firstCatId;
       this.forSubmitAuditCat.params.audit_req.category_info.level2 = row.secondCatId;
       this.forSubmitAuditCat.params.audit_req.category_info.level3 = row.thirdCatId;
-      this.forSubmitAuditCat.dialog.title = '上传类目资质';
+      this.forSubmitAuditCat.dialog.title = this.$t('videoChannel.uploadCategoryQualification');
       this.forSubmitAuditCat.dialog.visible = true;
     },
     forSubmitAuditCatSuccess() {

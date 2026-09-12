@@ -1,14 +1,14 @@
 <template>
   <div class="divBox">
     <div class="container_box">
-      <pages-header ref="pageHeader" title="添加直播商品" backUrl="/marketing/broadcast/product"></pages-header>
+      <pages-header ref="pageHeader" :title="$t('marketing.addLiveProduct')" backUrl="/marketing/broadcast/product"></pages-header>
     </div>
     <el-card class="box-card box-body mt14" shadow="never" :bordered="false">
       <el-form ref="form" :model="form" label-width="120px" size="small" class="demo-ruleForm">
         <div v-if="!isEdit" class="acea-row row-between-wrapper">
           <div class="acea-row mb20">
-            <el-button size="small" type="primary" @click="addGoods()">添加商品</el-button>
-            <el-button size="small" @click="batchDel" :disabled="isShowCheck">批量删除</el-button>
+            <el-button size="small" type="primary" @click="addGoods()">{{ $t('marketing.addProduct') }}</el-button>
+            <el-button size="small" @click="batchDel" :disabled="isShowCheck">{{ $t('product.batchDelete') }}</el-button>
           </div>
         </div>
         <el-table
@@ -22,17 +22,17 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column v-if="!isEdit" type="selection" width="55"></el-table-column>
-          <el-table-column prop="name" min-width="150" label="商品名称">
+          <el-table-column prop="name" min-width="150" :label="$t('product.listProductName')">
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.name"
                 maxlength="14"
                 @keyup.native="keyupEvent(scope.$index, scope.row.name)"
-                placeholder="最长14个汉字"
+                :placeholder="$t('marketing.max14ChineseChars')"
               ></el-input>
             </template>
           </el-table-column>
-          <el-table-column label="商品图" min-width="80">
+          <el-table-column :label="$t('product.productImage')" min-width="80">
             <template slot-scope="scope">
               <div class="upLoadPicBox line-heightOne" @click="modalPicTap('1', 'duo', scope.$index)">
                 <div v-if="scope.row.image" class="pictrue tabPic"><img :src="scope.row.image" /></div>
@@ -42,15 +42,15 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="价格类型" min-width="160">
+          <el-table-column :label="$t('marketing.priceType')" min-width="160">
             <template slot-scope="scope">
-              <el-select v-model="scope.row.priceType" placeholder="请选择" style="width: 100%">
+              <el-select v-model="scope.row.priceType" :placeholder="$t('common.pleaseSelect')" style="width: 100%">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="直播价" min-width="160">
+          <el-table-column :label="$t('marketing.livePrice')" min-width="160">
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.price"
@@ -76,9 +76,9 @@
               </el-input-number>
             </template>
           </el-table-column>
-          <el-table-column v-if="!isEdit" label="操作" width="70" fixed="right">
+          <el-table-column v-if="!isEdit" :label="$t('common.operate')" width="70" fixed="right">
             <template slot-scope="scope">
-              <a v-if="!scope.row.sku" @click="handleDelete(scope.$index, scope.row)">删除</a>
+              <a v-if="!scope.row.sku" @click="handleDelete(scope.$index, scope.row)">{{ $t('common.delete') }}</a>
             </template>
           </el-table-column>
         </el-table>
@@ -95,7 +95,7 @@
             }
           "
           size="small"
-          >保存</el-button
+          >{{ $t('common.save') }}</el-button
         >
       </div>
     </el-card>
@@ -113,15 +113,15 @@ export default {
       options: [
         {
           value: 1,
-          label: '一口价',
+          label: this.$t('product.fixedPrice'),
         },
         {
           value: 2,
-          label: '价格区间（左边不能大于右边）',
+          label: this.$t('marketing.priceRangeDescription'),
         },
         {
           value: 3,
-          label: '折扣价（左边为原价，右边为现价）',
+          label: this.$t('marketing.discountPriceDescription'),
         },
       ],
       form: {
@@ -211,13 +211,13 @@ export default {
     },
     //行删除
     handleDelete(index, row) {
-      this.$modalSure('删除该直播商品吗？').then(() => {
+      this.$modalSure(this.$t('marketing.deleteLiveProductConfirm')).then(() => {
         let i = this.proData.findIndex((item) => item == row);
         this.proData.splice(i, 1);
       });
     },
     batchDel() {
-      this.$modalSure(`批量删除直播商品吗？`).then(() => {
+      this.$modalSure(this.$t('marketing.batchDeleteLiveProductsConfirm')).then(() => {
         this.proData.forEach((itemA, indexA) => {
           this.multipleSelectionAll.forEach((itemB) => {
             if (itemA.id === itemB.id) {
@@ -280,11 +280,11 @@ export default {
         price = item.price;
         name = item.name;
       });
-      if (this.proData.length === 0) return this.$message.warning('请至少添加一个商品');
-      if (!name) return this.$message.warning('商品名称不能为空');
-      if (!priceType) return this.$message.warning('价格类型不能为空');
-      if ((priceType === 2 || priceType === 3) && !price2 && !price) return this.$message.warning('两个价格不能为空');
-      if (priceType === 2 && price2 < price) return this.$message.warning('左边价格不能大于右边价格');
+      if (this.proData.length === 0) return this.$message.warning(this.$t('marketing.addAtLeastOneProduct'));
+      if (!name) return this.$message.warning(this.$t('marketing.productNameRequired'));
+      if (!priceType) return this.$message.warning(this.$t('marketing.priceTypeRequired'));
+      if ((priceType === 2 || priceType === 3) && !price2 && !price) return this.$message.warning(this.$t('marketing.twoPricesRequired'));
+      if (priceType === 2 && price2 < price) return this.$message.warning(this.$t('marketing.leftPriceNotGreater'));
       let proData = [...this.proData];
       proData.map((item) => {
         list.push({
@@ -306,13 +306,13 @@ export default {
       this.$route.params.liveId !== '0'
         ? liveGoodsuUpdateApi(list[0])
             .then((res) => {
-              this.$message.success('编辑成功');
+              this.$message.success(this.$t('product.editSuccess'));
               this.$router.push({ path: `/marketing/broadcast/product` });
             })
             .catch((res) => {})
         : liveGoodsSaveApi(list)
             .then((res) => {
-              this.$message.success('添加成功');
+              this.$message.success(this.$t('user.addSuccess'));
               this.$router.push({ path: `/marketing/broadcast/product` });
             })
             .catch((res) => {});

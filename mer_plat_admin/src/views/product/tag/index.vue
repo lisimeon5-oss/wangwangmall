@@ -9,18 +9,18 @@
     >
       <div class="padding-add">
         <el-form inline label-position="right" @submit.native.prevent>
-          <el-form-item label="标签名称：">
+          <el-form-item :label="$t('product.tagName')">
             <el-input
               v-model.trim="keywords"
               @keyup.enter.native="handleSearch"
               size="small"
               clearable
               class="selWidth"
-              placeholder="请输入标签名称"
+              :placeholder="$t('product.pleaseEnterTagName')"
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button size="small" type="primary" @click="handleSearch">搜索</el-button>
+            <el-button size="small" type="primary" @click="handleSearch">{{ $t('common.search') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -28,7 +28,7 @@
     <el-card class="box-card mt14" shadow="never" :bordered="false">
       <div class="container">
         <router-link :to="{ path: '/product/tag/creatTag' }" v-hasPermi="['platform:product:tag:save']">
-          <el-button size="small" type="primary" class="mr10">添加标签</el-button>
+          <el-button size="small" type="primary" class="mr10">{{ $t('product.addTag') }}</el-button>
         </router-link>
       </div>
       <el-table
@@ -41,43 +41,45 @@
         class="mt20"
       >
         <el-table-column prop="id" label="ID" min-width="60" />
-        <el-table-column label="标签名称" prop="tagName" min-width="100" :show-overflow-tooltip="true" />
-        <el-table-column label="标签说明" prop="tagNote" min-width="200" :show-overflow-tooltip="true" />
-        <el-table-column prop="startTime" label="生效期间" width="350">
+        <el-table-column :label="$t('product.tagName')" min-width="100" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ getLocalizedTagName(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('product.tagNote')" prop="tagNote" min-width="200" :show-overflow-tooltip="true" />
+        <el-table-column prop="startTime" :label="$t('product.effectivePeriod')" width="350">
           <template slot-scope="scope"> {{ scope.row.startTime }} - {{ scope.row.endTime }} </template>
         </el-table-column>
-        <el-table-column prop="status" label="是否显示" min-width="100" fixed="right">
+        <el-table-column prop="status" :label="$t('product.isShow')" min-width="100" fixed="right">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:product:tag:status'])"
               v-model="scope.row.status"
               :active-value="1"
               :inactive-value="0"
-              active-text="显示"
-              inactive-text="隐藏"
+              :active-text="$t('product.show')"
+              :inactive-text="$t('product.hide')"
               @change="onchangeIsShow(scope.row)"
             />
-            <div v-else>{{ scope.row.status ? '显示' : '隐藏' }}</div>
+            <div v-else>{{ scope.row.status ? $t('product.show') : $t('product.hide') }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" min-width="150" />
-        <el-table-column prop="position" label="商城标题位置" min-width="90">
+        <el-table-column prop="createTime" :label="$t('product.createTime')" min-width="150" />
+        <el-table-column prop="position" :label="$t('product.mallTitlePosition')" min-width="90">
           <template slot-scope="scope">
-            <span>{{ scope.row.position === 0 ? '标题下' : '标题前' }}</span>
+            <span>{{ scope.row.position === 0 ? $t('product.belowTitle') : $t('product.beforeTitle') }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="sort" label="排序" min-width="50" />
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column prop="sort" :label="$t('product.sort')" min-width="50" />
+        <el-table-column :label="$t('product.operate')" width="100" fixed="right">
           <template slot-scope="scope">
             <router-link
               :to="{ path: '/product/tag/creatTag/' + scope.row.id }"
               v-hasPermi="['platform:product:tag:update']"
             >
-              <a>编辑</a>
+              <a>{{ $t('product.edit') }}</a>
             </router-link>
             <template v-if="scope.row.owner > 0 && checkPermi(['platform:product:tag:delet'])">
               <el-divider direction="vertical"></el-divider>
-              <a @click="handleDelete(scope.row.id, scope.$index)">删除</a>
+              <a @click="handleDelete(scope.row.id, scope.$index)">{{ $t('product.delete') }}</a>
             </template>
           </template>
         </el-table-column>
@@ -97,7 +99,7 @@
     </el-card>
     <el-drawer
       :visible.sync="editDataDialogConfig.visible"
-      :title="editData.id ? '商品标签编辑' : '商品标签新增'"
+      :title="editData.id ? $t('product.tagEdit') : $t('product.tagAdd')"
       direction="rtl"
       custom-class="demo-drawer"
       size="900px"
@@ -132,12 +134,23 @@ import { mapGetters } from 'vuex';
 import { checkPermi } from '@/utils/permission';
 import { productTagInfoApi, productTagStatusApi } from '@/api/product.js';
 import { handleDeleteTable } from '@/libs/public'; // 权限判断函数
+import { getLocalizedText } from '@/utils/localizedName';
 export default {
   name: 'ProductTag',
   components: {
     editTag,
   },
-  computed: {},
+  computed: {
+    currentLocale() {
+      return (
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn'
+      );
+    },
+  },
   data() {
     return {
       isChecked: false,
@@ -165,6 +178,9 @@ export default {
   },
   methods: {
     checkPermi,
+    getLocalizedTagName(row) {
+      return getLocalizedText(row.tagName, row.tagNameJson, this.currentLocale);
+    },
     handleSearch() {
       this.getList(1);
     },
@@ -205,10 +221,10 @@ export default {
     },
     // 删除
     handleDelete(id, idx) {
-      this.$modalSure('删除当前标签吗？').then(async () => {
+      this.$modalSure(this.$t('product.deleteTagConfirm')).then(async () => {
         await storeApi.productTagDelete(id);
         await handleDeleteTable(this.tableData.data.length, this.tableFrom);
-        this.$message.success('删除成功');
+        this.$message.success(this.$t('product.deleteSuccess'));
         await this.getList();
       });
     },
@@ -216,7 +232,7 @@ export default {
       storeApi
         .productTagStatusApi(row.id, row.status)
         .then((res) => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('product.operateSuccess'));
           this.getList();
         })
         .catch((e) => {

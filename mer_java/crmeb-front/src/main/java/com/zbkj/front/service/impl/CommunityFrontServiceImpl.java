@@ -19,6 +19,7 @@ import com.zbkj.common.result.CommunityResultCode;
 import com.zbkj.common.result.MarketingResultCode;
 import com.zbkj.common.result.UserResultCode;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.front.service.CommunityFrontService;
 import com.zbkj.service.service.*;
 import org.springframework.beans.BeanUtils;
@@ -180,7 +181,7 @@ public class CommunityFrontServiceImpl implements CommunityFrontService {
         }
         CommunityTopicFrontCountResponse response = new CommunityTopicFrontCountResponse();
         response.setId(topic.getId());
-        response.setName(topic.getName());
+        response.setName(I18nJsonUtil.resolveByRequest(topic.getName(), topic.getNameJson()));
         response.setNoteNum(communityNotesService.getFrontCountByTopic(topic.getId()));
         return response;
     }
@@ -243,7 +244,9 @@ public class CommunityFrontServiceImpl implements CommunityFrontService {
         }
 
         CommunityCategory category = communityCategoryService.getById(note.getCategoryId());
-        response.setCategoryName(category.getName());
+        if (ObjectUtil.isNotNull(category)) {
+            response.setCategoryName(I18nJsonUtil.resolveByRequest(category.getName(), category.getNameJson()));
+        }
         if (StrUtil.isNotBlank(note.getTopicIds())) {
             List<Integer> topicIdList = CrmebUtil.stringToArray(note.getTopicIds());
             List<CommunityTopic> topicList = communityTopicService.findAllByIdList(topicIdList);

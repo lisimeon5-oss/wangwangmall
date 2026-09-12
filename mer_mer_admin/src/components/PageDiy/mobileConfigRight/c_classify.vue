@@ -2,6 +2,13 @@
   <!--商品分类组件-->
   <div class="c_product borderPadding" v-if="configData">
     <div class="title">{{ configData.title }}</div>
+    <div class="lang-name-switch">
+      <el-radio-group v-model="activeLang" size="mini">
+        <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+          {{ lang.label }}
+        </el-radio-button>
+      </el-radio-group>
+    </div>
     <div class="list-box">
       <draggable class="dragArea list-group" :list="configData.list" group="peoples" handle=".move-icon">
         <div class="item" v-for="(item, index) in configData.list" :key="index" @click="activeBtn(index)">
@@ -10,31 +17,37 @@
           </div>
           <div class="content ml20">
             <div class="con-item">
-              <span>显示文字</span>
+              <span>{{ $t('pagediy.displayText') }}</span>
               <div>
-                <el-input size="small" v-model="item.title" placeholder="请输入标签名称，5个字以内" maxlength="5">
+                <el-input
+                  size="small"
+                  :value="getTitleInput(item)"
+                  :placeholder="titlePlaceholder"
+                  maxlength="5"
+                  @input="setTitleInput(item, $event)"
+                >
                 </el-input>
               </div>
             </div>
             <div class="con-item">
-              <span>数据类型</span>
+              <span>{{ $t('pagediy.dataType') }}</span>
               <el-radio-group v-model="item.type">
-                <el-radio :label="0">微页面</el-radio>
-                <el-radio :label="1">商品分类</el-radio>
+                <el-radio :label="0">{{ $t('linkPicker.microPage') }}</el-radio>
+                <el-radio :label="1">{{ $t('pagediy.productCategory') }}</el-radio>
               </el-radio-group>
             </div>
             <div v-if="item.type === 0" class="con-item">
-              <span>微页面</span>
+              <span>{{ $t('linkPicker.microPage') }}</span>
               <div class="input-box">
-                <el-select v-model="item.val" placeholder="请选择">
+                <el-select v-model="item.val" :placeholder="$t('common.pleaseSelect')">
                   <el-option v-for="item in microList" :key="item.id" :label="item.name" :value="item.id"> </el-option>
                 </el-select>
               </div>
             </div>
             <div v-else class="con-item">
-              <span>商品分类</span>
+              <span>{{ $t('pagediy.productCategory') }}</span>
               <div class="input-box">
-                <el-select v-model="item.val" placeholder="请选择">
+                <el-select v-model="item.val" :placeholder="$t('common.pleaseSelect')">
                   <el-option
                     v-for="item in merPlatProductClassify"
                     :key="item.id"
@@ -55,7 +68,7 @@
     </div>
     <div v-if="configData.list">
       <div class="add-btn" @click="addHotTxt">
-        <el-button style="width: 100%" icon="el-icon-plus" plain>添加模块</el-button>
+        <el-button style="width: 100%" icon="el-icon-plus" plain>{{ $t('pagediy.addModule') }}</el-button>
       </div>
     </div>
     <linkaddress ref="linkaddres" @linkUrl="linkUrl"></linkaddress>
@@ -76,6 +89,9 @@ import vuedraggable from 'vuedraggable';
 import linkaddress from '@/components/linkaddress';
 import { mapGetters } from 'vuex';
 import { pagediyListApi } from '@/api/devise';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { parseLangJsonMap, resolveFormActiveLang } from '@/utils/localizedName';
 export default {
   name: 'c_classify',
   props: {
@@ -105,15 +121,27 @@ export default {
         name: '',
       },
       microList: [],
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
     };
   },
   computed: {
     ...mapGetters(['merPlatProductClassify']),
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
+    },
+    titlePlaceholder() {
+      if (this.activeLang === this.defaultLangCode) return this.$t('pagediy.enterTabNameMax5');
+      return this.$t('category.inputNameInLang', { lang: this.activeLangLabel });
+    },
   },
   mounted() {
     this.getList();
+    this.getLanguageList();
     this.$nextTick(() => {
-      if (!localStorage.getItem('merPlatProductClassify')) this.$store.dispatch('product/getAdminProductClassify');
+      if (!localStorage.getItem('merPlatProductClassifyV2')) this.$store.dispatch('product/getAdminProductClassify');
       this.defaults = this.configObj;
       this.configData = this.configObj[this.configNme];
     });
@@ -128,6 +156,41 @@ export default {
     },
   },
   methods: {
+    getTitleInput(item) {
+      if (this.activeLang === this.defaultLangCode) return item.title || '';
+      return parseLangJsonMap(item.titleJson)[this.activeLang] || '';
+    },
+    setTitleInput(item, val) {
+      if (this.activeLang === this.defaultLangCode) {
+        this.$set(item, 'title', val);
+        return;
+      }
+      const map = parseLangJsonMap(item.titleJson);
+      if (String(val || '').trim()) map[this.activeLang] = val;
+      else delete map[this.activeLang];
+      this.$set(item, 'titleJson', Object.keys(map).length ? JSON.stringify(map) : '');
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     //微页面地址
     getList() {
       pagediyListApi(this.tableForm).then((res) => {
@@ -144,6 +207,7 @@ export default {
     addHotTxt() {
       let obj = {
         title: '精选',
+        titleJson: '',
         val: '',
         type: 0,
         url: '',
@@ -238,6 +302,14 @@ export default {
 .title {
   font-size: 12px;
   color: #bbbbbb;
+}
+.lang-name-switch {
+  width: 100%;
+  margin-top: 10px;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 .iconfont-diy,

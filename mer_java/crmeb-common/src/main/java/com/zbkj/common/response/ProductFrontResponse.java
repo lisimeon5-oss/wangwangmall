@@ -35,6 +35,9 @@ public class ProductFrontResponse {
     @ApiModelProperty(value = "商品图片")
     private String image;
 
+    @ApiModelProperty(value = "多语言商品封面图(JSON)")
+    private String imageJson;
+
     @ApiModelProperty(value = "商品名称")
     private String name;
 
@@ -61,6 +64,15 @@ public class ProductFrontResponse {
 
     @ApiModelProperty(value = "商户名称")
     private String merName;
+
+    @ApiModelProperty(value = "多语言商品名称(JSON)")
+    private String nameJson;
+
+    @ApiModelProperty(value = "多语言商品单位(JSON)")
+    private String unitNameJson;
+
+    @ApiModelProperty(value = "多语言商户名称(JSON)")
+    private String merNameJson;
 
     @ApiModelProperty(value = "商户分类ID")
     private Integer merCategoryId;

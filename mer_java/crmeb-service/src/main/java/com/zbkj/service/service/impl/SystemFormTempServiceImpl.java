@@ -13,6 +13,7 @@ import com.zbkj.common.model.system.SystemFormTemp;
 import com.zbkj.common.request.*;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.SystemConfigResultCode;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.utils.ValidateFormUtil;
 import com.zbkj.common.vo.SystemConfigFormItemConfigRegListVo;
 import com.zbkj.common.vo.SystemConfigFormItemVo;
@@ -58,9 +59,11 @@ public class SystemFormTempServiceImpl extends ServiceImpl<SystemFormTempDao, Sy
         LambdaQueryWrapper<SystemFormTemp> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if(StrUtil.isNotBlank(request.getKeywords())) {
             String keywords = URLUtil.decode(request.getKeywords());
-            lambdaQueryWrapper.eq(SystemFormTemp::getId, keywords).
-                    or().like(SystemFormTemp::getName, keywords).
-                    or().like(SystemFormTemp::getInfo, keywords);
+            lambdaQueryWrapper.and(w -> w.eq(SystemFormTemp::getId, keywords)
+                    .or().like(SystemFormTemp::getName, keywords)
+                    .or().like(SystemFormTemp::getNameJson, keywords)
+                    .or().like(SystemFormTemp::getInfo, keywords)
+                    .or().like(SystemFormTemp::getInfoJson, keywords));
         }
         lambdaQueryWrapper.orderByDesc(SystemFormTemp::getId);
         return dao.selectList(lambdaQueryWrapper);
@@ -94,8 +97,18 @@ public class SystemFormTempServiceImpl extends ServiceImpl<SystemFormTempDao, Sy
             systemConfigFormItemVo = JSONObject.parseObject(item, SystemConfigFormItemVo.class);
             String model = systemConfigFormItemVo.get__vModel__(); //字段 name
 
-            if(systemConfigFormItemVo.get__config__().getRequired() && map.get(model).equals("")) {
-                throw new CrmebException(CommonResultCode.VALIDATE_FAILED, systemConfigFormItemVo.get__config__().getLabel() + "不能为空！");
+            if(systemConfigFormItemVo.get__config__().getRequired()) {
+                String val = map.get(model);
+                boolean empty = val == null || "".equals(val);
+                if (empty && I18nJsonUtil.hasAnyText(map.get(model + "Json"))) {
+                    empty = false;
+                }
+                if (empty && I18nJsonUtil.hasAnyText(map.get(model + "_json"))) {
+                    empty = false;
+                }
+                if (empty) {
+                    throw new CrmebException(CommonResultCode.VALIDATE_FAILED, systemConfigFormItemVo.get__config__().getLabel() + "不能为空！");
+                }
             }
             //正则验证
             checkRule(systemConfigFormItemVo.get__config__().getRegList(), map.get(model),  systemConfigFormItemVo.get__config__().getLabel());
@@ -113,10 +126,11 @@ public class SystemFormTempServiceImpl extends ServiceImpl<SystemFormTempDao, Sy
         } catch (Exception e) {
             throw new CrmebException(SystemConfigResultCode.FORM_TEMP_PARAMETER_ERROR.setMsgParams(systemFormTempRequest.getName()));
         }
-        // 校验表单模板名称唯一
-        SystemFormTemp temp = getOneByName(systemFormTempRequest.getName());
-        if (ObjectUtil.isNotNull(temp)) {
-            throw new CrmebException(SystemConfigResultCode.FORM_TEMP_NAME_REPEAT);
+        if (StrUtil.isNotBlank(systemFormTempRequest.getName())) {
+            SystemFormTemp temp = getOneByName(systemFormTempRequest.getName());
+            if (ObjectUtil.isNotNull(temp)) {
+                throw new CrmebException(SystemConfigResultCode.FORM_TEMP_NAME_REPEAT);
+            }
         }
         SystemFormTemp systemFormTemp = new SystemFormTemp();
         BeanUtils.copyProperties(systemFormTempRequest, systemFormTemp);
@@ -135,10 +149,11 @@ public class SystemFormTempServiceImpl extends ServiceImpl<SystemFormTempDao, Sy
         } catch (Exception e) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "模板表单 【" + systemFormTempRequest.getName() + "】 的内容不是正确的JSON格式！");
         }
-        // 校验表单模板名称唯一
-        SystemFormTemp temp = getOneByName(systemFormTempRequest.getName());
-        if (ObjectUtil.isNotNull(temp) && !temp.getId().equals(id)) {
-            throw new CrmebException(SystemConfigResultCode.FORM_TEMP_NAME_REPEAT);
+        if (StrUtil.isNotBlank(systemFormTempRequest.getName())) {
+            SystemFormTemp temp = getOneByName(systemFormTempRequest.getName());
+            if (ObjectUtil.isNotNull(temp) && !temp.getId().equals(id)) {
+                throw new CrmebException(SystemConfigResultCode.FORM_TEMP_NAME_REPEAT);
+            }
         }
         SystemFormTemp systemFormTemp = new SystemFormTemp();
         BeanUtils.copyProperties(systemFormTempRequest, systemFormTemp);

@@ -2,26 +2,42 @@
   <div>
     <el-form ref="pram" :model="pram" label-width="80px" @submit.native.prevent>
       <el-form-item
-        label="角色名称："
+        :label="$t('systemSetting.roleNameLabel')"
         prop="roleName"
-        :rules="[{ required: true, message: '请填写角色名称', trigger: ['blur', 'change'] }]"
+        :rules="[{ required: true, validator: validateRoleName, trigger: ['blur', 'change'] }]"
       >
-        <el-input v-model.trim="pram.roleName" placeholder="身份名称" />
+        <div class="lang-name-switch">
+          <el-radio-group v-model="activeLang" size="small">
+            <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+              {{ lang.label }}
+            </el-radio-button>
+          </el-radio-group>
+          <el-input
+            v-if="activeLang === defaultLangCode"
+            v-model.trim="pram.roleName"
+            :placeholder="$t('systemSetting.identityName')"
+          />
+          <el-input
+            v-else
+            v-model.trim="nameJsonForm[activeLang]"
+            :placeholder="$t('marketing.inputNameInLang', { lang: activeLangLabel })"
+          />
+        </div>
       </el-form-item>
-      <el-form-item label="状态：">
+      <el-form-item :label="$t('user.statusColon')">
         <el-switch
           v-model="pram.status"
-          active-text="开启"
-          inactive-text="关闭"
+          :active-text="$t('common.open')"
+          :inactive-text="$t('common.close')"
           :active-value="true"
           :inactive-value="false"
         />
       </el-form-item>
-      <el-form-item label="菜单权限：">
-        <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'menu')">展开/折叠</el-checkbox>
+      <el-form-item :label="$t('systemSetting.menuPermissionLabel')">
+        <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'menu')">{{ $t('menu.toggleExpand') }}</el-checkbox>
         <!-- <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event, 'menu')">全选/全不选</el-checkbox> -->
         <el-checkbox v-model="menuCheckStrictly" @change="handleCheckedTreeConnect($event, 'menu')"
-          >父子联动</el-checkbox
+          >{{ $t('systemSetting.parentChildLinkage') }}</el-checkbox
         >
         <el-tree
           class="tree-border"
@@ -31,20 +47,20 @@
           node-key="id"
           :default-expand-all="expandAll"
           :check-strictly="!menuCheckStrictly"
-          empty-text="加载中，请稍候"
+          :empty-text="$t('systemSetting.loadingPleaseWait')"
           :props="defaultProps"
         ></el-tree>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer-inner">
-      <el-button size="small" @click="close">取消</el-button>
+      <el-button size="small" @click="close">{{ $t('common.cancel') }}</el-button>
       <el-button
         :loading="loading"
         size="small"
         type="primary"
         @click="handlerSubmit('pram')"
         v-hasPermi="['merchant:admin:role:update']"
-        >{{ isCreate === 0 ? '确定' : '更新' }}</el-button
+        >{{ isCreate === 0 ? $t('common.confirm') : $t('systemSetting.update') }}</el-button
       >
     </div>
   </div>
@@ -64,6 +80,14 @@
 import * as roleApi from '@/api/role.js';
 import { Debounce } from '@/utils/validate';
 import Cookies from 'js-cookie';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import {
+  buildI18nNameJson,
+  hasI18nNameContent,
+  pickFormName,
+  resolveFormActiveLang,
+} from '@/utils/localizedName';
 export default {
   name: 'roleEdit',
   props: {
@@ -82,11 +106,16 @@ export default {
       loading: false,
       pram: {
         roleName: null,
+        roleNameJson: '',
         rules: '',
         status: null,
         id: null,
         merId: JSON.parse(Cookies.get('JavaMerInfo')).id,
       },
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: {},
       menuExpand: false,
       menuNodeAll: false,
       menuOptions: [],
@@ -100,17 +129,76 @@ export default {
     };
   },
   mounted() {
+    this.getLanguageList();
     this.initEditData();
     this.getCacheMenu();
   },
+  computed: {
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
+    },
+  },
   methods: {
+    validateRoleName(rule, value, callback) {
+      if (hasI18nNameContent(pickFormName(this), this.nameJsonForm)) callback();
+      else callback(new Error(this.$t('systemSetting.pleaseEnterRoleName')));
+    },
+    emptyNameJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    parseNameJson(nameJson) {
+      const form = this.emptyNameJsonForm();
+      if (!nameJson) return form;
+      try {
+        const obj = typeof nameJson === 'string' ? JSON.parse(nameJson) : nameJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // 解析失败时保持为空
+      }
+      return form;
+    },
+    buildNameJson() {
+      return buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, pickFormName(this));
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseNameJson(this.pram && this.pram.roleNameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseNameJson(this.pram && this.pram.roleNameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     close() {
       this.$emit('hideEditDialog');
     },
     initEditData() {
       if (this.isCreate !== 1) return;
-      const { roleName, status, id, merId } = this.editData;
+      const { roleName, roleNameJson, status, id, merId } = this.editData;
       this.pram.roleName = roleName;
+      this.pram.roleNameJson = roleNameJson || '';
+      this.nameJsonForm = this.parseNameJson(this.pram.roleNameJson);
       this.pram.status = status;
       this.pram.id = id;
       this.pram.merId = JSON.parse(Cookies.get('JavaMerInfo')).id;
@@ -119,6 +207,9 @@ export default {
         text: 'Loading',
       });
       roleApi.getInfo(id).then((res) => {
+        this.pram.roleName = res.roleName;
+        this.pram.roleNameJson = res.roleNameJson || '';
+        this.nameJsonForm = this.parseNameJson(this.pram.roleNameJson);
         this.menuOptions = res.menuList;
         this.checkDisabled(this.menuOptions);
         loading.close();
@@ -138,6 +229,7 @@ export default {
         if (!valid) return;
         let roles = this.getMenuAllCheckedKeys().toString();
         this.pram.rules = roles;
+        this.pram.roleNameJson = this.buildNameJson();
         if (this.isCreate === 0) {
           this.handlerSave();
         } else {
@@ -150,7 +242,7 @@ export default {
       roleApi
         .addRole(this.pram)
         .then((data) => {
-          this.$message.success('创建身份成功');
+          this.$message.success(this.$t('systemSetting.createIdentitySuccess'));
           this.$emit('hideEditDialog');
           this.loading = false;
         })
@@ -163,7 +255,7 @@ export default {
       roleApi
         .updateRole(this.pram)
         .then((data) => {
-          this.$message.success('更新身份成功');
+          this.$message.success(this.$t('systemSetting.updateIdentitySuccess'));
           this.$emit('hideEditDialog');
           this.loading = false;
         })
@@ -247,4 +339,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.lang-name-switch {
+  width: 100%;
+}
+.lang-name-switch .el-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+</style>

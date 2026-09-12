@@ -37,9 +37,11 @@ public class PcPhilosophyVo implements Serializable {
     @NotBlank(message = "请选择图片")
     private String imageUrl;
 
-    @ApiModelProperty(value = "理念描述", required = true)
-    @NotBlank(message = "请填写理念描述")
+    @ApiModelProperty(value = "理念描述")
     private String name;
+
+    @ApiModelProperty(value = "多语言理念描述(JSON)")
+    private String nameJson;
 
     @ApiModelProperty(value = "排序", required = true)
     @NotNull(message = "排序不能为空")

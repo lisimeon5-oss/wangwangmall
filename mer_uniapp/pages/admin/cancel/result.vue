@@ -3,14 +3,14 @@
 		<view class="detailBox">
 			<image :src="type==1?urlDomain+'crmebimage/presets/adminImg/result2.png':urlDomain+'crmebimage/presets/adminImg/result1.png'" mode=""></image>
 			<view class="text">
-				{{type==1?'订单已全部核销':'暂无待核销订单'}}
+				{{type==1? $t('订单已全部核销') : $t('暂无待核销订单')}}
 			</view>
 			<view class="btn-box">
 				<view class="btn xq" @click="toDetail">
-					{{type==1?'订单详情':'返回重新核销'}}
+					{{type==1? $t('订单详情') : $t('返回重新核销')}}
 				</view>
 				<view class="btn gzt" @click="toWork">
-					返回工作台
+					{{$t('返回工作台')}}
 				</view>
 			</view>
 		</view>

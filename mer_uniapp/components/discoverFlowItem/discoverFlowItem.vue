@@ -8,11 +8,11 @@
 				</view>
 				<!-- 审核状态:0-待审核，1-审核通过，2-审核失败，3-平台关闭 -->
 				<view class="approval_status" v-if="items.auditStatus != 1 && uid == items.authorId">
-					<view v-if="items.auditStatus == 2" class="approval_title">审核未通过</view>
-					<view v-if="items.auditStatus == 3" class="approval_title">平台关闭</view>
-					<view v-if="items.auditStatus == 0" class="approval_title">正在审核</view>
-					<text v-if="items.auditStatus == 2 || items.auditStatus == 3" class="approval_info">查看未通过原因</text>
-					<text v-if="items.auditStatus == 0" class="approval_info">通过后将展示在列表</text>
+					<view v-if="items.auditStatus == 2" class="approval_title">{{$t('审核未通过')}}</view>
+					<view v-if="items.auditStatus == 3" class="approval_title">{{$t('平台关闭')}}</view>
+					<view v-if="items.auditStatus == 0" class="approval_title">{{$t('正在审核')}}</view>
+					<text v-if="items.auditStatus == 2 || items.auditStatus == 3" class="approval_info">{{$t('查看未通过原因')}}</text>
+					<text v-if="items.auditStatus == 0" class="approval_info">{{$t('通过后将展示在列表')}}</text>
 				</view>
 			</view>
 			<view class='text'>

@@ -9,49 +9,49 @@
     >
       <div class="padding-add">
         <el-form ref="form" inline :model="form" @submit.native.prevent>
-          <el-form-item label="关键字：">
+          <el-form-item :label="$t('distribution.keywordLabel')">
             <el-input
               v-model.trim="form.keywords"
               @keyup.enter.native="handlerSearch"
-              placeholder="请输入关键字"
+              :placeholder="$t('application.pleaseEnterKeyword')"
               class="selWidth"
               size="small"
               clearable
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="handlerSearch">查询</el-button>
+            <el-button type="primary" size="small" @click="handlerSearch">{{ $t('common.query') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '20px' }" shadow="never" :bordered="false">
       <el-button type="primary" size="small" @click="addExpress" v-hasPermi="['platform:express:sync']"
-        >同步物流公司</el-button
+        >{{ $t('maintain.syncLogisticsCompany') }}</el-button
       >
       <el-table class="mt20" v-loading="loading" size="small" :data="tableData.list">
         <el-table-column prop="id" label="ID" min-width="180" />
-        <el-table-column label="物流公司名称" min-width="150" prop="name" />
-        <el-table-column min-width="200" label="编码" prop="code" />
-        <el-table-column min-width="100" label="排序" prop="sort" sortable />
-        <el-table-column label="是否显示" min-width="100">
+        <el-table-column :label="$t('maintain.logisticsCompanyName')" min-width="150" prop="name" />
+        <el-table-column min-width="200" :label="$t('maintain.code')" prop="code" />
+        <el-table-column min-width="100" :label="$t('product.sort')" prop="sort" sortable />
+        <el-table-column :label="$t('product.isShow')" min-width="100">
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.isShow"
               class="demo"
               :active-value="true"
               :inactive-value="false"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
               @change="bindStatus(scope.row)"
               v-if="checkPermi(['platform:express:update:show'])"
             />
-            <div v-else>{{ scope.row.isShow ? '开启' : '关闭' }}</div>
+            <div v-else>{{ scope.row.isShow ? $t('common.open') : $t('common.close') }}</div>
           </template>
         </el-table-column>
-        <el-table-column v-hasPermi="['platform:express:update']" prop="address" fixed="right" width="70" label="操作">
+        <el-table-column v-hasPermi="['platform:express:update']" prop="address" fixed="right" width="70" :label="$t('common.operate')">
           <template slot-scope="scope">
-            <a @click="bindEdit(scope.row)">编辑</a>
+            <a @click="bindEdit(scope.row)">{{ $t('common.edit') }}</a>
           </template>
         </el-table-column> </el-table
       >`
@@ -68,30 +68,30 @@
         />
       </div>
     </el-card>
-    <el-dialog title="编辑物流公司" :visible.sync="dialogVisible" width="540px" :before-close="handleClose">
+    <el-dialog :title="$t('maintain.editLogisticsCompany')" :visible.sync="dialogVisible" width="540px" :before-close="handleClose">
       <el-form :model="formData" :rules="rules" ref="formData" label-width="65px" class="demo-ruleForm">
-        <el-form-item label="月结账号" prop="account" v-if="formData.partnerId">
-          <el-input v-model.trim="formData.account" placeholder="请输入月结账号"></el-input>
+        <el-form-item :label="$t('maintain.monthlyAccount')" prop="account" v-if="formData.partnerId">
+          <el-input v-model.trim="formData.account" :placeholder="$t('maintain.pleaseEnterMonthlyAccount')"></el-input>
         </el-form-item>
-        <el-form-item label="月结密码" prop="password" v-if="formData.partnerKey">
-          <el-input v-model.trim="formData.password" placeholder="请输入月结密码"></el-input>
+        <el-form-item :label="$t('maintain.monthlyPassword')" prop="password" v-if="formData.partnerKey">
+          <el-input v-model.trim="formData.password" :placeholder="$t('maintain.pleaseEnterMonthlyPassword')"></el-input>
         </el-form-item>
-        <el-form-item label="网点名称" prop="netName" v-if="formData.net">
-          <el-input v-model.trim="formData.netName" placeholder="请输入网点名称"></el-input>
+        <el-form-item :label="$t('maintain.branchName')" prop="netName" v-if="formData.net">
+          <el-input v-model.trim="formData.netName" :placeholder="$t('maintain.pleaseEnterBranchName')"></el-input>
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
-          <el-input-number v-model.trim="formData.sort" :min="0" :max="9999" label="排序"></el-input-number>
+        <el-form-item :label="$t('product.sort')" prop="sort">
+          <el-input-number v-model.trim="formData.sort" :min="0" :max="9999" :label="$t('product.sort')"></el-input-number>
         </el-form-item>
-        <el-form-item label="是否启用" prop="status">
+        <el-form-item :label="$t('maintain.isEnabled')" prop="status">
           <el-radio-group v-model="formData.status">
-            <el-radio :label="false">关闭</el-radio>
-            <el-radio :label="true">开启</el-radio>
+            <el-radio :label="false">{{ $t('common.close') }}</el-radio>
+            <el-radio :label="true">{{ $t('common.open') }}</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submit('formData')" v-hasPermi="['platform:express:update']">确定</el-button>
+        <el-button @click="dialogVisible = false">{{ $t('el.messagebox.cancel') }}</el-button>
+        <el-button type="primary" @click="submit('formData')" v-hasPermi="['platform:express:update']">{{ $t('el.messagebox.confirm') }}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -135,10 +135,10 @@ export default {
       formShow: false,
       editId: 0,
       rules: {
-        sort: [{ required: true, message: '请输入排序', trigger: 'blur' }],
-        account: [{ required: true, message: '请输入月结账号', trigger: 'blur' }],
-        password: [{ required: true, message: '请输入月结密码', trigger: 'blur' }],
-        netName: [{ required: true, message: '请输入网点名称', trigger: 'blur' }],
+        sort: [{ required: true, message: this.$t('user.pleaseEnterSort'), trigger: 'blur' }],
+        account: [{ required: true, message: this.$t('maintain.pleaseEnterMonthlyAccount'), trigger: 'blur' }],
+        password: [{ required: true, message: this.$t('maintain.pleaseEnterMonthlyPassword'), trigger: 'blur' }],
+        netName: [{ required: true, message: this.$t('maintain.pleaseEnterBranchName'), trigger: 'blur' }],
       },
     };
   },
@@ -180,7 +180,7 @@ export default {
           sort: item.sort,
         })
         .then((res) => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('product.operateSuccess'));
           // this.getExpressList()
         })
         .catch(() => {
@@ -199,7 +199,7 @@ export default {
     // 添加物流公司
     addExpress() {
       logistics.expressSyncApi().then((res) => {
-        this.$message.success('同步物流公司成功');
+        this.$message.success(this.$t('maintain.syncLogisticsSuccess'));
         this.page = 1;
         this.getExpressList();
       });
@@ -208,7 +208,7 @@ export default {
     bindDelete(item) {
       this.$modalSure().then(() => {
         logistics.expressDelete({ id: item.id }).then((res) => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           this.getExpressList();
         });
       });
@@ -218,7 +218,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           logistics.expressUpdate(this.formData).then((res) => {
-            this.$message.success('操作成功');
+            this.$message.success(this.$t('product.operateSuccess'));
             this.handleClose();
             this.getExpressList();
           });

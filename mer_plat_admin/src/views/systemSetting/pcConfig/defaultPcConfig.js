@@ -3,10 +3,11 @@
  */
 export const philosophyDefault = () => {
   return {
-    tips: '图片建议24*24px；鼠标拖拽左侧圆点可调整板块顺序；经营理念展示于PC商城底部授权板块，描述最多可输入10个字',
+    tips: 'systemSetting.pcPhilosophyTip',
     maxLength: 10,
-    title: '描述',
-    placeWords: '请输入描述，最多可输入10个字',
+    title: 'systemSetting.fieldDescription',
+    placeWords: 'systemSetting.pcPleaseEnterDescMax10',
+    isNameI18n: true,
     isShowAddBtn: false, //添加按钮
     isShowEdit: false, //删除按钮
     isShowStatus: false, //开启状态
@@ -16,6 +17,7 @@ export const philosophyDefault = () => {
     list: [
       {
         name: '',
+        nameJson: '',
         imageUrl: '',
         status: false,
         id: 0,
@@ -23,6 +25,7 @@ export const philosophyDefault = () => {
       },
       {
         name: '',
+        nameJson: '',
         imageUrl: '',
         status: false,
         id: 0,
@@ -30,6 +33,7 @@ export const philosophyDefault = () => {
       },
       {
         name: '',
+        nameJson: '',
         imageUrl: '',
         status: false,
         id: 0,
@@ -37,6 +41,7 @@ export const philosophyDefault = () => {
       },
       {
         name: '',
+        nameJson: '',
         imageUrl: '',
         status: false,
         id: 0,
@@ -51,9 +56,10 @@ export const philosophyDefault = () => {
  */
 export const friendlyLinkDefault = () => {
   return {
-    tips: '鼠标拖拽左侧圆点可调整板块顺序',
-    title: '链接名称',
-    placeWords: '请输入链接名称',
+    tips: 'systemSetting.pcFriendlyLinkTip',
+    title: 'application.linkName',
+    placeWords: 'systemSetting.pcPleaseEnterLinkName',
+    isNameI18n: true,
     isShowAddBtn: true, //添加按钮
     isShowEdit: true, //删除按钮
     isShowStatus: false, //开启状态
@@ -62,6 +68,7 @@ export const friendlyLinkDefault = () => {
     isShowImageUrl: false, //图片地址
     defaultList: {
       name: '',
+      nameJson: '',
       linkUrl: '',
       id: 0,
       sort: 0,
@@ -69,6 +76,7 @@ export const friendlyLinkDefault = () => {
     list: [
       {
         name: '',
+        nameJson: '',
         linkUrl: '',
         id: 0,
         sort: 0,
@@ -82,9 +90,10 @@ export const friendlyLinkDefault = () => {
  */
 export const bottomQrcodeDefault = () => {
   return {
-    tips: '鼠标拖拽左侧圆点可调整板块顺序,标题最多可输入8个字',
-    title: '链接名称',
-    placeWords: '请输入标题，最多可输入8个字',
+    tips: 'systemSetting.pcQrcodeTip',
+    title: 'application.linkName',
+    placeWords: 'systemSetting.pcPleaseEnterTitleMax8',
+    isNameI18n: true,
     isShowAddBtn: false, //添加按钮
     isShowEdit: false, //删除按钮
     isShowStatus: false, //开启状态
@@ -95,12 +104,14 @@ export const bottomQrcodeDefault = () => {
     list: [
       {
         name: '',
+        nameJson: '',
         imageUrl: '',
         id: 0,
         sort: 0,
       },
       {
         name: '',
+        nameJson: '',
         imageUrl: '',
         id: 0,
         sort: 0,
@@ -114,9 +125,10 @@ export const bottomQrcodeDefault = () => {
  */
 export const shoppingQuickEntryDefault = () => {
   return {
-    tips: '鼠标拖拽左侧圆点可调整板块顺序，最多可以添加6个板块，每个板块下最多可以添加7个链接',
-    title: '链接名称',
-    placeWords: '请输入链接名称，最多可输入6个字',
+    tips: 'systemSetting.pcQuickEntryTip',
+    title: 'application.linkName',
+    placeWords: 'systemSetting.pcPleaseEnterLinkNameMax6',
+    isNameI18n: true,
     isShowAddBtn: true, //添加按钮
     isShowEdit: true, //删除按钮
     isShowStatus: false, //开启状态
@@ -130,12 +142,14 @@ export const shoppingQuickEntryDefault = () => {
     modelLinkMaxLength: 7,
     defaultList: {
       name: '',
+      nameJson: '',
       imageUrl: '',
       id: 0,
       sort: 0,
       linkList: [
         {
           name: '',
+          nameJson: '',
           linkUrl: '',
           id: 0,
           sort: 0,
@@ -145,12 +159,14 @@ export const shoppingQuickEntryDefault = () => {
     list: [
       {
         name: '',
+        nameJson: '',
         imageUrl: '',
         id: 0,
         sort: 0,
         linkList: [
           {
             name: '',
+            nameJson: '',
             linkUrl: '',
             id: 0,
             sort: 0,
@@ -166,7 +182,8 @@ export const shoppingQuickEntryDefault = () => {
  */
 export const bannerDefault = () => {
   return {
-    tips: '最多可添加10张图片，建议1920*550px；鼠标拖拽左侧圆点可调整图片 顺序',
+    tips: 'systemSetting.pcBannerTip',
+    isNameI18n: true,
     isShowAddBtn: true, //添加按钮
     isShowEdit: true, //删除按钮
     isShowStatus: true, //开启状态
@@ -175,9 +192,11 @@ export const bannerDefault = () => {
     isShowImageUrl: true, //图片地址
     isShowMoreLinkUrl: false, //多条链接
     maxList: 10,
-    title: '标题',
+    title: 'content.title',
+    placeWords: 'systemSetting.pleaseEnterName',
     defaultList: {
       name: '',
+      nameJson: '',
       imageUrl: '',
       status: false,
       linkUrl: '',
@@ -188,6 +207,7 @@ export const bannerDefault = () => {
     list: [
       {
         name: '',
+        nameJson: '',
         imageUrl: '',
         status: false,
         linkUrl: '',
@@ -203,7 +223,7 @@ export const bannerDefault = () => {
  */
 export const advertisementDefault = () => {
   return {
-    tips: '图片宽度建议为1920px',
+    tips: 'systemSetting.pcAdWidthTip',
     isShowAddBtn: false, //添加按钮
     isShowEdit: false, //删除按钮
     isShowStatus: true, //开启状态
@@ -234,7 +254,8 @@ export const advertisementDefault = () => {
  */
 export const menuDefault = () => {
   return {
-    tips: '最多可开启6个板块，链接支持输入内部链接/外部链接',
+    tips: 'systemSetting.pcTopMenuTip',
+    isNameI18n: true,
     isShowAddBtn: true, //添加按钮
     isShowEdit: true, //删除按钮
     isShowStatus: true, //开启状态
@@ -244,15 +265,16 @@ export const menuDefault = () => {
     isShowMoreLinkUrl: false, //多条链接
     // modelMaxLength: 10,
     maxLength: 6,
-    placeWords: '请输入名称（最多6个字）',
-    linkPlaceWords: '支持输入内部链接/外部链接',
-    title: '名称',
+    placeWords: 'systemSetting.pcPleaseEnterNameMax6',
+    linkPlaceWords: 'systemSetting.pcInternalExternalLinkTip',
+    title: 'category.name',
     defaultList: {
       status: false,
       linkUrl: '',
       id: 0,
       sort: 0,
       name: '',
+      nameJson: '',
     },
     list: [
       {
@@ -261,6 +283,7 @@ export const menuDefault = () => {
         id: 0,
         sort: 0,
         name: '',
+        nameJson: '',
       },
     ],
   };

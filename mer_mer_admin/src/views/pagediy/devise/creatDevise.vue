@@ -6,32 +6,35 @@
   <div class="deviseBox">
     <div class="devise_head acea-row row-between-wrapper">
       <div class="acea-row row-baseline">
-        <div class="title">当前页面：{{ nameTop }}</div>
-        <el-popover placement="bottom" width="450" trigger="click" v-model="visible">
-          <div class="acea-row row-middle">
-            <el-input
-              v-model="nameTopFrom"
-              placeholder="必填不超过15个字"
-              maxlength="15"
-              size="small"
-              style="width: 260px"
-              class="mr20"
-            />
-            <el-button
-              size="small"
-              @click="
-                visible = false;
-                nameTopFrom = '';
-              "
-              >取消</el-button
-            >
-            <el-button
-              v-hasPermi="['platform:pagediy:update', 'platform:pagediy:save']"
-              type="primary"
-              size="small"
-              @click="saveName(nameTopFrom, 0)"
-              >确定</el-button
-            >
+        <div class="title">{{ $t('pagediy.currentPageColon') }}{{ nameTop }}</div>
+        <el-popover placement="bottom" width="480" trigger="click" v-model="visible">
+          <div>
+            <div class="mb10">
+              <el-radio-group v-model="nameActiveLang" size="mini">
+                <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                  {{ lang.label }}
+                </el-radio-button>
+              </el-radio-group>
+            </div>
+            <div class="acea-row row-middle">
+              <el-input
+                :value="namePopoverInput"
+                :placeholder="namePopoverPlaceholder"
+                maxlength="15"
+                size="small"
+                style="width: 237px"
+                class="mr20"
+                @input="onNamePopoverInput"
+              />
+              <el-button size="small" @click="visible = false">{{ $t('common.cancel') }}</el-button>
+              <el-button
+                v-hasPermi="['platform:pagediy:update', 'platform:pagediy:save']"
+                type="primary"
+                size="small"
+                @click="saveName(nameTopFrom, 0)"
+                >{{ $t('common.confirm') }}</el-button
+              >
+            </div>
           </div>
           <i slot="reference" class="edit el-icon-edit-outline"></i>
         </el-popover>
@@ -40,7 +43,7 @@
         <el-popover placement="top-start" trigger="hover" :disabled="Number(pageId) === 0">
           <div id="diyQrcode"></div>
           <el-button :disabled="Number(pageId) === 0" class="ht_btn" slot="reference" style="line-height: 9px"
-            ><i class="iconfont icon-caozuo-xianshi"></i>预览</el-button
+            ><i class="iconfont icon-caozuo-xianshi"></i>{{ $t('pagediy.preview') }}</el-button
           >
         </el-popover>
         <button
@@ -48,7 +51,7 @@
           class="ht_btn mx_12"
           v-debounceClick="saveConfig"
         >
-          仅保存
+          {{ $t('pagediy.saveOnly') }}
         </button>
         <el-button
           v-hasPermi="['platform:pagediy:update', 'platform:pagediy:save']"
@@ -60,7 +63,7 @@
             }
           "
           :loading="loading"
-          >保存关闭</el-button
+          >{{ $t('pagediy.saveClose') }}</el-button
         >
       </div>
     </div>
@@ -89,9 +92,9 @@
                 <div
                   class="list-group-item"
                   :class="{
-                    search: element.cname == '搜索框',
-                    comb: element.cname == '头部组件',
-                    bar: element.cname == '商品分类',
+                    search: element.cname == $t('pagediy.searchBox'),
+                    comb: element.cname == $t('pagediy.headerComponent'),
+                    bar: element.cname == $t('pagediy.productCategory'),
                   }"
                   v-for="element in item.list"
                   :key="element.id"
@@ -99,7 +102,7 @@
                   v-show="item.isOpen"
                 >
                   <div>
-                    <div class="position" style="display: none">释放鼠标将组建添加到此处</div>
+                    <div class="position" style="display: none">{{ $t('pagediy.dropComponentHere') }}</div>
                     <span class="conter t-icon" :class="element.icon"></span>
                     <p class="conter">{{ element.cname }}</p>
                   </div>
@@ -110,14 +113,14 @@
           <div class="wrapper" v-else :style="'height:' + clientHeight + 'px;'">
             <div class="link-item" v-for="(item, index) in urlList" :key="index">
               <div class="name">{{ item.name }}</div>
-              <div class="link-txt">地址：{{ item.url }}</div>
+              <div class="link-txt">{{ $t('pagediy.addressColon') }}{{ item.url }}</div>
               <div v-if="item.parameter" class="params">
-                <span class="txt">参数：</span>
+                <span class="txt">{{ $t('pagediy.paramColon') }}</span>
                 <span>{{ item.parameter }}</span>
               </div>
               <div v-if="item.example" class="lable">
-                <p class="txt">例如：{{ item.example }}</p>
-                <el-button size="small" class="copy copy-data" :data-clipboard-text="item.example">复制 </el-button>
+                <p class="txt">{{ $t('pagediy.exampleColon') }}{{ item.example }}</p>
+                <el-button size="small" class="copy copy-data" :data-clipboard-text="item.example">{{ $t('pagediy.copy') }}</el-button>
               </div>
             </div>
           </div>
@@ -223,24 +226,24 @@
             </div>
           </div>
           <div class="mt20 btn">
-            <el-button plain @click="showTitle" class="mb15">页面设置</el-button>
+            <el-button plain @click="showTitle" class="mb15">{{ $t('pagediy.pageSettings') }}</el-button>
             <el-tooltip
               class="item"
               effect="dark"
-              :content="pageId === 0 ? '暂无历史版本！' : '点击可另存模板'"
+              :content="pageId === 0 ? $t('pagediy.noHistoryVersion') : $t('pagediy.clickToSaveTemplate')"
               placement="left-start"
             >
               <el-popover placement="bottom" trigger="click" v-model="isShow">
                 <div class="acea-row row-between row-middle">
                   <el-input
                     v-model="nameContent"
-                    placeholder="必填不超过15个字"
+                    :placeholder="$t('pagediy.requiredMax15')"
                     maxlength="15"
                     size="small"
                     style="width: 237px"
                   />
-                  <el-button type="text" size="small" @click="isShow = false">取消</el-button>
-                  <el-button type="primary" size="small" @click="saveName(nameContent, 1)">确定</el-button>
+                  <el-button type="text" size="small" @click="isShow = false">{{ $t('common.cancel') }}</el-button>
+                  <el-button type="primary" size="small" @click="saveName(nameContent, 1)">{{ $t('common.confirm') }}</el-button>
                 </div>
                 <el-button
                   v-hasPermi="['platform:pagediy:save']"
@@ -249,25 +252,25 @@
                   plain
                   class="mb15"
                   @click="onClick"
-                  >另存模板</el-button
+                  >{{ $t('pagediy.saveTemplate') }}</el-button
                 >
               </el-popover>
             </el-tooltip>
             <el-tooltip
               class="item"
               effect="dark"
-              :content="pageId === 0 ? '暂无历史版本！' : '点击可重置模板'"
+              :content="pageId === 0 ? $t('pagediy.noHistoryVersion') : $t('pagediy.clickToResetTemplate')"
               placement="left-start"
             >
               <el-popover placement="bottom" width="400" trigger="click" v-model="isReast">
                 <div class="acea-row row-between row-middle">
-                  <p>是否重置当前页面数据？</p>
+                  <p>{{ $t('pagediy.resetPageDataConfirm') }}</p>
                   <div style="text-align: right; margin: 0">
-                    <el-button size="mini" type="text" @click="isReast = false">取消</el-button>
-                    <el-button type="primary" size="mini" @click="reast">确定</el-button>
+                    <el-button size="mini" type="text" @click="isReast = false">{{ $t('common.cancel') }}</el-button>
+                    <el-button type="primary" size="mini" @click="reast">{{ $t('common.confirm') }}</el-button>
                   </div>
                 </div>
-                <el-button slot="reference" :disabled="pageId === 0" plain class="mb15">重置</el-button>
+                <el-button slot="reference" :disabled="pageId === 0" plain class="mb15">{{ $t('common.reset') }}</el-button>
               </el-popover>
             </el-tooltip>
           </div>
@@ -305,7 +308,10 @@ import ClipboardJS from 'clipboard';
 import mPage from '../components/mobilePage/index.js';
 import mConfig from '../components/mobileConfig/index.js';
 import QRcode from 'qrcodejs2';
-import { mapStat, mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
+import { getLocalizedName, getLocalizedText, getUiLocale, hasI18nNameContent, parseLangJsonMap, buildI18nNameJson, resolveFormActiveLang } from '@/utils/localizedName';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
 import { getBaseInfoApi, merchantConfigInfoApi } from '@/api/merchant';
 import { isUrlHttp } from '@/utils/ZBKJIutil';
 import Cookies from 'js-cookie';
@@ -330,7 +336,7 @@ export default {
       category: [],
       tabList: [
         {
-          title: '组件库',
+          title: this.$t('pagediy.componentLibrary'),
           key: 0,
         },
       ],
@@ -347,6 +353,10 @@ export default {
       name: '', //模板名称
       nameTopFrom: '', //头部模板名称表单提交
       nameContent: '', //另存模板名称
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      nameActiveLang: 'zh-cn',
+      nameJsonForm: {},
       isShow: false,
       visible: false,
       isReast: false,
@@ -357,24 +367,24 @@ export default {
           tabVal: '0',
         },
         status: {
-          title: '是否自定义',
+          title: this.$t('pagediy.whetherCustom'),
           name: 'status',
           status: false,
         },
         txtColor: {
-          title: '文字颜色',
+          title: this.$t('pagediy.textColor'),
           name: 'txtColor',
           default: [{ item: '#282828' }],
           color: [{ item: '#282828' }],
         },
         activeTxtColor: {
-          title: '选中文字颜色',
+          title: this.$t('pagediy.selectedColor'),
           name: 'txtColor',
           default: [{ item: '#F62C2C' }],
           color: [{ item: '#F62C2C' }],
         },
         bgColor: {
-          title: '背景颜色',
+          title: this.$t('pagediy.backgroundColor'),
           name: 'bgColor',
           default: [{ item: '#fff' }],
           isFoot: true,
@@ -390,15 +400,23 @@ export default {
     ...mConfig,
   },
   watch: {
+    '$i18n.locale'() {
+      this.arraySort();
+    },
     nameTop(val) {
       //直接赋值给本地data中的属性，就不会报错啦
       this.name = val;
     },
+    visible(val) {
+      if (val) this.hydrateNamePopover();
+    },
   },
   computed: {
     ...mapState({
-      titleTxt: (state) => state.mobildConfig.pageTitle || '首页',
-      nameTop: (state) => state.mobildConfig.pageName,
+      pageTitleRaw: (state) => state.mobildConfig.pageTitle || '',
+      pageTitleJson: (state) => state.mobildConfig.pageTitleJson || '',
+      pageNameRaw: (state) => state.mobildConfig.pageName,
+      pageNameJson: (state) => state.mobildConfig.pageNameJson || '',
       showTxt: (state) => state.mobildConfig.pageShow,
       colorTxt: (state) => state.mobildConfig.pageColor,
       picTxt: (state) => state.mobildConfig.pagePic,
@@ -410,6 +428,24 @@ export default {
       titleBgColor: (state) => state.mobildConfig.titleBgColor, //标题背景色
     }),
     ...mapGetters(['frontDomain', 'mediaDomain']),
+    titleTxt() {
+      return getLocalizedText(this.pageTitleRaw, this.pageTitleJson, getUiLocale(this)) || this.$t('pagediy.homeTag');
+    },
+    nameTop() {
+      return getLocalizedName({ name: this.pageNameRaw, nameJson: this.pageNameJson }, getUiLocale(this)) || this.$t('pagediy.template');
+    },
+    nameActiveLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.nameActiveLang);
+      return lang ? lang.label : this.nameActiveLang;
+    },
+    namePopoverInput() {
+      if (this.nameActiveLang === this.defaultLangCode) return this.nameTopFrom;
+      return this.nameJsonForm[this.nameActiveLang] || '';
+    },
+    namePopoverPlaceholder() {
+      if (this.nameActiveLang === this.defaultLangCode) return this.$t('pagediy.requiredMax15');
+      return this.$t('category.inputNameInLang', { lang: this.nameActiveLangLabel });
+    },
     //标题样式
     pageTitle() {
       return [{ backgroundColor: this.titleBgColor }, { color: this.titleColor }];
@@ -425,9 +461,9 @@ export default {
     document.addEventListener('keydown', this.saveDiy, { passive: true });
     this.pageId = Number(this.$route.params.id);
     this.pageType = this.$route.params.type;
-    if (this.pageId === 0) this.visible = true; //新增的时候修改模板名称显示出来
-    this.nameTopFrom = this.pageType !== 'copy' ? this.nameTop : this.nameTop + '-副本';
-    this.name = this.pageType !== 'copy' ? this.nameTop : this.nameTop + '-副本';
+    this.nameTopFrom = this.pageType !== 'copy' ? this.nameTop : this.nameTop + this.$t('pagediy.copySuffix');
+    this.name = this.pageType !== 'copy' ? this.nameTop : this.nameTop + this.$t('pagediy.copySuffix');
+    this.getNameLanguageList();
     this.$nextTick(() => {
       this.arraySort();
       if (this.pageId != 0) {
@@ -452,7 +488,7 @@ export default {
     this.$nextTick(function () {
       const clipboard = new ClipboardJS('.copy-data');
       clipboard.on('success', () => {
-        this.$message.success('复制成功');
+        this.$message.success(this.$t('pagediy.copySuccess'));
       });
     });
     if (this.$route.params.id !== '0') this.getInfo();
@@ -523,7 +559,9 @@ export default {
         let data = res;
         //更新页面设置中的参数
         this.$store.commit('mobildConfig/titleUpdata', data.title);
-        this.$store.commit('mobildConfig/nameUpdata', this.pageType !== 'copy' ? data.name : data.name + '-副本');
+        this.$store.commit('mobildConfig/titleJsonUpdata', data.titleJson || '');
+        this.$store.commit('mobildConfig/nameUpdata', this.pageType !== 'copy' ? data.name : data.name + this.$t('pagediy.copySuffix'));
+        this.$store.commit('mobildConfig/nameJsonUpdata', data.nameJson || '');
         this.$store.commit('mobildConfig/showUpdata', data.isShow);
         this.$store.commit('mobildConfig/colorUpdata', data.isBgColor || 0);
         this.$store.commit('mobildConfig/picUpdata', data.isBgPic || 0);
@@ -533,7 +571,8 @@ export default {
         this.$store.commit('mobildConfig/returnAddressUpdata', data.returnAddress);
         this.$store.commit('mobildConfig/titleBgColorUpdata', data.titleBgColor);
         this.$store.commit('mobildConfig/titleColorUpdata', data.titleColor);
-        this.nameTopFrom = this.pageType !== 'copy' ? data.name : data.name + '-副本';
+        this.nameTopFrom = this.pageType !== 'copy' ? data.name : data.name + this.$t('pagediy.copySuffix');
+        this.hydrateNamePopover();
         this.defaultData(data.value);
       });
     },
@@ -595,9 +634,65 @@ export default {
       this.activeIndex = index;
       this.$store.commit('mobildConfig/SETCONFIGNAME', item.name);
     },
+    hydrateNamePopover() {
+      this.nameTopFrom = this.pageNameRaw || this.nameTopFrom || '';
+      this.nameJsonForm = this.parseNameJsonForm(this.pageNameJson);
+    },
+    parseNameJsonForm(json) {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      const map = parseLangJsonMap(json);
+      Object.keys(map).forEach((key) => {
+        if (key !== this.defaultLangCode) form[key] = map[key] || '';
+      });
+      return form;
+    },
+    onNamePopoverInput(val) {
+      if (this.nameActiveLang === this.defaultLangCode) {
+        this.nameTopFrom = val;
+      } else {
+        this.$set(this.nameJsonForm, this.nameActiveLang, val);
+      }
+      this.syncNamePopoverToStore();
+    },
+    syncNamePopoverToStore() {
+      const json = buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, this.nameTopFrom);
+      this.$store.commit('mobildConfig/nameUpdata', this.nameTopFrom);
+      this.$store.commit('mobildConfig/nameJsonUpdata', json);
+      return json;
+    },
+    getNameLanguageList() {
+      return systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameActiveLang = resolveFormActiveLang(this, this.langOptions, this.defaultLangCode);
+          this.hydrateNamePopover();
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameActiveLang = resolveFormActiveLang(this);
+          this.hydrateNamePopover();
+        })
+        .finally(() => {
+          if (this.pageId === 0) this.visible = true;
+        });
+    },
     // 模板名称保存
     saveName(n, j) {
-      if (!n) return this.$message.warning('请填写模板名称');
+      const json = this.syncNamePopoverToStore();
+      if (!hasI18nNameContent(this.nameTopFrom, parseLangJsonMap(json))) return this.$message.warning(this.$t('pagediy.templateNamePlaceholder'));
       if (j === 1) {
         //this.$store.commit('mobildConfig/UPNAME', this.nameContent);
       } else {
@@ -621,8 +716,10 @@ export default {
     diySaveDate(val, n, j) {
       let data = {
         value: val,
-        title: this.titleTxt,
-        name: j === 1 ? this.nameContent : j === 0 ? this.nameTopFrom : this.name,
+        title: this.pageTitleRaw,
+        titleJson: this.pageTitleJson,
+        name: j === 1 ? this.nameContent : j === 0 ? this.nameTopFrom : this.pageNameRaw,
+        nameJson: this.pageNameJson,
         isShow: this.showTxt ? 1 : 0,
         isBgColor: this.colorTxt ? 1 : 0,
         colorPicker: this.colorPickerTxt,
@@ -634,7 +731,7 @@ export default {
         titleBgColor: this.titleBgColor,
         id: this.pageId ? this.pageId : null,
       };
-      if (!data.name) return this.$message.warning('模板名称不能为空');
+      if (!hasI18nNameContent(data.name, parseLangJsonMap(data.nameJson))) return this.$message.warning(this.$t('pagediy.templateNameRequired'));
       this.pageId === 0 || j === 1 || (this.pageType === 'copy' && Number(this.$route.params.id) === this.pageId)
         ? pagediySaveApi(data)
             .then((res) => {
@@ -642,7 +739,7 @@ export default {
               if (j !== 1) {
                 this.pageId = res.id; //id
               }
-              this.$message.success('新增成功');
+              this.$message.success(this.$t('pagediy.addSuccess'));
               this.getQRcode();
               this.onCancel();
               this.close(n);
@@ -653,7 +750,7 @@ export default {
         : pagediyUpdateApi(data)
             .then((res) => {
               this.loading = false;
-              this.$message.success('编辑成功');
+              this.$message.success(this.$t('pagediy.editSuccess'));
               this.close(n);
               this.onCancel();
             })
@@ -703,17 +800,17 @@ export default {
     arraySort() {
       let tempArr = [];
       let basis = {
-        title: '基础组件',
+        title: this.$t('pagediy.baseComponent'),
         list: [],
         isOpen: true,
       };
       let marketing = {
-        title: '营销组件',
+        title: this.$t('pagediy.marketingComponent'),
         list: [],
         isOpen: true,
       };
       let tool = {
-        title: '工具组件',
+        title: this.$t('pagediy.toolComponent'),
         list: [],
         isOpen: true,
       };
@@ -775,7 +872,7 @@ export default {
     },
     //中间页点击添加模块；
     bindAddDom(item, type, index) {
-      if (item.name === 'home_footer') return this.$message.warning('该组件只能添加一次');
+      if (item.name === 'home_footer') return this.$message.warning(this.$t('pagediy.componentOnceOnly'));
       let i = item;
       this.lConfig.forEach((j) => {
         if (item.name == j.name) {
@@ -806,7 +903,7 @@ export default {
         item.name == 'home_comb' ||
         item.name == 'home_footer'
       ) {
-        return this.$message.warning('该组件禁止移动');
+        return this.$message.warning(this.$t('pagediy.componentNoMove'));
       }
       if (type) {
         if (
@@ -814,7 +911,7 @@ export default {
           this.mConfig[index - 1].name == 'nav_bar' ||
           this.mConfig[index - 1].name == 'home_comb'
         ) {
-          return this.$message.warning('搜索框必须为顶部');
+          return this.$message.warning(this.$t('pagediy.searchMustTop'));
         }
         this.swapArray(this.mConfig, index - 1, index);
       } else {
@@ -852,7 +949,7 @@ export default {
         if (i == 'pageTitle') {
           obj = mConfig[i];
           obj.configName = mConfig[i].name;
-          obj.cname = '页面设置';
+          obj.cname = this.$t('pagediy.pageSettings');
         }
       }
       let abc = obj;
@@ -862,22 +959,22 @@ export default {
     // 组件添加
     addDomCon(item, type, index) {
       if (item.name === 'home_footer') {
-        if (this.isFooter) return this.$message.warning('该组件只能添加一次');
+        if (this.isFooter) return this.$message.warning(this.$t('pagediy.componentOnceOnly'));
         this.isFooter = true;
       }
       if (item.name === 'search_box') {
-        if (this.isSearch) return this.$message.warning('该组件只能添加一次');
-        if (this.isComb) return this.$message.warning('该组件不能和组合组件同时存在');
+        if (this.isSearch) return this.$message.warning(this.$t('pagediy.componentOnceOnly'));
+        if (this.isComb) return this.$message.warning(this.$t('pagediy.componentConflictTip'));
         this.isSearch = true;
       }
       if (item.name === 'nav_bar') {
-        if (this.isTab) return this.$message.warning('该组件只能添加一次');
-        if (this.isComb) return this.$message.warning('该组件不能和组合组件同时存在');
+        if (this.isTab) return this.$message.warning(this.$t('pagediy.componentOnceOnly'));
+        if (this.isComb) return this.$message.warning(this.$t('pagediy.componentConflictTip'));
         this.isTab = true;
       }
       if (item.name === 'home_comb') {
-        if (this.isComb) return this.$message.warning('该组件只能添加一次');
-        if (this.isSearch || this.isTab) return this.$message.warning('组合组件不能和搜索框同时存在');
+        if (this.isComb) return this.$message.warning(this.$t('pagediy.componentOnceOnly'));
+        if (this.isSearch || this.isTab) return this.$message.warning(this.$t('pagediy.combConflictTip'));
         this.isComb = true;
       }
       idGlobal += 1;
@@ -931,13 +1028,14 @@ export default {
       });
       this.$store.commit('mobildConfig/SETCONFIGNAME', item.name);
       this.$store.commit('mobildConfig/defaultArraySort', obj);
-      if (type === 0) return this.$message.success('复制成功');
+      if (type === 0) return this.$message.success(this.$t('pagediy.copySuccess'));
     },
     //移动事件
     onMove(e) {
-      if (e.relatedContext.element.name == 'search_box') return false;
-      if (e.relatedContext.element.name == 'nav_bar') return false;
-      if (e.relatedContext.element.name == 'home_comb') return false;
+      const name = e.relatedContext && e.relatedContext.element && e.relatedContext.element.name;
+      if (name == 'search_box') return false;
+      if (name == 'nav_bar') return false;
+      if (name == 'home_comb') return false;
       return true;
     },
     //组件拖拽事件
@@ -945,13 +1043,13 @@ export default {
       // 中间拖拽排序
       if (evt.moved) {
         if (evt.moved.element.name == 'search_box') {
-          return this.$message.warning('该组件禁止拖拽');
+          return this.$message.warning(this.$t('pagediy.componentNoDrag'));
         }
         if (evt.moved.element.name == 'nav_bar') {
-          return this.$Message.warning('该组件禁止拖拽');
+          return this.$message.warning(this.$t('pagediy.componentNoDrag'));
         }
         if (evt.moved.element.name == 'home_comb') {
-          return this.$Message.warning('该组件禁止拖拽');
+          return this.$message.warning(this.$t('pagediy.componentNoDrag'));
         }
         evt.moved.oldNum = this.mConfig[evt.moved.oldIndex].num;
         evt.moved.newNum = this.mConfig[evt.moved.newIndex].num;

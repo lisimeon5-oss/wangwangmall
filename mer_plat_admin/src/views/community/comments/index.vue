@@ -9,10 +9,10 @@
     >
       <div class="padding-add">
         <el-form :inline="true" label-position="right" @submit.native.prevent>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('product.userSearchLabel')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('product.timeSelectLabel')">
             <el-date-picker
               @change="onchangeTime"
               v-model="timeVal"
@@ -21,14 +21,14 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               class="selWidth"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="审核状态：">
+          <el-form-item :label="$t('finance.auditStatusLabel')">
             <el-select
               v-model="tableFrom.auditStatus"
-              placeholder="请选择"
+              :placeholder="$t('el.select.placeholder')"
               size="small"
               class="selWidth"
               clearable
@@ -37,28 +37,28 @@
               <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="内容标题：">
+          <el-form-item :label="$t('community.contentTitleLabel')">
             <el-input
               v-model.trim="title"
-              placeholder="请输入文章标题"
+              :placeholder="$t('content.pleaseEnterArticleTitle')"
               class="selWidth"
               size="small"
               @keyup.enter.native="getList(1)"
               clearable
             ></el-input>
           </el-form-item>
-          <el-form-item label="评论内容：">
+          <el-form-item :label="$t('community.commentContentLabel')">
             <el-input
               v-model.trim="keywords"
-              placeholder="请输入评论内容"
+              :placeholder="$t('community.pleaseEnterCommentContent')"
               class="selWidth"
               size="small"
               clearable
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -66,36 +66,36 @@
     <el-card class="box-card mt14" :body-style="{ padding: '20px' }" :bordered="false" shadow="never">
       <el-table :data="tableData.data" size="small">
         <el-table-column prop="id" label="ID" width="50" />
-        <el-table-column label="用户名/ID" min-width="150">
+        <el-table-column :label="$t('community.usernameID')" min-width="150">
           <template slot-scope="{ row }">
             <span>{{ row.userNickname + ' / ' + row.uid }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="noteTitle" label="文章标题" min-width="120" :show-overflow-tooltip="true" />
-        <el-table-column prop="content" label="评论内容" min-width="150" :show-overflow-tooltip="true" />
-        <el-table-column prop="countReply" label="评论数" min-width="100" />
-        <el-table-column prop="countStart" label="点赞数" min-width="100" />
-        <el-table-column label="评论时间" min-width="150" prop="createTime" />
-        <el-table-column label="审核状态" min-width="100">
+        <el-table-column prop="noteTitle" :label="$t('content.articleTitle')" min-width="120" :show-overflow-tooltip="true" />
+        <el-table-column prop="content" :label="$t('community.commentContent')" min-width="150" :show-overflow-tooltip="true" />
+        <el-table-column prop="countReply" :label="$t('community.commentCount')" min-width="100" />
+        <el-table-column prop="countStart" :label="$t('community.likesCount')" min-width="100" />
+        <el-table-column :label="$t('community.commentTime')" min-width="150" prop="createTime" />
+        <el-table-column :label="$t('product.auditStatus')" min-width="100">
           <template slot-scope="scope">
             <span class="tag-background" :class="tagClass[scope.row.auditStatus]">{{
               scope.row.auditStatus | communityStatusFilter
             }}</span>
             <span v-if="scope.row.auditStatus == 2" style="display: block; font-size: 12px; color: red"
-              >原因: {{ scope.row.refusal }}</span
+              >{{ $t('common.reasonLabel') }}{{ scope.row.refusal }}</span
             >
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="150" fixed="right">
           <template slot-scope="scope">
-            <a @click="onAudit(scope.row, 'info')">详情</a>
+            <a @click="onAudit(scope.row, 'info')">{{ $t('common.detail') }}</a>
             <el-divider direction="vertical"></el-divider>
             <template v-if="scope.row.auditStatus === 0 && checkPermi(['platform:community:reply:audit'])">
-              <a @click="onAudit(scope.row, 'audit')">审核</a>
+              <a @click="onAudit(scope.row, 'audit')">{{ $t('finance.audit') }}</a>
               <el-divider direction="vertical"></el-divider>
             </template>
             <a @click="handleDelete(scope.row.id, scope.$index)" v-hasPermi="['platform:community:reply:delete']"
-              >删除</a
+              >{{ $t('common.delete') }}</a
             >
           </template>
         </el-table-column>
@@ -127,9 +127,9 @@
           <div class="full">
             <div class="order_icon"><span class="iconfont icon-daipingjia-2"></span></div>
             <div class="text">
-              <div class="title">{{auditType === 'audit'? '评论审核':'评论详情'}}</div>
+              <div class="title">{{auditType === 'audit'? $t('community.commentAudit'):$t('community.commentDetail')}}</div>
               <div>
-                <span class="mr20">审核结果：{{ commentsInfo.auditStatus | communityStatusFilter }}</span>
+                <span class="mr20">{{ $t('community.auditResultLabel') }}{{ commentsInfo.auditStatus | communityStatusFilter }}</span>
               </div>
             </div>
           </div>
@@ -142,7 +142,7 @@
                 }
               "
               style="margin-left: 0"
-              >{{ loadingBtn ? '提交中 ...' : '审核拒绝' }}</el-button
+              >{{ loadingBtn ? $t('finance.submitting') : $t('product.auditRejected') }}</el-button
             >
             <el-button
               type="primary"
@@ -152,7 +152,7 @@
                   onAuditStatus(1);
                 }
               "
-              >{{ loadingBtnSuccess ? '提交中 ...' : '审核通过' }}</el-button
+              >{{ loadingBtnSuccess ? $t('finance.submitting') : $t('finance.auditPassed') }}</el-button
             >
           </div>
         </div>
@@ -160,33 +160,33 @@
       <div class="demo-drawer__content detailSection" v-loading="loading">
         <ul class="list">
           <li class="item">
-            <div class="lang">用户昵称：</div>
+            <div class="lang">{{ $t('order.userNickname') }}</div>
             <div class="value">{{ commentsInfo.userNickname }}</div>
           </li>
           <li class="item">
-            <div class="tips">用户ID：</div>
+            <div class="tips">{{ $t('community.userIdLabel') }}</div>
             <div class="value">{{ commentsInfo.uid }}</div>
           </li>
           <li class="item">
-            <div class="tips">评论类型：</div>
-            <div class="value">{{ commentsInfo.type === 1 ? '评论' : '回复' }}</div>
+            <div class="tips">{{ $t('community.commentTypeLabel') }}</div>
+            <div class="value">{{ commentsInfo.type === 1 ? $t('community.comment') : $t('community.reply') }}</div>
           </li>
           <li class="item">
-            <div class="lang">评论数：</div>
+            <div class="lang">{{ $t('community.commentCountLabel') }}</div>
             <div class="value">{{ commentsInfo.countReply }}</div>
           </li>
           <li class="item">
-            <div class="tips">点赞数：</div>
+            <div class="tips">{{ $t('community.likesCountLabel') }}</div>
             <div class="value">{{ commentsInfo.countStart }}</div>
           </li>
         </ul>
         <div class="list" style="display: block">
           <div class="item">
-            <div class="lang">内容：</div>
+            <div class="lang">{{ $t('community.contentLabel') }}</div>
             <div class="value">{{ commentsInfo.content }}</div>
           </div>
           <div v-show="commentsInfo.auditStatus === 2" class="item">
-            <div class="lang">审核失败原因：</div>
+            <div class="lang">{{ $t('community.auditFailReasonLabel') }}</div>
             <div class="value">{{ commentsInfo.refusal }}</div>
           </div>
         </div>
@@ -224,11 +224,6 @@ export default {
       tagClass: ['doingTag', 'endTag', 'notStartTag'],
       loadingBtn: false,
       dialogVisible: false,
-      statusList: [
-        { label: '待审核', value: 0 },
-        { label: '已通过', value: 1 },
-        { label: '已拒绝', value: 2 },
-      ],
       props: {
         children: 'child',
         label: 'name',
@@ -271,6 +266,15 @@ export default {
       auditType: '', //详情还是审核
     };
   },
+  computed: {
+    statusList() {
+      return [
+        { label: this.$t('dashboard.awaitAudit'), value: 0 },
+        { label: this.$t('common.approved'), value: 1 },
+        { label: this.$t('common.rejected'), value: 2 },
+      ];
+    },
+  },
   watch: {
     $route(to, from) {
       this.getList();
@@ -286,7 +290,7 @@ export default {
     },
     //审核拒绝
     cancelForm() {
-      this.$modalPrompt('textarea', '拒绝原因').then((V) => {
+      this.$modalPrompt('textarea', this.$t('product.rejectReason')).then((V) => {
         this.auditStatusFrom.refusalReason = V;
         this.onAuditSubmit();
       });
@@ -295,7 +299,7 @@ export default {
     onAuditStatus(type) {
       this.auditStatusFrom.auditStatus = type;
       if (type === 1) {
-        this.$modalSure('审核通过该内容吗？').then(() => {
+        this.$modalSure(this.$t('community.approveContentConfirm')).then(() => {
           this.onAuditSubmit();
         });
       } else {
@@ -312,7 +316,7 @@ export default {
       }
       communityReplyAuditApi(this.auditStatusFrom)
         .then((res) => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('product.operateSuccess'));
           this.dialogVisible = false;
           if (this.auditStatusFrom.auditStatus === 1) {
             this.loadingBtnSuccess = false;
@@ -348,9 +352,9 @@ export default {
     },
     // 删除
     handleDelete(id, idx) {
-      this.$modalSure('删除该评论吗？').then(() => {
+      this.$modalSure(this.$t('community.deleteCommentConfirm')).then(() => {
         communityReplyDelApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableFrom);
           this.getList();
         });

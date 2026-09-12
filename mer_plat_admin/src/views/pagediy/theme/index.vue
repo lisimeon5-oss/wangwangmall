@@ -23,7 +23,7 @@
         </div>
         <div class="save">
           <el-button type="primary" @click="saveTheme()" v-hasPermi="['platform:system:config:change:color:save']"
-            >保存</el-button
+            >{{ $t('common.save') }}</el-button
           >
         </div>
       </div>
@@ -48,13 +48,6 @@ export default {
   data() {
     return {
       active: 0,
-      tabList: [
-        { tit: '热情红', class: 'bg1' },
-        { tit: '家居橙', class: 'bg2' },
-        { tit: '生鲜绿', class: 'bg3' },
-        { tit: '海鲜蓝', class: 'bg4' },
-        { tit: '女神粉', class: 'bg5' },
-      ],
       themeData: [],
       imgList: [require('@/assets/theme/theme1.png')],
       theme1: [require('@/assets/theme/theme1.png')],
@@ -63,6 +56,17 @@ export default {
       theme4: [require('@/assets/theme/theme4.png')],
       theme5: [require('@/assets/theme/theme5.png')],
     };
+  },
+  computed: {
+    tabList() {
+      return [
+        { tit: this.$t('pagediy.themePassionateRed'), class: 'bg1' },
+        { tit: this.$t('pagediy.themeHomeOrange'), class: 'bg2' },
+        { tit: this.$t('pagediy.themeFreshGreen'), class: 'bg3' },
+        { tit: this.$t('pagediy.themeSeafoodBlue'), class: 'bg4' },
+        { tit: this.$t('pagediy.themeGoddessPink'), class: 'bg5' },
+      ];
+    },
   },
   mounted() {
     if (checkPermi(['platform:system:config:change:color:get'])) this.getSet();
@@ -101,7 +105,7 @@ export default {
     },
     saveTheme: Debounce(function () {
       saveSystemColorApi({ value: this.active + 1 }).then((res) => {
-        this.$message.success('编辑成功');
+        this.$message.success(this.$t('product.editSuccess'));
         this.$store.commit('settings/SET_mobileThemeColor', this.active + 1);
       });
     }),

@@ -17,6 +17,7 @@ import auth from './wechat';
 // #endif
 
 import { LOGIN_STATUS, USER_INFO, EXPIRES_TIME, STATE_R_KEY, BACK_URL, GLOBAL_DATA} from './../config/cache';
+import { t } from '@/i18n';
 import {globalConfigApi} from "../api/public";
 import util from "../utils/util";
 
@@ -73,8 +74,8 @@ export function _toLogin(push, pathLogin) {
 		// #endif
 		// #ifdef APP-PLUS
 			uni.showModal({
-			    title: '登录提示',
-			    content: '登录以后可体验商城完整功能',
+			    title: t('登录提示'),
+			    content: t('登录以后可体验商城完整功能'),
 				cancelColor: '#000000',
 				showCancel: false, // 是否显示取消按钮，默认为 true
 				confirmColor: '#526BB1',

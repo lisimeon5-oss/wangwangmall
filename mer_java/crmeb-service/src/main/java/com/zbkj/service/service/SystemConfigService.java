@@ -95,6 +95,16 @@ public interface SystemConfigService extends IService<SystemConfig> {
     String getAgreementByKey(String agreementName);
 
     /**
+     * 后台协议详情：默认 agreement + 其它语言 agreementJson
+     */
+    String getAgreementAdminByKey(String agreementName);
+
+    /**
+     * 保存协议：默认语言写原配置，其它语言写 {key}_json
+     */
+    Boolean saveAgreement(String agreementName, String body);
+
+    /**
      * 获取移动端域名
      * @return 移动端域名
      */

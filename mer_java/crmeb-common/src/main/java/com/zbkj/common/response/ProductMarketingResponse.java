@@ -1,6 +1,7 @@
 package com.zbkj.common.response;
 
 import com.zbkj.common.model.product.ProductAttrValue;
+import com.zbkj.common.model.product.ProductAttribute;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -35,6 +36,12 @@ public class ProductMarketingResponse implements Serializable {
     @ApiModelProperty(value = "商品名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言商品名称(JSON)")
+    private String nameJson;
+
+    @ApiModelProperty(value = "多语言商品名称(对象，供后台列表直接按语言取值)")
+    private java.util.Map<String, String> nameI18n;
+
     @ApiModelProperty(value = "状态（0：未上架，1：上架）")
     private Boolean isShow;
 
@@ -44,11 +51,20 @@ public class ProductMarketingResponse implements Serializable {
     @ApiModelProperty(value = "商品分类名称")
     private String categoryName;
 
+    @ApiModelProperty(value = "多语言商品分类名称(JSON)")
+    private String categoryNameJson;
+
+    @ApiModelProperty(value = "多语言商品分类名称(对象)")
+    private java.util.Map<String, String> categoryNameI18n;
+
     @ApiModelProperty(value = "基础类型：0=普通商品,1-积分商品,2-虚拟商品,4=视频号,5-云盘商品,6-卡密商品")
     private Integer type;
 
     @ApiModelProperty(value = "商品规格SKU")
     private List<ProductAttrValue> attrValue;
+
+    @ApiModelProperty(value = "商品规格名/值（含多语言）")
+    private List<ProductAttribute> attrList;
 
     // 2024-9-21 前端要求添加
     @ApiModelProperty(value = "商品价格")

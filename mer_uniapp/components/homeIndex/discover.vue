@@ -9,7 +9,7 @@
 					<text class='label' :style="[titleColor]">{{titleText}}</text>
 				</view>
 				<view class='more tui-skeleton-rect' :style="[moreColor]" @click="goPage(dataConfig.linkConfig.val)">
-          更多
+          {{$t('更多')}}
 					<text class="iconfont icon-jiantou"></text>
 				</view>
 			</view>
@@ -82,6 +82,7 @@
 		Debounce
 	} from '@/utils/validate.js'
 	import easyLoadimage from '@/components/base/easy-loadimage.vue';
+	import { getLocalizedText } from '@/utils/localizedName';
 	let app = getApp();
 	export default {
 		name: 'homeDiscover',
@@ -177,20 +178,16 @@
 				return this.dataConfig.tabConfig.tabVal
 			},
 			logoUrl() {
-				return this.dataConfig.logoConfig.url
+				const logo = (this.dataConfig && this.dataConfig.logoConfig) || {};
+				return getLocalizedText(logo.url, logo.urlJson);
 			},
 			titleText() {
-				return this.dataConfig.titleConfig.val
+				const title = (this.dataConfig && this.dataConfig.titleConfig) || {};
+				return getLocalizedText(title.val, title.valJson);
 			},
 			titleColor() {
 				return {
 					color: this.dataConfig.titleColor.color[0].item
-				}
-			},
-			//更多颜色
-			moreColor() {
-				return {
-					color: this.dataConfig.moreColor.color[0].item
 				}
 			},
 			//作者昵称

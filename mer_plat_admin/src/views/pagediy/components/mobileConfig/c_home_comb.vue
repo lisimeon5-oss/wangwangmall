@@ -30,10 +30,11 @@
 // +---------------------------------------------------------------------
 import toolCom from '../mobileConfigRight/index.js';
 import rightBtn from '../rightBtn/index.vue';
+import { diyCname } from '@/utils/diyCname';
 export default {
   name: 'c_home_comb',
   componentsName: 'home_comb',
-  cname: '头部组件',
+  ...diyCname('pagediy.headerComponent'),
   props: {
     activeIndex: {
       type: null,

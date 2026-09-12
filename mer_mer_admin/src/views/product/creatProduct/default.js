@@ -1,13 +1,20 @@
+import i18n from '@/i18n';
 export const defaultObj = {
   image: '',
   sliderImages: [],
   sliderImage: '',
   name: '',
+  nameJson: {},
   intro: '',
+  introJson: {},
+  imageJson: {},
+  sliderImagesJson: {},
+  contentJson: {},
   keyword: '',
   cateIds: [], // 商品分类id
   cateId: null, // 商品分类id传值
   unitName: '',
+  unitNameJson: {},
   sort: 0,
   isShow: false,
   tempId: '',
@@ -54,38 +61,38 @@ export const defaultObj = {
   systemFormId: null,
   refundSwitch: true,
 };
-export const objTitle = {
+export const objTitle = () => ({
   price: {
-    title: '售价（元）',
+    title: i18n.t('product.salePrice'),
   },
   vipPrice: {
-    title: '会员价（元）',
+    title: i18n.t('product.memberPrice'),
   },
   cost: {
-    title: '成本价（元）',
+    title: i18n.t('product.costPrice'),
   },
   otPrice: {
-    title: '划线价（元）',
+    title: i18n.t('product.strikePrice'),
   },
   stock: {
-    title: '库存',
+    title: i18n.t('product.stock'),
   },
   barCode: {
-    title: '商品编码',
+    title: i18n.t('product.productCode'),
   },
   itemNumber: {
-    title: '商品条码',
+    title: i18n.t('product.productBarcode'),
   },
   weight: {
-    title: '重量（KG）',
+    title: i18n.t('product.weightKG'),
   },
   volume: {
-    title: '体积(m³)',
+    title: i18n.t('product.volumeM3'),
   },
   brokerage: {
-    title: '一级返佣(%)',
+    title: i18n.t('product.firstCommission'),
   },
   brokerageTwo: {
-    title: '二级返佣(%)',
+    title: i18n.t('product.secondCommission'),
   },
-};
+});

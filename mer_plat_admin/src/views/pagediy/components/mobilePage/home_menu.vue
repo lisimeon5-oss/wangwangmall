@@ -11,7 +11,7 @@
                 <span class="iconfont-diy iconfont icon-tu"></span>
               </div>
             </div>
-            <p :style="titleColor">{{ item.info[0].value }}</p>
+            <p :style="titleColor">{{ diyInfoTitle(item) }}</p>
           </div>
         </template>
       </div>
@@ -27,7 +27,7 @@
                 <span class="iconfont-diy iconfont icon-tu"></span>
               </div>
             </div>
-            <p :style="titleColor">{{ item.info[0].value }}</p>
+            <p :style="titleColor">{{ diyInfoTitle(item) }}</p>
           </div>
         </template>
       </div>
@@ -46,9 +46,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState } from 'vuex';
+import { diyCname } from '@/utils/diyCname';
+import { getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'home_menu',
-  cname: '导航组',
+  ...diyCname('pagediy.navigationGroup'),
   icon: 't-icon-zujian-daohangzu',
   configName: 'c_home_menu',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -134,20 +136,20 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '导航组',
+          cname: this.$t('pagediy.navigationGroup'),
         },
         tabConfig: {
-          title: '展示样式',
-          tabTitle: '展示设置',
+          title: this.$t('pagediy.displayStyle'),
+          tabTitle: this.$t('pagediy.displaySettings'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '单行展示',
+              val: this.$t('pagediy.singleRowDisplay'),
               icon: 'icon-yangshiyi',
             },
             {
-              val: '多行展示',
+              val: this.$t('pagediy.multiRowDisplay'),
               icon: 'icon-yangshier',
             },
           ],
@@ -159,15 +161,15 @@ export default {
           isShow: 1,
           list: [
             {
-              val: '2行',
+              val: this.$t('pagediy.twoRows'),
               icon: 'icon-daohang-2hang',
             },
             {
-              val: '3行',
+              val: this.$t('pagediy.threeRows'),
               icon: 'icon-daohang-3hang',
             },
             {
-              val: '4行',
+              val: this.$t('pagediy.fourRows'),
               icon: 'icon-daohang-4hang',
             },
           ],
@@ -179,53 +181,53 @@ export default {
           isShow: 1,
           list: [
             {
-              val: '3个',
+              val: this.$t('pagediy.threeItems'),
               icon: 'icon-daohang-3ge',
             },
             {
-              val: '4个',
+              val: this.$t('pagediy.fourItems'),
               icon: 'icon-daohang-4ge',
             },
             {
-              val: '5个',
+              val: this.$t('pagediy.fiveItems'),
               icon: 'icon-daohang-5ge',
             },
           ],
         },
         bgStyle: {
           tabTitle: '圆角设置',
-          title: '背景圆角',
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         contentStyle: {
-          title: '内容圆角',
+          title: this.$t('pagediy.contentRadius'),
           name: 'contentStyle',
           val: 30,
           min: 0,
           max: 30,
         },
         menuConfig: {
-          tabTitle: '内容设置',
-          title: '最多可添加1张图片，建议宽度90 * 90px',
+          tabTitle: this.$t('pagediy.contentSettings'),
+          title: this.$t('pagediy.navMenuImageTip'),
           maxList: 100,
           list: [
             {
               img: '',
               info: [
                 {
-                  title: '标题',
+                  title: this.$t('content.title'),
                   value: '今日推荐',
                   tips: '选填，不超过4个字',
                   max: 4,
                   status: true,
                 },
                 {
-                  title: '链接',
+                  title: this.$t('pagediy.link'),
                   value: '',
-                  tips: '请选择链接',
+                  tips: this.$t('application.pleaseSelectLink'),
                   max: 100,
                   status: true,
                 },
@@ -236,16 +238,16 @@ export default {
               img: '',
               info: [
                 {
-                  title: '标题',
+                  title: this.$t('content.title'),
                   value: '热门榜单',
                   tips: '选填，不超过4个字',
                   max: 4,
                   status: true,
                 },
                 {
-                  title: '链接',
+                  title: this.$t('pagediy.link'),
                   value: '',
-                  tips: '请选择链接',
+                  tips: this.$t('application.pleaseSelectLink'),
                   max: 100,
                   status: true,
                 },
@@ -256,16 +258,16 @@ export default {
               img: '',
               info: [
                 {
-                  title: '标题',
+                  title: this.$t('content.title'),
                   value: '首发新品',
                   tips: '选填，不超过4个字',
                   max: 4,
                   status: true,
                 },
                 {
-                  title: '链接',
+                  title: this.$t('pagediy.link'),
                   value: '',
-                  tips: '请选择链接',
+                  tips: this.$t('application.pleaseSelectLink'),
                   max: 100,
                   status: true,
                 },
@@ -276,16 +278,16 @@ export default {
               img: '',
               info: [
                 {
-                  title: '标题',
+                  title: this.$t('content.title'),
                   value: '促销单品',
                   tips: '选填，不超过4个字',
                   max: 4,
                   status: true,
                 },
                 {
-                  title: '链接',
+                  title: this.$t('pagediy.link'),
                   value: '',
-                  tips: '请选择链接',
+                  tips: this.$t('application.pleaseSelectLink'),
                   max: 100,
                   status: true,
                 },
@@ -330,15 +332,15 @@ export default {
           ],
         },
         contentConfig: {
-          title: '内容间距',
+          title: this.$t('pagediy.contentSpacing'),
           val: 10,
           min: 0,
           max: 30,
         },
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
@@ -380,6 +382,11 @@ export default {
     });
   },
   methods: {
+    diyInfoTitle(item) {
+      const info = item && item.info && item.info[0];
+      if (!info) return '';
+      return getLocalizedText(info.value, info.valueJson, getUiLocale(this));
+    },
     // 对象转数组
     objToArr(data) {
       let obj = Object.keys(data);

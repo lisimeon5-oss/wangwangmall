@@ -8,19 +8,19 @@
         label-width="90px"
         class="demo-ruleForm"
       >
-        <el-form-item label="秒杀样式：" prop="value">
+        <el-form-item :label="$t('marketing.seckillStyleLabel')" prop="value">
           <el-radio-group v-model="seckillStyleForm.value">
-            <el-radio label="1">样式1</el-radio>
-            <el-radio label="2">样式2</el-radio>
+            <el-radio label="1">{{ $t('marketing.style1') }}</el-radio>
+            <el-radio label="2">{{ $t('marketing.style2') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="样式展示：">
+        <el-form-item :label="$t('marketing.styleDisplayLabel')">
           <el-image v-if="seckillStyleForm.value === '1'" class="image" :src="imgage1" :preview-src-list="[imgage1]" />
           <el-image v-else :src="imgage2" :preview-src-list="[imgage2]" class="image" style="height: 445px" />
         </el-form-item>
         <el-form-item>
           <el-button v-if="checkPermi(['platform:system:config:seckill:style:save'])" type="primary" @click="submitForm"
-            >提交</el-button
+            >{{ $t('common.submit') }}</el-button
           >
         </el-form-item>
       </el-form>

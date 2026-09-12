@@ -14,7 +14,7 @@
           :key="k"
           @click="onCurrentContextmenuClick(v.id)"
         >
-          <template v-if="!v.isAffix">
+          <template v-if="!v.affix">
             <i :class="v.icon"></i>
             <span>{{ v.txt }}</span>
           </template>
@@ -36,17 +36,20 @@ export default {
   data() {
     return {
       isShow: false,
-      dropdownList: [
-        { id: 0, txt: '刷新', affix: false, icon: 'el-icon-refresh-right' },
-        { id: 1, txt: '关闭', affix: false, icon: 'el-icon-close' },
-        { id: 2, txt: '关闭其他', affix: false, icon: 'el-icon-circle-close' },
-        { id: 3, txt: '关闭全部', affix: false, icon: 'el-icon-folder-delete' },
-      ],
+      hideClose: false,
       path: {},
       arrowLeft: 5,
     };
   },
   computed: {
+    dropdownList() {
+      return [
+        { id: 0, txt: this.$t('common.refresh'), affix: false, icon: 'el-icon-refresh-right' },
+        { id: 1, txt: this.$t('common.close'), affix: this.hideClose, icon: 'el-icon-close' },
+        { id: 2, txt: this.$t('common.closeOthers'), affix: false, icon: 'el-icon-circle-close' },
+        { id: 3, txt: this.$t('common.closeAll'), affix: false, icon: 'el-icon-folder-delete' },
+      ];
+    },
     dropdowns() {
       // 99 为 `Dropdown 下拉菜单` 的宽度
       if (this.dropdown.x + 99 > document.documentElement.clientWidth) {
@@ -71,7 +74,7 @@ export default {
     // 打开右键菜单：判断是否固定，固定则不显示关闭按钮
     openContextmenu(item) {
       this.path = item.path;
-      item.meta.isAffix ? (this.dropdownList[1].affix = true) : (this.dropdownList[1].affix = false);
+      this.hideClose = !!(item.meta && item.meta.isAffix);
       this.closeContextmenu();
       setTimeout(() => {
         this.isShow = true;

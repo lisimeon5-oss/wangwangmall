@@ -3,7 +3,7 @@
     <div class="advert">
       <template v-if="style === 0">
         <div class="advertItem01 acea-row" v-for="(item, index) in picList" :key="index">
-          <img :src="item.image" v-if="item.image" :style="contentStyle" />
+          <img :src="hotspotImg(item)" v-if="hotspotImg(item)" :style="contentStyle" />
           <div class="empty-box" v-else>
             <span class="iconfont icontupian"></span>
           </div>
@@ -24,9 +24,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState } from 'vuex';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
+import { getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'home_hotspot',
-  cname: '热区',
+  ...diyCname('pagediy.hotZone'),
   configName: 'c_hotspot',
   icon: 't-icon-zujian-requ',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -86,36 +88,37 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '热区',
+          cname: this.$t('pagediy.hotZone'),
         },
         tabConfig: {
-          title: '选择样式',
-          tabTitle: '内容设置',
+          title: this.$t('pagediy.selectAppearance'),
+          tabTitle: this.$t('pagediy.contentSettings'),
           isShow: 0,
           tabVal: 0,
           list: [
             {
-              val: '样式一',
+              val: this.$t('pagediy.styleOne'),
               icon: 'icon-tupian-yangshiyi',
               count: 1,
             },
           ],
         },
         checkoutConfig: {
-          title: '图片设置',
-          tabTitle: '内容设置',
+          title: this.$t('pagediy.imageSettings'),
+          tabTitle: this.$t('pagediy.contentSettings'),
           checkoutVal: '2',
           isShow: 0,
           list: [],
           hotspot: [],
         },
         picStyle: {
-          tabTitle: '内容设置',
+          tabTitle: this.$t('pagediy.contentSettings'),
           tabVal: 0,
           isHotspot: 1,
           picList: [
             {
               image: '',
+              imageJson: '',
               link: '',
             },
           ],
@@ -128,10 +131,11 @@ export default {
           list: [
             {
               img: '',
+              imgJson: '',
               info: [
                 {
-                  title: '链接',
-                  tips: '请输入链接',
+                  title: this.$t('pagediy.link'),
+                  tips: this.$t('pagediy.pleaseSelectLink'),
                   value: '',
                   max: 100,
                 },
@@ -140,8 +144,8 @@ export default {
           ],
         },
         bgColor: {
-          title: '背景颜色',
-          tabTitle: '颜色设置',
+          title: this.$t('pagediy.backgroundColor'),
+          tabTitle: this.$t('pagediy.colorSettings'),
           default: [
             {
               item: '#FFFFFF',
@@ -160,16 +164,16 @@ export default {
           ],
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         contentStyle: {
-          tabTitle: '圆角设置',
-          title: '内容圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.contentRadius'),
           name: 'contentStyle',
           val: 0,
           min: 0,
@@ -177,33 +181,33 @@ export default {
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 40,
         },
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          title: '下边距',
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },
         // 页面间距
         igConfig: {
-          title: '图片间距',
+          title: this.$t('pagediy.imageSpacing'),
           val: 0,
           min: 0,
           max: 30,
@@ -224,15 +228,20 @@ export default {
     });
   },
   methods: {
+    hotspotImg(item) {
+      if (!item) return '';
+      return getLocalizedText(item.image, item.imageJson, getUiLocale(this));
+    },
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
         this.style = data.tabConfig.tabVal;
         if (!data.picStyle.picList.length) {
           this.picList = [
             {
               image: '',
+              imageJson: '',
               link: '',
             },
           ];

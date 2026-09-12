@@ -11,7 +11,7 @@
           <div class="iconfont icon-xuanze text333"></div>
         </div>
         <div class="merchantInfo flex">
-          <div class="mr6 self_min merType bg-color">自营</div>
+          <div class="mr6 self_min merType bg-color">{{ $t('merchant.selfOperated') }}</div>
           <div class="mr10 merType color-FAAD14">{{ JavaMerchantBaseInfo.merType }}</div>
           <div class="score">
             <div class="starsList flex">
@@ -43,9 +43,10 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapGetters } from 'vuex';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
 export default {
   name: 'home_store',
-  cname: '店铺信息',
+  ...diyCname('pagediy.storeInfo'),
   icon: 't-icon-zujian-dianpujie',
   configName: 'c_home_store',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -107,12 +108,12 @@ export default {
         name: 'homeStore',
         timestamp: this.num,
         setUp: {
-          cname: '店铺信息',
+          cname: this.$t('pagediy.storeInfo'),
         },
         // 关注按钮颜色
         followColor: {
-          tabTitle: '样式设置',
-          title: '关注按钮颜色',
+          tabTitle: this.$t('pagediy.styleSettings'),
+          title: this.$t('pagediy.followButtonColor'),
           default: [
             {
               item: '#303133',
@@ -125,7 +126,7 @@ export default {
           ],
         },
         logoStyleRadius: {
-          title: 'logo圆角',
+          title: this.$t('pagediy.logoRadius'),
           name: 'logoStyleRadius',
           val: 7,
           min: 0,
@@ -158,7 +159,7 @@ export default {
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
       }
     },
   },

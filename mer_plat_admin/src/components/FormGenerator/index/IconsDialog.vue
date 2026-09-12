@@ -9,12 +9,12 @@
       @close="onClose"
     >
       <div slot="title">
-        选择图标
+        {{ $t('formGenerator.selectIcon') }}
         <el-input
           v-model.trim="key"
           size="mini"
           :style="{ width: '260px' }"
-          placeholder="请输入图标名称"
+          :placeholder="$t('formGenerator.pleaseEnterIconName')"
           prefix-icon="el-icon-search"
           clearable
         />

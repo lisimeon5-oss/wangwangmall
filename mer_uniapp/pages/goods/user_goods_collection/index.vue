@@ -4,8 +4,8 @@
             <view class="placeholders"></view>
 			<view class="borderPad navbox">
 				<view class='nav acea-row row-between-wrapper'>
-					<view>当前共 <text class='num font_color'>{{ totals }}</text>件商品</view>
-					<view class='administrate acea-row row-center-wrapper' @click='manage'>{{ footerswitch ? '管理' : '取消'}}
+					<view>{{$t('当前共')}} <text class='num font_color'>{{ totals }}</text>{{$t('件商品')}}</view>
+					<view class='administrate acea-row row-center-wrapper' @click='manage'>{{ footerswitch ? $t('管理') : $t('取消')}}
 					</view>
 				</view>
 			</view>
@@ -23,8 +23,8 @@
 							</view>
 							<view>
 								<view class='name line1 text-28rpx' :class="item.isShow?'':'text--w111-ccc'">{{item.name}}</view>
-								<view class='money text-26rpx' v-if="item.isShow">￥{{item.price}}</view>
-								<view v-else class="text--w111-ccc text-24rpx">该商品已下架</view>
+								<view class='money text-26rpx' v-if="item.isShow">฿{{item.price}}</view>
+								<view v-else class="text--w111-ccc text-24rpx">{{$t('该商品已下架')}}</view>
 							</view>
 						</view>
 					</view>
@@ -39,28 +39,28 @@
 							</view>
 							<view>
 								<view class='name line1 text-28rpx' :class="item.isShow?'':'text--w111-ccc'">{{item.name}}</view>
-								<view v-if="item.isShow" class='money text-26rpx'>￥{{item.price}}</view>
-								<view v-else class="text--w111-ccc text-24rpx">该商品已下架</view>
+								<view v-if="item.isShow" class='money text-26rpx'>฿{{item.price}}</view>
+								<view v-else class="text--w111-ccc text-24rpx">{{$t('该商品已下架')}}</view>
 							</view>
 						</view>
-						<view class="remove borRadius14" @tap="delCollection(item.productId)">删除</view>
+						<view class="remove borRadius14" @tap="delCollection(item.productId)">{{$t('删除')}}</view>
 					</view>
 					<!-- #endif -->
 				</checkbox-group>
 			</view>
 			<view class='loadingicon acea-row row-center-wrapper'>
-				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{loadTitle}}
+				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{$t(loadTitle)}}
 			</view>
 			<view v-if="!footerswitch" class='footer acea-row row-between-wrapper'>
 				<view>
 					<checkbox-group @change="checkboxAllChange">
 						<checkbox value="all" :checked="!!isAllSelect" />
-						<text class='checkAll'>全选</text>
+						<text class='checkAll'>{{$t('全选')}}</text>
 					</checkbox-group>
 				</view>
 				<view class='button acea-row row-middle'>
 					<form @submit="delCollectionAll" report-submit='true'>
-						<button class='bnt cart-color' formType="submit">取消收藏</button>
+						<button class='bnt cart-color' formType="submit">{{$t('取消收藏')}}</button>
 					</form>
 				</view>
 			</view>
@@ -68,7 +68,7 @@
 		<view class='noCommodity' v-else-if="!collectProductList.length && page > 1">
 			<view class='pictrue'>
         <image :src="urlDomain+'crmebimage/presets/noguanzhu.png'"></image>
-				<view class="text-ccc">收藏列表为空哦~</view>
+				<view class="text-ccc">{{$t('收藏列表为空哦~')}}</view>
 			</view>
 			<recommend ref="recommendIndex"></recommend>
 		</view>
@@ -233,7 +233,7 @@
 			},
 			delCollectionAll: function() {
 				if (!this.selectValue || this.selectValue.length == 0) return this.$util.Tips({
-					title: '请选择商品'
+					title: this.$t('请选择商品')
 				});
 				this.del({
 					ids: this.selectValue
@@ -242,7 +242,7 @@
 			del: function(data) {
 				collectCancel(data).then(res => {
 					this.$util.Tips({
-						title: '取消收藏成功',
+						title: this.$t('取消收藏成功'),
 						icon: 'success'
 					});
 					this.selectValue = [];
@@ -419,7 +419,7 @@
 		/* #endif */
 		/* #ifndef MP || APP-PLUS */
 		// bottom: 98rpx;
-		// bottom: calc(98rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		// bottom: calc(98rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		// bottom: calc(98rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 		/* #endif */
 		.checkAll {
@@ -442,13 +442,13 @@
 	.font_color{
 		@include main_color(theme);
 	}
-	/deep/ checkbox .uni-checkbox-input.uni-checkbox-input-checked {
+	::v-deep  checkbox .uni-checkbox-input.uni-checkbox-input-checked {
 		@include main_bg_color(theme);
 		@include coupons_border_color(theme);
 		color: #fff!important
 	}
 
-	/deep/ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+	::v-deep  checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 		@include main_bg_color(theme);
 		@include coupons_border_color(theme);
 		color: #fff!important;

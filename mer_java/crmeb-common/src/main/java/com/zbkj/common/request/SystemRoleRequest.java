@@ -1,5 +1,6 @@
 package com.zbkj.common.request;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -33,10 +34,13 @@ public class SystemRoleRequest implements Serializable {
     @ApiModelProperty(value = "角色id(添加时不填，修改时必填)")
     private Integer id;
 
-    @ApiModelProperty(value = "身份管理名称", required = true)
-    @NotNull(message = "身份管理名称不能为空")
+    @ApiModelProperty(value = "身份管理名称")
     @Length(max = 32, message = "身份管理名称不能超过32个字符")
     private String roleName;
+
+    @ApiModelProperty(value = "多语言角色名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "身份管理名称不能为空")
+    private String roleNameJson;
 
     @ApiModelProperty(value = "权限字符串(英文逗号拼接)", required = true)
     @NotNull(message = "权限不能为空")

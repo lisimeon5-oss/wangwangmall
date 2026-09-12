@@ -22,7 +22,7 @@
             </li>
             <li class="item">
               <div class="title">实际支付</div>
-              <div>¥ {{ orderDatalist.payPrice || '0.0' }}</div>
+              <div>฿ {{ orderDatalist.payPrice || '0.0' }}</div>
             </li>
             <li class="item">
               <div class="title">支付方式</div>

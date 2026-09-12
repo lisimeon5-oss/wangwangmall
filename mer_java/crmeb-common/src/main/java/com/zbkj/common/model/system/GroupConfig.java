@@ -42,17 +42,29 @@ public class GroupConfig implements Serializable {
     @ApiModelProperty(value = "名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "链接地址")
     private String linkUrl;
 
     @ApiModelProperty(value = "图片地址")
     private String imageUrl;
 
+    @ApiModelProperty(value = "多语言图片地址(JSON)")
+    private String imageUrlJson;
+
     @ApiModelProperty(value = "值")
     private String value;
 
+    @ApiModelProperty(value = "多语言值(JSON)")
+    private String valueJson;
+
     @ApiModelProperty(value = "描述")
     private String message;
+
+    @ApiModelProperty(value = "多语言描述(JSON)")
+    private String messageJson;
 
     @ApiModelProperty(value = "状态:是否显示")
     private Boolean status;
@@ -71,4 +83,7 @@ public class GroupConfig implements Serializable {
 
     @ApiModelProperty(value = "拓展字段")
     private String expand;
+
+    @ApiModelProperty(value = "多语言拓展字段(JSON)")
+    private String expandJson;
 }

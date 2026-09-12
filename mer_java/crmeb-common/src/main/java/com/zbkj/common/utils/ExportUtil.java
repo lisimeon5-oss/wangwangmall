@@ -83,7 +83,7 @@ public class ExportUtil {
         aliasMap.forEach((key, value) -> writer.addHeaderAlias(key, value));
         // 合并单元格后的标题行，使用默认标题样式
         writer.merge(aliasMap.size() - 1, title);
-        writer.merge(aliasMap.size() - 1, StrUtil.format("生成时间:{}", DateUtil.now()));
+        writer.merge(aliasMap.size() - 1, I18nMessageUtil.translate("生成时间") + ":" + DateUtil.now());
         //设置宽度自适应
         writer.setColumnWidth(-1, 22);
         // 一次性写出内容，使用默认样式，强制输出标题

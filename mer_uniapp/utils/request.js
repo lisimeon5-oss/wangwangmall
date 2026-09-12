@@ -19,6 +19,7 @@ import {
 	checkLogin
 } from '../libs/login';
 import store from '../store';
+import { getLocale, t, localizeMessage } from '@/i18n';
 
 
 /**
@@ -29,16 +30,15 @@ function baseRequest(url, method, data, {
 	noVerify = false
 }, params) {
 	let Url = HTTP_REQUEST_URL,
-		header = HEADER
-	if (params != undefined) {
-		header = HEADERPARAMS;
-	}
+		header = Object.assign({}, params != undefined ? HEADERPARAMS : HEADER, {
+			lang: getLocale()
+		});
 	if (!noAuth) {
 		//登录过期自动登录
 		if (!store.state.app.token && !checkLogin()) {
 			toLogin();
 			return Promise.reject({
-				msg: '未登录'
+				msg: t('request.notLogin')
 			});
 		}
 	}
@@ -76,18 +76,18 @@ function baseRequest(url, method, data, {
 					if (res.data.message && res.data.message.indexOf('登录信息已过期') != -1) {
 						store.commit("LOGOUT");
 					}
-					reject(res.data.message || '系统异常');
+					reject(localizeMessage(res.data.message || t('request.systemError')));
 				} else if (res.data.code == 400) {
-					reject(res.data.message || '参数校验失败');
+					reject(localizeMessage(res.data.message || t('request.validateFail')));
 				} else if (res.data.code == 404) {
-					reject(res.data.message || '没有找到相关数据');
+					reject(localizeMessage(res.data.message || t('request.notFound')));
 				} else if (res.data.code == 403) {
-					reject(res.data.message || '没有相关权限');
+					reject(localizeMessage(res.data.message || t('request.noPermission')));
 				} else
-					reject(res.data.message || '系统错误');
+					reject(localizeMessage(res.data.message || t('request.systemFault')));
 			},
 			fail: (msg) => {
-				reject('请求失败');
+				reject(t('request.fail'));
 			}
 		})
 	});

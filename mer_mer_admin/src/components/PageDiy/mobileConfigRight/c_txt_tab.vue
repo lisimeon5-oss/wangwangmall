@@ -3,14 +3,14 @@
   <div class="txt_tab borderPadding" v-if="configData && configData.isShow === 1">
     <div class="c_row-item">
       <el-row class="c_label">
-        <span class="labelwidth">{{ configData.title }}</span>
-        <span class="labelml">{{ configData.list[configData.tabVal].val }}</span>
+        <span class="labelwidth">{{ diyUiText(configData.title) }}</span>
+        <span class="labelml">{{ diyUiText(configData.list[configData.tabVal].val) }}</span>
       </el-row>
       <el-row class="color-box labelml">
         <el-radio-group v-model="configData.tabVal" type="button" @change="radioChange($event)">
           <el-radio :label="key" v-for="(radio, key) in configData.list" :key="key">
             <span class="iconfont-diy iconfont" :class="radio.icon" v-if="radio.icon"></span>
-            <span v-else>{{ radio.val }}</span>
+            <span v-else>{{ diyUiText(radio.val) }}</span>
           </el-radio>
         </el-radio-group>
       </el-row>
@@ -28,6 +28,7 @@
 // +----------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
+import { diyUiText } from '@/utils/diyCname';
 export default {
   name: 'c_txt_tab',
   props: {
@@ -59,6 +60,7 @@ export default {
     },
   },
   methods: {
+    diyUiText,
     radioChange(e) {
       //防止魔方样式一出现两张图的情况
       if (this.configData.name === 'pictureCure') {

@@ -17,6 +17,7 @@ import request from '@/utils/request';
 export function addRole(pram) {
   const data = {
     roleName: pram.roleName,
+    roleNameJson: pram.roleNameJson,
     status: pram.status,
     rules: pram.rules,
     merId: pram.merId,
@@ -77,6 +78,7 @@ export function updateRole(pram) {
   const data = {
     id: pram.id,
     roleName: pram.roleName,
+    roleNameJson: pram.roleNameJson,
     rules: pram.rules,
     status: pram.status,
     merId: pram.merId,

@@ -39,6 +39,10 @@ public class ActivityStyle implements Serializable {
     @ApiModelProperty(value = "活动名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言活动名称(JSON)")
+    @TableField("name_json")
+    private String nameJson;
+
     @ApiModelProperty(value = "活动类型0=活动边框，1=活动背景")
     private Boolean type;
 

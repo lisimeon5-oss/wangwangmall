@@ -2,7 +2,7 @@
 	<view :data-theme="theme">
 		<!-- #ifndef APP-PLUS -->
 		<view class='cart_nav'>
-			<nav-bar :navTitle='navTitle' iconColor='#fff' :isBackgroundColor="true" ref="navBarRef"></nav-bar>
+			<nav-bar :navTitle="$t('提交订单')" iconColor='#fff' :isBackgroundColor="true" ref="navBarRef"></nav-bar>
 		</view>
 
 		<!-- #endif -->
@@ -15,10 +15,10 @@
 					<view class="w-full abs-lb rd-t-24rpx flex bg--w111-fff">
 						<view class="flex-center w-50p h-76 fs-28 rd-lt-24rpx z-2"
 							:class="shippingType == 1 ? 'bg--w111-fff font_color' : 'bg-primary-light'"
-							@tap="addressType(1)">商家配送</view>
+							@tap="addressType(1)">{{$t('商家配送')}}</view>
 						<view class="flex-center w-50p h-76 fs-28 rd-rt-24rpx z-2"
 							:class="shippingType == 2 ? 'bg--w111-fff font_color' : 'bg-primary-light'"
-							@tap="addressType(2)">到店自提</view>
+							@tap="addressType(2)">{{$t('到店自提')}}</view>
 					</view>
 					<view class="w-50p rd-t-24rpx bg--w111-fff h-96" :class="shippingType == 1 ? 'abs-lt' : 'abs-rt'">
 						<view class="w-full h-full relative active-card"></view>
@@ -32,11 +32,11 @@
 							<view class='phone'>{{addressInfo.phone}}</view>
 						</view>
 						<view class="acea-row">
-							<view class="line1"><text class='default  font_color' v-if="addressInfo.isDefault">[默认]</text>{{addressInfo.province}}{{addressInfo.city}}{{addressInfo.district}}{{ addressInfo.street}}{{addressInfo.detail}}</view>
+							<view class="line1"><text class='default  font_color' v-if="addressInfo.isDefault">[{{$t('默认')}}]</text>{{addressInfo.province}}{{addressInfo.city}}{{addressInfo.district}}{{ addressInfo.street}}{{addressInfo.detail}}</view>
 						</view>
 					</view>
 					<view class='addressCon' v-else>
-						<view class='setaddress'>设置收货地址</view>
+						<view class='setaddress'>{{$t('设置收货地址')}}</view>
 					</view>
 					<view class='iconfont icon-jiantou mt30'></view>
 				</view>
@@ -65,12 +65,12 @@
 							<text class='phone'>{{addressInfo.phone}}</text>
 						</view>
 						<view class="acea-row line2">
-							<text class='default font_color' v-if="addressInfo.isDefault">[默认]</text>
+							<text class='default font_color' v-if="addressInfo.isDefault">[{{$t('默认')}}]</text>
 							<text>{{addressInfo.province}}{{addressInfo.city}}{{addressInfo.district}}{{ addressInfo.street}}{{addressInfo.detail}}</text>
 						</view>
 					</view>
 					<view class='addressCon' v-else>
-						<view class='setaddress'>设置收货地址</view>
+						<view class='setaddress'>{{$t('设置收货地址')}}</view>
 					</view>
 					<view class='iconfont icon-jiantou'></view>
 				</view>
@@ -85,16 +85,16 @@
 					</orderGoods>
 					<view v-show="Number(orderInfoVo.secondType)===0&&orderInfoVo.type!=2" class="boxs">
 						<view class='item acea-row row-between-wrapper'>
-							<view>配送方式</view>
+							<view>{{$t('配送方式')}}</view>
 							<view v-if="item.deliveryMethodMer.length===3 && item.takeTheirSwitch"
 								class='discount acea-row row-middle'>
 								<text
-									@tap="openShowBox(item,index)">{{item.shippingType === 1 ? '商家配送' : '到店自提'}}</text>
+									@tap="openShowBox(item,index)">{{item.shippingType === 1 ? $t('商家配送') : $t('到店自提')}}</text>
 
 								<text @tap="openShowBox(item,index)" class='iconfont icon-jiantou'></text>
 							</view>
 							<view v-else class='discount'>
-								{{item.shippingType === 1 ? '商家配送' : '到店自提'}}
+								{{item.shippingType === 1 ? $t('商家配送') : $t('到店自提')}}
 							</view>
 						</view>
 						<view v-if="item.shippingType == 2 && item.takeTheirSwitch" class="store-address acea-row">
@@ -104,36 +104,36 @@
 							</view>
 							<view class="map" @click="goMap(item)">
 								<text class="iconfont icon-chakanditu"></text>
-								<view class="map_text">查看地图</view>
+								<view class="map_text">{{$t('查看地图')}}</view>
 							</view>
 						</view>
 					</view>
 					<view v-show="item.shippingType === 1 && Number(orderInfoVo.secondType)===0"
 						class='item acea-row row-between-wrapper'>
-						<view>快递费用</view>
-						<view v-if='!item.freightFee || item.freightFee == 0' class="noCoupon">免运费</view>
-						<view v-else class='money'>￥{{item.freightFee}}</view>
+						<view>{{$t('快递费用')}}</view>
+						<view v-if='!item.freightFee || item.freightFee == 0' class="noCoupon">{{$t('免运费')}}</view>
+						<view v-else class='money'>฿{{item.freightFee}}</view>
 					</view>
 					<view v-show="item.svipDiscountPrice != 0&&orderInfoVo.type!=2"
 						class='item acea-row row-between-wrapper'>
-						<view>会员优惠</view>
-						<view class='money'>-￥{{item.svipDiscountPrice}}</view>
+						<view>{{$t('会员优惠')}}</view>
+						<view class='money'>-฿{{item.svipDiscountPrice}}</view>
 					</view>
 					<view v-if="isProductType" class='item acea-row row-between-wrapper'>
-						<view>店铺优惠</view>
+						<view>{{$t('店铺优惠')}}</view>
 						<view v-if="item.merCouponUserList && item.merCouponUserList.length"
 							@tap='couponTap(item.merCouponUserList,item.merId, index)'>
-							<view class='discount acea-row row-between-wrapper'>
+							<view class='discount acea-row row-middle'>
 								<text
-									class="couponTitle line1">{{item.couponFee==0?`有${item.merCouponUserList.length}张优惠券可选`:`-￥${item.couponFee}`}}</text>
+									class="couponTitle line1">{{item.couponFee==0?`${$t('有')}${item.merCouponUserList.length}${$t('张优惠券可选')}`:`-฿${item.couponFee}`}}</text>
 								<text class='iconfont icon-jiantou'></text>
 							</view>
 						</view>
-						<view v-else class="noCoupon">暂无优惠券</view>
+						<view v-else class="noCoupon">{{$t('暂无优惠券')}}</view>
 					</view>
 					<view class='item acea-row row-between-wrapper' v-if="textareaStatus" style="height: auto;">
-						<view>买家留言</view>
-						<input placeholder-class='placeholder' value="" name="mark" placeholder='选填买家留言'
+						<view>{{$t('买家留言')}}</view>
+						<input placeholder-class='placeholder' value="" name="mark" :placeholder="$t('选填买家留言')"
 							v-model="item.remark" @input='bindHideKeyboard(item.remark,index)'
 							style="width: 484rpx;text-align: right;"></input>
 					</view>
@@ -146,38 +146,38 @@
 				</view>
 				<view class='moneyList borRadius14'>
 					<view v-show="secondType !== ProductTypeEnum.Integral" class='item acea-row row-between-wrapper'>
-						<view>商品总价</view>
-						<view class='money'>￥{{orderInfoVo.proTotalFee || 0}}</view>
+						<view>{{$t('商品总价')}}</view>
+						<view class='money'>฿{{orderInfoVo.proTotalFee || 0}}</view>
 					</view>
 					<view class='item acea-row row-between-wrapper' v-if="parseInt(orderInfoVo.freightFee) > 0">
-						<view>运费：</view>
-						<view class='money'>+￥{{orderInfoVo.freightFee}}</view>
+						<view>{{$t('运费：')}}</view>
+						<view class='money'>+฿{{orderInfoVo.freightFee}}</view>
 					</view>
 					<view v-show="orderInfoVo.svipDiscountPrice != 0 &&orderInfoVo.type!=2"
 						class='item acea-row row-between-wrapper'>
-						<view>会员优惠</view>
-						<view class='money'>-￥{{orderInfoVo.svipDiscountPrice}}</view>
+						<view>{{$t('会员优惠')}}</view>
+						<view class='money'>-฿{{orderInfoVo.svipDiscountPrice}}</view>
 					</view>
 					<view class='item acea-row row-between-wrapper' v-if="parseInt(merCouponFee) > 0 && isProductType">
-						<view>店铺优惠</view>
-						<view class='money'>-￥{{merCouponFee}}</view>
+						<view>{{$t('店铺优惠')}}</view>
+						<view class='money'>-฿{{merCouponFee}}</view>
 					</view>
 					<view v-if="isProductType" class='item acea-row row-between-wrapper'>
-						<view>平台优惠</view>
+						<view>{{$t('平台优惠')}}</view>
 						<view v-if="orderInfoVo.platCouponUserList && orderInfoVo.platCouponUserList.length"
-							class='discount acea-row row-between-wrapper'
+							class='discount acea-row row-middle'
 							@tap='couponTap(orderInfoVo.platCouponUserList,0)'>
 							<text
-								class="couponTitle line1">{{platCouponFee==0?`有${orderInfoVo.platCouponUserList.length}张优惠券可选`:`-￥${platCouponFee}`}}</text>
+								class="couponTitle line1">{{platCouponFee==0?`${$t('有')}${orderInfoVo.platCouponUserList.length}${$t('张优惠券可选')}`:`-฿${platCouponFee}`}}</text>
 							<text class='iconfont icon-jiantou'></text>
 						</view>
-						<view v-else class="noCoupon">暂无优惠券</view>
+						<view v-else class="noCoupon">{{$t('暂无优惠券')}}</view>
 					</view>
 					<view class='item acea-row row-between-wrapper'
 						v-if="orderInfoVo.integralDeductionSwitch && isProductType">
-						<view>积分抵扣</view>
+						<view>{{$t('积分抵扣')}}</view>
 						<view class='discount acea-row row-middle'>
-							<view class="mr14"> {{isUseIntegral ? "使用积分":"当前积分"}}
+							<view class="mr14"> {{isUseIntegral ? $t('使用积分'):$t('当前积分')}}
 								<text
 									class='num font_color'>{{ isUseIntegral ? orderInfoVo.surplusIntegral : orderInfoVo.userIntegral}}</text>
 							</view>
@@ -189,23 +189,23 @@
 					</view>
 
 					<view class='item acea-row row-between-wrapper' v-if="Number(orderInfoVo.deductionPrice) > 0">
-						<view>抵扣金额</view>
-						<view class='money'>-￥{{orderInfoVo.deductionPrice}}</view>
+						<view>{{$t('抵扣金额')}}</view>
+						<view class='money'>-฿{{orderInfoVo.deductionPrice}}</view>
 					</view>
 
 				</view>
 				<view style='height:120rpx;'></view>
 			</view>
 			<view class='footer acea-row row-between-wrapper'>
-				<view class="acea-row row-middle">合计：
+				<view class="acea-row row-middle">{{$t('合计：')}}
 					<!-- 积分价格 -->
 					<PointsPrice v-if="orderInfoVo.secondType === ProductTypeEnum.Integral" :pointsPrice="orderInfoVo"
 						:pointsGoodsStyle="hotPointsStyle"></PointsPrice>
 					<!-- 其他价格 -->
-					<text v-else class='price_color'>￥{{orderInfoVo.payFee || 0}}</text>
+					<text v-else class='price_color'>฿{{orderInfoVo.payFee || 0}}</text>
 				</view>
 				<view class='settlement' style='z-index:100' @tap="SubOrder">
-					{{secondType === ProductTypeEnum.Integral?"确认兑换":"立即下单"}}
+					{{secondType === ProductTypeEnum.Integral?$t('确认兑换'):$t('立即下单')}}
 				</view>
 			</view>
 		</view>
@@ -221,14 +221,14 @@
 		<uni-popup ref="sh_popup" background-color="#fff" borderRadius="10px">
 			<view class="sh_popup-content">
 				<view class="sh_popup_title">
-					提示
+					{{$t('提示')}}
 				</view>
 				<view class="sh_popup_text">
-					该团已拼成，是否自行开团？
+					{{$t('该团已拼成，是否自行开团？')}}
 				</view>
 				<view class="sh_popup_btn">
-					<view class="no_btn btn font_color" @click="popupClose">返回首页</view>
-					<view class="yes_btn btn" @click="toAudit">去开团</view>
+					<view class="no_btn btn font_color" @click="popupClose">{{$t('返回首页')}}</view>
+					<view class="yes_btn btn" @click="toAudit">{{$t('去开团')}}</view>
 				</view>
 			</view>
 		</uni-popup>
@@ -567,7 +567,7 @@
 			// 计算订单价格
 			computedPrice: function() {
 				uni.showLoading({
-					title: '加载中...'
+					title: this.$t('加载中...')
 				});
 				let shippingType = this.shippingType;
 				postOrderComputed({
@@ -741,7 +741,7 @@
 				});
 				if (flag) {
 					that.$util.Tips({
-						title: '请选择收货地址'
+						title: this.$t('请选择收货地址')
 					});
 					return;
 				}
@@ -831,7 +831,7 @@
 
 				};
 				uni.showLoading({
-					title: '订单提交中'
+					title: this.$t('订单提交中')
 				});
 				that.payment(data);
 				//// #ifdef MP
@@ -867,7 +867,10 @@
 	}
 
 	.couponTitle {
-		width: 430rpx;
+		flex: 1;
+		min-width: 0;
+		width: auto;
+		max-width: 100%;
 		display: inline-block;
 		text-align: right;
 		@include main_color(theme);
@@ -1033,11 +1036,17 @@
 		padding: 28rpx 24rpx;
 		font-size: 30rpx;
 		color: #333333;
+		flex-wrap: nowrap;
+		align-items: center;
 	}
 
 	.order-submission .wrapper .item .discount {
 		font-size: 30rpx;
 		color: #333;
+		flex: 1;
+		min-width: 0;
+		justify-content: flex-end;
+		flex-wrap: nowrap;
 	}
 
 	.order-submission .wrapper .item .discount .iconfont {
@@ -1146,7 +1155,22 @@
 	.order-submission .moneyList .item {
 		font-size: 30rpx;
 		color: #282828;
-		height: 96rpx;
+		height: auto;
+		min-height: 96rpx;
+		flex-wrap: nowrap;
+		align-items: center;
+	}
+
+	.order-submission .moneyList .item > view:first-child {
+		flex-shrink: 0;
+		margin-right: 16rpx;
+	}
+
+	.order-submission .moneyList .item .discount {
+		flex: 1;
+		min-width: 0;
+		justify-content: flex-end;
+		flex-wrap: nowrap;
 	}
 
 	.order-submission .moneyList .item~.item {
@@ -1168,7 +1192,7 @@
 		position: fixed;
 		bottom: 0;
 		left: 0;
-		height: calc(100rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(100rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(100rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 		z-index: 999;
 	}
@@ -1189,13 +1213,13 @@
 		opacity: 0
 	}
 
-	/deep/ checkbox .uni-checkbox-input.uni-checkbox-input-checked {
+	::v-deep  checkbox .uni-checkbox-input.uni-checkbox-input-checked {
 		@include main_bg_color(theme);
 		border: none !important;
 		color: #fff !important
 	}
 
-	/deep/ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+	::v-deep  checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 		@include main_bg_color(theme);
 		border: none !important;
 		color: #fff !important;
@@ -1203,24 +1227,24 @@
 	}
 
 	// 切换
-	/deep/.uni-date-x--border {
+	::v-deep .uni-date-x--border {
 		border: 0;
 	}
 
-	/deep/.uni-icons {
+	::v-deep .uni-icons {
 		font-size: 0 !important;
 	}
 
-	/deep/.uni-date-x {
+	::v-deep .uni-date-x {
 		color: #999;
 		font-size: 15px;
 	}
 
-	/deep/.uni-date__x-input {
+	::v-deep .uni-date__x-input {
 		font-size: 15px;
 	}
 
-	/deep/uni-checkbox[disabled] .uni-checkbox-input {
+	::v-deep uni-checkbox[disabled] .uni-checkbox-input {
 		background-color: #eee;
 	}
 
@@ -1324,7 +1348,7 @@
 	.font-color {
 		font-weight: 500 !important;
 	}
-	/deep/ .uni-popup__wrapper {
+	::v-deep  .uni-popup__wrapper {
 		background: #FFFFFF;
 		border-radius: 32rpx;
 	}

@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 import draggable from 'vuedraggable';
 import render from '@/components/FormGenerator/components/render/render';
+import { translateText } from '@/utils/i18nText';
 
 const components = {
   itemBtns(h, element, index, parent) {
@@ -17,7 +18,7 @@ const components = {
     return [
       <span
         class="drawing-item-copy"
-        title="复制"
+        title={this.$t('formGenerator.copy')}
         onClick={(event) => {
           copyItem(element, parent);
           event.stopPropagation();
@@ -27,7 +28,7 @@ const components = {
       </span>,
       <span
         class="drawing-item-delete"
-        title="删除"
+        title={this.$t('common.delete')}
         onClick={(event) => {
           deleteItem(index, parent);
           event.stopPropagation();
@@ -61,18 +62,18 @@ const layouts = {
         >
           <el-form-item
             label-width={labelWidth}
-            label={config.showLabel ? config.label : ''}
+            label={config.showLabel ? translateText(config.label) : ''}
             required={config.required}
           >
             <render
-              key={config.renderKey}
+              key={config.renderKey + '-' + ((this.$i18n && this.$i18n.locale) || '')}
               conf={element}
               onInput={(event) => {
                 this.$set(config, 'defaultValue', event);
               }}
             />
             <div>
-              <span className="tips-info">{config.tipsDesc}</span>
+              <span className="tips-info">{translateText(config.tipsDesc)}</span>
             </div>
           </el-form-item>
           {components.itemBtns.apply(this, arguments)}
@@ -90,11 +91,11 @@ const layouts = {
         >
           <el-form-item
             label-width={labelWidth}
-            label={config.showLabel ? config.label : ''}
+            label={config.showLabel ? translateText(config.label) : ''}
             required={config.required}
           >
             <render
-              key={config.renderKey}
+              key={config.renderKey + '-' + ((this.$i18n && this.$i18n.locale) || '')}
               conf={element}
               onInput={(event) => {
                 this.$set(config, 'defaultValue', event);

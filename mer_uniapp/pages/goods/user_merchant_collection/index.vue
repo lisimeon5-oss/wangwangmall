@@ -13,27 +13,27 @@
 						<!-- #endif -->
 						<view class="info">
 							<view class="info_head">
-								<span class="self" v-if="item.isSelf === true">自营</span>
+								<span class="self" v-if="item.isSelf === true">{{$t('自营')}}</span>
 								<text class="name line1">{{item.merName}}</text>
 							</view>
 							<view class="collection">
-								{{item.collectNum}}人关注
+								{{item.collectNum}}{{$t('人关注')}}
 							</view>
 						</view>
 					</view>
-					<view class="remove" @click.stop="bindDetele(item.merId, index)">取消关注</view>
+					<view class="remove" @click.stop="bindDetele(item.merId, index)">{{$t('取消关注')}}</view>
 				</view>
 			</block>
 		</scroll-view>
 		<view class='noCommodity' v-if="!storeList.length && page > 1 &&!loading" >
 			<view class='pictrue mb30'>
         <image :src="urlDomain+'crmebimage/presets/noguanzhu.png'"></image>
-				<view class="text-ccc">收藏列表为空哦~</view>
+				<view class="text-ccc">{{$t('收藏列表为空哦~')}}</view>
 			</view>
 			<recommend ref="recommendIndex"></recommend>
 		</view>
 		<view class='loadingicon acea-row row-center-wrapper'>
-			<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{loadTitle}}
+			<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{$t(loadTitle)}}
 		</view>
 	</view>
 </template>
@@ -152,7 +152,7 @@
 			bindDetele(id, index){
 				getMerCollectCancelApi(id).then(res=>{
 					uni.showToast({
-						title: '取消成功',
+						title: this.$t('取消成功'),
 						icon:'none'
 					})
 					this.storeList.splice(index,1)

@@ -20,20 +20,20 @@
 						<view class='text acea-row row-between'>
 							<view class='name line2'>{{item.productName}}</view>
 							<view class='money'>
-								<view>￥{{item.price}}</view>
+								<view>฿{{item.price}}</view>
 								<view>x{{item.payNum}}</view>
 							</view>
-							<view class="sku">规格：{{ item.sku?item.sku:'无' }}</view>
+							<view class="sku">{{$t('规格')}}：{{ item.sku?item.sku:$t('无') }}</view>
 						</view>
 					</view>
 					<view class='bottom acea-row row-right row-middle'>
-						<view class='bnt bg_color' @click='evaluateTap(item)'>去评价</view>
+						<view class='bnt bg_color' @click='evaluateTap(item)'>{{$t('去评价')}}</view>
 					</view>
 				</view>
 				<view class='loadingicon acea-row row-center-wrapper'>
-					<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{replyList.length>0?loadTitle:''}}
+					<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{replyList.length>0?$t(loadTitle):''}}
 				</view>
-				<emptyPage v-if="replyList.length == 0 && !loading" title="暂无评论~" :imgSrc="urlDomain+'crmebimage/presets/noEvaluate.png'"></emptyPage>
+				<emptyPage v-if="replyList.length == 0 && !loading" :title="$t('暂无评论~')" :imgSrc="urlDomain+'crmebimage/presets/noEvaluate.png'"></emptyPage>
 			</view>
 		</view>
 	</view>
@@ -265,7 +265,7 @@
 		height: 120rpx;
 	}
 
-	.my-order .list .item .item-info .pictrue image , /deep/.easy-loadimage,uni-image {
+	.my-order .list .item .item-info .pictrue image , ::v-deep .easy-loadimage,uni-image {
 		width: 100%;
 		height: 100%;
 		border-radius: 14rpx;
@@ -344,10 +344,10 @@
 		width: 100%;
 		height: 100%;
 	}
-	/deep/.tui-red{
+	::v-deep .tui-red{
 		@include main_bg_color(theme);
 	}
-	/deep/.tui-red-outline{
+	::v-deep .tui-red-outline{
 		@include main_color(theme);
 		@include coupons_border_color(theme);
 	}

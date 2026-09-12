@@ -1,8 +1,8 @@
 <template>
   <div class="news-box" :style="boxStyle" v-if="configObj">
     <div class="item" :style="textColor">
-      <div class="img-box"><img :src="imgUrl" alt="" /></div>
-      <div class="right-box" :style="textPosition">{{ list[0].chiild[0].val }}</div>
+      <div class="img-box"><img :src="iconSrc" alt="" /></div>
+      <div class="right-box" :style="textPosition">{{ displayNewsTitle }}</div>
     </div>
   </div>
 </template>
@@ -19,9 +19,11 @@
 // +----------------------------------------------------------------------
 import { mapState } from 'vuex';
 
+import { diyCname } from '@/utils/diyCname';
+import { getLocalizedDiyVal, getLocalizedDiyUrl, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'home_news_roll',
-  cname: '新闻播报',
+  ...diyCname('pagediy.newsBroadcast'),
   configName: 'c_news_roll',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
   defaultName: 'news', // 外面匹配名称
@@ -59,6 +61,17 @@ export default {
         color: this.configObj.textColor.color[0].item,
       };
     },
+    displayNewsTitle() {
+      const row = this.list && this.list[0] && this.list[0].chiild && this.list[0].chiild[0];
+      return getLocalizedDiyVal(row, getUiLocale(this));
+    },
+    iconSrc() {
+      return (
+        getLocalizedDiyUrl(this.configObj && this.configObj.logoConfig, getUiLocale(this)) ||
+        (this.configObj && this.configObj.logoConfig && this.configObj.logoConfig.url) ||
+        ''
+      );
+    },
   },
   watch: {
     pageData: {
@@ -90,52 +103,52 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '新闻播报',
+          cname: this.$t('pagediy.newsBroadcast'),
         },
         directionConfig: {
-          title: '滚动方向',
-          tabTitle: '文字设置',
+          title: this.$t('pagediy.scrollDirection'),
+          tabTitle: this.$t('pagediy.textSettings'),
           name: 'directionConfig',
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '上下',
+              val: this.$t('pagediy.upDown'),
               icon: 'icon-shangxia',
               style: 'left',
             },
             {
-              val: '左右',
+              val: this.$t('pagediy.leftRightScroll'),
               icon: 'icon-zuoyou',
               style: 'center',
             },
           ],
         },
         textPosition: {
-          title: '文本位置',
+          title: this.$t('pagediy.textPosition'),
           name: 'textPosition',
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '居左',
+              val: this.$t('pagediy.alignLeft'),
               icon: 'icon-juzuo',
               style: 'left',
             },
             {
-              val: '居中',
+              val: this.$t('pagediy.alignCenter'),
               icon: 'icon-juzhong',
               style: 'center',
             },
             {
-              val: '居右',
+              val: this.$t('pagediy.alignRight'),
               icon: 'icon-juyou',
               style: 'right',
             },
           ],
         },
         textColor: {
-          title: '文字颜色',
+          title: this.$t('pagediy.textColor'),
           color: [
             {
               item: '#333',
@@ -149,8 +162,8 @@ export default {
         },
         // 背景颜色
         bgColor: {
-          title: '背景颜色',
-          tabTitle: '颜色设置',
+          title: this.$t('pagediy.backgroundColor'),
+          tabTitle: this.$t('pagediy.colorSettings'),
           default: [
             {
               item: '#FFFFFF',
@@ -169,25 +182,26 @@ export default {
           ],
         },
         listConfig: {
-          title: '最多可添加10个版块；鼠标拖拽左侧圆点可调整版块顺序',
-          tabTitle: '公告设置',
+          title: this.$t('pagediy.newsSectionTip'),
+          tabTitle: this.$t('pagediy.announcementSettings'),
           max: 10,
           list: [
             {
               status: true,
               chiild: [
                 {
-                  title: '标题',
-                  val: '标题',
+                  title: this.$t('content.title'),
+                  val: this.$t('content.title'),
+                  valJson: '',
                   max: 30,
-                  pla: '选填，不超过30个字',
+                  pla: this.$t('pagediy.optionalMax30'),
                   empty: true,
                 },
                 {
-                  title: '链接',
-                  val: '链接',
+                  title: this.$t('pagediy.link'),
+                  val: '',
                   max: 200,
-                  pla: '请输入连接',
+                  pla: this.$t('application.pleaseSelectLink'),
                   status: true,
                 },
               ],
@@ -196,44 +210,45 @@ export default {
         },
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 0,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          title: '下边距',
+          title: this.$t('pagediy.bottomMargin'),
           val: 0,
           min: 0,
           max: 100,
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 30,
         },
         // 页面间距
         mbConfig: {
-          title: '页面间距',
-          tabTitle: '边距设置',
+          title: this.$t('pagediy.pageSpacing'),
+          tabTitle: this.$t('pagediy.marginSettings'),
           val: 10,
           min: 0,
         },
         logoConfig: {
-          tabTitle: '图标设置',
-          header: '上传图标',
-          title: '上传图标',
-          tips: '支持上传1张图片，建议宽度130*36px',
+          tabTitle: this.$t('pagediy.iconSettings'),
+          header: this.$t('pagediy.uploadIcon'),
+          title: this.$t('pagediy.uploadIcon'),
+          tips: this.$t('pagediy.newsIconTip'),
           isShow: 1,
           url: require('@/assets/imgs/new_header.png'),
+          urlJson: '',
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
@@ -260,7 +275,6 @@ export default {
       if (data) {
         this.configObj = data;
         this.list = data.listConfig.list;
-        this.imgUrl = data.logoConfig.url;
       }
     },
   },

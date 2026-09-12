@@ -3,11 +3,12 @@
 <mapper namespace="com.zbkj.service.dao.SeckillProductDao">
 
     <select id="getSeckillProductPage" resultType="com.zbkj.common.response.SeckillProductPageResponse" parameterType="Map">
-        SELECT p.id,bp.image,bp.name,p.price,p.seckill_price as seckillPrice,p.quota_show as quotaShow,p.quota,
+        SELECT p.id,bp.image,bp.name,bp.name_json as nameJson,p.price,p.seckill_price as seckillPrice,p.quota_show as quotaShow,p.quota,
         p.is_show as isShow,p.sort,p.spec_type as specType,p.audit_status as auditStatus,p.reason,p.activity_id as activityId,
         p.product_id as productId,p.type,
-        m.name as merName,m.star_level as merStarLevel,sa.name as activityName,sa.status as activityStatus,
-        pc.name as categoryName
+        m.name as merName,m.name_json as merNameJson,m.star_level as merStarLevel,
+        sa.name as activityName,sa.name_json as activityNameJson,sa.status as activityStatus,
+        pc.name as categoryName,pc.name_json as categoryNameJson
         FROM eb_seckill_product AS p
         left join eb_merchant AS m on p.mer_id = m.id
         left join eb_seckill_activity AS sa on p.activity_id = sa.id
@@ -18,7 +19,8 @@
             and p.audit_status = #{auditStatus}
         </if>
         <if test="proName != null and proName !='' ">
-            and bp.name like CONCAT('%', #{proName, jdbcType=VARCHAR}, '%')
+            and (bp.name like CONCAT('%', #{proName, jdbcType=VARCHAR}, '%')
+            or bp.name_json like CONCAT('%', #{proName, jdbcType=VARCHAR}, '%'))
         </if>
         <if test="proStatus != null">
             and p.is_show = #{proStatus}
@@ -27,7 +29,8 @@
             and find_in_set(p.activity_id, #{activityIdStr})
         </if>
         <if test="activityName != null and activityName !='' ">
-            and sa.name like CONCAT('%', #{activityName, jdbcType=VARCHAR}, '%')
+            and (sa.name like CONCAT('%', #{activityName, jdbcType=VARCHAR}, '%')
+            or sa.name_json like CONCAT('%', #{activityName, jdbcType=VARCHAR}, '%'))
         </if>
         <if test="merIds != null and merIds !='' ">
             and find_in_set(p.mer_id, #{merIds})

@@ -1,6 +1,6 @@
 <template>
 	<view class="systemForm-box">
-		<view class="herader">系统表单</view>
+		<view class="herader">{{$t('系统表单')}}</view>
 		<!--商品关联系统表单-->
 		<view class='wrapper borRadius14' v-if="systemFormValue">
 			<systemFrom :value="systemFormValue"></systemFrom>

@@ -5,35 +5,35 @@
 			<view class='iconfont icons icon-duihao2 bg_color' v-if="order_pay_info.paid === 1"></view>
 			<view v-if="order_pay_info.paid === 2" class='iconfont icons icon-iconfontguanbi'></view>
 			<!-- 失败时：订单支付失败 -->
-			<view class='status'>{{payResult}}</view>
+			<view class='status'>{{$t(payResult)}}</view>
 			<view class='wrapper'>
 				<view v-if="fromType !=='svip'" class='item acea-row row-between-wrapper'>
-					<view>订单编号</view>
+					<view>{{$t('订单编号')}}</view>
 					<view class='itemCom'>{{orderId}}</view>
 				</view>
 				<view v-if="fromType !=='svip'" class='item acea-row row-between-wrapper'>
-					<view>下单时间</view>
+					<view>{{$t('下单时间')}}</view>
 					<view class='itemCom'>{{order_pay_info.createTime?order_pay_info.createTime:'-'}}</view>
 				</view>
 				<view class='item acea-row row-between-wrapper'>
-					<view>支付方式</view>
-					<view class='itemCom'>支付宝支付</view>
+					<view>{{$t('支付方式')}}</view>
+					<view class='itemCom'>{{$t('支付宝支付')}}</view>
 				</view>
 				<view v-if="fromType !=='svip'" class='item acea-row row-between-wrapper'>
-					<view>支付金额</view>
+					<view>{{$t('支付金额')}}</view>
 					<view class='itemCom'>{{order_pay_info.payPrice}}</view>
 				</view>
 				<!--失败时加上这个  -->
 				<view class='item acea-row row-between-wrapper' v-if="order_pay_info.paid === 2">
-					<view>失败原因</view>
+					<view>{{$t('失败原因')}}</view>
 					<view class='itemCom'>{{msg}}</view>
 				</view>
 			</view>
 			<!--失败时： 重新购买 -->
 			<view @tap="goOrderDetails">
-				<button formType="submit" class='returnBnt bg_color' hover-class='none'>{{fromType !=='svip'?'查看订单':'查看会员'}}</button>
+				<button formType="submit" class='returnBnt bg_color' hover-class='none'>{{fromType !=='svip'? $t('查看订单') : $t('查看会员')}}</button>
 			</view>
-			<button @click="goIndex" class='returnBnt cart-color' formType="submit" hover-class='none'>返回首页</button>
+			<button @click="goIndex" class='returnBnt cart-color' formType="submit" hover-class='none'>{{$t('返回首页')}}</button>
 		</view>
 	</view>
 </template>
@@ -124,7 +124,7 @@
 			getOrderPayInfo: function() {
 				let that = this;
 				uni.showLoading({
-					title: '正在加载中'
+					title: this.$t('正在加载中')
 				});
 				getOrderDetail(that.orderId).then(res => {
 					that.$set(that, 'order_pay_info', res.data);
@@ -139,13 +139,13 @@
 					if (res.data) {
 						this.payResult = '支付成功';
 						uni.setNavigationBarTitle({
-							title: '支付成功'
+							title: this.$t('支付成功')
 						});
 						this.order_pay_info.paid = 1;
 					} else {
 						this.payResult = '支付失败';
 						uni.setNavigationBarTitle({
-							title: '支付失败'
+							title: this.$t('支付失败')
 						});
 						this.order_pay_info.paid = 2;
 					}

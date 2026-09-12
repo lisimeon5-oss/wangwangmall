@@ -2,49 +2,49 @@
   <div class="divBox">
     <el-card shadow="never" :bordered="false" class="box-card mt14" :body-style="{ padding: '20px' }">
       <el-button size="small" type="primary" @click="handleAddAddress" v-hasPermi="['merchant:address:add']"
-        >添加地址</el-button
+        >{{ $t('systemSetting.addAddress') }}</el-button
       >
       <el-table v-loading="listLoading" :data="tableData.data" class="mt20" size="small">
         <el-table-column prop="id" label="ID" min-width="50" />
-        <el-table-column :show-overflow-tooltip="true" label="商家地址" min-width="280">
+        <el-table-column :show-overflow-tooltip="true" :label="$t('systemSetting.merchantAddress')" min-width="280">
           <template slot-scope="scope">
-            <span v-show="scope.row.isDefault" style="color: #409eff" class="mr5">[默认退货]</span>
+            <span v-show="scope.row.isDefault" style="color: #409eff" class="mr5">[{{ $t('systemSetting.defaultReturn') }}]</span>
             <span>{{ scope.row.detail }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="receiverName" label="商家姓名" min-width="100" />
-        <el-table-column prop="receiverPhone" label="商家电话" min-width="100" />
-        <el-table-column label="是否开启" min-width="100" fixed="right">
+        <el-table-column prop="receiverName" :label="$t('systemSetting.merchantName')" min-width="100" />
+        <el-table-column prop="receiverPhone" :label="$t('systemSetting.merchantPhone')" min-width="100" />
+        <el-table-column :label="$t('systemSetting.enabled')" min-width="100" fixed="right">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['merchant:address:update:show'])"
               v-model="scope.row.isShow"
               :active-value="true"
               :inactive-value="false"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
               :disabled="scope.row.isDefault"
               @click.native="onchangeIsShow(scope.row)"
             />
-            <div v-else>{{ scope.row.isShow ? '开启' : '关闭' }}</div>
+            <div v-else>{{ scope.row.isShow ? $t('common.open') : $t('common.close') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="180" fixed="right">
           <template slot-scope="scope">
-            <a @click="handleEditAddress(scope.row)" v-hasPermi="['merchant:address:update']">编辑</a>
+            <a @click="handleEditAddress(scope.row)" v-hasPermi="['merchant:address:update']">{{ $t('common.edit') }}</a>
             <el-divider direction="vertical"></el-divider>
             <template v-if="!scope.row.isDefault && checkPermi(['merchant:address:set:default']) && scope.row.isShow">
-              <a @click="handleSetIsDefault(scope.row)">设为默认</a>
+              <a @click="handleSetIsDefault(scope.row)">{{ $t('systemSetting.setDefault') }}</a>
               <el-divider direction="vertical"></el-divider>
             </template>
-            <a @click="handleDelAddress(scope.row)" v-hasPermi="['merchant:address:delete']">删除</a>
+            <a @click="handleDelAddress(scope.row)" v-hasPermi="['merchant:address:delete']">{{ $t('common.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
     <!--添加-->
     <el-dialog
-      :title="formData.id === 0 ? '新增地址' : '编辑地址'"
+      :title="formData.id === 0 ? $t('systemSetting.addAddress') : $t('systemSetting.editAddress')"
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
       width="540px"
@@ -58,28 +58,28 @@
         label-width="100px"
         class="demo-ruleForm"
       >
-        <el-form-item label="商家地址：" prop="detail">
-          <el-input type="textarea" v-model.trim="formData.detail" placeholder="请填写商家地址"></el-input>
+        <el-form-item :label="$t('systemSetting.merchantAddressLabel')" prop="detail">
+          <el-input type="textarea" v-model.trim="formData.detail" :placeholder="$t('systemSetting.pleaseEnterMerchantAddress')"></el-input>
         </el-form-item>
-        <el-form-item label="商家姓名：" prop="receiverName">
-          <el-input v-model.trim="formData.receiverName" placeholder="请填写商家姓名"></el-input>
+        <el-form-item :label="$t('systemSetting.merchantNameLabel')" prop="receiverName">
+          <el-input v-model.trim="formData.receiverName" :placeholder="$t('systemSetting.pleaseEnterMerchantName')"></el-input>
         </el-form-item>
-        <el-form-item label="商家电话：" prop="receiverPhone">
+        <el-form-item :label="$t('systemSetting.merchantPhoneLabel')" prop="receiverPhone">
           <el-input
             v-model.trim="formData.receiverPhone"
             maxlength="11"
             class="width100"
-            placeholder="请填写商家电话"
+            :placeholder="$t('systemSetting.pleaseEnterMerchantPhone')"
           ></el-input>
         </el-form-item>
-        <el-form-item label="开启状态：">
-          <el-switch v-model="formData.isShow" class="mr20" active-text="开启" inactive-text="关闭"></el-switch>
-          <el-checkbox v-show="formData.isShow" v-model="formData.isDefault">设为默认发货地址</el-checkbox>
+        <el-form-item :label="$t('systemSetting.enabledStatusLabel')">
+          <el-switch v-model="formData.isShow" class="mr20" :active-text="$t('common.open')" :inactive-text="$t('common.close')"></el-switch>
+          <el-checkbox v-show="formData.isShow" v-model="formData.isDefault">{{ $t('systemSetting.setDefaultShippingAddress') }}</el-checkbox>
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" :loading="btnLoading" @click="submitForm('formData')">保存</el-button>
+        <el-button @click="dialogVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" :loading="btnLoading" @click="submitForm('formData')">{{ $t('common.save') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -138,8 +138,8 @@ export default {
       },
       formData: Object.assign({}, defaultFormData),
       rules: {
-        detail: [{ required: true, message: '请输入商家地址', trigger: 'blur' }],
-        receiverName: [{ required: true, message: '请输入商家姓名', trigger: 'blur' }],
+        detail: [{ required: true, message: this.$t('systemSetting.pleaseEnterMerchantAddress'), trigger: 'blur' }],
+        receiverName: [{ required: true, message: this.$t('systemSetting.pleaseEnterMerchantName'), trigger: 'blur' }],
         receiverPhone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
       },
     };
@@ -169,7 +169,7 @@ export default {
           this.formData.id === 0
             ? merchantAddressSaveApi(this.formData)
                 .then((res) => {
-                  this.$message.success('添加成功');
+                  this.$message.success(this.$t('common.addSuccess'));
                   this.dialogVisible = false;
                   this.getList();
                 })
@@ -178,7 +178,7 @@ export default {
                 })
             : merchantAddressUpdateApi(this.formData)
                 .then((res) => {
-                  this.$message.success('编辑成功');
+                  this.$message.success(this.$t('common.editSuccess'));
                   this.dialogVisible = false;
                   this.getList();
                 })
@@ -208,7 +208,7 @@ export default {
       if (row.isDefault) return;
       merchantAddressUpdateShowApi(row.id)
         .then(() => {
-          this.$message.success('修改成功');
+          this.$message.success(this.$t('user.modifySuccess'));
           this.getList();
         })
         .catch(() => {
@@ -217,17 +217,17 @@ export default {
     },
     // 设置默认地址
     handleSetIsDefault(rowData) {
-      this.$modalSure('设置为默认地址吗?').then(() => {
+      this.$modalSure(this.$t('systemSetting.setDefaultAddressConfirm')).then(() => {
         merchantAddressSetDefaultApi(rowData.id).then(() => {
-          this.$message.success('设置成功');
+          this.$message.success(this.$t('systemSetting.setSuccess'));
           this.getList();
         });
       });
     },
     handleDelAddress(rowData) {
-      this.$modalSure('删除当前数据?').then(() => {
+      this.$modalSure(this.$t('systemSetting.confirmDeleteCurrentData')).then(() => {
         merchantAddressDeleteApi(rowData.id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('common.deleteSuccess'));
           this.getList();
         });
       });

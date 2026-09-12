@@ -3,16 +3,19 @@
     <checked-tab :configObj="defaultConfig" configNme="setUp" @getConfig="getConfig"></checked-tab>
     <div v-if="actived === 0">
       <c-title :configObj="defaultConfig" configNme="titleCent"></c-title>
-      <div class="c_row-item" v-if="this.$route.query.type !== 2">
-        <div class="label">模板名称</div>
-        <div class="slider-box">
-          <el-input size="small" v-model="name" placeholder="选填不超过15个字" maxlength="15" @change="changName" />
+      <div class="c_row-item">
+        <div class="lang-name-switch">
+          <el-radio-group v-model="activeLang" size="mini">
+            <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+              {{ lang.label }}
+            </el-radio-button>
+          </el-radio-group>
         </div>
       </div>
       <div class="c_row-item">
-        <div class="label">页面标题</div>
+        <div class="label">{{ $t('pagediy.pageTitleLabel') }}</div>
         <div class="slider-box">
-          <el-input size="small" v-model="title" placeholder="选填不超过30个字" maxlength="30" @change="changVal" />
+          <el-input size="small" :value="titleInput" :placeholder="titlePlaceholder" maxlength="30" @input="onTitleInput" />
         </div>
       </div>
       <div class="mt20"><txt-tab :configObj="defaultConfig" configNme="textPosition"></txt-tab></div>
@@ -21,62 +24,62 @@
     <div v-if="actived === 1">
       <c-title :configObj="defaultConfig" configNme="titleColor"></c-title>
       <div class="c_row-item">
-        <div class="label">背景设置</div>
+        <div class="label">{{ $t('pagediy.backgroundSettings') }}</div>
         <div class="slider-box acea-row row-middle">
           <el-radio-group v-model="colorRadio" @change="handleColorRadio()">
-            <el-radio label="1">背景色</el-radio>
-            <el-radio label="2">背景图</el-radio>
+            <el-radio label="1">{{ $t('pagediy.backgroundColor') }}</el-radio>
+            <el-radio label="2">{{ $t('pagediy.backgroundImage') }}</el-radio>
           </el-radio-group>
         </div>
       </div>
       <div class="c_row-item" v-if="colorRadio === '1'">
-        <div class="label">背景颜色</div>
+        <div class="label">{{ $t('pagediy.backgroundColor') }}</div>
         <div class="slider-box acea-row row-between row-middle">
           <el-color-picker v-model="colorPicker" @change="colorPickerTap(colorPicker)" />
           <el-input size="small" v-model="colorPicker" class="widthIpt"></el-input>
-          <span class="resetBtn" @click="resetBgB">重置</span>
+          <span class="resetBtn" @click="resetBgB">{{ $t('common.reset') }}</span>
         </div>
       </div>
       <div class="c_row-item acea-row row-top" v-if="colorRadio === '2'">
-        <div class="label">背景图片</div>
+        <div class="label">{{ $t('pagediy.backgroundImg') }}</div>
         <div class="slider-box">
           <div class="acea-row row-between row-middle">
             <div class="title">
-              <div>上传图片</div>
-              <div>建议：宽度750px</div>
+              <div>{{ $t('upload.uploadImage') }}</div>
+              <div>{{ $t('pagediy.suggestWidth750') }}</div>
             </div>
             <div class="boxs" @click="modalPicTap">
               <img :src="bgPicUrl" alt="" v-if="bgPicUrl" />
               <div class="upload-box" v-else><i class="iconfont icon-tianjia1" /></div>
-              <div class="replace" v-if="bgPicUrl">更换图片</div>
+              <div class="replace" v-if="bgPicUrl">{{ $t('pagediy.changeImage') }}</div>
             </div>
           </div>
         </div>
       </div>
       <div class="c_row-item" v-if="colorRadio === '2'">
-        <div class="label">填充方式</div>
+        <div class="label">{{ $t('pagediy.fillMode') }}</div>
         <div class="slider-box acea-row row-middle">
           <el-radio-group v-model="tabVal" type="button" @change="radioTap">
-            <el-radio :label="0">拉伸</el-radio>
-            <el-radio :label="1">缩放</el-radio>
-            <el-radio :label="2">填充</el-radio>
+            <el-radio :label="0">{{ $t('pagediy.stretch') }}</el-radio>
+            <el-radio :label="1">{{ $t('pagediy.scale') }}</el-radio>
+            <el-radio :label="2">{{ $t('pagediy.fill') }}</el-radio>
           </el-radio-group>
         </div>
       </div>
       <div class="c_row-item">
-        <div class="label">顶部颜色</div>
+        <div class="label">{{ $t('pagediy.topColor') }}</div>
         <div class="slider-box acea-row row-between row-middle">
           <el-color-picker v-model="titleBgColor" @change="titleBgPickerTap(titleBgColor)" />
           <el-input size="small" v-model="titleBgColor" class="widthIpt"></el-input>
-          <span class="resetBtn" @click="resetBgA">重置</span>
+          <span class="resetBtn" @click="resetBgA">{{ $t('common.reset') }}</span>
         </div>
       </div>
       <div class="c_row-item">
-        <div class="label">标题颜色</div>
+        <div class="label">{{ $t('pagediy.titleColor') }}</div>
         <div class="slider-box acea-row row-between row-middle">
           <el-radio-group v-model="titleColor" @change="handleChangeTitle(titleColor)">
-            <el-radio label="#ffffff">白色</el-radio>
-            <el-radio label="#000000">黑色</el-radio>
+            <el-radio label="#ffffff">{{ $t('pagediy.white') }}</el-radio>
+            <el-radio label="#000000">{{ $t('pagediy.black') }}</el-radio>
           </el-radio-group>
         </div>
       </div>
@@ -101,6 +104,9 @@ import checkedTab from '@/components/PageDiy/mobileConfigRight/c_checked_tab.vue
 import txtTab from '@/components/PageDiy/mobileConfigRight/c_txt_tab.vue';
 import cTitle from '@/components/PageDiy/mobileConfigRight/c_title.vue';
 import linkaddress from '@/components/linkaddress';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { parseLangJsonMap, resolveFormActiveLang, buildI18nNameJson } from '@/utils/localizedName';
 export default {
   name: 'pageTitle',
   components: {
@@ -116,19 +122,22 @@ export default {
       // 默认初始化数据禁止修改
       defaultConfig: {
         titleCent: {
-          tabTitle: '基础设置',
+          tabTitle: this.$t('pagediy.basicSettings'),
         },
         titleColor: {
-          tabTitle: '颜色设置',
+          tabTitle: this.$t('pagediy.colorSettings'),
         },
         setUp: {
           tabVal: '0',
-          cname: '页面设置',
+          cname: this.$t('pagediy.pageSettings'),
         },
       },
       colorRadio: '1',
       title: '', //页面标题
-      name: '', //模板名称
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      titleJsonForm: {},
       isShow: true,
       bgPic: false,
       tabVal: 0,
@@ -158,20 +167,35 @@ export default {
   },
   computed: {
     ...mapState({
-      titleTxt: (state) => state.mobildConfig.pageTitle || '首页',
-      nameTxt: (state) => state.mobildConfig.pageName || '模板',
+      titleTxt: (state) => state.mobildConfig.pageTitle || '',
+      pageTitleJson: (state) => state.mobildConfig.pageTitleJson || '',
     }),
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
+    },
+    titleInput() {
+      if (this.activeLang === this.defaultLangCode) return this.title;
+      return this.titleJsonForm[this.activeLang] || '';
+    },
+    titlePlaceholder() {
+      if (this.activeLang === this.defaultLangCode) return this.$t('pagediy.optionalMax30');
+      return this.$t('category.inputNameInLang', { lang: this.activeLangLabel });
+    },
   },
   watch: {
-    nameTxt(val) {
-      //直接赋值给本地data中的属性，就不会报错啦
-      this.name = val;
+    titleTxt(val) {
+      this.title = val;
+    },
+    pageTitleJson(val) {
+      this.titleJsonForm = this.parseJsonForm(val);
     },
   },
   created() {
     let state = this.$store.state.mobildConfig;
-    this.title = state.pageTitle || '首页';
-    this.name = state.pageName || '模板';
+    this.title = state.pageTitle || '';
+    this.titleJsonForm = this.parseJsonForm(state.pageTitleJson);
+    this.getLanguageList();
     this.isShow = state.pageShow ? true : false;
     this.colorPicker = state.pageColorPicker;
     this.tabVal = state.pageTabVal || 0;
@@ -247,9 +271,52 @@ export default {
     changVal(val) {
       this.$store.commit('mobildConfig/UPTITLE', val);
     },
-    //模板名称
-    changName(val) {
-      this.$store.commit('mobildConfig/nameUpdata', val);
+    parseJsonForm(json) {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        const code = lang.code;
+        if (code !== this.defaultLangCode) form[code] = '';
+      });
+      const map = parseLangJsonMap(json);
+      Object.keys(map).forEach((key) => {
+        if (key !== this.defaultLangCode) form[key] = map[key] || '';
+      });
+      return form;
+    },
+    syncTitleJson() {
+      const json = buildI18nNameJson(this.langOptions, this.titleJsonForm, this.defaultLangCode, this.title);
+      this.$store.commit('mobildConfig/titleJsonUpdata', json);
+    },
+    onTitleInput(val) {
+      if (this.activeLang === this.defaultLangCode) {
+        this.title = val;
+        this.changVal(val);
+      } else {
+        this.$set(this.titleJsonForm, this.activeLang, val);
+      }
+      this.syncTitleJson();
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.titleJsonForm = this.parseJsonForm(this.pageTitleJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.activeLang = resolveFormActiveLang(this);
+        });
     },
   },
 };
@@ -383,5 +450,12 @@ export default {
 }
 .resetBtn {
   cursor: pointer;
+}
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 </style>

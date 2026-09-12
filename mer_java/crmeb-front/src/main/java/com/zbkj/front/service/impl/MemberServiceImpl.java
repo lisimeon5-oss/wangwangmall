@@ -2,7 +2,6 @@ package com.zbkj.front.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zbkj.common.constants.*;
 import com.zbkj.common.exception.CrmebException;
@@ -18,6 +17,7 @@ import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.MemberResultCode;
 import com.zbkj.common.utils.CrmebDateUtil;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.common.utils.WxPayUtil;
 import com.zbkj.common.vo.*;
@@ -102,9 +102,9 @@ public class MemberServiceImpl implements MemberService {
             while (iterator.hasNext()) {
                 GroupConfig config = iterator.next();
                 SvipBenefitsExplainResponse benefitsResponse = new SvipBenefitsExplainResponse();
-                benefitsResponse.setValue(config.getValue());
+                benefitsResponse.setValue(resolveLocalizedText(config.getValue(), config.getValueJson()));
                 benefitsResponse.setImageUrl(config.getImageUrl());
-                benefitsResponse.setExpand(config.getExpand());
+                benefitsResponse.setExpand(resolveLocalizedText(config.getExpand(), config.getExpandJson()));
                 benefitsResponseList.add(benefitsResponse);
             }
         }
@@ -124,8 +124,8 @@ public class MemberServiceImpl implements MemberService {
             while (iterator.hasNext()) {
                 GroupConfig config = iterator.next();
                 SvipBenefitsResponse benefitsResponse = new SvipBenefitsResponse();
-                benefitsResponse.setValue(config.getValue());
-                benefitsResponse.setMessage(config.getMessage());
+                benefitsResponse.setValue(resolveLocalizedText(config.getValue(), config.getValueJson()));
+                benefitsResponse.setMessage(resolveLocalizedText(config.getMessage(), config.getMessageJson()));
                 benefitsResponse.setImageUrl(config.getImageUrl());
                 benefitsResponseList.add(benefitsResponse);
             }
@@ -257,6 +257,10 @@ public class MemberServiceImpl implements MemberService {
         for (PaidMemberOrder record : recordList) {
             SvipOrderRecordResponse response = new SvipOrderRecordResponse();
             BeanUtils.copyProperties(record, response);
+            PaidMemberCard card = record.getCardId() != null ? paidMemberCardService.getById(record.getCardId()) : null;
+            if (card != null) {
+                response.setCardName(I18nJsonUtil.resolveByRequest(card.getName(), card.getNameJson()));
+            }
             responseList.add(response);
         }
         return responseList;
@@ -429,5 +433,9 @@ public class MemberServiceImpl implements MemberService {
         String sign = WxPayUtil.getSign(vo, signKey);
         vo.setSign(sign);
         return vo;
+    }
+
+    private String resolveLocalizedText(String text, String json) {
+        return I18nJsonUtil.resolveByRequest(text, json);
     }
 }

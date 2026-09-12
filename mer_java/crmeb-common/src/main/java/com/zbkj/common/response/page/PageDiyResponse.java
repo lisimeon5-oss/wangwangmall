@@ -35,8 +35,14 @@ public class PageDiyResponse implements Serializable {
     @ApiModelProperty(value = "页面名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言模板名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "网站标题")
     private String title;
+
+    @ApiModelProperty(value = "多语言页面标题(JSON)")
+    private String titleJson;
 
     @ApiModelProperty(value = "封面图")
     private String coverImage;

@@ -3,8 +3,8 @@
     <div class="header clearfix">
       <div class="filter-container">
         <div class="demo-input-suffix acea-row">
-          <span class="seachTiele">商品搜索：</span>
-          <el-input v-model="keywords" placeholder="请输入商品名称，关键字，产品编号" class="selWidth" size="small">
+          <span class="seachTiele">{{ $t('product.productSearch') }}</span>
+          <el-input v-model="keywords" :placeholder="$t('marketing.productSearchPlaceholder')" class="selWidth" size="small">
             <el-button slot="append" icon="el-icon-search" class="el-button-solt" size="small" @click="getList()" />
           </el-input>
         </div>
@@ -22,29 +22,29 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column label="ID" prop="id" min-width="40" />
-      <el-table-column label="商品ID" min-width="50">
+      <el-table-column :label="$t('marketing.productId')" min-width="50">
         <template slot-scope="scope">
           <span>{{ scope.row.productId | filterEmpty }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="商品名称" min-width="130" :show-overflow-tooltip="true">
+      <el-table-column :label="$t('product.listProductName')" min-width="130" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>{{ scope.row.name + '/' + scope.row.productId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="商品图" min-width="100">
+      <el-table-column :label="$t('product.productImage')" min-width="100">
         <template slot-scope="scope">
           <div class="demo-image__preview line-heightOne">
             <el-image :src="scope.row.coverImgUrlLocal" :preview-src-list="[scope.row.coverImgUrlLocal]" />
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="价格类型" min-width="80">
+      <el-table-column :label="$t('marketing.priceType')" min-width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.priceType | priceTypeFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="价格" min-width="100">
+      <el-table-column :label="$t('marketing.price')" min-width="100">
         <template slot-scope="scope">
           <span v-if="scope.row.priceType === 1">{{ scope.row.price }}</span>
           <span v-else>{{ scope.row.price + '~' + scope.row.price2 }}</span>

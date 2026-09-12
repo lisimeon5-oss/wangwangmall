@@ -8,6 +8,8 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 
+import { localizeNamedTree } from '@/utils/localizedName';
+
 const getters = {
   sidebar: (state) => state.app.sidebar,
   size: (state) => state.app.size,
@@ -24,11 +26,23 @@ const getters = {
   sidebarRouters: (state) => state.permission.sidebarRouters,
   errorLogs: (state) => state.errorLog.logs,
   isLogin: (state) => state.user.isLogin,
-  merPlatProductClassify: (state) => state.product.merPlatProductClassify,
-  merProductClassify: (state) => state.product.merProductClassify,
+  merPlatProductClassify: (state) =>
+    localizeNamedTree(
+      state.product.merPlatProductClassify,
+      (state.themeConfig && state.themeConfig.themeConfig && state.themeConfig.themeConfig.globalI18n) || 'zh-cn',
+    ),
+  merProductClassify: (state) =>
+    localizeNamedTree(
+      state.product.merProductClassify,
+      (state.themeConfig && state.themeConfig.themeConfig && state.themeConfig.themeConfig.globalI18n) || 'zh-cn',
+    ),
   productBrand: (state) => state.product.productBrand,
   merchantClassify: (state) => state.merchant.merchantClassify,
-  merchantType: (state) => state.merchant.merchantType,
+  merchantType: (state) =>
+    localizeNamedTree(
+      state.merchant.merchantType,
+      (state.themeConfig && state.themeConfig.themeConfig && state.themeConfig.themeConfig.globalI18n) || 'zh-cn',
+    ),
   shippingTemplates: (state) => state.product.shippingTemplates,
   mediaDomain: (state) => state.settings.mediaDomain,
   systemFormList: (state) => state.settings.systemFormList,

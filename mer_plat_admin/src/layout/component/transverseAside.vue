@@ -12,13 +12,7 @@
           :title="v.title"
         >
           <div :class="setColumnsAsidelayout">
-            <div class="font12">
-              {{
-                v.title && v.title.length >= 4
-                  ? v.title.substr(0, setColumnsAsidelayout === 'columns-vertical' ? 4 : 3)
-                  : v.title
-              }}
-            </div>
+            <div class="font12 columns-menu-title">{{ getMenuTitle(v.title) }}</div>
           </div>
         </li>
         <div ref="columnsAsideActiveRef" :class="setColumnsAsideStyle"></div>
@@ -72,6 +66,15 @@ export default {
     });
   },
   methods: {
+    // 仅中文名称按字数截断以适配窄栏；英文/泰文/缅文等语言显示完整名称
+    getMenuTitle(title) {
+      if (!title) return title;
+      if (/[\u4e00-\u9fff]/.test(title)) {
+        const limit = this.setColumnsAsidelayout === 'columns-vertical' ? 4 : 3;
+        return title.length > limit ? title.substr(0, limit) : title;
+      }
+      return title;
+    },
     // 设置横向滚动条可以鼠标滚轮滚动
     onElMenuHorizontalScroll(e) {
       const eventDelta = e.wheelDelta || -e.deltaY * 40;
@@ -209,6 +212,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.columns-menu-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
 ::v-deep .el-scrollbar__bar.is-horizontal {
   height: 0;
 }

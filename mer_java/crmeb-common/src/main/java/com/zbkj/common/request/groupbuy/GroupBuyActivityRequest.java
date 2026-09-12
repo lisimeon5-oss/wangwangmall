@@ -1,5 +1,6 @@
 package com.zbkj.common.request.groupbuy;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,9 +26,12 @@ public class GroupBuyActivityRequest {
     private Integer id;
 
     @ApiModelProperty(value = "拼团活动名称")
-    @NotBlank(message = "拼团团活动名称 必须填写")
     @Length(max = 100, message = "拼团团活动名称 不能超过100个字符")
     private String groupName;
+
+    @ApiModelProperty(value = "多语言拼团活动名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言拼团活动名称不能为空")
+    private String groupNameJson;
 
     @ApiModelProperty(value = "开始时间")
     @NotNull(message = "开始时间不能为空")

@@ -36,76 +36,79 @@ export default {
   data() {
     return {
       grid: { xl: 4, lg: 8, md: 12, sm: 6, xs: 24 },
-      nav_list: [
-        {
-          bgColor: '#EF9C20',
-          icon: 'icon-yonghuguanli',
-          title: '用户管理',
-          url: '/user/index',
-        },
-        {
-          bgColor: '#1890FF',
-          icon: 'icon-shangpinguanli',
-          title: '商品管理',
-          url: '/product/list',
-        },
-        {
-          bgColor: '#4BCAD5',
-          icon: 'icon-shanghuguanli',
-          title: '商户管理',
-          url: '/merchant/list',
-        },
-        {
-          bgColor: '#A277FF',
-          icon: 'icon-a-dingdanguanli1',
-          title: '订单管理',
-          url: '/order/list',
-        },
-        {
-          bgColor: '#1BBE6B',
-          icon: 'icon-xitongshezhi',
-          title: '系统设置',
-          url: '/operation/setting',
-        },
-        {
-          bgColor: '#1890FF',
-          icon: 'icon-fenxiaoshezhi',
-          title: '分销设置',
-          url: '/distribution/distributionconfig',
-        },
-        {
-          bgColor: '#A277FF',
-          icon: 'icon-caiwuguanli',
-          title: '财务管理',
-          url: '/finance/statement',
-        },
-
-        {
-          bgColor: '#EF9C20',
-          icon: 'icon-yihaotong',
-          title: '一号通',
-          url: '/operation/onePass/home',
-        },
-        {
-          bgColor: '#4BCAD5',
-          icon: 'icon-qiandaopeizhi',
-          title: '签到配置',
-          url: '/marketing/sign/config',
-        },
-      ],
-      statisticData: [
-        { title: '待审核商品数量', num: 0, path: '/product/list' },
-        { title: '待核销订单数量', num: 0, path: '/order/list' },
-        { title: '待发货订单数量', num: 0, path: '/order/list' },
-        { title: '在售商品数量', num: 0, path: '/product/list' },
-        { title: '待退款订单数量', num: 0, path: '/order/refund' },
-      ],
       optionData: {},
       applyNum: 0,
       style: { height: '250px' },
     };
   },
   computed: {
+    nav_list() {
+      return [
+        {
+          bgColor: '#EF9C20',
+          icon: 'icon-yonghuguanli',
+          title: this.$t('dashboard.userManage'),
+          url: '/user/index',
+        },
+        {
+          bgColor: '#1890FF',
+          icon: 'icon-shangpinguanli',
+          title: this.$t('dashboard.productManage'),
+          url: '/product/list',
+        },
+        {
+          bgColor: '#4BCAD5',
+          icon: 'icon-shanghuguanli',
+          title: this.$t('dashboard.merchantManage'),
+          url: '/merchant/list',
+        },
+        {
+          bgColor: '#A277FF',
+          icon: 'icon-a-dingdanguanli1',
+          title: this.$t('dashboard.orderManage'),
+          url: '/order/list',
+        },
+        {
+          bgColor: '#1BBE6B',
+          icon: 'icon-xitongshezhi',
+          title: this.$t('dashboard.systemSetting'),
+          url: '/operation/setting',
+        },
+        {
+          bgColor: '#1890FF',
+          icon: 'icon-fenxiaoshezhi',
+          title: this.$t('dashboard.distributionSetting'),
+          url: '/distribution/distributionconfig',
+        },
+        {
+          bgColor: '#A277FF',
+          icon: 'icon-caiwuguanli',
+          title: this.$t('dashboard.financeManage'),
+          url: '/finance/statement',
+        },
+        {
+          bgColor: '#EF9C20',
+          icon: 'icon-yihaotong',
+          title: this.$t('dashboard.yihaoTong'),
+          url: '/operation/onePass/home',
+        },
+        {
+          bgColor: '#4BCAD5',
+          icon: 'icon-qiandaopeizhi',
+          title: this.$t('dashboard.signConfig'),
+          url: '/marketing/sign/config',
+        },
+      ];
+    },
+    statisticData() {
+      return [
+        { title: this.$t('dashboard.awaitAuditProductNum'), num: 0, path: '/product/list' },
+        { title: this.$t('dashboard.awaitVerificationOrderNum'), num: 0, path: '/order/list' },
+        { title: this.$t('dashboard.awaitShippingOrderNum'), num: 0, path: '/order/list' },
+        { title: this.$t('dashboard.onSaleProductNum'), num: 0, path: '/product/list' },
+        { title: this.$t('dashboard.awaitRefundOrderNum'), num: 0, path: '/order/refund' },
+      ];
+    },
     //鉴权处理
     permList: function () {
       let arr = [];

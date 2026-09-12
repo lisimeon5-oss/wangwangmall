@@ -1,10 +1,10 @@
 <template>
   <!--边距拉动组件-->
-  <div v-if="configData.title !== '图片间距' || (configData.title === '图片间距' && configObj.tabConfig.tabVal !== 0)">
+  <div v-if="!isImageSpacing || (isImageSpacing && configObj.tabConfig.tabVal !== 0)">
     <div v-if="configData" class="borderPadding">
       <div class="c_row-item">
         <div class="label labelwidth c_label" v-if="configData.title">
-          {{ configData.title }}
+          {{ diyUiText(configData.title) }}
         </div>
         <div class="slider-box ml22">
           <el-slider
@@ -30,6 +30,7 @@
 // +----------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
+import { diyUiText } from '@/utils/diyCname';
 export default {
   name: 'c_slider',
   props: {
@@ -47,6 +48,12 @@ export default {
       configData: {},
     };
   },
+  computed: {
+    isImageSpacing() {
+      const t = this.configData && this.configData.title;
+      return t === '图片间距' || t === this.$t('pagediy.imageSpacing');
+    },
+  },
   mounted() {
     this.$nextTick(() => {
       this.defaults = this.configObj;
@@ -63,6 +70,7 @@ export default {
     },
   },
   methods: {
+    diyUiText,
     sliderChange(e) {},
   },
 };

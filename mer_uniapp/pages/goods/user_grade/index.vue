@@ -21,7 +21,7 @@
 					</view>
 					<view @click="goMultiple" class="rule acea-row row-center-wrapper">
 						<text class="iconfont wenhao mr10">?</text>
-						<view>规则说明</view>
+						<view>{{$t('规则说明')}}</view>
 					</view>
 				</view>
 			</view>
@@ -31,7 +31,7 @@
 				</view>
 				<view class="growth">
 					<view class="title" :style="'color: '+userlevel.backColor">{{userlevel.userLevelName}}</view>
-					<view class="info" :style="'color: '+userlevel.backColor">今日获得经验值{{userlevel.todayExp}}点</view>
+					<view class="info" :style="'color: '+userlevel.backColor">{{$t('今日获得经验值')}}{{userlevel.todayExp}}{{$t('点')}}</view>
 				</view>
 				<view class="wait">
 					<view class="wait_count acea-row row-between-wrapper">
@@ -49,15 +49,15 @@
 		<view class="ml-20 mr-20">
 			<view class="grade_main">
 				<view v-if="gradeList.length > 0" class="grade_privilege">
-					<view class="title">会员可专项优质特权</view>
+					<view class="title">{{$t('会员可专项优质特权')}}</view>
 					<view class="grade_list acea-row row-between-wrapper">
 						<view v-for="(item,index) in gradeList" class="item acea-row">
 							<view class="picture" :class="item.status == 0 ? 'isLocked' : ''">
 								<image class="bg_image" :src="item.pic"></image>
 							</view>
 							<view class="desc">
-								<view class="name line1">{{item.name}}</view>
-								<view class="detail line1">{{item.info}}</view>
+								<view class="name line1">{{$t(item.name)}}</view>
+								<view class="detail line1">{{$t(item.info)}}</view>
 							</view>
 						</view>
 					</view>
@@ -65,9 +65,9 @@
 				<view class="upgrade">
 					<view class="upgrade-main">
 						<view class="acea-row row-between mb-36">
-							<view class="title">获取经验</view>
+							<view class="title">{{$t('获取经验')}}</view>
 							<navigator hover-class='none' url='/pages/goods/exp_record/index'>
-								<view class="rule acea-row row-center-wrapper">经验明细<text
+								<view class="rule acea-row row-center-wrapper">{{$t('经验明细')}}<text
 										class="iconfont icon-jinru2"></text></view>
 							</navigator>
 						</view>
@@ -76,13 +76,13 @@
 								<image class="w-100 h-100" :src="urlDomain+'crmebimage/presets/qiandaotu.png'"></image>
 								<view class="ml-24">
 									<view class="name">
-										签到
+										{{$t('签到')}}
 									</view>
-									<view class="text">每日签到可获得经验值</view>
+									<view class="text">{{$t('每日签到可获得经验值')}}</view>
 								</view>
 							</view>
-							<view v-if="userlevel.todaySign" class="get_btn">已完成</view>
-							<navigator v-else class="get_btn" hover-class='none' url='/pages/merchant/user_sgin/index'>去完成
+							<view v-if="userlevel.todaySign" class="get_btn">{{$t('已完成')}}</view>
+							<navigator v-else class="get_btn" hover-class='none' url='/pages/merchant/user_sgin/index'>{{$t('去完成')}}
 							</navigator>
 						</view>
 						<view v-if="userlevel.isOpenCommunity" class="mt-44 item acea-row row-between-wrapper">
@@ -90,12 +90,12 @@
 								<image class="w-100 h-100" :src="urlDomain+'crmebimage/presets/zhongcaotu.png'"></image>
 								<view class="ml-24">
 									<view class="name">
-										发布种草{{'（'+userlevel.noteNum+'/'+ userlevel.noteMaxNum + '）'}}
+										{{$t('发布种草')}}{{'（'+userlevel.noteNum+'/'+ userlevel.noteMaxNum + '）'}}
 									</view>
-									<view class="text">发布一条种草可获得经验值<text class="add">+{{userlevel.noteExp}}</text></view>
+									<view class="text">{{$t('发布一条种草可获得经验值')}}<text class="add">+{{userlevel.noteExp}}</text></view>
 								</view>
 							</view>
-							<navigator class="get_btn" hover-class='none' url='/pages/discover/discover_release/index'>{{userlevel.noteNum == userlevel.noteMaxNum ? '已完成': '去完成'}}
+							<navigator class="get_btn" hover-class='none' url='/pages/discover/discover_release/index'>{{userlevel.noteNum == userlevel.noteMaxNum ? $t('已完成') : $t('去完成')}}
 							</navigator>
 						</view>
 					</view>
@@ -109,7 +109,7 @@
 		<view class="instructions" v-if="showProtocol">
 			<view class="setAgCount">
 				<i class="icon iconfont icon-cha" @click="showProtocol = false"></i>
-				<div class="title">会员等级规则</div>
+				<div class="title">{{$t('会员等级规则')}}</div>
 				<view class="content">
 					<jyf-parser :html="protocol" ref="article" :tag-style="tagStyle"></jyf-parser>
 				</view>
@@ -118,7 +118,7 @@
 		<view class="success" v-if="isShowbox">
 			<view class="bg"></view>
 			<view class="con">
-				<view class="title">恭喜您升级为</view>
+				<view class="title">{{$t('恭喜您升级为')}}</view>
 				<view class="upgrade">
 					{{upgradeInfo.brokerage_name}}
 				</view>
@@ -126,7 +126,7 @@
 				<view class="level">
 					<image class="imgae" :src="upgradeInfo.brokerage_icon"></image>
 				</view>
-				<view class="btn" @click="close">查看我的权益</view>
+				<view class="btn" @click="close">{{$t('查看我的权益')}}</view>
 				<view class='iconfont icon-guanbi3' @click="close"></view>
 			</view>
 		</view>
@@ -858,12 +858,12 @@
 			height: 900rpx;
 			overflow-y: scroll;
 
-			/deep/ p {
+			::v-deep  p {
 				font-size: 13px;
 				line-height: 22px;
 			}
 
-			/deep/ img {
+			::v-deep  img {
 				max-width: 100%;
 			}
 		}

@@ -5,9 +5,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -33,12 +33,18 @@ public class CdkeyLibrarySaveRequest implements Serializable {
     @ApiModelProperty(value = "卡密库ID,编辑时必填")
     private Integer id;
 
-    @ApiModelProperty(value = "卡密库名称", required = true)
-    @NotBlank(message = "请填写卡密库名称")
+    @ApiModelProperty(value = "卡密库名称")
     @Length(max = 32, message = "卡密库名称长度不能超过32个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言卡密库名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言卡密库名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "备注")
     @Length(max = 200, message = "备注长度不能超过200个字符")
     private String remark;
+
+    @ApiModelProperty(value = "多语言备注(JSON)")
+    private String remarkJson;
 }

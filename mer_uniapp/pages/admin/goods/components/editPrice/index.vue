@@ -1,35 +1,35 @@
 <template>
 	<base-drawer mode="bottom" :visible="visible" background-color="transparent" mask maskClosable @close="closeDrawer">
 		<view class="edit-price rd-t-40rpx" v-if="goodsInfo.attr_value">
-			<view class="title">修改价格/库存
+			<view class="title">{{$t('修改价格/库存')}}
 			  <view class="close acea-row row-center-wrapper" @tap="closeDrawer">
 				  <text class="iconfont icon-guanbi"></text>
 			  </view>
 			</view>
 			<view class="list">
 				<view class="item acea-row row-between-wrapper">
-					<view>成本价</view>
+					<view>{{$t('成本价')}}</view>
 					<input type="number" :placeholder="'请填写成本价'" placeholder-class="placeholder" v-model="goodsInfo.attr_value.cost" />
 				</view>
 				<view class="item acea-row row-between-wrapper">
-					<view>划线价</view>
+					<view>{{$t('划线价')}}</view>
 					<input type="number" :placeholder="'请填写划线价'" placeholder-class="placeholder" v-model="goodsInfo.attr_value.otPrice" />
 				</view>
 				<view class="item acea-row row-between-wrapper">
-					<view>售价</view>
+					<view>{{$t('售价')}}</view>
 					<input type="number" :placeholder="'请填写售价'" placeholder-class="placeholder" v-model="goodsInfo.attr_value.price" />
 				</view>
 				<view class="item acea-row row-between-wrapper" v-if="isPaidMember">
-					<view>会员价</view>
+					<view>{{$t('会员价')}}</view>
 					<input type="number" :placeholder="'请填写会员价'" placeholder-class="placeholder" v-model="goodsInfo.attr_value.vipPrice" />
 				</view>
 				<view class="item acea-row row-between-wrapper">
-					<view>库存</view>
+					<view>{{$t('库存')}}</view>
 					<input type="number" :placeholder="'请填写库存'" placeholder-class="placeholder" v-model="goodsInfo.attr_value.stock" />
 				</view>
 			</view>
-			<view v-if="goodsInfo.spec_type" class="bnt acea-row row-center-wrapper" @tap="defineSpec">确定</view>
-			<view v-else class="bnt acea-row row-center-wrapper" @tap="define">保存</view>
+			<view v-if="goodsInfo.spec_type" class="bnt acea-row row-center-wrapper" @tap="defineSpec">{{$t('确定')}}</view>
+			<view v-else class="bnt acea-row row-center-wrapper" @tap="define">{{$t('保存')}}</view>
 		</view>
 	</base-drawer>
 </template>
@@ -66,7 +66,7 @@ export default {
 				this.$emit('successChange',info);
 			}else{
 				this.$util.Tips({
-					title: '修改类容至少填写一项'
+					title: this.$t('修改类容至少填写一项')
 				});
 			}
 		},

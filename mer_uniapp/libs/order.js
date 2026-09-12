@@ -12,6 +12,7 @@ import {
 	preOrderApi,refundOrderRevokeApi
 } from '@/api/order.js';
 import util from '@/utils/util'
+import { t } from '@/i18n'
 import animationType from '@/utils/animationType.js'
 import { ProductMarketingTypeEnum, ProductTypeEnum } from "@/enums/productEnums";
 
@@ -21,7 +22,7 @@ import { ProductMarketingTypeEnum, ProductTypeEnum } from "@/enums/productEnums"
 export function goOrderDetail(orderNo) {
 	return new Promise(resolve => {
 		if (!orderNo) return that.$util.Tips({
-			title: '缺少订单号无法查看订单详情'
+			title: t('缺少订单号无法查看订单详情')
 		});
 		// #ifdef MP
 		uni.navigateTo({
@@ -84,8 +85,8 @@ export function onGetPreOrder(preOrderType, orderDetails) {
 export function onRevokeRefund(refundOrderNo) {
 	return new Promise((resolve, reject) => {
 		uni.showModal({
-			title: '提示',
-			content: '确定要撤销本次退款申请吗？',
+			title: t('提示'),
+			content: this.$t('确定要撤销本次退款申请吗？'),
 			success: function(res) {
 				if (res.confirm) {
 					refundOrderRevokeApi(refundOrderNo).then(res => {

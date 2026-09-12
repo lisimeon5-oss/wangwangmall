@@ -3,7 +3,7 @@
 		<view class="move-path" @touchend="handleOnTouchEnd" @touchstart="start">
 			<view class="move-content">
 				<view v-if="vertify" class="success">{{this.tipWords}}</view>
-				<view v-else>拖动滑块验证</view>
+				<view v-else>{{$t('拖动滑块验证')}}</view>
 			</view>
 			<movable-area :animation="true">
 				<movable-view class="move-view" :x="x" direction="horizontal" @change="handleOnMoving" :disabled="vertify"

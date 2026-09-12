@@ -6,9 +6,9 @@
         SELECT gbr.group_buying_id as groupBuyingId,gbr.group_leader_uid as groupLeaderUid,gbr.buying_count_num as buyingCountNum,
                gbr.create_time as createTime,gbr.end_time as endTime,gbr.yet_buying_num as yetBuyingNum,
                u.nickname as groupLeaderNickname,
-               p.image as productImage,p.name as productName,
-               gba.group_name as groupName,
-               m.name as merName
+               p.image as productImage,p.name as productName,p.name_json as productNameJson,
+               gba.group_name as groupName,gba.group_name_json as groupNameJson,
+               m.name as merName,m.name_json as merNameJson
         FROM eb_group_buy_record AS gbr
         left join eb_group_buy_activity gba on gba.id = gbr.group_activity_id
         left join eb_product p on p.id = gbr.product_group_id
@@ -16,13 +16,14 @@
         left join eb_user u on u.id = gbr.group_leader_uid
         where gbr.is_del = 0 and gbr.record_status = #{recordStatus}
         <if test="groupActivityName != null and groupActivityName !='' ">
-            and gba.group_name like CONCAT('%',#{groupActivityName},'%')
+            and (gba.group_name like CONCAT('%',#{groupActivityName},'%')
+            or gba.group_name_json like CONCAT('%',#{groupActivityName},'%'))
         </if>
         <if test="productName != null and productName !='' ">
-            and p.name like CONCAT('%',#{productName},'%')
+            and (p.name like CONCAT('%',#{productName},'%') or p.name_json like CONCAT('%',#{productName},'%'))
         </if>
         <if test="merName != null and merName !='' ">
-            and m.name like CONCAT('%',#{merName},'%')
+            and (m.name like CONCAT('%',#{merName},'%') or m.name_json like CONCAT('%',#{merName},'%'))
         </if>
         <if test="startTime != null and startTime != ''">
             and gbr.create_time between #{startTime} and #{endTime}
@@ -58,13 +59,14 @@
         left join eb_user u on u.id = gbr.group_leader_uid
         where gbr.is_del = 0 and gbr.record_status = #{recordStatus}
         <if test="groupActivityName != null and groupActivityName !='' ">
-            and gba.group_name like CONCAT('%',#{groupActivityName},'%')
+            and (gba.group_name like CONCAT('%',#{groupActivityName},'%')
+            or gba.group_name_json like CONCAT('%',#{groupActivityName},'%'))
         </if>
         <if test="productName != null and productName !='' ">
-            and p.name like CONCAT('%',#{productName},'%')
+            and (p.name like CONCAT('%',#{productName},'%') or p.name_json like CONCAT('%',#{productName},'%'))
         </if>
         <if test="merName != null and merName !='' ">
-            and m.name like CONCAT('%',#{merName},'%')
+            and (m.name like CONCAT('%',#{merName},'%') or m.name_json like CONCAT('%',#{merName},'%'))
         </if>
         <if test="startTime != null and startTime != ''">
             and gbr.create_time between #{startTime} and #{endTime}

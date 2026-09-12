@@ -6,15 +6,15 @@
 				<image :src="item.avatar?item.avatar:urlDomain+'crmebimage/presets/morenT.png'" mode=""></image>
 				<view class="info">
 					<view class="line1">
-						<text class="name line1">{{item.isLogoff ? "用户已注销" :item.nickname}}</text>
+						<text class="name line1">{{item.isLogoff ? $t('用户已注销') :item.nickname}}</text>
 					</view>
 					<view v-if="item.fansNum" class="des">
-						粉丝{{item.fansNum<10000 ? item.fansNum : (item.fansNum/10000).toFixed(2)+'万'}}
+						{{$t('粉丝')}}{{item.fansNum<10000 ? item.fansNum : (item.fansNum/10000).toFixed(2)+$t('万')}}
 					</view>
-					<view v-else class="des">粉丝0</view>
+					<view v-else class="des">{{$t('粉丝0')}}</view>
 					<view class="btn" :class="(!item.isConcerned && type === 'follow') || (!item.isFansConcerned &&type === 'fans') ? 'focusBtn' : ''" @click.stop="focusToggle(item)">
-			            <text v-if="type === 'follow'">{{!item.isConcerned ?'关注' : '已关注'}}</text>
-						<text v-else>{{!item.isFansConcerned ?'回关' : '已关注'}}</text>
+			            <text v-if="type === 'follow'">{{!item.isConcerned ? $t('关注') : $t('已关注')}}</text>
+						<text v-else>{{!item.isFansConcerned ? $t('回关') : $t('已关注')}}</text>
 					</view>
 				</view>
 			</view>
@@ -25,11 +25,11 @@
 		<view class='noCommodity' v-if="list.length == 0 && !loading">
 			<view v-if="type === 'follow'" class='pictrue'>
         <image :src="urlDomain+'crmebimage/presets/noguanzhu.png'"></image>
-				<view class="text-ccc">暂未关注任何人哦~</view>
+				<view class="text-ccc">{{$t('暂未关注任何人哦~')}}</view>
 			</view>
 			<view v-else class='pictrue'>
         <image :src="urlDomain+'crmebimage/presets/noguanzhu.png'"></image>
-				<view class="text-ccc">你还没有粉丝哦~</view>
+				<view class="text-ccc">{{$t('你还没有粉丝哦~')}}</view>
 			</view>
 		</view>
 	</view>
@@ -68,7 +68,7 @@
 		onLoad(options) {
 			this.type = options.type;
 			uni.setNavigationBarTitle({
-				title: options.type  === 'follow' ? '我的关注' : '我的粉丝'
+				title: options.type  === 'follow' ? this.$t('我的关注') : this.$t('我的粉丝')
 			})
 			if(options.type === 'follow'){
 				this.getList()

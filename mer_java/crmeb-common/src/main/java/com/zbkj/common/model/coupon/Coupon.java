@@ -39,6 +39,9 @@ public class Coupon implements Serializable {
     @ApiModelProperty(value = "优惠券名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言优惠券名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "发行方，1-平台，2-商户")
     private Integer publisher;
 

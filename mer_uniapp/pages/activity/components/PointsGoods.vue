@@ -7,11 +7,11 @@
 				:width="pointsGoodsStyle._imageWidth"
 				:height="pointsGoodsStyle._imageHeight"
 				:radius="10"></easy-loadimage>
-				<view v-show="item.stock===0" class="sellOut">已售罄</view>
+				<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 			</view>
 			<view class="info">
 				<view class="title line1" :style="[pointsGoodsStyle.nameStyle]">{{ item.name }}</view>
-				<view class="sales text-999 mt-8 mb-20" :style="[pointsGoodsStyle.salesStyle]">已有{{item.sales}}人兑换</view>
+				<view class="sales text-999 mt-8 mb-20" :style="[pointsGoodsStyle.salesStyle]">{{$t('已有')}}{{item.sales}}{{$t('人兑换')}}</view>
 				<PointsPrice :pointsPrice="item" :pointsGoodsStyle="pointsGoodsStyle" v-model="isShowSamll"></PointsPrice>
 			</view>
 		</view>

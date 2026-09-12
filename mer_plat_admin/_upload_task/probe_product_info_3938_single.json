@@ -1,0 +1,91 @@
+{
+  "code": 200,
+  "message": null,
+  "data": {
+    "id": 3938,
+    "image": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/10/a31f262576384becb0a9d2a1fd6049d3c6i4t50cwg.jpg",
+    "sliderImage": "[\"https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/10/a31f262576384becb0a9d2a1fd6049d3c6i4t50cwg.jpg\",\"https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/10/644b1758128445618af64b73da7dc108q9oueeiuyo.jpg\",\"https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/10/b600ee7d5d3e4da18ad0f2de3310f031gch3er4uxp.jpg\",\"https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/10/f1875554cce34d5e86564eb3c655455aulast3rzfn.jpg\",\"https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/10/0a800edd3b1a46ac981c41237d6ce0ee1cvlrp4rd2.jpg\"]",
+    "name": "120W充电宝（50000mAh黑色）",
+    "intro": "120W 大容量充电宝，80000mAh，支持快充，LED 电量显示。",
+    "keyword": "tt_powerbank_120w",
+    "cateId": "85",
+    "brandId": 0,
+    "categoryId": 566,
+    "guaranteeIds": "",
+    "unitName": "件",
+    "sort": 1,
+    "ficti": 0,
+    "specType": false,
+    "attrList": [
+      {
+        "id": 8446,
+        "productId": 3938,
+        "attributeName": "规格",
+        "isShowImage": false,
+        "sort": 0,
+        "isDel": false,
+        "optionList": [
+          {
+            "id": 15240,
+            "productId": 3938,
+            "attributeId": 8446,
+            "optionName": "默认",
+            "image": "",
+            "sort": 1,
+            "isDel": false
+          }
+        ]
+      }
+    ],
+    "attrValueList": [
+      {
+        "id": 27790,
+        "productId": 3938,
+        "sku": "默认",
+        "stock": 1,
+        "sales": 0,
+        "price": "999.00",
+        "image": "https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/10/a31f262576384becb0a9d2a1fd6049d3c6i4t50cwg.jpg",
+        "cost": "0.01",
+        "otPrice": "999.00",
+        "weight": "0.00",
+        "volume": "0.00",
+        "brokerage": 0,
+        "brokerageTwo": 0,
+        "type": 0,
+        "quota": 0,
+        "quotaShow": 0,
+        "attrValue": "{\"规格\":\"默认\"}",
+        "barCode": "",
+        "expand": "",
+        "cdkeyId": 0,
+        "cdkeyLibraryName": null,
+        "vipPrice": "0.00",
+        "redeemIntegral": 0,
+        "isShow": true,
+        "isDefault": true,
+        "itemNumber": ""
+      }
+    ],
+    "content": "<div class=\"sheep-detail-layout-v1\" style=\"padding:18px 16px;background:#fff;color:#333;font-size:15px;line-height:1.85;text-align:left;\"><div style=\"margin:0 0 20px;padding:14px;background:#fff;border:1px solid #eeeeee;border-radius:10px;\"><p style=\"margin:0 0 12px;font-size:16px;font-weight:600;color:#333;border-left:3px solid #c78b6b;padding-left:9px;\">商品信息</p><p style=\"margin:0 0 10px;line-height:1.85;word-break:break-word;white-space:normal;\"><strong>120W充电宝（80000mAh）</strong></p><p style=\"margin:0 0 10px;line-height:1.85;word-break:break-word;white-space:normal;\">120W 大容量充电宝，标称 80000mAh，支持 Quick Charge，LED 电量显示。</p><p style=\"margin:0 0 10px;line-height:1.85;word-break:break-word;white-space:normal;\">规格：1 件。</p><p style=\"margin:0 0 10px;line-height:1.85;word-break:break-word;white-space:normal;\">适合出行、办公等需要长时间续航的场景。</p></div><div style=\"margin:0 0 20px;padding:14px;background:#fff;border:1px solid #eeeeee;border-radius:10px;\"><p style=\"margin:0 0 12px;font-size:16px;font-weight:600;color:#333;border-left:3px solid #c78b6b;padding-left:9px;\">商品图片</p><img style=\"display:block;width:100%;height:auto;margin:12px 0;border-radius:10px;\" src=\"https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/10/a31f262576384becb0a9d2a1fd6049d3c6i4t50cwg.jpg\" alt=\"120W充电宝（80000mAh）\"/><img style=\"display:block;width:100%;height:auto;margin:12px 0;border-radius:10px;\" src=\"https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/10/644b1758128445618af64b73da7dc108q9oueeiuyo.jpg\" alt=\"120W充电宝（80000mAh）\"/><img style=\"display:block;width:100%;height:auto;margin:12px 0;border-radius:10px;\" src=\"https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/10/b600ee7d5d3e4da18ad0f2de3310f031gch3er4uxp.jpg\" alt=\"120W充电宝（80000mAh）\"/><img style=\"display:block;width:100%;height:auto;margin:12px 0;border-radius:10px;\" src=\"https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/10/f1875554cce34d5e86564eb3c655455aulast3rzfn.jpg\" alt=\"120W充电宝（80000mAh）\"/><img style=\"display:block;width:100%;height:auto;margin:12px 0;border-radius:10px;\" src=\"https://yt.pic.sheep2.shop/crmebimage/public/product/2026/09/10/0a800edd3b1a46ac981c41237d6ce0ee1cvlrp4rd2.jpg\" alt=\"120W充电宝（80000mAh）\"/></div></div>",
+    "couponIds": null,
+    "couponList": null,
+    "flatPattern": "",
+    "tempId": 3,
+    "isSub": false,
+    "type": 0,
+    "price": "999.00",
+    "sales": 0,
+    "stock": 1,
+    "collectNum": 0,
+    "isShow": true,
+    "guaranteeList": null,
+    "createTime": "2026-09-10 21:05:41",
+    "isPaidMember": false,
+    "auditStatus": 0,
+    "deliveryMethod": "1",
+    "systemFormId": 0,
+    "systemFormValue": null,
+    "refundSwitch": true
+  }
+}

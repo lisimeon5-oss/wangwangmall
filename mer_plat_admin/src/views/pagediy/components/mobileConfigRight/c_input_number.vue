@@ -3,7 +3,7 @@
   <div class="numbox borderPadding" v-if="configData && configData.isShow === 1">
     <div class="c_row-item">
       <div class="label labelwidth c_label">
-        <span>{{ configData.title || '商品数量' }}</span>
+        <span>{{ configData.title || $t('marketing.productCount') }}</span>
       </div>
       <div class="slider-box ml22">
         <el-input-number

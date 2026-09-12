@@ -36,6 +36,9 @@ public class ProductTag implements Serializable {
     @ApiModelProperty(value = "标签名称")
     private String tagName;
 
+    @ApiModelProperty(value = "多语言标签名称(JSON)")
+    private String tagNameJson;
+
     @ApiModelProperty(value = "标签说明")
     private String tagNote;
 

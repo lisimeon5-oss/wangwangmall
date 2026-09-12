@@ -2,19 +2,20 @@
   <div class="divBox">
     <div class="header clearfix">
       <div class="container">
-        <el-form inline label-width="120px" size="small">
-          <el-form-item label="商品搜索:">
+        <el-form class="filter-form" label-width="155px" size="small">
+          <el-form-item :label="$t('product.productSearchLabel')">
             <el-input
               v-model.trim="tableFrom.name"
               @input="onInput($event)"
-              placeholder="请输入商品名称"
+              :placeholder="$t('product.pleaseEnterProductName')"
               class="selWidth"
             >
               <el-button slot="append" icon="el-icon-search" @click="getList(1)" />
             </el-input>
           </el-form-item>
-          <el-form-item label="平台商品分类:">
+          <el-form-item :label="$t('product.platformCategoryLabel')">
             <el-cascader
+              :key="'plat-' + uiLocale"
               v-model="tableFrom.categoryId"
               class="selWidth"
               :options="categoryList"
@@ -24,8 +25,9 @@
               @change="getList(1)"
             />
           </el-form-item>
-          <el-form-item label="商户商品分类555:">
+          <el-form-item :label="$t('product.merchantCategoryLabel')">
             <el-cascader
+              :key="'mer-' + uiLocale"
               v-model="tableFrom.cateId"
               class="selWidth"
               :options="mercategoryList"
@@ -35,16 +37,16 @@
               @change="getList(1)"
             />
           </el-form-item>
-          <el-form-item label="商品状态:">
+          <el-form-item :label="$t('product.productStatusLabel')">
             <el-select
               clearable
               v-model="tableFrom.isShow"
-              placeholder="请选择商品状态"
+              :placeholder="$t('product.pleaseSelectProductStatus')"
               class="selWidth"
               @change="getList(1)"
             >
-              <el-option label="上架" value="1" />
-              <el-option label="下架" value="0" />
+              <el-option :label="$t('product.onShelf')" value="1" />
+              <el-option :label="$t('product.offShelf')" value="0" />
             </el-select>
           </el-form-item>
         </el-form>
@@ -78,23 +80,27 @@
         </template>
       </el-table-column>
       <el-table-column prop="id" label="ID" min-width="50" />
-      <el-table-column label="商品图" min-width="60">
+      <el-table-column :label="$t('product.productImage')" min-width="60">
         <template slot-scope="scope">
           <div class="demo-image__preview line-heightOne">
             <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="商品名称" min-width="250" show-overflow-tooltip />
-      <el-table-column prop="categoryName" label="商品分类" min-width="150" show-overflow-tooltip />
-      <el-table-column label="商品类型" min-width="100">
+      <el-table-column :label="$t('product.productName')" min-width="250" show-overflow-tooltip>
+        <template slot-scope="scope">{{ localizedName(scope.row) }}</template>
+      </el-table-column>
+      <el-table-column :label="$t('product.productCategory')" min-width="150" show-overflow-tooltip>
+        <template slot-scope="scope">{{ localizedText(scope.row.categoryName, scope.row.categoryNameJson) }}</template>
+      </el-table-column>
+      <el-table-column :label="$t('product.productType')" min-width="100">
         <template slot-scope="scope">
           <div>{{ scope.row.type | productTpyeFilter }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="商品状态" width="100">
+      <el-table-column :label="$t('product.productStatus')" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.isShow ? '上架' : '下架' }}</span>
+          <span>{{ scope.row.isShow ? $t('product.onShelf') : $t('product.offShelf') }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -110,8 +116,8 @@
       />
     </div>
     <div class="right-align inline-block">
-      <el-button size="small" @click="close">取消</el-button>
-      <el-button size="small" type="primary" @click="ok">确定</el-button>
+      <el-button size="small" @click="close">{{ $t('common.cancel') }}</el-button>
+      <el-button size="small" type="primary" @click="ok">{{ $t('common.confirm') }}</el-button>
     </div>
   </div>
 </template>
@@ -129,6 +135,7 @@
 
 import { productActivityListApi } from '@/api/product';
 import store from '@/store';
+import { getLocalizedName, getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'GoodList',
   props: {
@@ -166,6 +173,7 @@ export default {
         limit: this.$constants.page.limit[0],
         cateId: '', //商户分类id
         keywords: '',
+        name: '',
         type: 1,
       },
       imgList: [],
@@ -175,22 +183,26 @@ export default {
       isIndex: 0,
       checkBox: [],
       merCateList: store.getters.merProductClassify,
-      checkedIds: [], // 订单当前页选中的数据
-      categoryList: [],
-      mercategoryList: [],
+      checkedIds: [],
     };
   },
   created() {
-    if (!localStorage.getItem('merProductClassify')) store.dispatch('product/getMerProductClassify');
+    if (!localStorage.getItem('merProductClassifyV2')) store.dispatch('product/getMerProductClassify');
   },
-  computed: {},
+  computed: {
+    uiLocale() {
+      return getUiLocale(this);
+    },
+    categoryList() {
+      return store.getters.merPlatProductClassify;
+    },
+    mercategoryList() {
+      return store.getters.merProductClassify;
+    },
+  },
   mounted() {
     if (!store.getters.merPlatProductClassify.length) store.dispatch('product/getAdminProductClassify');
     if (!store.getters.merProductClassify.length) store.dispatch('product/getMerProductClassify');
-    this.$nextTick(() => {
-      this.categoryList = store.getters.merPlatProductClassify;
-      this.mercategoryList = store.getters.merProductClassify;
-    });
     this.getList();
     if (this.checked.length) {
       let [...arr2] = this.checked;
@@ -201,6 +213,12 @@ export default {
     }
   },
   methods: {
+    localizedName(row) {
+      return getLocalizedName(row, this.uiLocale);
+    },
+    localizedText(text, json) {
+      return getLocalizedText(text, json, this.uiLocale);
+    },
     close() {
       this.$emit('closeDialog', null);
     },
@@ -310,8 +328,17 @@ export default {
   padding-bottom: 20px;
   padding-top: 10px;
 }
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+}
+::v-deep .filter-form .el-form-item {
+  width: 50%;
+  margin-right: 0;
+  margin-bottom: 12px;
+}
 .selWidth {
-  width: 250px !important;
+  width: 220px !important;
 }
 .seachTiele {
   line-height: 35px;

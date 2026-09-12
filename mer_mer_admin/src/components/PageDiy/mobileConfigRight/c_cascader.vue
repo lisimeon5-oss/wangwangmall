@@ -9,7 +9,7 @@
         <el-cascader
           style="width: 100%"
           :options="configData.list"
-          :placeholder="`请选择${configData.title}`"
+          :placeholder="$t('common.pleaseSelectNamed', { name: configData.title })"
           v-model="configData.activeValue"
           filterable
           :props="props"

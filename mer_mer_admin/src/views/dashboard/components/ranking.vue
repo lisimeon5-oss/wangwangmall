@@ -3,9 +3,9 @@
     <el-row :gutter="14" class="ranking">
       <el-col v-bind="grid" class="ivu-mb mb14" v-hasPermi="['merchant:statistics:home:product:pay:ranking']">
         <el-card class="box-card" shadow="never" :bordered="false">
-          <div class="header_title_line">商品支付排行</div>
+          <div class="header_title_line">{{ $t('dashboard.productPayRanking') }}</div>
           <el-table :data="payData" style="width: 100%" class="mt20">
-            <el-table-column type="index" label="排名" width="60">
+            <el-table-column type="index" :label="$t('dashboard.rank')" width="60">
               <template slot-scope="scope">
                 <span
                   class="index_common"
@@ -23,7 +23,7 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column label="商品信息" min-width="320">
+            <el-table-column :label="$t('dashboard.productInfo')" min-width="320">
               <template slot-scope="scope">
                 <div class="product_info">
                   <div class="demo-image__preview line-heightOne">
@@ -39,15 +39,15 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="salesAmount" label="支付金额"></el-table-column>
+            <el-table-column prop="salesAmount" :label="$t('dashboard.payAmount')"></el-table-column>
           </el-table>
         </el-card>
       </el-col>
       <el-col v-bind="grid" class="ivu-mb mb14" v-hasPermi="['merchant:statistics:home:product:pageview:ranking']">
         <el-card class="box-card" shadow="never" :bordered="false">
-          <div class="header_title_line">商品访客排行</div>
+          <div class="header_title_line">{{ $t('dashboard.productViewRanking') }}</div>
           <el-table :data="pageviewData" style="width: 100%" class="mt20">
-            <el-table-column type="index" label="排名" width="60">
+            <el-table-column type="index" :label="$t('dashboard.rank')" width="60">
               <template slot-scope="scope">
                 <span
                   class="index_common"
@@ -65,7 +65,7 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column label="商品信息" min-width="320">
+            <el-table-column :label="$t('dashboard.productInfo')" min-width="320">
               <template slot-scope="scope">
                 <div class="product_info">
                   <div class="demo-image__preview line-heightOne">
@@ -81,7 +81,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="pageView" label="访问量"></el-table-column>
+            <el-table-column prop="pageView" :label="$t('dashboard.pageView')"></el-table-column>
           </el-table>
         </el-card>
       </el-col>

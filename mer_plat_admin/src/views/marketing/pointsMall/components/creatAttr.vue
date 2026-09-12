@@ -2,20 +2,27 @@
   <div>
     <el-row :gutter="24">
       <el-col :span="24">
-        <el-form-item label="规格类型：" props="specType">
+        <el-form-item :label="$t('marketing.specTypeLabel')" props="specType">
           <el-radio-group
             v-model="formValidate.specType"
             @change="onChangeSpec(formValidate.specType)"
             :disabled="isDisabled"
           >
-            <el-radio :label="false" class="radio">单规格</el-radio>
-            <el-radio :label="true">多规格</el-radio>
+            <el-radio :label="false" class="radio">{{ $t('product.singleSpec') }}</el-radio>
+            <el-radio :label="true">{{ $t('product.multiSpec') }}</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-col>
       <!-- 多规格添加-->
       <el-col v-if="formValidate.specType && !isDisabled" :span="24" class="noForm">
-        <el-form-item label="商品规格：">
+        <el-form-item :label="$t('videoChannel.productSpecLabel')">
+          <div class="lang-name-switch mb10" v-if="langOptions && langOptions.length">
+            <el-radio-group :value="activeLang" size="mini" @input="onSpecLangChange">
+              <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                {{ lang.label }}
+              </el-radio-button>
+            </el-radio-group>
+          </div>
           <div class="specifications">
             <draggable
               group="specifications"
@@ -38,11 +45,22 @@
                   <div class="lineBox"></div>
                   <div class="specifications-item-name mb18">
                     <el-input
+                      v-if="isDefaultSpecLang"
                       size="small"
                       v-model="item.value"
-                      placeholder="规格名称"
+                      :placeholder="$t('marketing.specName')"
                       @change="attrChangeValue(index, item.value)"
                       @focus="handleFocus(item.value)"
+                      class="specifications-item-name-input"
+                      maxlength="30"
+                      show-word-limit
+                    ></el-input>
+                    <el-input
+                      v-else
+                      size="small"
+                      :value="specNameLangValue(item)"
+                      :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+                      @input="(val) => onSpecNameLangInput(item, index, val)"
                       class="specifications-item-name-input"
                       maxlength="30"
                       show-word-limit
@@ -54,12 +72,12 @@
                       :true-label="1"
                       :false-label="0"
                       @change="(e) => addPic(e, index)"
-                      >添加规格图</el-checkbox
+                      >{{ $t('marketing.addSpecImage') }}</el-checkbox
                     >
                     <el-tooltip
                       class="item"
                       effect="dark"
-                      content="添加规格图片, 仅支持打开一个(建议尺寸:800*800)"
+                      :content="$t('marketing.addSpecImageTip')"
                       placement="right"
                     >
                       <i class="el-icon-info"></i>
@@ -76,15 +94,30 @@
                       <div v-for="(det, indexn) in item.detail" :key="indexn" class="mr10 spec drag">
                         <i class="el-icon-error" @click="handleRemove2(item.detail, indexn, det.value)"></i>
                         <el-input
+                          v-if="isDefaultSpecLang"
                           style="width: 120px"
                           size="small"
                           v-model="det.value"
-                          placeholder="规格值"
+                          :placeholder="$t('marketing.specValue')"
                           @change="attrDetailChangeValue(det.value, index)"
                           @focus="handleFocus(det.value)"
                           maxlength="30"
                           show-word-limit
                           @blur="handleBlur()"
+                        >
+                          <template slot="prefix">
+                            <span class="iconfont icon-drag2"></span>
+                          </template>
+                        </el-input>
+                        <el-input
+                          v-else
+                          style="width: 120px"
+                          size="small"
+                          :value="specValueLangValue(det)"
+                          :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+                          @input="(val) => onSpecValueLangInput(det, val, index)"
+                          maxlength="30"
+                          show-word-limit
                         >
                           <template slot="prefix">
                             <span class="iconfont icon-drag2"></span>
@@ -109,7 +142,7 @@
                         <el-input
                           :ref="'inputRef_' + index"
                           size="small"
-                          placeholder="请输入规格值"
+                          :placeholder="$t('marketing.pleaseEnterSpecValue')"
                           v-model="formDynamic.attrsVal"
                           @keyup.enter.native="createAttr(formDynamic.attrsVal, index)"
                           @blur="createAttr(formDynamic.attrsVal, index)"
@@ -117,7 +150,7 @@
                           show-word-limit
                         >
                         </el-input>
-                        <div class="addfont" slot="reference">添加规格值</div>
+                        <div class="addfont" slot="reference">{{ $t('marketing.addSpecValue') }}</div>
                       </el-popover>
                     </draggable>
                   </div>
@@ -126,16 +159,16 @@
             </draggable>
           </div>
           <div class="flex">
-            <el-button @click="handleAddRole">添加新规格</el-button>
+            <el-button @click="handleAddRole">{{ $t('marketing.addNewSpec') }}</el-button>
           </div>
         </el-form-item>
       </el-col>
       <el-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
         <!-- 单规格表格-->
         <el-form-item v-if="formValidate.specType === false">
-          <el-alert title="价格设置范围 0.01~999999.99" type="info"> </el-alert>
+          <el-alert :title="$t('marketing.priceRangeTip')" type="info"> </el-alert>
           <el-table :data="OneattrValue" border class="tabNumWidth" size="small">
-            <el-table-column label="图片" width="77" align="center">
+            <el-table-column :label="$t('content.image')" width="77" align="center">
               <template slot-scope="scope">
                 <div class="upLoadPicBox" @click="modalPicTap(false, 'dan', 'pi')">
                   <div v-if="scope.row.image" class="tabPic"><img :src="scope.row.image" /></div>
@@ -148,7 +181,7 @@
             <el-table-column
               v-for="(item, iii) in tableAttrValue"
               :key="iii"
-              :label="formThead[iii] && formThead[iii].title"
+              :label="specTheadLabel(iii)"
               min-width="160"
               align="center"
             >
@@ -179,11 +212,11 @@
         <!-- 多规格表格-->
         <el-form-item
           v-if="formValidate.specType"
-          label="商品属性："
+          :label="$t('marketing.productAttrLabel')"
           class="labeltop"
           :class="isDisabled ? 'disLabel' : 'disLabelmoren'"
         >
-          <el-alert title="价格设置范围 0.01~999999.99" type="info"></el-alert>
+          <el-alert :title="$t('marketing.priceRangeTip')" type="info"></el-alert>
           <el-table
             :data="ManyAttrValue"
             :key="tableKey"
@@ -196,7 +229,7 @@
             <el-table-column
               v-for="(item, index) in formValidate.header"
               :key="index"
-              :label="item.title"
+              :label="headerColumnLabel(item)"
               :min-width="item.minWidth || '100'"
             >
               <template slot-scope="scope">
@@ -204,7 +237,7 @@
                 <template v-if="scope.$index == 0">
                   <template v-if="item.key">
                     <div v-if="formValidate.attrs[scope.column.index] && ManyAttrValue.length">
-                      <el-select v-model="oneFormBatch[0][item.title]" :placeholder="`请选择${item.title}`" clearable>
+                      <el-select v-model="oneFormBatch[0][item.title]" :placeholder="$t('marketing.pleaseSelectNamed', { name: item.title })" clearable>
                         <el-option
                           v-for="val in formValidate.attrs[scope.column.index].detail"
                           :key="val.value"
@@ -296,9 +329,9 @@
                   </template>
                   <template v-else-if="item.slot === 'isDefault'"> -- </template>
                   <template v-else-if="item.slot === 'action'">
-                    <a type="text" size="mini" @click="batchAdd">批量修改</a>
+                    <a type="text" size="mini" @click="batchAdd">{{ $t('marketing.batchModify') }}</a>
                     <el-divider direction="vertical"></el-divider>
-                    <a type="text" size="mini" @click="batchDel">清空</a>
+                    <a type="text" size="mini" @click="batchDel">{{ $t('marketing.clearAll') }}</a>
                   </template>
                 </template>
                 <template v-else>
@@ -389,7 +422,7 @@
                   <template v-else-if="item.slot === 'isDefault'">
                     <el-switch
                       v-model="ManyAttrValue[scope.$index].isDefault"
-                      active-text="默认"
+                      :active-text="$t('product.specDefault')"
                       @change="(e) => changeDefaultSelect(e, scope.$index)"
                     />
                   </template>
@@ -397,8 +430,8 @@
                     <el-switch
                       class="defineSwitch"
                       v-model="ManyAttrValue[scope.$index].isShow"
-                      active-text="显示"
-                      inactive-text="隐藏"
+                      :active-text="$t('common.show')"
+                      :inactive-text="$t('menu.hide')"
                       :active-value="true"
                       :inactive-value="false"
                       @change="changeDefaultShow(scope.$index)"
@@ -420,6 +453,7 @@ import product from '@/mixins/product';
 import { defaultObj } from '@/views/marketing/pointsMall/default';
 import { GoodsTableHead } from '@/views/marketing/pointsMall/creatProduct/TableHeadList';
 import { arraysEqual } from '@/utils';
+import { parseLangJsonMap } from '@/utils/localizedName';
 export default {
   name: 'creatAttr',
   mixins: [product], //此js存放商品的部分函数方法
@@ -438,6 +472,13 @@ export default {
         delete obj.brokerageTwo;
       }
       return obj;
+    },
+    isDefaultSpecLang() {
+      return this.activeLang === this.defaultLangCode;
+    },
+    activeLangLabel() {
+      const lang = (this.langOptions || []).find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
     },
   },
   data() {
@@ -513,6 +554,20 @@ export default {
         return [];
       },
     },
+    langOptions: {
+      type: Array,
+      default: function () {
+        return [];
+      },
+    },
+    defaultLangCode: {
+      type: String,
+      default: 'zh-cn',
+    },
+    activeLang: {
+      type: String,
+      default: 'zh-cn',
+    },
   },
   watch: {
     formValidate: {
@@ -527,7 +582,12 @@ export default {
       this.formValidate.attrs = this.formValidate.attrList.map((i) => {
         return {
           value: i.attributeName,
-          detail: i.optionList.map((val) => ({ value: val.optionName, image: val.image })),
+          valueJson: parseLangJsonMap(i.attributeNameJson),
+          detail: i.optionList.map((val) => ({
+            value: val.optionName,
+            valueJson: parseLangJsonMap(val.optionNameJson),
+            image: val.image,
+          })),
           add_pic: i.isShowImage ? 1 : 0,
         };
       });
@@ -537,6 +597,36 @@ export default {
     }
   },
   methods: {
+    specTheadLabel(key) {
+      const map = {
+        price: this.$t('marketing.exchangeAmount'),
+        redeemIntegral: this.$t('marketing.exchangePoints'),
+        cost: `${this.$t('product.attrOtPrice')} (${this.$t('product.yuan')})`,
+        stock: this.$t('product.stock'),
+        weight: this.$t('product.attrWeight'),
+        volume: this.$t('product.attrVolume'),
+        barCode: this.$t('product.attrBarCode'),
+      };
+      return map[key] || (this.formThead[key] && this.formThead[key].title) || '';
+    },
+    headerColumnLabel(item) {
+      if (item && item.slot) {
+        const slotMap = {
+          image: this.$t('product.image'),
+          price: this.$t('marketing.exchangeAmount'),
+          redeemIntegral: this.$t('marketing.exchangePoints'),
+          cost: this.$t('product.attrOtPrice'),
+          stock: this.$t('product.stock'),
+          barCode: this.$t('product.attrBarCode'),
+          weight: this.$t('product.attrWeight'),
+          volume: this.$t('product.attrVolume'),
+          isDefault: this.$t('product.defaultSelected'),
+          action: this.$t('common.operate'),
+        };
+        return slotMap[item.slot] || item.title;
+      }
+      return item ? item.title : '';
+    },
     handleShowPop(index) {
       this.$refs['inputRef_' + index][0].focus();
     },
@@ -549,10 +639,38 @@ export default {
     handleAddRole() {
       let data = {
         value: this.formDynamic.attrsName,
+        valueJson: {},
         add_pic: 0,
         detail: [],
       };
       this.formValidate.attrs.push(data);
+    },
+    onSpecLangChange(lang) {
+      this.$emit('update:activeLang', lang);
+    },
+    specNameLangValue(item) {
+      if (!item.valueJson) this.$set(item, 'valueJson', {});
+      return item.valueJson[this.activeLang] || '';
+    },
+    specValueLangValue(det) {
+      if (!det.valueJson) this.$set(det, 'valueJson', {});
+      return det.valueJson[this.activeLang] || '';
+    },
+    onSpecNameLangInput(item, index, val) {
+      if (!item.valueJson) this.$set(item, 'valueJson', {});
+      this.$set(item.valueJson, this.activeLang, val);
+      if (!item.value && val) {
+        item.value = val;
+        this.attrChangeValue(index, item.value);
+      }
+    },
+    onSpecValueLangInput(det, val, index) {
+      if (!det.valueJson) this.$set(det, 'valueJson', {});
+      this.$set(det.valueJson, this.activeLang, val);
+      if (!det.value && val) {
+        det.value = val;
+        this.attrDetailChangeValue(det.value, index);
+      }
     },
     // 规格名称改变
     attrChangeValue(i, val) {
@@ -754,9 +872,9 @@ export default {
         }
       }
       if (isHas) {
-        this.$confirm('可以同步修改下方该规格图片，确定要替换吗？', '提示', {
-          confirmButtonText: '替换',
-          cancelButtonText: '暂不',
+        this.$confirm(this.$t('marketing.syncReplaceSpecImageConfirm'), this.$t('el.messagebox.title'), {
+          confirmButtonText: this.$t('marketing.replace'),
+          cancelButtonText: this.$t('marketing.notNow'),
           type: 'warning',
         })
           .then(() => {
@@ -863,7 +981,7 @@ export default {
       // 如果默认选中开启 则不可隐藏
       if (this.ManyAttrValue[index].isDefault === true) {
         this.ManyAttrValue[index].isShow = true;
-        this.$message.error('默认规格不可隐藏');
+        this.$message.error(this.$t('marketing.defaultSpecCannotHide'));
       }
     },
     // 清空批量规格信息
@@ -925,11 +1043,11 @@ export default {
         // 判断是否存在同样熟悉
         var isExist = this.formValidate.attrs[idx].detail.some((item) => item.value === num);
         if (isExist) {
-          this.$message.error('规格值已存在');
+          this.$message.error(this.$t('marketing.specValueExists'));
           return;
         }
 
-        this.formValidate.attrs[idx].detail.push({ value: num, image: '' });
+        this.formValidate.attrs[idx].detail.push({ value: num, valueJson: {}, image: '' });
         if (this.ManyAttrValue.length) {
           this.addOneAttr(this.formValidate.attrs[idx].value, num);
         } else {
@@ -953,6 +1071,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
 // 多规格设置
 .priceBox {
   width: 100%;

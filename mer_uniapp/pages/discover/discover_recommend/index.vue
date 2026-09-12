@@ -5,13 +5,13 @@
 			<discover-details v-if="noteRecommendList.length>0" @getIsMore="getIsMore" @getComment="getComment"
 				type="list" :noteRecommendList="noteRecommendList"></discover-details>
 			<view class='loadingicon acea-row row-center-wrapper'>
-				<text class='loading iconfont icon-jiazai' :hidden='loading==false && noteDetails'></text>{{loadTitle}}
+				<text class='loading iconfont icon-jiazai' :hidden='loading==false && noteDetails'></text>{{$t(loadTitle)}}
 			</view>
 		</scroll-view>
 
 		<view class="empty-boxs" v-if="isShow">
-			<emptyPage title="内容不存在,可能被删除了噢~" mTop="31%" :imgSrc="urlDomain+'crmebimage/presets/noguanzhu.png'"></emptyPage>
-			<view class="btn" url="/pages/discover_index/index" @click="back">返回首页</view>
+			<emptyPage :title="$t('内容不存在,可能被删除了噢~')" mTop="31%" :imgSrc="urlDomain+'crmebimage/presets/noguanzhu.png'"></emptyPage>
+			<view class="btn" url="/pages/discover_index/index" @click="back">{{$t('返回首页')}}</view>
 		</view>
 
 		<!-- 评论 -->
@@ -197,7 +197,7 @@
 
 	.discover_recommend {
 		background-color: #fff;
-		/deep/.no-border {
+		::v-deep .no-border {
 			bottom: 40rpx;
 		}
 	}

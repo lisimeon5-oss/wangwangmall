@@ -10,23 +10,23 @@
 		<!-- #endif -->
 		<view v-if="this.$wechat.isWeixin()">
 			<view class="text-section">
-				<view>点击复制网址去浏览器中打开</view>
+				<view>{{$t('点击复制网址去浏览器中打开')}}</view>
 				<view class="link">{{ link }}</view>
 			</view>
 			<view class="button-section">
 				<!-- #ifdef H5 -->
-				<button class="button copy" :data-clipboard-text="link">点击复制</button>
+				<button class="button copy" :data-clipboard-text="link">{{$t('点击复制')}}</button>
 				<!-- #endif -->
 				<!-- #ifdef MP -->
-				<button class="button copy" @click="copyLink">点击复制</button>
+				<button class="button copy" @click="copyLink">{{$t('点击复制')}}</button>
 				<!-- #endif -->
-				<button class="button off" @click="goDetail">完成支付</button>
+				<button class="button off" @click="goDetail">{{$t('完成支付')}}</button>
 			</view>
 		</view>
 		<!-- #ifdef H5 -->
 		<view v-show="hintShow" class="hint" @click="hintShow = false">
-			<view>点击右上角<text class="iconfont icon-xiangyou"></text></view>
-			<view>选择 在浏览器 打开，去支付宝支付</view>
+			<view>{{$t('点击右上角')}}<text class="iconfont icon-xiangyou"></text></view>
+			<view>{{$t('选择 在浏览器 打开，去支付宝支付')}}</view>
 		</view>
 		<!-- #endif -->
 	</view>
@@ -77,7 +77,7 @@
 					if (!this.orderId) {
 						this.content = '支付订单不存在，页面将在2秒后自动关闭！';
 						uni.showToast({
-							title: '支付订单不存在,页面将在2秒后自动关闭',
+							title: this.$t('支付订单不存在,页面将在2秒后自动关闭'),
 							icon: 'none'
 						});
 						setTimeout(() => {
@@ -140,7 +140,7 @@
 				const clipboard = new ClipboardJS(".copy");
 				clipboard.on("success", () => {
 					uni.showToast({
-						title: '复制成功'
+						title: this.$t('复制成功')
 					});
 				});
 				// #endif
@@ -153,13 +153,13 @@
 					data: this.link,
 					success() {
 						uni.showToast({
-							title: '复制成功',
+							title: this.$t('复制成功'),
 							icon: 'success'
 						});
 					},
 					fail() {
 						uni.showToast({
-							title: '复制失败',
+							title: this.$t('复制失败'),
 							icon: 'none'
 						});
 					}

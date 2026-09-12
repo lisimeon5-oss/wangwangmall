@@ -4,8 +4,8 @@
       <div class="bg_box" :style="boxBgStyle"></div>
       <div class="title acea-row row-between-wrapper">
         <div class="text line1 tui-skeleton-rect acea-row">
-          <el-image class="image" :src="src"></el-image>
-          <span class="label" :style="titleColor">{{ configObj.titleConfig.val }}</span>
+          <el-image class="image" :src="logoSrc"></el-image>
+          <span class="label" :style="titleColor">{{ titleText }}</span>
         </div>
         <div class="more tui-skeleton-rect" :style="moreColor">
           MORE
@@ -65,9 +65,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapGetters } from 'vuex';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
+import { getFormLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'home_discover',
-  cname: '种草社区',
+  ...diyCname('pagediy.plantingCommunity'),
   configName: 'c_home_discover',
   icon: 't-icon-zujian-zhongcaoshequ',
   type: 1, // 0 基础组件 1 营销组件 2工具组件
@@ -83,6 +85,29 @@ export default {
   computed: {
     ...mapState('mobildConfig', ['defaultArray']),
     ...mapGetters(['mediaDomain']),
+    previewLang() {
+      return (this.configObj && this.configObj.diyMediaLang) || getUiLocale(this);
+    },
+    titleText() {
+      if (!this.configObj || !this.configObj.titleConfig) return '';
+      return getFormLocalizedText(this.configObj.titleConfig.val, this.configObj.titleConfig.valJson, this.previewLang);
+    },
+    logoSrc() {
+      if (!this.configObj || !this.configObj.logoConfig) return '';
+      const picked = getFormLocalizedText(
+        this.configObj.logoConfig.url,
+        this.configObj.logoConfig.urlJson,
+        this.previewLang,
+      );
+      if (picked) return picked;
+      if (this.previewLang === 'zh-cn') {
+        return (
+          this.configObj.logoConfig.url ||
+          localStorage.getItem('mediaDomain') + '/crmebimage/presets/guangguang.png'
+        );
+      }
+      return '';
+    },
     //最外层盒子的样式
     boxStyle() {
       return [
@@ -192,79 +217,81 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '种草社区',
+          cname: this.$t('pagediy.plantingCommunity'),
         },
         productList: {
-          title: '推荐组',
+          title: this.$t('pagediy.recommendGroup'),
           list: [],
         },
         logoConfig: {
           isShow: 1,
-          tabTitle: '图标设置',
-          title: '上传图标',
-          tips: '建议：124px*32px',
+          tabTitle: this.$t('pagediy.iconSettings'),
+          title: this.$t('pagediy.uploadIcon'),
+          tips: this.$t('pagediy.suggestIconSize124'),
           url: localStorage.getItem('mediaDomain') + '/crmebimage/presets/guangguang.png',
+          urlJson: '',
         },
         titleConfig: {
-          tabTitle: '标题设置',
-          title: '标题内容',
-          val: '生活好物分享',
-          place: '请输入标题',
+          tabTitle: this.$t('pagediy.titleSettings'),
+          title: this.$t('pagediy.titleContent'),
+          val: this.$t('pagediy.lifeGoodsShare'),
+          valJson: '',
+          place: this.$t('pagediy.pleaseEnterTitle'),
           isShow: 1,
-          max: 15,
+          max: 30,
         },
         linkConfig: {
-          title: '更多链接',
+          title: this.$t('pagediy.moreLink'),
           val: '/pages/discover_index/index',
-          place: '请选择链接',
+          place: this.$t('pagediy.pleaseSelectLink'),
           isShow: 1,
           max: 100,
         },
         //数量
         numConfig: {
-          tabTitle: '内容数量',
-          title: '展示数量',
+          tabTitle: this.$t('pagediy.displayContent'),
+          title: this.$t('pagediy.displayQuantity'),
           val: 3,
           isShow: 1,
           max: 8,
         },
         //显示内容
         typeConfig: {
-          tabTitle: '显示内容',
-          title: '展示内容',
+          tabTitle: this.$t('pagediy.displayContent'),
+          title: this.$t('pagediy.displayContent'),
           name: 'typeConfig',
           activeValue: [0, 1, 2],
           list: [
             {
-              val: '文章标题',
+              val: this.$t('content.articleTitle'),
             },
             {
-              val: '作者头像',
+              val: this.$t('pagediy.authorAvatar'),
             },
             {
-              val: '作者昵称',
+              val: this.$t('pagediy.authorNickname'),
             },
           ],
         },
         tabConfig: {
-          tabTitle: '布局设置',
-          title: '展示样式',
+          tabTitle: this.$t('pagediy.layoutSettings'),
+          title: this.$t('pagediy.displayStyle'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '单行模式',
+              val: this.$t('pagediy.singleRowMode'),
               icon: 'icon-yangshiyi',
             },
             {
-              val: '双排模式',
+              val: this.$t('pagediy.dualRowMode'),
               icon: 'icon-yangshisan',
             },
           ],
         },
         bgColor: {
-          tabTitle: '颜色设置',
-          title: '背景颜色',
+          tabTitle: this.$t('pagediy.colorSettings'),
+          title: this.$t('pagediy.backgroundColor'),
           color: [
             {
               item: '#D2B0FF',
@@ -284,7 +311,7 @@ export default {
         },
         laberColor: {
           name: 'laberColor',
-          title: '文章标题颜色',
+          title: this.$t('pagediy.articleTitleColor'),
           color: [
             {
               item: '#282828',
@@ -298,7 +325,7 @@ export default {
         },
         nameColor: {
           name: 'nameColor',
-          title: '作者昵称',
+          title: this.$t('pagediy.authorNickname'),
           color: [
             {
               item: '#282828',
@@ -311,7 +338,7 @@ export default {
           ],
         },
         titleColor: {
-          title: '标题颜色',
+          title: this.$t('pagediy.titleColor'),
           color: [
             {
               item: '#999999',
@@ -324,7 +351,7 @@ export default {
           ],
         },
         moreColor: {
-          title: '更多按钮颜色',
+          title: this.$t('pagediy.moreButtonColor'),
           color: [
             {
               item: '#282828',
@@ -337,15 +364,15 @@ export default {
           ],
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 7,
           min: 0,
           max: 30,
         },
         contentStyle: {
-          title: '图片圆角',
+          title: this.$t('pagediy.imageRadius'),
           name: 'bgStyle',
           val: 7,
           min: 0,
@@ -353,32 +380,32 @@ export default {
         },
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          title: '下边距',
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 25,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },
         contentConfig: {
-          title: '内容间距',
+          title: this.$t('pagediy.contentSpacing'),
           val: 10,
           min: 0,
           max: 30,
@@ -388,74 +415,33 @@ export default {
       list: [
         {
           image: '',
-          store_name: '西安首家线下体验店',
-          nickname: '国宝小熊猫',
+          store_name: this.$t('pagediy.previewDiscoverStore'),
+          nickname: this.$t('pagediy.previewDiscoverAuthor'),
           avatar: '',
           iconfont: 'icon-shoucang',
           likes: '1.5w',
         },
         {
           image: '',
-          store_name: '西安首家线下体验店',
-          nickname: '国宝小熊猫',
+          store_name: this.$t('pagediy.previewDiscoverStore'),
+          nickname: this.$t('pagediy.previewDiscoverAuthor'),
           avatar: '',
           iconfont: 'icon-shoucang1',
           likes: '215',
         },
         {
           image: '',
-          store_name: '西安首家线下体验店',
-          nickname: '国宝小熊猫',
+          store_name: this.$t('pagediy.previewDiscoverStore'),
+          nickname: this.$t('pagediy.previewDiscoverAuthor'),
           avatar: '',
           iconfont: 'icon-shoucang1',
           likes: '1.5w',
         },
-        // {
-        //   image: '',
-        //   store_name: '西安首家线下体验店',
-        //   nickname: '国宝小熊猫',
-        //   avatar: '',
-        //   iconfont: 'icon-shoucang',
-        //   likes: '215',
-        // },
-        // {
-        //   image: '',
-        //   store_name: '西安首家线下体验店',
-        //   nickname: '国宝小熊猫',
-        //   avatar: '',
-        //   iconfont: 'icon-shoucang',
-        //   likes: '1.5w',
-        // },
-        // {
-        //   image: '',
-        //   store_name: '西安首家线下体验店',
-        //   nickname: '国宝小熊猫',
-        //   avatar: '',
-        //   iconfont: 'icon-shoucang1',
-        //   likes: '215',
-        // },
-        // {
-        //   image: '',
-        //   store_name: '西安首家线下体验店',
-        //   nickname: '国宝小熊猫',
-        //   avatar: '',
-        //   iconfont: 'icon-shoucang1',
-        //   likes: '1.5w',
-        // },
-        // {
-        //   image: '',
-        //   store_name: '西安首家线下体验店',
-        //   nickname: '国宝小熊猫',
-        //   avatar: '',
-        //   iconfont: 'icon-shoucang',
-        //   likes: '215',
-        // },
       ],
       discoverList: [],
       pageData: {},
       listStyle: 0,
       configObj: null,
-      src: '', //标题图片
     };
   },
   mounted() {
@@ -469,15 +455,16 @@ export default {
   methods: {
     setConfig(data) {
       if (!data) return;
-      //this.discoverList = this.list;
       if (data) {
-        this.configObj = data;
-        this.navlist = data.tabConfig.list;
-        this.listStyle = data.tabConfig.tabVal;
-        this.src = this.configObj.logoConfig.url
-          ? this.configObj.logoConfig.url
-          : localStorage.getItem('mediaDomain') + '/crmebimage/presets/guangguang.png';
-        //this.discoverList = this.list.splice(0, this.configObj.numConfig.val)
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
+        if (!Object.prototype.hasOwnProperty.call(this.configObj.titleConfig || {}, 'valJson')) {
+          this.$set(this.configObj.titleConfig, 'valJson', '');
+        }
+        if (!Object.prototype.hasOwnProperty.call(this.configObj.logoConfig || {}, 'urlJson')) {
+          this.$set(this.configObj.logoConfig, 'urlJson', '');
+        }
+        this.navlist = this.configObj.tabConfig.list;
+        this.listStyle = this.configObj.tabConfig.tabVal;
       }
     },
   },

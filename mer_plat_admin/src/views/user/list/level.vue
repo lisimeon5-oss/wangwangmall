@@ -1,19 +1,19 @@
 <template>
   <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
     <el-form-item>
-      <el-alert title="请勿频繁更改，以免计算产生混乱！" type="warning" effect="light"></el-alert>
+      <el-alert :title="$t('user.noFrequentChange')" type="warning" effect="light"></el-alert>
     </el-form-item>
-    <el-form-item label="用户等级" label-width="100px">
-      <el-select v-model="ruleForm.levelId" clearable placeholder="请选择" @change="currentSel">
+    <el-form-item :label="$t('user.userLevel')" label-width="100px">
+      <el-select v-model="ruleForm.levelId" clearable :placeholder="$t('common.pleaseSelect')" @change="currentSel">
         <el-option v-for="item in levelList" :key="item.grade" :label="item.name" :value="item.id"> </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="扣除经验" label-width="100px" v-if="grade == '' ? false : grade < levelInfo.gradeLevel">
+    <el-form-item :label="$t('user.deductExperience')" label-width="100px" v-if="grade == '' ? false : grade < levelInfo.gradeLevel">
       <el-switch v-model="ruleForm.isSub"></el-switch>
     </el-form-item>
     <el-form-item>
-      <el-button @click="resetForm('ruleForm')">取消</el-button>
-      <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
+      <el-button @click="resetForm('ruleForm')">{{ $t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')">{{ $t('common.confirmPrefix') }}</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -65,7 +65,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           userLevelUpdateApi(this.ruleForm).then((res) => {
-            this.$message.success('编辑成功');
+            this.$message.success(this.$t('user.editSuccess'));
             this.$parent.$parent.getList();
             this.$parent.$parent.levelVisible = false;
             this.$refs[formName].resetFields();

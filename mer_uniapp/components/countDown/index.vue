@@ -2,7 +2,7 @@
 	<view class="time" :style="justifyLeft">
 		<text class="text" style="width: auto;">{{ tipText }}</text>
 		<text class=" p6 is_day" v-if="isDay === true && day>0"
-			:style="{background:bgColor.bgColor,color:bgColor.Color}">{{ day }}{{bgColor.isDay?'天':''}}</text>
+			:style="{background:bgColor.bgColor,color:bgColor.Color}">{{ day }}{{bgColor.isDay?$t('天'):''}}</text>
 		<text class="timeTxt" v-if="dayText&&day>0"
 			:style="{width:bgColor.timeTxtwidth,color:!isBg?bgColor.bgColor:bgColor.txtColor}">{{ dayText }}</text>
 		<text class="styleAll" :class='isCol?"timeCol":""'

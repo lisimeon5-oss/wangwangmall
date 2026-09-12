@@ -79,7 +79,7 @@ public class MerchantBaseCategoryController {
     @LogControllerAnnotation(intoDB = true, methodType = MethodType.UPDATE, description = "修改基础分类")
     @ApiOperation(value = "修改基础分类")
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-    public CommonResult<String> update(@PathVariable(value = "id") Integer id, @ModelAttribute CategoryRequest categoryRequest) {
+    public CommonResult<String> update(@PathVariable(value = "id") Integer id, @RequestBody @Validated CategoryRequest categoryRequest) {
         if (categoryService.update(categoryRequest, id)) {
             return CommonResult.success();
         }

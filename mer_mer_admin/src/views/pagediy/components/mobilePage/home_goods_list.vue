@@ -25,11 +25,11 @@
                 </div>
                 <div class="price semiBold" :style="priceColor">
                   <div class="num" v-if="priceShow">
-                    ￥<span>{{ item.price }}</span>
+                    ฿<span>{{ item.price }}</span>
                   </div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">
-                  已售 {{ Math.floor(item.sales) + Math.floor(item.ficti) || 0 }} {{ item.unitName }}
+                  {{ $t('pagediy.soldCountText', { count: Math.floor(item.sales) + Math.floor(item.ficti) || 0, unit: item.unitName }) }}
                 </div>
               </div>
             </div>
@@ -43,14 +43,14 @@
                 <div class="hd">
                   <div class="text">
                     <div class="title line2" :style="titleColor">
-                      <span v-if="titleShow">商品名称</span>
+                      <span v-if="titleShow">{{ $t('pagediy.productName') }}</span>
                     </div>
                   </div>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>199</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>199</span></div>
                 </div>
-                <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
+                <div class="sold" v-if="soldShow" :style="soldColor">{{ $t('pagediy.soldCountText', { count: 999, unit: $t('pagediy.pieceUnit') }) }}</div>
               </div>
             </div>
             <div class="item" :style="{ marginBottom: contentConfig + 'px' }">
@@ -61,14 +61,14 @@
                 <div class="hd">
                   <div class="text">
                     <div class="title line2" :style="titleColor">
-                      <span v-if="titleShow">商品名称</span>
+                      <span v-if="titleShow">{{ $t('pagediy.productName') }}</span>
                     </div>
                   </div>
                 </div>
                 <div class="price semiBold" :style="priceColor">
-                  <div class="num" v-if="priceShow">¥<span>199</span></div>
+                  <div class="num" v-if="priceShow">฿<span>199</span></div>
                 </div>
-                <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
+                <div class="sold" v-if="soldShow" :style="soldColor">{{ $t('pagediy.soldCountText', { count: 999, unit: $t('pagediy.pieceUnit') }) }}</div>
               </div>
             </div>
           </div>
@@ -87,11 +87,11 @@
                 </div>
                 <div class="price semiBold" :style="priceColor">
                   <div class="num" v-if="priceShow">
-                    ¥<span>{{ item.price }}</span>
+                    ฿<span>{{ item.price }}</span>
                   </div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">
-                  已售 {{ Math.floor(item.sales) + Math.floor(item.ficti) || 0 }} {{ item.unitName }}
+                  {{ $t('pagediy.soldCountText', { count: Math.floor(item.sales) + Math.floor(item.ficti) || 0, unit: item.unitName }) }}
                 </div>
               </div>
             </div>
@@ -103,12 +103,12 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span class="title line2" v-if="titleShow" :style="titleColor">商品名称</span>
+                  <span class="title line2" v-if="titleShow" :style="titleColor">{{ $t('pagediy.productName') }}</span>
                 </div>
                 <div class="price semiBold" :style="priceColor">
-                  <div class="num" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
-                <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
+                <div class="sold" v-if="soldShow" :style="soldColor">{{ $t('pagediy.soldCountText', { count: 999, unit: $t('pagediy.pieceUnit') }) }}</div>
               </div>
             </div>
             <div class="item auto">
@@ -117,12 +117,12 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span class="title line2" v-if="titleShow" :style="titleColor">商品名称</span>
+                  <span class="title line2" v-if="titleShow" :style="titleColor">{{ $t('pagediy.productName') }}</span>
                 </div>
                 <div class="price semiBold" :style="priceColor">
-                  <div class="num" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
-                <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
+                <div class="sold" v-if="soldShow" :style="soldColor">{{ $t('pagediy.soldCountText', { count: 999, unit: $t('pagediy.pieceUnit') }) }}</div>
               </div>
             </div>
           </div>
@@ -141,11 +141,11 @@
                 </div>
                 <div class="price semiBold" :style="priceColor">
                   <div class="num" v-if="priceShow">
-                    ¥<span>{{ item.price }}</span>
+                    ฿<span>{{ item.price }}</span>
                   </div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">
-                  已售 {{ Math.floor(item.sales) + Math.floor(item.ficti) || 0 }} {{ item.unitName }}
+                  {{ $t('pagediy.soldCountText', { count: Math.floor(item.sales) + Math.floor(item.ficti) || 0, unit: item.unitName }) }}
                 </div>
               </div>
             </div>
@@ -157,12 +157,12 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span class="title line2" v-if="titleShow" :style="titleColor">商品名称</span>
+                  <span class="title line2" v-if="titleShow" :style="titleColor">{{ $t('pagediy.productName') }}</span>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
-                <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
+                <div class="sold" v-if="soldShow" :style="soldColor">{{ $t('pagediy.soldCountText', { count: 999, unit: $t('pagediy.pieceUnit') }) }}</div>
               </div>
             </div>
             <div class="item auto">
@@ -171,12 +171,12 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span class="title line2" v-if="titleShow" :style="titleColor">商品名称</span>
+                  <span class="title line2" v-if="titleShow" :style="titleColor">{{ $t('pagediy.productName') }}</span>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
-                <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
+                <div class="sold" v-if="soldShow" :style="soldColor">{{ $t('pagediy.soldCountText', { count: 999, unit: $t('pagediy.pieceUnit') }) }}</div>
               </div>
             </div>
             <div class="item auto">
@@ -185,12 +185,12 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span class="title line2" v-if="titleShow" :style="titleColor">商品名称</span>
+                  <span class="title line2" v-if="titleShow" :style="titleColor">{{ $t('pagediy.productName') }}</span>
                 </div>
                 <div class="price" :style="priceColor">
-                  <div class="num semiBold" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num semiBold" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
-                <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
+                <div class="sold" v-if="soldShow" :style="soldColor">{{ $t('pagediy.soldCountText', { count: 999, unit: $t('pagediy.pieceUnit') }) }}</div>
               </div>
             </div>
           </div>
@@ -214,11 +214,11 @@
                 </div>
                 <div class="price semiBold" :style="priceColor">
                   <div class="num" v-if="priceShow">
-                    ¥<span>{{ item.price }}</span>
+                    ฿<span>{{ item.price }}</span>
                   </div>
                 </div>
                 <div class="sold" v-if="soldShow" :style="soldColor">
-                  已售 {{ Math.floor(item.sales) + Math.floor(item.ficti) || 0 }} {{ item.unitName }}
+                  {{ $t('pagediy.soldCountText', { count: Math.floor(item.sales) + Math.floor(item.ficti) || 0, unit: item.unitName }) }}
                 </div>
               </div>
             </div>
@@ -230,12 +230,12 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span class="title line2" v-if="titleShow" :style="titleColor">商品名称</span>
+                  <span class="title line2" v-if="titleShow" :style="titleColor">{{ $t('pagediy.productName') }}</span>
                 </div>
                 <div class="price semiBold" :style="priceColor">
-                  <div class="num" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
-                <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
+                <div class="sold" v-if="soldShow" :style="soldColor">{{ $t('pagediy.soldCountText', { count: 999, unit: $t('pagediy.pieceUnit') }) }}</div>
               </div>
             </div>
             <div class="itemBig" :style="{ marginBottom: contentConfig + 'px' }">
@@ -244,12 +244,12 @@
               </div>
               <div class="info">
                 <div class="hd acea-row">
-                  <span class="title line2" v-if="titleShow" :style="titleColor">商品名称</span>
+                  <span class="title line2" v-if="titleShow" :style="titleColor">{{ $t('pagediy.productName') }}</span>
                 </div>
                 <div class="price semiBold" :style="priceColor">
-                  <div class="num" v-if="priceShow">¥<span>66.66</span></div>
+                  <div class="num" v-if="priceShow">฿<span>66.66</span></div>
                 </div>
-                <div class="sold" v-if="soldShow" :style="soldColor">已售 999 件</div>
+                <div class="sold" v-if="soldShow" :style="soldColor">{{ $t('pagediy.soldCountText', { count: 999, unit: $t('pagediy.pieceUnit') }) }}</div>
               </div>
             </div>
           </div>
@@ -270,9 +270,10 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapGetters } from 'vuex';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
 export default {
   name: 'home_goods_list',
-  cname: '商品列表',
+  ...diyCname('pagediy.productList'),
   configName: 'c_home_goods_list',
   icon: 't-icon-zujian-shangpinliebiao',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -376,66 +377,66 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '商品列表',
+          cname: this.$t('pagediy.productList'),
         },
         itemStyle: {
-          tabTitle: '展现形式',
-          title: '展现形式',
+          tabTitle: this.$t('pagediy.displayForm'),
+          title: this.$t('pagediy.displayForm'),
           name: 'itemSstyle',
           tabVal: 0,
           list: [
             {
-              val: '卡片',
+              val: this.$t('pagediy.card'),
               icon: 'icon-shangpin-danlie',
             },
             {
-              val: '列表',
+              val: this.$t('pagediy.listLayout'),
               icon: 'icon-shangpin-lianglie',
             },
             {
-              val: '三列',
+              val: this.$t('pagediy.threeColumns'),
               icon: 'icon-shangpin-sanlie',
             },
             {
-              val: '大图',
+              val: this.$t('pagediy.bigImage'),
               icon: 'icon-shangpin-datu',
             },
           ],
           isShow: 1,
         },
         tabConfig: {
-          tabTitle: '商品设置',
-          title: '选择方式',
+          tabTitle: this.$t('pagediy.productSettings'),
+          title: this.$t('pagediy.selectMethod'),
           tabVal: 0,
           list: [
             {
-              name: '指定商品',
+              name: this.$t('pagediy.specifiedProducts'),
             },
             {
-              name: '指定分类',
+              name: this.$t('pagediy.specifiedCategory'),
             },
           ],
         },
         //显示内容
         typeConfig: {
-          title: '展示信息',
-          tabTitle: '显示内容',
+          title: this.$t('pagediy.displayInfo'),
+          tabTitle: this.$t('pagediy.displayContent'),
           name: 'rowsNum',
           activeValue: [0, 1, 2],
           list: [
             {
-              val: '商品名称',
+              val: this.$t('pagediy.productName'),
             },
             {
-              val: '商品价格',
+              val: this.$t('pagediy.productPriceLabel'),
             },
             {
-              val: '已售数量',
+              val: this.$t('pagediy.soldCount'),
             },
           ],
         },
         selectConfig: {
-          title: '商品分类',
+          title: this.$t('pagediy.productCategory'),
           activeValue: [],
           list: [],
           isMultiple: true,
@@ -443,20 +444,20 @@ export default {
           isShow: 0,
         }, //分类
         goodsSort: {
-          title: '商品排序',
+          title: this.$t('pagediy.productSort'),
           name: 'goodsSort',
           tabVal: 0,
           list: [
             {
-              val: '综合',
+              val: this.$t('pagediy.comprehensive'),
               icon: 'icon-zonghe',
             },
             {
-              val: '销量',
+              val: this.$t('pagediy.sales'),
               icon: 'icon-xiaoliang',
             },
             {
-              val: '价格',
+              val: this.$t('pagediy.price'),
               icon: 'icon-jiage',
             },
           ],
@@ -469,8 +470,8 @@ export default {
         },
         // 背景颜色
         bgColor: {
-          tabTitle: '颜色设置',
-          title: '背景颜色',
+          tabTitle: this.$t('pagediy.colorSettings'),
+          title: this.$t('pagediy.backgroundColor'),
           color: [
             {
               item: '#FFF',
@@ -489,7 +490,7 @@ export default {
           ],
         },
         titleColor: {
-          title: '商品标题颜色',
+          title: this.$t('pagediy.productTitleColor'),
           name: 'titleColor',
           color: [
             {
@@ -504,20 +505,20 @@ export default {
         },
         //色调
         themeStyleConfig: {
-          title: '色调',
+          title: this.$t('pagediy.colorTone'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '跟随主题风格',
+              val: this.$t('pagediy.followTheme'),
             },
             {
-              val: '自定义',
+              val: this.$t('pagediy.customStyle'),
             },
           ],
         },
         priceColor: {
-          title: '价格颜色',
+          title: this.$t('pagediy.priceColor'),
           name: 'priceColor',
           isShow: 0,
           default: [
@@ -532,7 +533,7 @@ export default {
           ],
         },
         soldColor: {
-          title: '已售数量颜色',
+          title: this.$t('pagediy.soldCountColor'),
           name: 'labelColor',
           color: [
             {
@@ -546,15 +547,15 @@ export default {
           ],
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         contentStyle: {
-          title: '内容圆角',
+          title: this.$t('pagediy.contentRadius'),
           name: 'contentStyle',
           val: 7,
           min: 0,
@@ -562,39 +563,39 @@ export default {
         },
         // 上间距
         upConfig: {
-          title: '上边距',
-          tabTitle: '边距设置',
+          title: this.$t('pagediy.topMargin'),
+          tabTitle: this.$t('pagediy.marginSettings'),
           val: 0,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          tabTitle: '边距设置',
-          title: '下边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.bottomMargin'),
           val: 0,
           min: 0,
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 15,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },
         contentConfig: {
-          title: '内容间距',
+          title: this.$t('pagediy.contentSpacing'),
           val: 10,
           min: 0,
           max: 20,
         },
         productList: {
-          title: '商品列表',
+          title: this.$t('pagediy.productList'),
           list: [],
         },
         goodsList: {
@@ -629,7 +630,7 @@ export default {
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
         this.itemStyle = data.itemStyle.tabVal || 0;
         this.contentConfig = data.contentConfig.val || 0;
         this.slider = data.mbConfig.val;

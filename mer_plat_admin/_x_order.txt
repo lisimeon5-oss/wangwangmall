@@ -1,0 +1,27 @@
+REUSE product.createTime | 创建时间
+REUSE order.orderNo | 订单编号
+REUSE order.orderStatus | 订单状态
+REUSE order.compulsoryRefund | 强制退款
+REUSE el.table.clearFilter | 全部
+REUSE order.mallOrder | 商城订单
+REUSE product.merchantName | 商户名称
+REUSE order.payPrice | 实际支付
+REUSE order.videoOrder | 视频号订单
+REUSE order.afterSalesType | 售后类型
+REUSE order.returnType | 退货类型
+REUSE order.refundOrderNo | 退款单号
+REUSE order.refundPrice | 退款金额
+REUSE order.refundStatus | 退款状态
+REUSE order.orderTime | 下单时间
+REUSE product.userNickname | 用户昵称
+REUSE order.payType | 支付方式
+NEW  | // +---------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +---------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +---------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +---------------------------------------------------------------------
+// | Author: CRMEB Team
+
+TOTAL unique: 18, NEW: 1

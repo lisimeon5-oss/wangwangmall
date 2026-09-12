@@ -10,6 +10,7 @@
 
 
 import request from "@/utils/request.js";
+import { getLocale } from '@/i18n';
 
 /**
  * 获取购物车数量
@@ -156,7 +157,7 @@ export function express(invoiceId) {
  *
  */
 export function ordeRefundReason() {
-	return request.get('refund/reason');
+	return request.get('refund/reason', { lang: getLocale() });
 }
 
 /**

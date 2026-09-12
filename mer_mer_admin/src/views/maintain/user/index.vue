@@ -2,48 +2,48 @@
   <div class="divBox">
     <el-card class="box-card" shadow="never" :bordered="false">
       <el-form ref="pram" :model="pram" :rules="rules" label-width="100px">
-        <el-form-item label="管理员账号：" prop="account">
-          <el-input v-model.trim="pram.account" class="from-ipt-width" placeholder="管理员账号" :disabled="true" />
+        <el-form-item :label="$t('maintain.adminAccountLabel')" prop="account">
+          <el-input v-model.trim="pram.account" class="from-ipt-width" :placeholder="$t('maintain.adminAccount')" :disabled="true" />
         </el-form-item>
-        <el-form-item label="管理员姓名：" prop="realName">
+        <el-form-item :label="$t('maintain.adminNameLabel')" prop="realName">
           <el-input
             :disabled="type === 'password'"
             v-model.trim="pram.realName"
             maxlength="16"
             class="from-ipt-width"
-            placeholder="管理员姓名"
+            :placeholder="$t('maintain.adminName')"
           />
         </el-form-item>
-        <el-form-item v-if="type === 'password'" label="原始密码：" prop="oldPassword">
+        <el-form-item v-if="type === 'password'" :label="$t('maintain.originalPasswordLabel')" prop="oldPassword">
           <el-input
             v-model.trim="pram.oldPassword"
             type="password"
             class="from-ipt-width"
-            placeholder="原始密码"
+            :placeholder="$t('maintain.originalPassword')"
             clearable
           />
         </el-form-item>
-        <el-form-item v-if="type === 'password'" label="新密码：" prop="password">
+        <el-form-item v-if="type === 'password'" :label="$t('maintain.newPasswordLabel')" prop="password">
           <el-input
             v-model.trim="pram.password"
             type="password"
             class="from-ipt-width"
-            placeholder="新密码"
+            :placeholder="$t('maintain.newPassword')"
             clearable
           />
         </el-form-item>
-        <el-form-item v-if="pram.password" label="确认新密码：" prop="confirmPassword">
+        <el-form-item v-if="pram.password" :label="$t('maintain.confirmNewPasswordLabel')" prop="confirmPassword">
           <el-input
             v-model.trim="pram.confirmPassword"
             class="from-ipt-width"
             type="password"
-            placeholder="确认新密码"
+            :placeholder="$t('maintain.confirmNewPassword')"
             clearable
           />
         </el-form-item>
         <el-form-item v-hasPermi="['merchant:login:admin:update:password', 'merchant:login:admin:update']">
-          <el-button type="primary" @click="handlerSubmit('pram')">提交</el-button>
-          <el-button @click="close('pram')">取消</el-button>
+          <el-button type="primary" @click="handlerSubmit('pram')">{{ $t('common.submit') }}</el-button>
+          <el-button @click="close('pram')">{{ $t('common.cancel') }}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -70,16 +70,16 @@ export default {
   data() {
     const confirmvalidatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'));
+        callback(new Error(this.$t('maintain.pleaseReenterPassword')));
       } else if (value !== this.pram.password) {
-        callback(new Error('两次输入密码不一致!'));
+        callback(new Error(this.$t('maintain.passwordMismatch')));
       } else {
         callback();
       }
     };
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入新密码'));
+        callback(new Error(this.$t('maintain.pleaseEnterNewPassword')));
       } else {
         if (this.pram.confirmPassword !== '') {
           this.$refs.pram.validateField('confirmPassword');
@@ -101,14 +101,14 @@ export default {
       },
       roleList: [],
       rules: {
-        account: [{ required: true, message: '请填写管理员账号', trigger: ['blur', 'change'] }],
-        oldPassword: [{ required: true, message: '请填写原始密码', trigger: ['blur', 'change'] }],
+        account: [{ required: true, message: this.$t('maintain.pleaseEnterAdminAccount'), trigger: ['blur', 'change'] }],
+        oldPassword: [{ required: true, message: this.$t('maintain.pleaseEnterOriginalPassword'), trigger: ['blur', 'change'] }],
         password: [
           { required: true, validator: validatePass, trigger: 'blur' },
-          { required: true, min: 6, max: 20, message: '长度6-20个字符' },
+          { required: true, min: 6, max: 20, message: this.$t('maintain.passwordLength6to20') },
         ],
         confirmPassword: [{ required: true, validator: confirmvalidatePass, trigger: ['blur', 'change'] }],
-        realName: [{ required: true, message: '管理员姓名', trigger: ['blur', 'change'] }],
+        realName: [{ required: true, message: this.$t('maintain.adminName'), trigger: ['blur', 'change'] }],
       },
       type: 'users', //个人中心还是修改密码
     };
@@ -131,7 +131,7 @@ export default {
     checkPermi,
     //设置头部标题
     setTagsViewTitle() {
-      const title = this.type === 'password' ? '修改密码' : '个人中心';
+      const title = this.type === 'password' ? this.$t('maintain.modifyPassword') : this.$t('maintain.personalCenter');
       const route = Object.assign({}, this.tempRoute, { title: `${title}` });
       this.$store.dispatch('tagsView/updateVisitedView', route);
     },
@@ -154,14 +154,14 @@ export default {
     //保存密码
     onSavePassword() {
       systemAdminApi.adminPasswordUpdate(this.pram).then((data) => {
-        this.$message.success('提交成功');
+        this.$message.success(this.$t('user.submitSuccess'));
         this.$router.go(-1);
       });
     },
     //保存账号
     onSaveAccount() {
       systemAdminApi.adminAccountUpdate(this.pram).then((data) => {
-        this.$message.success('提交成功');
+        this.$message.success(this.$t('user.submitSuccess'));
         this.$router.go(-1);
       });
     },

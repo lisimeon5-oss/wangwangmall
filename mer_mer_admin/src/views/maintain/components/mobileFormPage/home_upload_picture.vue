@@ -25,7 +25,7 @@
 import { mapState } from 'vuex';
 export default {
   name: 'home_upload_picture',
-  cname: '图片',
+  cname: 'upload.image',
   icon: 'icon-biaodanzujian-tupian',
   configName: 'c_upload_picture',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -69,22 +69,22 @@ export default {
         name: 'uploadPicture',
         timestamp: this.num,
         titleConfig: {
-          title: '标题',
-          val: '上传图片',
-          place: '请输入标题',
+          title: this.$t('formGenerator.title'),
+          val: this.$t('upload.uploadImage'),
+          place: this.$t('formGenerator.pleaseEnterTitle'),
           max: 20,
           type: 'form',
           isShow: 1,
         },
         numConfig: {
           val: 8,
-          title: '最多上传',
+          title: this.$t('maintain.maxUpload'),
           type: 'form',
           isShow: 1,
           max: 10,
         },
         titleShow: {
-          title: '是否必填',
+          title: this.$t('formGenerator.required'),
           val: true,
           type: 'form',
         },

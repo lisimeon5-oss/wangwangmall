@@ -1,27 +1,27 @@
 <template>
   <div class="layout-navbars-breadcrumb-user-news">
     <div class="head-box">
-      <div class="head-box-title">系统通知</div>
-      <!-- <div class="head-box-btn" v-if="newsList.length > 0" @click="onAllReadClick">全部已读</div> -->
+      <div class="head-box-title">{{ translateText("系统通知") }}</div>
+      <!-- <div class="head-box-btn" v-if="newsList.length > 0" @click="onAllReadClick">{{ translateText("全部已读") }}</div> -->
     </div>
     <div class="content-box">
       <template v-if="newsList.length > 0">
         <div class="content-box-item" v-for="(v, k) in newsList" :key="k" @click="jumpUrl(v.url)">
           <div class="content-box-right">
-            <div class="content-box-type">{{ v.title }}</div>
+            <div class="content-box-type">{{ translateText(v.title) }}</div>
             <div class="content-box-msg">
-              {{ v.message }}
+              {{ translateText(v.message) }}
             </div>
           </div>
         </div>
         <div v-if="list.length > 3 && list.length != newsList.length" class="moreBtn" @click="newsList = list">
-          展开全部<span class="el-icon-arrow-down"></span>
+          {{ translateText('展开全部') }}<span class="el-icon-arrow-down"></span>
         </div>
       </template>
       <div class="content-box-empty" v-else>
         <div class="content-box-empty-margin">
           <img class="no-msg" src="@/assets/imgs/no-message.png" alt="" />
-          <div class="mt15">暂无系统通知</div>
+          <div class="mt15">{{ translateText('暂无系统通知') }}</div>
         </div>
       </div>
     </div>

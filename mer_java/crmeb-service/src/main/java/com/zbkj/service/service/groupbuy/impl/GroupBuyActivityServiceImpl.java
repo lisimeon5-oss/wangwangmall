@@ -31,6 +31,8 @@ import com.zbkj.common.response.AttrValueResponse;
 import com.zbkj.common.response.ProductInfoResponse;
 import com.zbkj.common.response.groupbuy.*;
 import com.zbkj.common.result.CommonResultCode;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.I18nSearchUtil;
 import com.zbkj.common.utils.CrmebDateUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.service.dao.groupby.GroupBuyActivityDao;
@@ -96,8 +98,8 @@ public class GroupBuyActivityServiceImpl extends ServiceImpl<GroupBuyActivityDao
         if (admin.getType().equals(RoleEnum.SUPER_MERCHANT.getValue()) || admin.getType().equals(RoleEnum.MERCHANT_ADMIN.getValue())) {
             lambdaQueryWrapper.eq(GroupBuyActivity::getMerId, admin.getMerId());
         }
-        if (ObjectUtil.isNotEmpty(request.getGroupName().trim())) {
-            lambdaQueryWrapper.like(GroupBuyActivity::getGroupName, URLUtil.decode(request.getGroupName().trim()));
+        if (ObjectUtil.isNotEmpty(request.getGroupName()) && ObjectUtil.isNotEmpty(request.getGroupName().trim())) {
+            I18nSearchUtil.likeName(lambdaQueryWrapper, GroupBuyActivity::getGroupName, GroupBuyActivity::getGroupNameJson, URLUtil.decode(request.getGroupName().trim()));
         }
         // 活动进程 活动进程  0=未开始 1=进行中 2=已结束
         if (ObjectUtil.isNotEmpty(request.getGroupProcess())) {
@@ -164,6 +166,7 @@ public class GroupBuyActivityServiceImpl extends ServiceImpl<GroupBuyActivityDao
             groupBuyActivityResponses.add(groupBuyActivityResponse);
             return null;
         }).collect(Collectors.toList());
+        fillMerchantNameJson(groupBuyActivityResponses);
         return CommonPage.copyPageInfo(activityGroupPage, groupBuyActivityResponses);
     }
 
@@ -201,9 +204,9 @@ public class GroupBuyActivityServiceImpl extends ServiceImpl<GroupBuyActivityDao
             if (StrUtil.isNotBlank(request.getMerName())) {
                 queryWrapper.like(GroupBuyActivity::getMerName, URLUtil.decode(request.getMerName()));
             }
-            if (StrUtil.isNotBlank(request.getGroupName().trim())) {
+            if (StrUtil.isNotBlank(request.getGroupName()) && StrUtil.isNotBlank(request.getGroupName().trim())) {
                 String groupNameDecode = URLUtil.decode(request.getGroupName().trim());
-                queryWrapper.like(GroupBuyActivity::getGroupName, groupNameDecode);
+                I18nSearchUtil.likeName(queryWrapper, GroupBuyActivity::getGroupName, GroupBuyActivity::getGroupNameJson, groupNameDecode);
             }
             // 活动进程 活动进程  0=未开始 1=进行中 2=已结束
             if (ObjectUtil.isNotEmpty(request.getGroupProcess())) {
@@ -354,6 +357,7 @@ public class GroupBuyActivityServiceImpl extends ServiceImpl<GroupBuyActivityDao
         // set 拼团活动数据
         GroupBuyActivityResponse groupBuyActivityResponse = new GroupBuyActivityResponse();
         BeanUtils.copyProperties(groupBuyActivity, groupBuyActivityResponse);
+        fillMerchantNameJson(groupBuyActivityResponse);
 
         // 获取当前拼团下所有的sku列表
         List<GroupBuyActivitySku> groupBuyActivitySkuList = groupBuyActivitySkuService.getListByGroupActivityId(id);
@@ -395,7 +399,9 @@ public class GroupBuyActivityServiceImpl extends ServiceImpl<GroupBuyActivityDao
             GroupBuyActivityProductResponse groupBuyActivityProductResponse = new GroupBuyActivityProductResponse();
             groupBuyActivityProductResponse.setProductId(productId);
             groupBuyActivityProductResponse.setProductName(productInfoResponse.getName());
+            groupBuyActivityProductResponse.setProductNameJson(productInfoResponse.getNameJson());
             groupBuyActivityProductResponse.setImage(productInfoResponse.getImage());
+            groupBuyActivityProductResponse.setAttrList(productInfoResponse.getAttrList());
             groupBuyActivityProductResponse.setGroupBuyActivitySkuResponses(groupBuyActivitySkuResponseList);
             groupBuyActivityProductResponseList.add(groupBuyActivityProductResponse);
         }
@@ -621,12 +627,13 @@ public class GroupBuyActivityServiceImpl extends ServiceImpl<GroupBuyActivityDao
 
                 Product product = productService.getById(groupBuyActivitySku.getProductId());
                 ProductAttrValue attrValue = productAttrValueService.getById(groupBuyActivitySku.getSkuId());
+                String localizedProductName = I18nJsonUtil.resolveByRequest(product.getName(), product.getNameJson());
 
                 AttrValueResponse attrValueResponse = new AttrValueResponse();
                 BeanUtils.copyProperties(attrValue, attrValueResponse);
 
                 // 商品基础的sku 信息
-                skuResponse.setProductName(product.getName());
+                skuResponse.setProductName(localizedProductName);
                 List<AttrValueResponse> attrValueResponseList = new ArrayList<>();
                 attrValueResponse.setPrice(attrValue.getPrice());
                 attrValueResponseList.add(attrValueResponse);
@@ -635,7 +642,8 @@ public class GroupBuyActivityServiceImpl extends ServiceImpl<GroupBuyActivityDao
                 skuResponse.setLatestBuyCount(groupBuyUserService.getOrderDoneCountByProductIdAndActivityId(groupBuyActivitySku.getProductId(), groupBuyActivity.getId()));
 
                 productResponse.setProductId(groupBuyActivitySku.getProductId());
-                productResponse.setProductName(product.getName());
+                productResponse.setProductName(localizedProductName);
+                productResponse.setProductNameJson(product.getNameJson());
                 productResponse.setImage(product.getImage());
 
                 skuResponses.add(skuResponse);
@@ -690,12 +698,13 @@ public class GroupBuyActivityServiceImpl extends ServiceImpl<GroupBuyActivityDao
 
                 Product product = productService.getById(groupBuyActivitySku.getProductId());
                 ProductAttrValue attrValue = productAttrValueService.getById(groupBuyActivitySku.getSkuId());
+                String localizedProductName = I18nJsonUtil.resolveByRequest(product.getName(), product.getNameJson());
 
                 AttrValueResponse attrValueResponse = new AttrValueResponse();
                 BeanUtils.copyProperties(attrValue, attrValueResponse);
 
                 // 商品基础的sku 信息
-                skuResponse.setProductName(product.getName());
+                skuResponse.setProductName(localizedProductName);
                 List<AttrValueResponse> attrValueResponseList = new ArrayList<>();
                 attrValueResponse.setPrice(attrValue.getPrice());
                 attrValueResponseList.add(attrValueResponse);
@@ -704,7 +713,8 @@ public class GroupBuyActivityServiceImpl extends ServiceImpl<GroupBuyActivityDao
                 skuResponse.setLatestBuyCount(groupBuyUserService.getOrderDoneCountByProductIdAndActivityId(groupBuyActivitySku.getProductId(), groupBuyActivity.getId()));
 
                 productResponse.setProductId(groupBuyActivitySku.getProductId());
-                productResponse.setProductName(product.getName());
+                productResponse.setProductName(localizedProductName);
+                productResponse.setProductNameJson(product.getNameJson());
                 productResponse.setImage(product.getImage());
 
                 skuResponses.add(skuResponse);
@@ -733,6 +743,37 @@ public class GroupBuyActivityServiceImpl extends ServiceImpl<GroupBuyActivityDao
     }
 
     //////////////////////////////////////////////////////////////////// 以下为工具方法
+
+    private void fillMerchantNameJson(GroupBuyActivityResponse response) {
+        if (response == null || response.getMerId() == null) {
+            return;
+        }
+        Merchant merchant = merchantService.getById(response.getMerId());
+        if (merchant != null) {
+            response.setMerNameJson(merchant.getNameJson());
+        }
+    }
+
+    private void fillMerchantNameJson(List<GroupBuyActivityResponse> list) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        List<Integer> merIdList = list.stream()
+                .map(GroupBuyActivityResponse::getMerId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        if (merIdList.isEmpty()) {
+            return;
+        }
+        Map<Integer, Merchant> merchantMap = merchantService.getMerIdMapByIdList(merIdList);
+        for (GroupBuyActivityResponse item : list) {
+            Merchant merchant = merchantMap.get(item.getMerId());
+            if (merchant != null) {
+                item.setMerNameJson(merchant.getNameJson());
+            }
+        }
+    }
 
     /**
      * 拼团商品必要时的验证

@@ -44,7 +44,7 @@
 			<view class="dialog_nav_item" v-for="(item,index) in selectNavList" :key="index"
 				@click="linkPage(item.url)">
 				<text class="iconfont" :class="item.icon"></text>
-				<text class="pl-20">{{item.name}}</text>
+				<text class="pl-20">{{$t(item.name)}}</text>
 			</view>
 		</view>
 		<view v-if="isHeight" :style="{ height: `${navH}rpx` }"></view>

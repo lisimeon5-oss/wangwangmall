@@ -1,19 +1,19 @@
 <template>
 	<view class="goods-list">
 		<!-- #ifdef MP || APP-PLUS -->
-		<NavBar titleText="商品管理" bagColor="#F5F5F5" :iconColor="iconColor" :textColor="iconColor"
+		<NavBar :titleText="$t('商品管理')" bagColor="#F5F5F5" :iconColor="iconColor" :textColor="iconColor"
 			:isScrolling="isScrolling" showBack></NavBar>
 		<!-- #endif -->
 		<view class="searchCon acea-row row-between-wrapper">
 			<view class="search acea-row row-middle">
 				<text class="iconfont icon-ic_search"></text>
-				<input class="inputs" placeholder='请输入商品名称/关键字' placeholder-class='placeholder' confirm-type='search'
+				<input class="inputs" :placeholder="$t('请输入商品名称/关键字')" placeholder-class='placeholder' confirm-type='search'
 					name="search" v-model="keyword" @confirm="searchSubmit"></input>
 			</view>
 			<view class="edit acea-row row-center-wrapper" @click="filtrate">
 				<text class="iconfont icon-a-icon_filter1x"></text>
 			</view>
-			<view @click="manageTap" v-if="administer">取消</view>
+			<view @click="manageTap" v-if="administer">{{$t('取消')}}</view>
 			<view class="edit acea-row row-center-wrapper" @click="manageTap" v-else>
 				<text class="iconfont icon-ic_batch"></text>
 			</view>
@@ -49,7 +49,7 @@
 								<view class="item_header-type"><text class="iconfont icon-color"
 										:class="goods_type_icon[item.type]"></text>{{goods_type[item.type]}}
 								</view>
-								<view class="item_header_right">{{item.isShow?'已上架':'未上架'}}</view>
+								<view class="item_header_right">{{item.isShow? $t('已上架') : $t('未上架')}}</view>
 							</view>
 							<view class="top acea-row row-center-wrapper" @tap="priceNum(item.id,item.type)">
 								<view class="pictrue">
@@ -58,8 +58,8 @@
 								<view class="text">
 									<view class="name line1">{{item.name}}</view>
 									<view class="info">
-										<text>销量: {{item.sales}}</text>
-										<text>库存: {{item.stock}}</text>
+										<text>{{$t('销量')}}: {{item.sales}}</text>
+										<text>{{$t('库存')}}: {{item.stock}}</text>
 									</view>
 									<view class="acea-row svip-box">
 										<baseMoney :money="item.price" symbolSize="20" integerSize="32" decimalSize="20"
@@ -77,71 +77,71 @@
 							</view>
 							<view class="bottom acea-row row-right" v-if="!administer&&type==1">
 								<view class="bnt acea-row row-center-wrapper" :class="item.isShow?'':'up'"
-									@click="setUpDown(item.isShow,item.id)">{{item.isShow?'下架':'上架'}}</view>
+									@click="setUpDown(item.isShow,item.id)">{{item.isShow? $t('下架') : $t('上架')}}</view>
 								<!-- <view class="bnt on acea-row row-center-wrapper" v-if="item.type!=6"
-									@click="addNum(item.id)">增加库存</view> -->
+									@click="addNum(item.id)">{{$t('增加库存')}}</view> -->
 									<view class="bnt on  acea-row row-center-wrapper" v-if="item.type!=6"
-										@click="priceNum(item.id)">价格库存</view>
+										@click="priceNum(item.id)">{{$t('价格库存')}}</view>
 							</view>
 							<view class="bottom acea-row row-right" v-if="!administer&&(type==2||type==3||type==4)">
-								<!-- <view class="bnt acea-row row-center-wrapper" @click="editClass(item.id)">修改分类</view> -->
+								<!-- <view class="bnt acea-row row-center-wrapper" @click="editClass(item.id)">{{$t('修改分类')}}</view> -->
 								<view class="bnt  acea-row row-center-wrapper" v-if="item.type!=6"
-									@click="priceNum(item.id)">价格库存</view>
+									@click="priceNum(item.id)">{{$t('价格库存')}}</view>
 								<!-- <view class="bnt  acea-row row-center-wrapper" v-if="item.type!=6&&item.isShow"
-									@click="addNum(item.id)">增加库存</view> -->
+									@click="addNum(item.id)">{{$t('增加库存')}}</view> -->
 								<view class="bnt on acea-row row-center-wrapper"
-									@click="setUpDown(item.isShow,item.id)">{{item.isShow?'下架':'上架'}}</view>
+									@click="setUpDown(item.isShow,item.id)">{{item.isShow? $t('下架') : $t('上架')}}</view>
 							</view>
 							<view class="bottom acea-row row-right" v-if="!administer&&type==8">
-								<view class="bnt acea-row row-center-wrapper" @click="hsToggle('center',item.id)">加入回收站
+								<view class="bnt acea-row row-center-wrapper" @click="hsToggle('center',item.id)">{{$t('加入回收站')}}
 								</view>
 								<view class="bnt  acea-row row-center-wrapper" v-if="item.type!=6"
-									@click="priceNum(item.id)">价格库存</view>
-								<view class="bnt on acea-row row-center-wrapper" @click="shToggle(item.id)">提交审核</view>
+									@click="priceNum(item.id)">{{$t('价格库存')}}</view>
+								<view class="bnt on acea-row row-center-wrapper" @click="shToggle(item.id)">{{$t('提交审核')}}</view>
 							</view>
 							<view class="bottom acea-row row-right" v-if="!administer&&(type==6||type==7)">
-								<view class="bnt acea-row row-center-wrapper" @click="hsToggle('center',item.id)">加入回收站
+								<view class="bnt acea-row row-center-wrapper" @click="hsToggle('center',item.id)">{{$t('加入回收站')}}
 								</view>
 							</view>
 							<view class="bottom acea-row row-right" v-if="!administer&&type==5">
-								<view class="bnt acea-row row-center-wrapper" @click="toDelete(item.id)">删除</view>
-								<view class="bnt on acea-row row-center-wrapper" @click="toRestore(item.id)">恢复商品</view>
+								<view class="bnt acea-row row-center-wrapper" @click="toDelete(item.id)">{{$t('删除')}}</view>
+								<view class="bnt on acea-row row-center-wrapper" @click="toRestore(item.id)">{{$t('恢复商品')}}</view>
 							</view>
 						</view>
 					</view>
 				</checkbox-group>
 			</view>
 			<view class="empty-box" v-if="goodsList.length == 0 && !loading">
-				<emptyPage title="暂无商品～" :imgSrc="urlDomain+'crmebimage/presets/noShopper.png'"></emptyPage>
+				<emptyPage :title="$t('暂无商品～')" :imgSrc="urlDomain+'crmebimage/presets/noShopper.png'"></emptyPage>
 			</view>
 			<Loading :loaded="loadend" :loading="loading"></Loading>
 			<view class="footerH"></view>
 			<view class="footer acea-row row-between-wrapper" v-if="administer">
 				<checkbox-group @change="checkboxAllChange">
 					<checkbox value="all" :checked="isAllSelect" />
-					<text class='checkAll'>全选({{getIds().length}})</text>
+					<text class='checkAll'>{{$t('全选')}}({{getIds().length}})</text>
 				</checkbox-group>
 				<view class="acea-row row-middle" v-if="type == 1">
-					<view class="bnt acea-row row-center-wrapper" @click="setShow('',1,0)">批量下架</view>
+					<view class="bnt acea-row row-center-wrapper" @click="setShow('',1,0)">{{$t('批量下架')}}</view>
 				</view>
 				<view class="acea-row row-middle" v-if="type == 2">
-					<view class="bnt acea-row row-center-wrapper" @click="toRecycleAll('',1,1)">加入回收站</view>
-					<view class="bnt acea-row row-center-wrapper" @click="setShow('',1,1)">批量上架</view>
+					<view class="bnt acea-row row-center-wrapper" @click="toRecycleAll('',1,1)">{{$t('加入回收站')}}</view>
+					<view class="bnt acea-row row-center-wrapper" @click="setShow('',1,1)">{{$t('批量上架')}}</view>
 				</view>
 				<view class="acea-row row-middle" v-if="(type == 3||type == 4)">
-					<view class="bnt acea-row row-center-wrapper" @click="setShow('',1,0)">批量下架</view>
-					<view class="bnt acea-row row-center-wrapper" @click="setShow('',1,1)">批量上架</view>
+					<view class="bnt acea-row row-center-wrapper" @click="setShow('',1,0)">{{$t('批量下架')}}</view>
+					<view class="bnt acea-row row-center-wrapper" @click="setShow('',1,1)">{{$t('批量上架')}}</view>
 				</view>
 				<view class="acea-row row-middle" v-if="type == 8">
-					<view class="bnt acea-row row-center-wrapper" @click="toRecycleAll('',1,1)">加入回收站</view>
-					<view class="bnt acea-row row-center-wrapper" @click="shToggleAll">批量提审</view>
+					<view class="bnt acea-row row-center-wrapper" @click="toRecycleAll('',1,1)">{{$t('加入回收站')}}</view>
+					<view class="bnt acea-row row-center-wrapper" @click="shToggleAll">{{$t('批量提审')}}</view>
 				</view>
 				<view class="acea-row row-middle" v-if="type == 6||type ==7">
-					<view class="bnt acea-row row-center-wrapper" @click="toRecycleAll('',1,1)">加入回收站</view>
+					<view class="bnt acea-row row-center-wrapper" @click="toRecycleAll('',1,1)">{{$t('加入回收站')}}</view>
 				</view>
 				<view class="acea-row row-middle" v-if="type == 5">
-					<view class="bnt acea-row row-center-wrapper" @click="toDeleteAll">批量删除</view>
-					<view class="bnt acea-row row-center-wrapper" @click="toRestoreAll('',1,1)">恢复商品</view>
+					<view class="bnt acea-row row-center-wrapper" @click="toDeleteAll">{{$t('批量删除')}}</view>
+					<view class="bnt acea-row row-center-wrapper" @click="toRestoreAll('',1,1)">{{$t('恢复商品')}}</view>
 				</view>
 			</view>
 			<footer-page></footer-page>
@@ -162,14 +162,14 @@
 				<view class="sh_popup-content"
 					:class="{ 'popup-height': popup_center === 'left' || popup_center === 'right' }">
 					<view class="sh_popup_title">
-						提交审核
+						{{$t('提交审核')}}
 					</view>
 					<view class="sh_popup_text">
-						你确定要将选中商品提交审核吗？
+						{{$t('你确定要将选中商品提交审核吗？')}}
 					</view>
 					<view class="sh_popup_btn">
-						<view class="no_btn btn" @click="shPopupClose">取消</view>
-						<view class="yes_btn btn" @click="toAudit">确认</view>
+						<view class="no_btn btn" @click="shPopupClose">{{$t('取消')}}</view>
+						<view class="yes_btn btn" @click="toAudit">{{$t('确认')}}</view>
 					</view>
 				</view>
 			</uni-popup>
@@ -178,14 +178,14 @@
 				<view class="sh_popup-content"
 					:class="{ 'popup-height': popup_center === 'left' || popup_center === 'right' }">
 					<view class="sh_popup_title">
-						加入回收站
+						{{$t('加入回收站')}}
 					</view>
 					<view class="sh_popup_text">
-						你确定要将选中商品加入回收站吗？
+						{{$t('你确定要将选中商品加入回收站吗？')}}
 					</view>
 					<view class="sh_popup_btn">
-						<view class="no_btn btn" @click="hsPopupClose">取消</view>
-						<view class="yes_btn btn" @click="toRecycle">确认</view>
+						<view class="no_btn btn" @click="hsPopupClose">{{$t('取消')}}</view>
+						<view class="yes_btn btn" @click="toRecycle">{{$t('确认')}}</view>
 					</view>
 				</view>
 			</uni-popup>
@@ -194,14 +194,14 @@
 				<view class="sh_popup-content"
 					:class="{ 'popup-height': popup_center === 'left' || popup_center === 'right' }">
 					<view class="sh_popup_title">
-						恢复商品
+						{{$t('恢复商品')}}
 					</view>
 					<view class="sh_popup_text">
-						你确定要将选中商品恢复吗？
+						{{$t('你确定要将选中商品恢复吗？')}}
 					</view>
 					<view class="sh_popup_btn">
-						<view class="no_btn btn" @click="hfPopupClose">取消</view>
-						<view class="yes_btn btn" @click="toRestoreBtn">确认</view>
+						<view class="no_btn btn" @click="hfPopupClose">{{$t('取消')}}</view>
+						<view class="yes_btn btn" @click="toRestoreBtn">{{$t('确认')}}</view>
 					</view>
 				</view>
 			</uni-popup>
@@ -210,14 +210,14 @@
 				<view class="sh_popup-content"
 					:class="{ 'popup-height': popup_center === 'left' || popup_center === 'right' }">
 					<view class="sh_popup_title">
-						删除商品
+						{{$t('删除商品')}}
 					</view>
 					<view class="sh_popup_text">
-						你确定要将选中商品删除吗？
+						{{$t('你确定要将选中商品删除吗？')}}
 					</view>
 					<view class="sh_popup_btn">
-						<view class="no_btn btn" @click="scPopupClose">取消</view>
-						<view class="yes_btn btn" @click="toDeleteBtn">确认</view>
+						<view class="no_btn btn" @click="scPopupClose">{{$t('取消')}}</view>
+						<view class="yes_btn btn" @click="toDeleteBtn">{{$t('确认')}}</view>
 					</view>
 				</view>
 			</uni-popup>
@@ -416,7 +416,7 @@
 			priceNum(id,type) {
 				if(type==6){
 					return this.$util.Tips({
-						title: '卡密商品无法查看'
+						title: this.$t('卡密商品无法查看')
 					});
 				}
 				uni.navigateTo({
@@ -457,7 +457,7 @@
 				if (num) {
 					if (!this.getIds().length) {
 						this.$util.Tips({
-							title: '请选择商品'
+							title: this.$t('请选择商品')
 						});
 						return
 					}
@@ -477,7 +477,7 @@
 					}).then(res => {
 						if (res.code == 200) {
 							this.$util.Tips({
-								title: '下架成功'
+								title: this.$t('下架成功')
 							})
 							this.init()
 						}
@@ -488,7 +488,7 @@
 					}).then(res => {
 						if (res.code == 200) {
 							this.$util.Tips({
-								title: '上架成功'
+								title: this.$t('上架成功')
 							})
 							this.init()
 						}
@@ -599,7 +599,7 @@
 			toRecycleAll(item, num, type) {
 				if (!this.getIds().length) {
 					this.$util.Tips({
-						title: '请选择商品'
+						title: this.$t('请选择商品')
 					});
 					return
 				} else {
@@ -617,7 +617,7 @@
 			toRestoreAll(item, num, type) {
 				if (!this.getIds().length) {
 					this.$util.Tips({
-						title: '请选择商品'
+						title: this.$t('请选择商品')
 					});
 					return
 				}
@@ -634,7 +634,7 @@
 			toDeleteAll() {
 				if (!this.getIds().length) {
 					this.$util.Tips({
-						title: '请选择商品'
+						title: this.$t('请选择商品')
 					});
 					return
 				}
@@ -645,7 +645,7 @@
 			shToggleAll() {
 				if (!this.getIds().length) {
 					this.$util.Tips({
-						title: '请选择商品'
+						title: this.$t('请选择商品')
 					});
 					return
 				}
@@ -658,7 +658,7 @@
 					employeeProductUp(id).then(res => {
 						if (res.code == 200) {
 							this.$util.Tips({
-								title: '上架成功'
+								title: this.$t('上架成功')
 							})
 							this.init()
 						}
@@ -667,7 +667,7 @@
 					employeeProductDown(id).then(res => {
 						if (res.code == 200) {
 							this.$util.Tips({
-								title: '下架成功'
+								title: this.$t('下架成功')
 							})
 							this.init()
 						}
@@ -798,7 +798,7 @@
 				if (value.length) {
 					if (this.goodsList.length > 100) {
 						this.$util.Tips({
-							title: '每次最多只提交100条数据'
+							title: this.$t('每次最多只提交100条数据')
 						});
 					}
 					this.isAllSelect = true;
@@ -816,23 +816,23 @@
 </script>
 
 <style lang="scss" scoped>
-	/deep/checkbox .uni-checkbox-input.uni-checkbox-input-checked {
+	::v-deep checkbox .uni-checkbox-input.uni-checkbox-input-checked {
 		border-color: #2A7EFB !important;
 		background-color: #2A7EFB !important;
 		color: #fff !important;
 	}
 
-	/deep/checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+	::v-deep checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 		border: 1px solid #2A7EFB !important;
 		background-color: #2A7EFB !important;
 		color: #fff !important;
 	}
 
-	/deep/uni-checkbox .uni-checkbox-input {
+	::v-deep uni-checkbox .uni-checkbox-input {
 		margin-top: -4rpx;
 	}
 
-	/deep/checkbox:not([disabled]) .uni-checkbox-input:hover {
+	::v-deep checkbox:not([disabled]) .uni-checkbox-input:hover {
 		border-color: #d1d1d1 !important;
 	}
 
@@ -952,12 +952,12 @@
 			padding-bottom: 20rpx;
 			padding: 0 20rpx 20rpx 20rpx;
 
-			/deep/uni-checkbox .uni-checkbox-input {
+			::v-deep uni-checkbox .uni-checkbox-input {
 				background-color: #f5f5f5;
 				margin: 0 20rpx 20rpx 0;
 			}
 
-			/deep/wx-checkbox .wx-checkbox-input {
+			::v-deep wx-checkbox .wx-checkbox-input {
 				background-color: #f5f5f5;
 				margin: 0 20rpx 20rpx 0;
 			}
@@ -1121,7 +1121,7 @@
 		}
 	}
 
-	/deep/ .uni-popup__wrapper {
+	::v-deep  .uni-popup__wrapper {
 		width: 600rpx;
 		height: 310rpx;
 		background: #FFFFFF;

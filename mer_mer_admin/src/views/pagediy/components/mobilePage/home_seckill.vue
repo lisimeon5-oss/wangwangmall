@@ -5,10 +5,10 @@
       <div class="title acea-row row-between-wrapper">
         <div class="acea-row row-middle">
           <div class="pictrue skeleton-rect">
-            <el-image :src="src" class="image"></el-image>
+            <el-image :src="logoSrc" class="image"></el-image>
           </div>
           <div class="lines"></div>
-          <div class="point skeleton-rect" :style="titleColor">{{ configObj.titleConfig.val }}</div>
+          <div class="point skeleton-rect" :style="titleColor">{{ titleDisplay }}</div>
         </div>
         <div class="more acea-row row-center-wrapper skeleton-rect">GO<span class="iconfont icon-xuanze"></span></div>
       </div>
@@ -20,9 +20,9 @@
                 <!--<el-image :src="item.image" :style="contentStyle" mode="aspectFill"></el-image>-->
                 <div class="empty-box" :style="contentStyle"><span class="iconfont icon-tu"></span></div>
               </div>
-              <div v-show="nameShow" class="name line1 skeleton-rect" :style="nameColor">{{ item.name }}</div>
+              <div v-show="nameShow" class="name line1 skeleton-rect" :style="nameColor">{{ diyUiText(item.name) }}</div>
               <div v-show="priceShow" class="x_money line1 skeleton-rect semiBold" :style="priceColor">
-                ¥<span class="num">{{ item.price }}</span>
+                ฿<span class="num">{{ item.price }}</span>
               </div>
             </div>
           </div>
@@ -36,11 +36,11 @@
           </div>
           <div class="text-info text-add acea-row row-column row-between">
             <div v-show="nameShow">
-              <div class="title line2" :style="nameColor">{{ item.name }}</div>
+              <div class="title line2" :style="nameColor">{{ diyUiText(item.name) }}</div>
             </div>
             <div v-show="priceShow" class="price semiBold" :style="priceColor">
               <div>
-                <span>￥</span>
+                <span>฿</span>
                 {{ item.price }}
               </div>
             </div>
@@ -62,9 +62,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapGetters } from 'vuex';
+import { diyCname, mergeDiyUiLabels, diyUiText } from '@/utils/diyCname';
+import { getFormLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'home_seckill',
-  cname: '秒杀',
+  ...diyCname('order.spike'),
   icon: 't-icon-zujian-miaosha',
   configName: 'c_home_seckill',
   type: 1, // 0 基础组件 1 营销组件 2工具组件
@@ -136,6 +138,27 @@ export default {
         return false;
       }
     },
+    previewLang() {
+      return (this.configObj && this.configObj.diyMediaLang) || getUiLocale(this);
+    },
+    logoSrc() {
+      if (!this.configObj || !this.configObj.logoConfig) return '';
+      const preset = (this.mediaDomain || localStorage.getItem('mediaDomain') || '') + '/crmebimage/presets/seckillTitle.png';
+      const picked = getFormLocalizedText(
+        this.configObj.logoConfig.url,
+        this.configObj.logoConfig.urlJson,
+        this.previewLang,
+      );
+      if (picked) return picked;
+      if (this.previewLang === 'zh-cn') return this.configObj.logoConfig.url || preset;
+      return '';
+    },
+    titleDisplay() {
+      if (!this.configObj || !this.configObj.titleConfig) return '';
+      return diyUiText(
+        getFormLocalizedText(this.configObj.titleConfig.val, this.configObj.titleConfig.valJson, this.previewLang),
+      );
+    },
   },
   watch: {
     pageData: {
@@ -172,65 +195,67 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '秒杀',
+          cname: this.$t('order.spike'),
         },
         tabConfig: {
-          title: '展示样式',
-          tabTitle: '布局设置',
+          title: this.$t('pagediy.displayStyle'),
+          tabTitle: this.$t('pagediy.layoutSettings'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '样式1',
+              val: this.$t('pagediy.styleOne'),
               icon: 'icon-yangshiyi',
             },
             {
-              val: '样式2',
+              val: this.$t('pagediy.styleTwo'),
               icon: 'icon-yangshier',
             },
           ],
         },
         logoConfig: {
           isShow: 1,
-          tabTitle: '图标设置',
-          title: '上传图标',
-          tips: '建议：124px*32px',
+          tabTitle: this.$t('pagediy.iconSettings'),
+          title: this.$t('pagediy.uploadIcon'),
+          tips: this.$t('pagediy.suggestIconSize124'),
           url: localStorage.getItem('mediaDomain') + '/crmebimage/presets/seckillTitle.png',
+          urlJson: '',
         },
         titleConfig: {
-          tabTitle: '标题设置',
-          title: '标题内容',
+          tabTitle: this.$t('pagediy.titleSettings'),
+          title: this.$t('pagediy.titleContent'),
           val: '邀请你的好友来参与',
-          place: '请输入标题',
+          valJson: '',
+          place: this.$t('pagediy.pleaseEnterTitle'),
           isShow: 1,
           max: 15,
         },
         // linkConfig: {
-        //   title: '更多链接',
+        //   title: this.$t('pagediy.moreLink'),
         //   val: '/pages/activity/mer-good-seckill/index',
-        //   place: '请选择链接',
+        //   place: this.$t('pagediy.pleaseSelectLink'),
         //   isShow: 1,
         //   max: 100,
         // },
         //显示内容
         typeConfig: {
-          tabTitle: '显示内容',
+          tabTitle: this.$t('pagediy.displayContent'),
           name: 'rowsNum',
-          title: '展示信息',
+          title: this.$t('pagediy.displayInfo'),
           activeValue: [0, 1],
           list: [
             {
-              val: '商品名称',
+              val: this.$t('pagediy.productName'),
             },
             {
-              val: '商品价格',
+              val: this.$t('pagediy.productPriceLabel'),
             },
           ],
         },
         // 背景颜色
         bgColor: {
-          tabTitle: '颜色设置',
-          title: '背景颜色',
+          tabTitle: this.$t('pagediy.colorSettings'),
+          title: this.$t('pagediy.backgroundColor'),
           isShow: 1,
           color: [
             {
@@ -264,7 +289,7 @@ export default {
           ],
         },
         titleColor: {
-          title: '标题颜色',
+          title: this.$t('pagediy.titleColor'),
           isShow: 1,
           color: [
             {
@@ -279,20 +304,20 @@ export default {
         },
         //色调
         themeStyleConfig: {
-          title: '色调',
+          title: this.$t('pagediy.colorTone'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '跟随主题风格',
+              val: this.$t('pagediy.followTheme'),
             },
             {
-              val: '自定义',
+              val: this.$t('pagediy.customStyle'),
             },
           ],
         },
         priceColor: {
-          title: '价格颜色',
+          title: this.$t('pagediy.priceColor'),
           isShow: 0,
           color: [
             {
@@ -306,15 +331,15 @@ export default {
           ],
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 7,
           min: 0,
           max: 30,
         },
         contentStyle: {
-          title: '内容圆角',
+          title: this.$t('pagediy.contentRadius'),
           name: 'contentStyle',
           val: 5,
           min: 0,
@@ -322,39 +347,38 @@ export default {
         },
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          title: '下边距',
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 25,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },
         contentConfig: {
-          title: '内容间距',
+          title: this.$t('pagediy.contentSpacing'),
           val: 10,
           min: 0,
           max: 30,
         },
       },
       configObj: null,
-      src: '',
       listStyle: 0,
       spikeList: [
         {
@@ -394,14 +418,12 @@ export default {
     });
   },
   methods: {
+    diyUiText,
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
         this.listStyle = this.configObj.tabConfig.tabVal;
-        this.src = this.configObj.logoConfig.url
-          ? this.configObj.logoConfig.url
-          : localStorage.getItem('mediaDomain') + '/crmebimage/presets/seckillTitle.png';
         this.themeStyle = data.themeStyleConfig.tabVal;
         this.themeColor = this.$options.filters.filterTheme(this.mobileTheme - 1);
       }

@@ -45,20 +45,20 @@
       <div class="form">
         <div class="acea-row row-middle">
           <div class="mb12 titleTop acea-row row-middle">
-            <span>热区管理</span>
+            <span>{{ $t('pagediy.hotZoneManage') }}</span>
             <span class="ml5 iconfont icon-requwenzitishi"></span>
             <img class="ml5" src="@/assets/imgs/qipaokuang.png" alt="" />
-            <div class="ml5 title-text">可框选热区范围，双击设置热区信息</div>
+            <div class="ml5 title-text">{{ $t('pagediy.hotZoneDrawTip') }}</div>
           </div>
         </div>
-        <el-button type="primary" size="small" @click="addAreaBox">添加热区</el-button>
-        <el-button size="small" @click="resetAreaBox">重置</el-button>
+        <el-button type="primary" size="small" @click="addAreaBox">{{ $t('pagediy.addHotZone') }}</el-button>
+        <el-button size="small" @click="resetAreaBox">{{ $t('common.reset') }}</el-button>
         <div v-for="(item, index) in areaData" :key="index" class="form-row">
           <!-- <span class="iconfont iconrequbianji"></span> -->
           <el-input :maxlength="6" class="item-input" v-model="item.name"></el-input>
           <div class="form-item label">
             <div @click="getLink(index)">
-              <el-input :value="item.link" class="toLink" :style="linkInputStyle" readonly placeholder="选择跳转链接">
+              <el-input :value="item.link" class="toLink" :style="linkInputStyle" readonly :placeholder="$t('pagediy.selectJumpLink')">
                 <i class="iconfont icon-lianjietubiao" slot="suffix"> </i>
               </el-input>
             </div>
@@ -67,8 +67,8 @@
         </div>
       </div>
       <div class="btn-footer">
-        <el-button @click="btnDialog(0)">取 消</el-button>
-        <el-button type="primary" @click="btnDialog(1)">确 定</el-button>
+        <el-button @click="btnDialog(0)">{{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="btnDialog(1)">{{ $t('common.confirm') }}</el-button>
       </div>
     </div>
     <linkaddress :isHotSpot="true" ref="linkaddres" @linkUrl="linkUrl"></linkaddress>
@@ -221,7 +221,7 @@ export default {
       this.areaData.push({
         starX,
         starY,
-        name: `热区${this.nowNum}`,
+        name: this.$t('pagediy.hotZoneN', { n: this.nowNum }),
         areaWidth: 114,
         areaHeight: 114,
         nowImgWidth: 456,
@@ -294,7 +294,7 @@ export default {
       this.imgNum = this.areaData.length + 1;
       if (this.caseShow && this.areaWidth > 10 && this.areaHeight > 10) {
         const data = {
-          name: `热区${this.imgNum}`,
+          name: this.$t('pagediy.hotZoneN', { n: this.imgNum }),
           starX: this.starX,
           starY: this.starY,
           areaWidth: this.areaWidth < 50 ? 50 : this.areaWidth,

@@ -4,20 +4,36 @@
     <div v-if="configData.info" class="title">
       <span>{{ configData.info }}</span>
     </div>
+    <div class="lang-name-switch">
+      <el-radio-group v-model="activeLang" size="mini">
+        <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+          {{ lang.label }}
+        </el-radio-button>
+      </el-radio-group>
+    </div>
     <div class="input-box">
       <draggable class="dragArea list-group" :list="configData.list" group="peoples" handle=".icon">
         <div class="input-item" v-for="(item, index) in configData.list" :key="index">
           <div class="icon">
             <i class="iconfont icon-tuozhuaidian" style="font-size: 20px; color: #dddddd" />
           </div>
-          <el-input size="small" class="ml20" v-model="item.val" maxlength="10" placeholder="选填，不超过十个字" />
+          <el-input
+            size="small"
+            class="ml20"
+            :value="getHotInput(item)"
+            maxlength="10"
+            :placeholder="hotPlaceholder"
+            @input="setHotInput(item, $event)"
+          />
           <div class="delete" @click.stop="bindDelete(index)">
             <i class="el-icon-error" style="font-size: 20px" />
           </div>
         </div>
       </draggable>
       <div class="add-btn" @click="addHotTxt" v-if="configData.list.length < 20">
-        <el-button icon="el-icon-plus" plain style="width: 100%; height: 40px; font-size: 12px">添加热词</el-button>
+        <el-button icon="el-icon-plus" plain style="width: 100%; height: 40px; font-size: 12px">{{
+          $t('pagediy.addHotWord')
+        }}</el-button>
       </div>
     </div>
   </div>
@@ -33,6 +49,9 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +---------------------------------------------------------------------
 import vuedraggable from 'vuedraggable';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { parseLangJsonMap, resolveFormActiveLang } from '@/utils/localizedName';
 export default {
   name: 'c_hot_word',
   props: {
@@ -52,16 +71,29 @@ export default {
       hotIndex: 1,
       defaults: {},
       configData: {},
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
     };
+  },
+  computed: {
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
+    },
+    hotPlaceholder() {
+      if (this.activeLang === this.defaultLangCode) return this.$t('pagediy.optionalMax10');
+      return this.$t('pagediy.inputHotWordInLang', { lang: this.activeLangLabel });
+    },
   },
   created() {
     this.defaults = this.configObj;
     this.configData = this.configObj[this.configNme];
+    this.getLanguageList();
   },
   watch: {
     configObj: {
       handler(nVal, oVal) {
-        // this.hotWordList = nVal.hotList
         this.configData = nVal[this.configNme];
       },
       immediate: true,
@@ -69,20 +101,47 @@ export default {
     },
   },
   methods: {
+    getHotInput(item) {
+      if (this.activeLang === this.defaultLangCode) return item.val || '';
+      return parseLangJsonMap(item.valJson)[this.activeLang] || '';
+    },
+    setHotInput(item, val) {
+      if (this.activeLang === this.defaultLangCode) {
+        this.$set(item, 'val', val);
+        return;
+      }
+      const map = parseLangJsonMap(item.valJson);
+      if (String(val || '').trim()) map[this.activeLang] = val;
+      else delete map[this.activeLang];
+      this.$set(item, 'valJson', Object.keys(map).length ? JSON.stringify(map) : '');
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     addHotTxt() {
-      // let obj = {}
-      // if(this.configData.list.length){
-      //     obj = JSON.parse(JSON.stringify(this.configData.list[this.configData.list.length - 1]))
-      // }else {
-      //     obj = {
-      //         val: ''
-      //     }
-      // }
       let obj = {
         val: '',
+        valJson: '',
       };
       this.configData.list.push(obj);
-      // this.$emit('input', this.hotWordList);
     },
     // 删除数组
     bindDelete(index) {
@@ -137,6 +196,14 @@ export default {
     flex: 1;
     height: 36px;
     font-size: 13px !important;
+  }
+}
+.lang-name-switch {
+  width: 100%;
+  margin-bottom: 10px;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
   }
 }
 </style>

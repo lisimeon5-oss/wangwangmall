@@ -2,6 +2,7 @@ package com.zbkj.front.controller;
 
 import com.zbkj.common.model.product.ProductCategory;
 import com.zbkj.common.result.CommonResult;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.vo.ProCategoryCacheVo;
 import com.zbkj.service.service.ProductCategoryService;
 import io.swagger.annotations.Api;
@@ -39,18 +40,24 @@ public class ProductCategoryController {
     @ApiOperation(value = "获取第一级商品分类")
     @RequestMapping(value = "/get/first", method = RequestMethod.GET)
     public CommonResult<List<ProCategoryCacheVo>> getFirstCategory() {
-        return CommonResult.success(productCategoryService.getFrontFirstCategory());
+        List<ProCategoryCacheVo> list = productCategoryService.getFrontFirstCategory();
+        I18nJsonUtil.applyCategoryTree(list);
+        return CommonResult.success(list);
     }
 
     @ApiOperation(value = "获取首页第三级商品分类")
     @RequestMapping(value = "/get/third/{id}", method = RequestMethod.GET)
     public CommonResult<List<ProductCategory>> getHomeThirdCategory(@PathVariable(name = "id") Integer id) {
-        return CommonResult.success(productCategoryService.getHomeThirdCategory(id));
+        List<ProductCategory> list = productCategoryService.getHomeThirdCategory(id);
+        I18nJsonUtil.applyProductCategoryList(list);
+        return CommonResult.success(list);
     }
 
     @ApiOperation(value = "获取商品分类缓存树")
     @RequestMapping(value = "/get/tree", method = RequestMethod.GET)
     public CommonResult<List<ProCategoryCacheVo>> getCategory() {
-        return CommonResult.success(productCategoryService.getMerchantCacheTree());
+        List<ProCategoryCacheVo> list = productCategoryService.getMerchantCacheTree();
+        I18nJsonUtil.applyCategoryTree(list);
+        return CommonResult.success(list);
     }
 }

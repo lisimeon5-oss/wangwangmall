@@ -8,6 +8,8 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 
+import { t } from '@/i18n'
+
 // #ifdef H5
 import WechatJSSDK from "@/plugin/jweixin-module/index.js";
 import {getWechatConfig,wechatAuth} from "@/api/public";
@@ -65,7 +67,7 @@ class AuthWechat {
 				}).catch(err => {
 					console.log('微信配置失败',err);
 					util.Tips({
-						title: '请正确配置公众号后使用！'+err
+						title: t('请正确配置公众号后使用！') + err
 					});
 					this.status = false;
 					reject(err);
@@ -93,7 +95,7 @@ class AuthWechat {
 	// 微信公众号的共享地址
 	openAddress() {
 		uni.showLoading({
-			title: '加载中...'
+			title: t('加载中...')
 		});
 		return new Promise((resolve, reject) => {
 			this.wechat().then(wx => {

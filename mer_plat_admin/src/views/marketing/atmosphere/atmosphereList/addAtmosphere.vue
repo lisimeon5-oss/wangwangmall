@@ -2,12 +2,13 @@
   <div class="divBox">
     <pages-header
       ref="pageHeader"
-      :title="activityTpye === 1 ? `${isEdit ? '编辑' : '添加'}氛围图` : `${isEdit ? '编辑' : '添加'}活动边框`"
+      :title="pageTitle"
       :backUrl="activityTpye === 1 ? '/marketing/atmosphere/list' : '/marketing/border/list'"
     ></pages-header>
     <el-card class="box-card mb20 mt20" :body-style="{ padding: '0 20px 20px' }" :bordered="false" shadow="never">
       <el-tabs
         v-if="tabList.length > 0"
+        :key="'atmosphere-tabs-' + ($i18n.locale || '')"
         class="list-tabs"
         v-model="currentTab"
         @tab-click="onChangeType('formValidate')"
@@ -15,6 +16,7 @@
         <el-tab-pane v-for="(item, index) in tabList" :key="index" :name="item.value" :label="item.title" />
       </el-tabs>
       <el-form
+        :key="'atmosphere-form-' + ($i18n.locale || '')"
         ref="formValidate"
         v-loading="fullscreenLoading"
         class="formValidate mt25"
@@ -24,26 +26,46 @@
         @submit.native.prevent
       >
         <div v-show="currentTab == 1">
-          <el-form-item label="活动名称：" prop="name">
-            <el-input v-model="formValidate.name" size="small" class="selWidth" placeholder="请输入活动名称" />
+          <el-form-item :label="$t('marketing.activityNameLabel')" prop="name">
+            <div class="lang-name-switch selWidth">
+              <el-radio-group v-model="activeLang" size="small">
+                <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                  {{ lang.label }}
+                </el-radio-button>
+              </el-radio-group>
+              <el-input
+                v-if="activeLang === defaultLangCode"
+                v-model.trim="formValidate.name"
+                size="small"
+                class="lang-name-input"
+                :placeholder="$t('marketing.pleaseEnterActivityName')"
+              />
+              <el-input
+                v-else
+                v-model.trim="nameJsonForm[activeLang]"
+                size="small"
+                class="lang-name-input"
+                :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+              />
+            </div>
           </el-form-item>
-          <el-form-item label="活动时间：" prop="timeVal">
+          <el-form-item :label="$t('marketing.activityTimeLabel')" prop="timeVal">
             <el-date-picker
               class="mb10 selWidth"
               v-model="formValidate.timeVal"
               :default-time="['00:00:00', '23:59:59']"
               type="datetimerange"
-              range-separator="至"
+              :range-separator="$t('marketing.to')"
               value-format="yyyy-MM-dd HH:mm:ss"
-              start-placeholder="开始日期"
+              :start-placeholder="$t('product.startDate')"
               :picker-options="pickerOptions"
-              end-placeholder="结束日期"
+              :end-placeholder="$t('product.endDate')"
               @change="onchangeTime"
             >
             </el-date-picker>
-            <p class="desc">{{ `设置活动${activityTpye === 1 ? '氛围图' : '边框'}在商城展示时间` }}</p>
+            <p class="desc">{{ $t('marketing.setActivityDisplayTimeTip', { name: activityTpye === 1 ? $t('marketing.atmosphereImage') : $t('marketing.border') }) }}</p>
           </el-form-item>
-          <el-form-item :label="activityTpye === 1 ? '活动氛围图：' : '活动边框：'" prop="style">
+          <el-form-item :label="activityTpye === 1 ? $t('marketing.activityAtmosphereImageLabel') : $t('marketing.activityBorderLabel')" prop="style">
             <div class="upLoadPicBox mb10" @click="modalPicTap(false)">
               <div v-if="formValidate.style" class="pictrue"><img :src="formValidate.style" /></div>
               <div v-else class="upLoad">
@@ -52,30 +74,30 @@
             </div>
             <p class="desc">{{ activityTpye === 1 ? '750*100px' : '750*750px' }}</p>
           </el-form-item>
-          <el-form-item label="是否开启：">
+          <el-form-item :label="$t('merchant.enableLabel')">
             <el-switch
               :width="56"
               v-model="formValidate.status"
               :active-value="true"
               :inactive-value="false"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
             />
           </el-form-item>
         </div>
         <div v-show="currentTab == 2">
           <el-form-item label-width="0">
             <el-radio-group v-model="formValidate.method">
-              <el-radio :label="0">全部商品参与</el-radio>
-              <el-radio :label="1">指定商品参与</el-radio>
-              <el-radio :label="2">指定品牌参与</el-radio>
-              <el-radio :label="3">指定分类参与</el-radio>
-              <el-radio :label="4">指定商户参与</el-radio>
+              <el-radio :label="0">{{ $t('product.allProductsParticipate') }}</el-radio>
+              <el-radio :label="1">{{ $t('product.specifiedProductParticipation') }}</el-radio>
+              <el-radio :label="2">{{ $t('product.specifiedBrandParticipation') }}</el-radio>
+              <el-radio :label="3">{{ $t('product.specifiedCategoryParticipation') }}</el-radio>
+              <el-radio :label="4">{{ $t('product.specifiedMerchantParticipation') }}</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item v-if="formValidate.method == 1" label-width="0">
-            <el-button size="small" type="primary" @click="addGoods">添加商品</el-button>
-            <el-button size="small" @click="batchDel" :disabled="!multipleSelection.length">批量删除</el-button>
+            <el-button size="small" type="primary" @click="addGoods">{{ $t('marketing.addProduct') }}</el-button>
+            <el-button size="small" @click="batchDel" :disabled="!multipleSelection.length">{{ $t('product.batchDelete') }}</el-button>
           </el-form-item>
           <el-form-item v-if="formValidate.method == 1" label-width="0">
             <el-table
@@ -91,26 +113,26 @@
             >
               <el-table-column type="selection" width="55"> </el-table-column>
               <el-table-column prop="id" label="ID" width="55"> </el-table-column>
-              <el-table-column label="商品图" min-width="80">
+              <el-table-column :label="$t('product.productImage')" min-width="80">
                 <template slot-scope="scope">
                   <div class="demo-image__preview line-heightOne">
                     <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column :show-overflow-tooltip="true" prop="name" label="商品名称" min-width="200" />
-              <el-table-column prop="price" label="售价" min-width="90" />
-              <el-table-column prop="stock" label="库存" min-width="70" />
-              <el-table-column label="操作" width="140" fixed="right">
+              <el-table-column :show-overflow-tooltip="true" prop="name" :label="$t('product.productName')" min-width="200" />
+              <el-table-column prop="price" :label="$t('user.salePricePlaceholder')" min-width="90" />
+              <el-table-column prop="stock" :label="$t('product.stock')" min-width="70" />
+              <el-table-column :label="$t('common.operate')" width="140" fixed="right">
                 <template slot-scope="scope">
-                  <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                  <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">{{ $t('common.delete') }}</el-button>
                 </template>
               </el-table-column>
             </el-table>
           </el-form-item>
           <el-form-item
             v-if="formValidate.method == 2"
-            label="选择品牌："
+            :label="$t('marketing.selectBrandLabel')"
             :span="24"
             label-width="100px"
             prop="proBrandList"
@@ -123,7 +145,7 @@
               :loading="loading"
               remote
               multiple
-              placeholder="请选择品牌"
+              :placeholder="$t('videoChannel.pleaseSelectBrand')"
             >
               <el-option v-for="(v, i) in productBrand" :key="i" :label="v.name" :value="v.id" :disabled="!v.isShow">
               </el-option>
@@ -131,7 +153,7 @@
           </el-form-item>
           <el-form-item
             v-if="formValidate.method == 3"
-            label="选择分类："
+            :label="$t('marketing.selectCategoryLabel')"
             :span="24"
             label-width="100px"
             prop="proCategorylist"
@@ -148,7 +170,7 @@
             />
           </el-form-item>
           <el-form-item
-            label="选择商户："
+            :label="$t('marketing.selectMerchantLabel')"
             v-hasPermi="['platform:merchant:page:list']"
             v-if="formValidate.method == 4"
             :span="24"
@@ -166,13 +188,13 @@
     </el-card>
     <el-card class="fixed-card" :bordered="false" shadow="never">
       <el-button v-show="currentTab == 1" size="small" type="primary" @click="submitForm('formValidate', 1)"
-        >下一步</el-button
+        >{{ $t('product.nextStep') }}</el-button
       >
       <el-button v-show="currentTab == 2" size="small" @click="currentTab = '1'" class="priamry_border"
-        >上一步</el-button
+        >{{ $t('product.previousStep') }}</el-button
       >
       <el-button v-show="currentTab == 2" size="small" type="primary" @click="submitForm('formValidate', 2)"
-        >保存</el-button
+        >{{ $t('common.save') }}</el-button
       >
     </el-card>
   </div>
@@ -193,6 +215,9 @@ import { merCategoryListApi } from '@/api/merchant';
 import { productListbyidsApi } from '@/api/product';
 import { mapGetters } from 'vuex';
 import merchantName from '@/components/merUseCategory';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { resolveFormActiveLang, hasI18nNameContent, buildI18nNameJson, pickFormName } from '@/utils/localizedName';
 export default {
   name: 'addAtmosphere',
   components: { merchantName },
@@ -232,13 +257,17 @@ export default {
         emitPath: false,
       },
       currentTab: '1',
-      tabList: [
-        { value: '1', title: '基础设置' },
-        { value: '2', title: '使用范围' },
-      ],
       fullscreenLoading: false,
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
       formValidate: {
         name: '',
+        nameJson: '',
         starttime: '',
         endtime: '',
         style: '',
@@ -253,14 +282,6 @@ export default {
         id: null,
       },
 
-      ruleValidate: {
-        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-        style: [{ required: true, message: '请选择图片', trigger: 'blur' }],
-        proBrandList: [{ type: 'array', required: true, message: '请至少选择一个品牌', trigger: 'change' }],
-        proCategorylist: [{ type: 'array', required: true, message: '请至少选择一个分类', trigger: 'change' }],
-        merIds: [{ type: 'array', required: true, message: '请至少选择一个商户', trigger: 'change' }],
-        timeVal: [{ type: 'array', required: true, message: '请选择时间', trigger: 'change' }],
-      },
       listLoading: false,
       selectGoods: false,
       multipleSelection: [],
@@ -272,11 +293,11 @@ export default {
       options: [
         {
           value: 'all',
-          label: '所有页',
+          label: 'all',
         },
         {
           value: 'one',
-          label: '当前页',
+          label: 'one',
         },
       ],
       tableFrom: {
@@ -305,8 +326,42 @@ export default {
     activityTpye() {
       return this.$route.path.indexOf('border') !== -1 ? 0 : 1;
     },
+    pageTitle() {
+      if (this.activityTpye === 1) {
+        return this.isEdit ? this.$t('marketing.editAtmosphereImage') : this.$t('marketing.addAtmosphereImage');
+      }
+      return this.isEdit ? this.$t('marketing.editActivityBorder') : this.$t('marketing.addActivityBorder');
+    },
+    tabList() {
+      return [
+        { value: '1', title: this.$t('product.basicSetting') },
+        { value: '2', title: this.$t('product.usageScope') },
+      ];
+    },
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    ruleValidate() {
+      return {
+        name: [{
+          required: true,
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(pickFormName(this), this.nameJsonForm)) callback();
+            else callback(new Error(this.$t('marketing.pleaseEnterActivityName')));
+          },
+          trigger: 'blur',
+        }],
+        style: [{ required: true, message: this.$t('systemSetting.pleaseSelectImage'), trigger: 'blur' }],
+        proBrandList: [{ type: 'array', required: true, message: this.$t('marketing.pleaseSelectAtLeastOneBrand'), trigger: 'change' }],
+        proCategorylist: [{ type: 'array', required: true, message: this.$t('marketing.pleaseSelectAtLeastOneCategory'), trigger: 'change' }],
+        merIds: [{ type: 'array', required: true, message: this.$t('marketing.pleaseSelectAtLeastOneMerchant'), trigger: 'change' }],
+        timeVal: [{ type: 'array', required: true, message: this.$t('marketing.pleaseSelectTimeRange'), trigger: 'change' }],
+      };
+    },
   },
   mounted() {
+    this.getLanguageList();
     if (!localStorage.getItem('merPlatProductClassify')) this.$store.dispatch('product/getAdminProductClassify');
     if (!localStorage.getItem('productBrand')) this.$store.dispatch('product/getMerProductBrand');
     if (this.$route.params.id) {
@@ -316,6 +371,52 @@ export default {
     this.getMerchantList();
   },
   methods: {
+    emptyNameJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseNameJson(this.formValidate && this.formValidate.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseNameJson(this.formValidate && this.formValidate.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
+    parseNameJson(nameJson) {
+      const form = this.emptyNameJsonForm();
+      if (!nameJson) return form;
+      try {
+        const obj = typeof nameJson === 'string' ? JSON.parse(nameJson) : nameJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // 解析失败时保持为空
+      }
+      return form;
+    },
+    buildNameJson() {
+      return buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, pickFormName(this));
+    },
     // 点击选项
     onChangeType(formName) {
       //this.$refs[formName].resetFields();
@@ -349,7 +450,7 @@ export default {
       );
     },
     setTagsViewTitle() {
-      const title = this.activityTpye === 1 ? '编辑氛围图' : '编辑活动边框';
+      const title = this.activityTpye === 1 ? this.$t('marketing.editAtmosphereImage') : this.$t('marketing.editActivityBorder');
       const route = Object.assign({}, this.tempRoute, {
         title: `${title}-${this.$route.params.id}`,
       });
@@ -366,12 +467,16 @@ export default {
       this.fullscreenLoading = true;
       let data = JSON.parse(localStorage.getItem('activitystyle'));
       let info = JSON.parse(JSON.stringify(data));
+      this.formValidate.id = info.id;
       this.formValidate.starttime = info.starttime;
       this.formValidate.endtime = info.endtime;
       this.formValidate.style = info.style;
       this.formValidate.status = info.status;
       this.formValidate.method = info.method;
       this.formValidate.name = info.name;
+      this.formValidate.nameJson = info.nameJson || '';
+      this.nameJsonForm = this.parseNameJson(this.formValidate.nameJson);
+      this.activeLang = resolveFormActiveLang(this);
       this.formValidate.products = info.products;
       this.formValidate.type = this.activityTpye;
       this.formValidate.timeVal = [info.starttime, info.endtime];
@@ -433,13 +538,13 @@ export default {
     },
     //行删除
     handleDelete(index, row) {
-      this.$modalSure('删除该商品吗？').then(() => {
+      this.$modalSure(this.$t('product.deleteThisProductConfirm')).then(() => {
         this.tableData.data.splice(index, 1);
       });
     },
     //批量删除
     batchDel() {
-      this.$modalSure('批量删除商品吗？').then(() => {
+      this.$modalSure(this.$t('product.batchDeleteProductConfirm')).then(() => {
         let data = [];
         for (let item1 of this.tableData.data) {
           let _index = this.multipleSelection.findIndex((c) => c.id === item1.id);
@@ -487,7 +592,7 @@ export default {
                 this.formValidate.products = '';
                 break;
               case 1:
-                if (!this.tableData.data.length) return this.$message.error('请选择至少一个商品');
+                if (!this.tableData.data.length) return this.$message.error(this.$t('product.pleaseSelectAtLeastOneProduct'));
                 let data = [];
                 this.tableData.data.map((item) => data.push(item.id));
                 this.formValidate.products = data.toString();
@@ -503,17 +608,18 @@ export default {
                 break;
             }
             this.formValidate.type = this.activityTpye;
-            if (this.formValidate.style == '') return this.$message.error('请上传氛围图');
+            this.formValidate.nameJson = this.buildNameJson();
+            if (this.formValidate.style == '') return this.$message.error(this.$t('systemSetting.pleaseUploadAtmosphereImage'));
             if (this.isEdit) this.formValidate.id = this.$route.params.id;
             this.isEdit
               ? atuosphereUpdateApi(this.formValidate).then((res) => {
-                  this.$message.success('编辑成功');
+                  this.$message.success(this.$t('product.editSuccess'));
                   this.$router.push({
                     path: this.activityTpye === 1 ? '/marketing/atmosphere/list' : '/marketing/border/list',
                   });
                 })
               : createAtuosphere(this.formValidate).then((res) => {
-                  this.$message.success('新增成功');
+                  this.$message.success(this.$t('product.addSuccess'));
                   this.$router.push({
                     path: this.activityTpye === 1 ? '/marketing/atmosphere/list' : '/marketing/border/list',
                   });
@@ -551,5 +657,15 @@ export default {
 
 .selWidth {
   width: 460px !important;
+}
+.lang-name-switch {
+  width: 460px;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.lang-name-input {
+  margin-top: 10px;
 }
 </style>

@@ -19,6 +19,8 @@ import { getLoginInfo } from '@/libs/public';
 const state = {
   token: getToken(),
   name: '',
+  merName: '',
+  merNameJson: '',
   avatar: '',
   introduction: '',
   roles: [],
@@ -49,6 +51,12 @@ const mutations = {
   },
   SET_NAME: (state, name) => {
     state.name = name;
+  },
+  SET_MER_NAME: (state, merName) => {
+    state.merName = merName || '';
+  },
+  SET_MER_NAME_JSON: (state, merNameJson) => {
+    state.merNameJson = merNameJson || '';
   },
   SET_ACCOUNT: (state, account) => {
     state.account = account;
@@ -115,9 +123,11 @@ const actions = {
           // }
 
           const { roles, account, realName, permissionsList, merStarLevel, merReceiptPrintingSwitch,
-            merId, electrPrintingSwitch } = data;
+            merId, electrPrintingSwitch, merName, merNameJson } = data;
           commit('SET_ROLES', roles);
-          commit('SET_NAME', realName); //商户名称
+          commit('SET_NAME', realName);
+          commit('SET_MER_NAME', merName);
+          commit('SET_MER_NAME_JSON', merNameJson);
           commit('SET_ACCOUNT', account); //账号
           commit('SET_PERMISSIONS', permissionsList); //权限标识
           Cookies.set('JavaMerchantId', merId); //商户id

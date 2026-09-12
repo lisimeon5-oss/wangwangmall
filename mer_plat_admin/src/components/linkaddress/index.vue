@@ -4,7 +4,7 @@
       :destroy-on-close="true"
       lock-scroll
       show-close
-      title="选择链接"
+      :title="$t('linkPicker.title')"
       :close-on-click-modal="false"
       :data="categoryData"
       @close="dialogVisible = false"
@@ -13,9 +13,10 @@
       :visible.sync="dialogVisible"
       :append-to-body="true"
     >
-      <div class="table_box">
+      <div class="table_box" :key="'link-picker-' + localeKey">
         <div class="left_box">
           <el-tree
+            :key="'link-tree-' + localeKey"
             :data="categoryData"
             :props="defaultProps"
             :default-expanded-keys="[1, 2, 3, 4]"
@@ -25,13 +26,13 @@
           ></el-tree>
         </div>
         <div class="right_box" v-if="currenType == 'link'">
-          <div v-if="basicsList.length">
-            <div class="cont">基础链接</div>
+          <div v-if="basicsListView.length">
+            <div class="cont">{{ $t('linkPicker.basicLink') }}</div>
             <div class="Box">
               <div
                 class="cont_box"
                 :class="currenId == item.id && currenUrl == item.url ? 'on' : ''"
-                v-for="(item, index) in basicsList"
+                v-for="(item, index) in basicsListView"
                 :key="index"
                 @click="getUrl(item)"
               >
@@ -39,13 +40,13 @@
               </div>
             </div>
           </div>
-          <div v-if="userList.length">
-            <div class="cont">个人中心</div>
+          <div v-if="userListView.length">
+            <div class="cont">{{ $t('linkPicker.personalCenter') }}</div>
             <div class="Box">
               <div
                 class="cont_box"
                 :class="currenId == item.id ? 'on' : ''"
-                v-for="(item, index) in userList"
+                v-for="(item, index) in userListView"
                 :key="index"
                 @click="getUrl(item)"
               >
@@ -53,13 +54,13 @@
               </div>
             </div>
           </div>
-          <div v-if="distributionList.length">
-            <div class="cont">分销</div>
+          <div v-if="distributionListView.length">
+            <div class="cont">{{ $t('linkPicker.distribution') }}</div>
             <div class="Box">
               <div
                 class="cont_box"
                 :class="currenId == item.id ? 'on' : ''"
-                v-for="(item, index) in distributionList"
+                v-for="(item, index) in distributionListView"
                 :key="index"
                 @click="getUrl(item)"
               >
@@ -69,13 +70,13 @@
           </div>
         </div>
         <div class="right_box" v-if="currenType == 'marketing_link'">
-          <div v-if="coupon.length">
-            <div class="cont">营销</div>
+          <div v-if="couponView.length">
+            <div class="cont">{{ $t('linkPicker.marketing') }}</div>
             <div class="Box">
               <div
                 class="cont_box"
                 :class="currenId == item.id ? 'on' : ''"
-                v-for="(item, index) in coupon"
+                v-for="(item, index) in couponView"
                 :key="index"
                 @click="getUrl(item)"
               >
@@ -83,13 +84,13 @@
               </div>
             </div>
           </div>
-          <div v-if="integral.length">
-            <div class="cont">积分</div>
+          <div v-if="integralView.length">
+            <div class="cont">{{ $t('linkPicker.points') }}</div>
             <div class="Box">
               <div
                 class="cont_box"
                 :class="currenId == item.id ? 'on' : ''"
-                v-for="(item, index) in integral"
+                v-for="(item, index) in integralView"
                 :key="index"
                 @click="getUrl(item)"
               >
@@ -97,13 +98,13 @@
               </div>
             </div>
           </div>
-          <div v-if="group.length">
-            <div class="cont">拼团</div>
+          <div v-if="groupView.length">
+            <div class="cont">{{ $t('linkPicker.groupBuy') }}</div>
             <div class="Box">
               <div
                 class="cont_box"
                 :class="currenId == item.id ? 'on' : ''"
-                v-for="(item, index) in group"
+                v-for="(item, index) in groupView"
                 :key="index"
                 @click="getUrl(item)"
               >
@@ -131,11 +132,11 @@
               <el-col :span="24">
                 <el-form-item>
                   <el-input
-                    placeholder="请输入商品名称,关键字"
+                    :placeholder="$t('linkPicker.productKeywordPlaceholder')"
                     v-model.trim="formValidate.keywords"
                     style="width: 260px; margin-right: 20px"
                   />
-                  <el-button type="primary" @click="handleSearch">搜索</el-button>
+                  <el-button type="primary" @click="handleSearch">{{ $t('common.search') }}</el-button>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -168,7 +169,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="id" label="ID" width="80"></el-table-column>
-            <el-table-column v-if="currenType !== 'micro'" label="图片" width="80">
+            <el-table-column v-if="currenType !== 'micro'" :label="$t('linkPicker.image')" width="80">
               <template slot-scope="scope">
                 <el-image
                   style="width: 50px; height: 50px"
@@ -189,21 +190,21 @@
             </el-table-column>
             <el-table-column
               prop="name"
-              :label="currenType === 'product' ? '商品名称' : '标题名称'"
+              :label="currenType === 'product' ? $t('linkPicker.productName') : $t('linkPicker.titleName')"
               :show-overflow-tooltip="true"
               max-width="250"
               v-if="currenType === 'product' || currenType === 'micro'"
             ></el-table-column>
             <el-table-column
               prop="name"
-              label="分类名称"
+              :label="$t('linkPicker.categoryName')"
               :show-overflow-tooltip="true"
               max-width="250"
               v-else-if="currenType == 'product_category'"
             ></el-table-column>
             <el-table-column
               prop="title"
-              :label="currenType == 'news' ? '文章名称' : '商品名称'"
+              :label="currenType == 'news' ? $t('linkPicker.articleName') : $t('linkPicker.productName')"
               :show-overflow-tooltip="true"
               max-width="250"
               v-else
@@ -223,16 +224,16 @@
         <div class="right_box" v-if="currenType == 'custom'">
           <div style="width: 440px; margin: 50px 0 0 0">
             <el-form ref="customDate" :model="customDate" label-width="100px">
-              <el-form-item label="跳转路径：" prop="url">
-                <el-input v-model.trim="customDate.url" placeholder="请输入跳转路径" />
+              <el-form-item :label="$t('linkPicker.jumpPath')" prop="url">
+                <el-input v-model.trim="customDate.url" :placeholder="$t('linkPicker.pleaseEnterJumpPath')" />
               </el-form-item>
             </el-form>
           </div>
         </div>
       </div>
       <div slot="footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmit()">确定</el-button>
+        <el-button @click="dialogVisible = false">{{ $t('el.messagebox.cancel') }}</el-button>
+        <el-button type="primary" @click="handleSubmit()">{{ $t('el.messagebox.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -255,6 +256,7 @@ import { pagediyListApi } from '@/api/devise';
 import listData from './list.json';
 import linkData from './linkData.json';
 import marketing from './marketing.json';
+import { localizeLinkTree, localizeLinkItems } from './translateLabel';
 
 export default {
   name: 'linkaddress',
@@ -335,14 +337,32 @@ export default {
     },
   },
   computed: {
+    localeKey() {
+      return (this.$i18n && this.$i18n.locale) || 'zh-cn';
+    },
     categoryData() {
+      void this.localeKey;
       const obj = [...listData.data];
-      if (this.fromType === 'linkGenerator') {
-        obj.splice(3, 1);
-        return obj;
-      } else {
-        return [...listData.data];
-      }
+      const source = this.fromType === 'linkGenerator' ? obj.filter((_, i) => i !== 3) : obj;
+      return localizeLinkTree(this, source);
+    },
+    basicsListView() {
+      return localizeLinkItems(this, this.basicsList);
+    },
+    userListView() {
+      return localizeLinkItems(this, this.userList);
+    },
+    distributionListView() {
+      return localizeLinkItems(this, this.distributionList);
+    },
+    couponView() {
+      return localizeLinkItems(this, this.coupon);
+    },
+    integralView() {
+      return localizeLinkItems(this, this.integral);
+    },
+    groupView() {
+      return localizeLinkItems(this, this.group);
     },
   },
   methods: {
@@ -452,14 +472,14 @@ export default {
       switch (this.currenType) {
         case 'product':
           if (this.isHotSpot) {
-            this.$emit('linkUrl', `/pages/goods/goods_details/index?id=${this.linkId}&mt=0`, '商品详情');
+            this.$emit('linkUrl', `/pages/goods/goods_details/index?id=${this.linkId}&mt=0`, this.$t('linkPicker.productDetail'));
           } else {
             this.$emit('linkUrl', `/pages/goods/goods_details/index?id=${this.linkId}&mt=0`);
           }
           break;
         case 'seckill':
           if (this.isHotSpot) {
-            this.$emit('linkUrl', `/pages/goods/goods_details/index?id=${this.linkId}&mt=1`, '秒杀商品');
+            this.$emit('linkUrl', `/pages/goods/goods_details/index?id=${this.linkId}&mt=1`, this.$t('linkPicker.seckillProduct'));
           } else {
             this.$emit('linkUrl', `/pages/goods/goods_details/index?id=${this.linkId}&mt=1`);
           }
@@ -469,7 +489,7 @@ export default {
             this.$emit(
               'linkUrl',
               '/pages/activity/goods_bargain_details/index?id=' + this.linkId + '&mt=2',
-              '砍价商品',
+              this.$t('linkPicker.bargainProduct'),
             );
           } else {
             this.$emit('linkUrl', '/pages/activity/goods_bargain_details/index?id=' + this.linkId + '&mt=2');
@@ -477,35 +497,35 @@ export default {
           break;
         case 'combination':
           if (this.isHotSpot) {
-            this.$emit('linkUrl', '/pages/activity/goods_combination_details/index?id=' + this.linkId, '拼团商品');
+            this.$emit('linkUrl', '/pages/activity/goods_combination_details/index?id=' + this.linkId, this.$t('linkPicker.groupProduct'));
           } else {
             this.$emit('linkUrl', '/pages/activity/goods_combination_details/index?id=' + this.linkId);
           }
           break;
         case 'news':
           if (this.isHotSpot) {
-            this.$emit('linkUrl', '/pages/goods/news_details/index?id=' + this.linkId, '文章详情');
+            this.$emit('linkUrl', '/pages/goods/news_details/index?id=' + this.linkId, this.$t('linkPicker.articleDetail'));
           } else {
             this.$emit('linkUrl', '/pages/goods/news_details/index?id=' + this.linkId);
           }
           break;
         case 'product_category':
           if (this.isHotSpot) {
-            this.$emit('linkUrl', '/pages/goods/goods_cate/index', '商品分类');
+            this.$emit('linkUrl', '/pages/goods/goods_cate/index', this.$t('linkPicker.productCategory'));
           } else {
             this.$emit('linkUrl', '/pages/goods/goods_cate/index');
           }
           break;
         case 'custom':
           if (this.isHotSpot) {
-            this.$emit('linkUrl', this.customDate.url, '自定义链接');
+            this.$emit('linkUrl', this.customDate.url, this.$t('linkPicker.customLink'));
           } else {
             this.$emit('linkUrl', this.customDate.url);
           }
           break;
         case 'micro':
           if (this.isHotSpot) {
-            this.$emit('linkUrl', `/pages/activity/small_page/index?id=${this.linkId}`, '微页面');
+            this.$emit('linkUrl', `/pages/activity/small_page/index?id=${this.linkId}`, this.$t('linkPicker.microPage'));
           } else {
             this.$emit('linkUrl', `/pages/activity/small_page/index?id=${this.linkId}`);
           }

@@ -18,10 +18,10 @@
         >
           <div class="acea-row search-form" v-if="!collapse">
             <div class="search-form-box">
-              <el-form-item label="用户搜索：" label-for="nickname">
+              <el-form-item :label="$t('user.userSearchLabel')" label-for="nickname">
                 <UserSearchInput v-model="userFrom" />
               </el-form-item>
-              <el-form-item label="访问时间：">
+              <el-form-item :label="$t('user.visitTimeLabel')">
                 <el-date-picker
                   v-model="timeVal"
                   align="right"
@@ -32,8 +32,8 @@
                   type="daterange"
                   placement="bottom-end"
                   range-separator="-"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
+                  :start-placeholder="$t('common.startDate')"
+                  :end-placeholder="$t('common.endDate')"
                   class="form_content_width"
                   :picker-options="pickerOptions"
                   @change="onchangeTime"
@@ -41,20 +41,20 @@
               </el-form-item>
             </div>
             <el-form-item class="search-form-sub">
-              <el-button type="primary" size="small" @click="handleSearchList">搜索</el-button>
-              <el-button size="small" @click="handleReset('userFrom')" class="ResetSearch">重置</el-button>
+              <el-button type="primary" size="small" @click="handleSearchList">{{ $t('common.search') }}</el-button>
+              <el-button size="small" @click="handleReset('userFrom')" class="ResetSearch">{{ $t('common.reset') }}</el-button>
               <a class="ivu-ml-8 font12 ml10" @click="collapse = !collapse">
-                <template v-if="!collapse"> 展开 <i class="el-icon-arrow-down" /> </template>
-                <template v-else> 收起 <i class="el-icon-arrow-up" /> </template>
+                <template v-if="!collapse"> {{ $t('user.expand') }} <i class="el-icon-arrow-down" /> </template>
+                <template v-else> {{ $t('user.collapse') }} <i class="el-icon-arrow-up" /> </template>
               </a>
             </el-form-item>
           </div>
           <div v-if="collapse" class="acea-row search-form">
             <div class="search-form-box">
-              <el-form-item label="用户搜索：" label-for="nickname">
+              <el-form-item :label="$t('user.userSearchLabel')" label-for="nickname">
                 <UserSearchInput v-model="userFrom" />
               </el-form-item>
-              <el-form-item label="访问时间：">
+              <el-form-item :label="$t('user.visitTimeLabel')">
                 <el-date-picker
                   v-model="timeVal"
                   align="right"
@@ -65,26 +65,26 @@
                   type="daterange"
                   placement="bottom-end"
                   range-separator="-"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
+                  :start-placeholder="$t('common.startDate')"
+                  :end-placeholder="$t('common.endDate')"
                   class="form_content_width"
                   :picker-options="pickerOptions"
                   @change="onchangeTime"
                 />
               </el-form-item>
-              <el-form-item label="性别：">
-                <el-select v-model="userFrom.sex" placeholder="请选择" size="small" class="selWidth" clearable>
-                  <el-option value="" label="全部"></el-option>
-                  <el-option value="0" label="未知"></el-option>
-                  <el-option value="1" label="男"></el-option>
-                  <el-option value="2" label="女"></el-option>
-                  <el-option value="3" label="保密"></el-option>
+              <el-form-item :label="$t('user.gender')">
+                <el-select v-model="userFrom.sex" :placeholder="$t('common.pleaseSelect')" size="small" class="selWidth" clearable>
+                  <el-option value="" :label="$t('common.all')"></el-option>
+                  <el-option value="0" :label="$t('user.unknown')"></el-option>
+                  <el-option value="1" :label="$t('user.male')"></el-option>
+                  <el-option value="2" :label="$t('user.female')"></el-option>
+                  <el-option value="3" :label="$t('user.secret')"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="注册类型：">
+              <el-form-item :label="$t('user.registerTypeLabel')">
                 <el-select
                   v-model="userFrom.registerType"
-                  placeholder="请选择"
+                  :placeholder="$t('common.pleaseSelect')"
                   @change="getList(1)"
                   clearable
                   class="form_content_width"
@@ -95,11 +95,11 @@
               </el-form-item>
             </div>
             <el-form-item class="search-form-sub">
-              <el-button type="primary" size="small" @click="handleSearchList">搜索</el-button>
-              <el-button size="small" @click="handleReset('userFrom')" class="ResetSearch">重置</el-button>
+              <el-button type="primary" size="small" @click="handleSearchList">{{ $t('common.search') }}</el-button>
+              <el-button size="small" @click="handleReset('userFrom')" class="ResetSearch">{{ $t('common.reset') }}</el-button>
               <a class="ivu-ml-8 font12 ml10" @click="collapse = !collapse">
-                <template v-if="!collapse"> 展开 <i class="el-icon-arrow-down" /> </template>
-                <template v-else> 收起 <i class="el-icon-arrow-up" /> </template>
+                <template v-if="!collapse"> {{ $t('user.expand') }} <i class="el-icon-arrow-down" /> </template>
+                <template v-else> {{ $t('user.collapse') }} <i class="el-icon-arrow-up" /> </template>
               </a>
             </el-form-item>
           </div>
@@ -119,52 +119,52 @@
         <el-table-column type="expand" width="40">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="真实姓名：">
+              <el-form-item :label="$t('user.realNameLabel')">
                 <span>{{ props.row.realName | filterEmpty }}</span>
               </el-form-item>
-              <el-form-item label="性别：">
+              <el-form-item :label="$t('user.gender')">
                 <span>{{ props.row.sex | sexFilter }}</span>
               </el-form-item>
-              <el-form-item label="首次访问：">
+              <el-form-item :label="$t('user.firstVisit')">
                 <span>{{ props.row.createTime | filterEmpty }}</span>
               </el-form-item>
-              <el-form-item label="近次访问：">
+              <el-form-item :label="$t('user.lastVisit')">
                 <span>{{ props.row.lastLoginTime | filterEmpty }}</span>
               </el-form-item>
-              <el-form-item label="备注：">
+              <el-form-item :label="$t('user.remarkLabel')">
                 <span>{{ props.row.mark | filterEmpty }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column prop="id" label="ID" width="70" align="right" />
-        <el-table-column label="头像" width="60">
+        <el-table-column :label="$t('user.avatar')" width="60">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.avatar" :preview-src-list="[scope.row.avatar]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="昵称" min-width="180">
+        <el-table-column :label="$t('user.nickname')" min-width="180">
           <template slot-scope="scope">
             <span :class="scope.row.isLogoff == true ? 'red' : ''">{{ scope.row.nickname | filterEmpty }}</span>
             <span :class="scope.row.isLogoff == true ? 'red' : ''" v-if="scope.row.isLogoff == true">|</span>
-            <span v-if="scope.row.isLogoff == true" class="red">(已注销)</span>
+            <span v-if="scope.row.isLogoff == true" class="red">{{ $t('user.loggedOff') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="手机号" min-width="180">
+        <el-table-column :label="$t('user.phone')" min-width="180">
           <template slot-scope="scope">
             <span>{{ scope.row.phone | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="registerType" label="注册类型" min-width="180">
+        <el-table-column prop="registerType" :label="$t('user.registerType')" min-width="180">
           <template slot-scope="scope">
             <span>{{ scope.row.registerType | registerTypeFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkPermi(['merchant:user:detail'])" label="操作" width="70" fixed="right">
+        <el-table-column v-if="checkPermi(['merchant:user:detail'])" :label="$t('common.operate')" width="70" fixed="right">
           <template slot-scope="scope">
-            <a @click="onDetails(scope.row.id)">用户详情</a>
+            <a @click="onDetails(scope.row.id)">{{ $t('user.userDetails') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -202,16 +202,17 @@ import userList from '@/components/userList';
 import detailUser from './userDetails.vue';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
 import { Debounce } from '@/utils/validate';
+import i18n from '@/i18n';
 export default {
   name: 'UserIndex',
   components: { detailUser },
   filters: {
     sexFilter(status) {
       const statusMap = {
-        0: '未知',
-        1: '男',
-        2: '女',
-        3: '保密',
+        0: i18n.t('user.unknown'),
+        1: i18n.t('user.male'),
+        2: i18n.t('user.female'),
+        3: i18n.t('user.secret'),
       };
       return statusMap[status];
     },
@@ -222,39 +223,13 @@ export default {
         google: 'Google',
         email: 'Email',
         phone: 'Phone',
-        visitor: '游客',
+        visitor: i18n.t('user.visitor'),
       };
       return statusMap[value];
     },
   },
   data() {
     return {
-      registerTypeList: [
-        {
-          value: 'wechat',
-          label: '公众号',
-        },
-        {
-          value: 'routine',
-          label: '小程序',
-        },
-        {
-          value: 'h5',
-          label: 'H5',
-        },
-        {
-          value: 'iosWx',
-          label: '微信ios',
-        },
-        {
-          value: 'androidWx',
-          label: '微信安卓',
-        },
-        {
-          value: 'ios',
-          label: 'ios',
-        },
-      ],
       tableHeight: 0,
       formExtension: {
         image: '',
@@ -265,7 +240,6 @@ export default {
       extensionVisible: false,
       userVisible: false,
       levelInfo: '',
-      pickerOptions: this.$timeOptions,
       loadingBtn: false,
       PointValidateForm: {
         integralType: 2,
@@ -340,6 +314,23 @@ export default {
       checkAll: false,
       isIndeterminate: true,
     };
+  },
+  computed: {
+    pickerOptions() {
+      this.$i18n.locale;
+      return this.$createTimeOptions();
+    },
+    registerTypeList() {
+      this.$i18n.locale;
+      return [
+        { value: 'wechat', label: this.$t('user.registerWechat') },
+        { value: 'routine', label: this.$t('user.registerRoutine') },
+        { value: 'h5', label: this.$t('user.registerH5') },
+        { value: 'iosWx', label: this.$t('user.registerIosWx') },
+        { value: 'androidWx', label: this.$t('user.registerAndroidWx') },
+        { value: 'ios', label: this.$t('user.registerIos') },
+      ];
+    },
   },
   created() {
     // 浏览器高度
@@ -416,13 +407,13 @@ export default {
     },
     // 发送文章
     sendNews() {
-      if (this.selectionList.length === 0) return this.$message.warning('请先选择用户');
+      if (this.selectionList.length === 0) return this.$message.warning(this.$t('user.pleaseSelectUser'));
       const _this = this;
       this.$modalArticle(function (row) {}, 'send');
     },
     // 发送优惠劵
     onSend() {
-      if (this.selectionList.length === 0) return this.$message.warning('请选择要设置的用户');
+      if (this.selectionList.length === 0) return this.$message.warning(this.$t('user.pleaseSelectUser'));
       const _this = this;
       this.$modalCoupon(
         'send',

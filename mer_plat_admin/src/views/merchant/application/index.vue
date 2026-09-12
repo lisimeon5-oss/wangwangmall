@@ -9,53 +9,51 @@
     >
       <div class="padding-add">
         <el-form size="small" label-position="right" inline @submit.native.prevent>
-          <el-form-item label="选择时间：">
+          <el-form-item :label="$t('merchant.selectTimeLabel')">
             <el-date-picker
               v-model="timeVal"
               type="daterange"
               size="small"
-              placeholder="选择日期"
+              :placeholder="$t('user.chooseDate')"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
               range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
+              :start-placeholder="$t('product.startDate')"
+              :end-placeholder="$t('product.endDate')"
               @change="onchangeTime"
               class="selWidth"
             />
           </el-form-item>
-          <el-form-item label="审核状态：">
-            <el-select v-model="tableFrom.auditStatus" clearable size="small" placeholder="请选择" class="selWidth">
-              <el-option
-                v-for="(itemn, indexn) in statusList.fromTxt"
-                :key="indexn"
-                :label="itemn.text"
-                :value="itemn.val"
-              />
+          <el-form-item :label="$t('finance.auditStatusLabel')">
+            <el-select v-model="tableFrom.auditStatus" clearable size="small" :placeholder="$t('el.select.placeholder')" class="selWidth">
+              <el-option :label="$t('common.all')" value="" />
+              <el-option :label="$t('order.pendingAudit')" value="1" />
+              <el-option :label="$t('finance.auditPassed')" value="2" />
+              <el-option :label="$t('product.auditRejected')" value="3" />
             </el-select>
           </el-form-item>
-          <el-form-item label="商户分类：">
-            <el-select v-model="tableFrom.categoryId" clearable size="small" placeholder="请选择" class="selWidth">
+          <el-form-item :label="$t('merchant.merchantCategoryLabel')">
+            <el-select v-model="tableFrom.categoryId" clearable size="small" :placeholder="$t('el.select.placeholder')" class="selWidth">
               <el-option v-for="item in merchantClassify" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
-          <el-form-item label="店铺类型：">
-            <el-select v-model="tableFrom.typeId" clearable size="small" placeholder="请选择" class="selWidth">
+          <el-form-item :label="$t('merchant.storeTypeLabel')">
+            <el-select v-model="tableFrom.typeId" clearable size="small" :placeholder="$t('el.select.placeholder')" class="selWidth">
               <el-option v-for="item in merchantType" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
-          <el-form-item label="商户搜索：">
+          <el-form-item :label="$t('merchant.merchantSearchLabel')">
             <el-input
               v-model.trim="keywords"
               size="small"
-              placeholder="请输入商户名称/关键字"
+              :placeholder="$t('merchant.pleaseEnterMerchantNameKeyword')"
               class="selWidth"
               @keyup.enter.native="getList(1)"
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -65,44 +63,44 @@
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="商户姓名：">
+              <el-form-item :label="$t('merchant.merchantRealNameLabel')">
                 <span>{{ props.row.realName }}</span>
               </el-form-item>
-              <el-form-item label="商户类别：">
-                <span>{{ props.row.isSelf ? '自营' : '非自营' }}</span>
+              <el-form-item :label="$t('merchant.merchantTypeLabel')">
+                <span>{{ props.row.isSelf ? $t('product.selfOperated') : $t('product.notSelfOperated') }}</span>
               </el-form-item>
-              <el-form-item label="备注：">
+              <el-form-item :label="$t('user.remarkLabel')">
                 <span>{{ props.row.remark }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column prop="id" label="ID" min-width="60" />
-        <el-table-column prop="name" label="商户名称" min-width="150" :show-overflow-tooltip="true" />
-        <el-table-column prop="phone" label="联系方式" min-width="130" />
-        <el-table-column prop="createTime" label="申请时间" min-width="150" />
-        <el-table-column label="状态" min-width="150">
+        <el-table-column prop="name" :label="$t('product.merchantName')" min-width="150" :show-overflow-tooltip="true" />
+        <el-table-column prop="phone" :label="$t('merchant.contactInfo')" min-width="130" />
+        <el-table-column prop="createTime" :label="$t('finance.applyTime')" min-width="150" />
+        <el-table-column :label="$t('common.status')" min-width="150">
           <template slot-scope="scope">
-            <el-tag class="endTag tag-background" v-if="scope.row.auditStatus == 2" type="success">已通过</el-tag>
-            <el-tag class="doingTag tag-background" v-if="scope.row.auditStatus == 1" type="info">未处理</el-tag>
-            <el-tag class="notStartTag tag-background" v-if="scope.row.auditStatus == 3" type="warning">已拒绝</el-tag>
-            <div v-if="scope.row.auditStatus == 3" class="mt10">原因：{{ scope.row.denialReason }}</div>
+            <el-tag class="endTag tag-background" v-if="scope.row.auditStatus == 2" type="success">{{ $t('common.approved') }}</el-tag>
+            <el-tag class="doingTag tag-background" v-if="scope.row.auditStatus == 1" type="info">{{ $t('merchant.unprocessed') }}</el-tag>
+            <el-tag class="notStartTag tag-background" v-if="scope.row.auditStatus == 3" type="warning">{{ $t('common.rejected') }}</el-tag>
+            <div v-if="scope.row.auditStatus == 3" class="mt10">{{ $t('common.reasonLabel') }}{{ scope.row.denialReason }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="150" fixed="right">
           <template slot-scope="scope">
             <a
               v-if="scope.row.auditStatus == 1 && checkPermi(['platform:merchant:apply:audit'])"
               @click="onchangeIsShow(scope.row, 'isSHOW')"
-              >审核</a
+              >{{ $t('finance.audit') }}</a
             >
             <el-divider
               v-if="scope.row.auditStatus == 1 && checkPermi(['platform:merchant:apply:audit'])"
               direction="vertical"
             ></el-divider>
-            <a @click="onchangeIsShow(scope.row)">详情</a>
+            <a @click="onchangeIsShow(scope.row)">{{ $t('common.detail') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a @click="onEdit(scope.row)" v-hasPermi="['platform:merchant:apply:remark']">备注</a>
+            <a @click="onEdit(scope.row)" v-hasPermi="['platform:merchant:apply:remark']">{{ $t('common.remark') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -147,7 +145,6 @@ export default {
         emitPath: false,
       },
       fromList: this.$constants.fromList,
-      statusList: this.$constants.statusList, //筛选状态列表
       isChecked: false,
       listLoading: false,
       tableData: {
@@ -255,14 +252,14 @@ export default {
 
     // 备注
     onEdit(row) {
-      this.$modalPrompt('textarea', '备注', row.remark).then((V) => {
+      this.$modalPrompt('textarea', this.$t('common.remark'), row.remark).then((V) => {
         merApplyRemarkApi({
           id: row.id,
           remark: V,
         }).then((res) => {
           this.$message({
             type: 'success',
-            message: '提交成功',
+            message: this.$t('user.submitSuccess'),
           });
           this.getList('');
         });

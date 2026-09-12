@@ -39,6 +39,7 @@ import {
 	USER_INFO
 } from '../../config/cache';
 import util from '../../utils/util';
+import { persistLocale, applyTabBar, applyPageTitle } from '@/i18n';
 import {
 	globalConfigApi, loginConfigApi
 } from "../../api/public";
@@ -92,10 +93,14 @@ const state = {
 	merchantEmployeeList: Cache.get('merchantEmployeeList') ? JSON.parse(Cache.get('merchantEmployeeList')) : [],
 	isEmployee: Cache.get(IS_EMPLOYEE) ? JSON.parse(Cache.get(IS_EMPLOYEE)) : null,
 	selectMerId: Cache.get('selectMerId') ? JSON.parse(Cache.get('selectMerId')) : null,
-	selectMerchantRole: Cache.get('selectMerchantRole') || null
+	selectMerchantRole: Cache.get('selectMerchantRole') || null,
+	locale: uni.getStorageSync('locale') || uni.getStorageSync('lang') || 'zh-cn'
 };
 
 const mutations = {
+	SET_LOCALE(state, locale) {
+		state.locale = locale;
+	},
 	LOGIN(state, opt) {
 		state.token = opt.token;
 		Cache.set(LOGIN_STATUS, opt.token);
@@ -112,6 +117,7 @@ const mutations = {
 		state.token = token;
 	},
 	LOGOUT(state) {
+		const locale = state.locale || uni.getStorageSync('locale') || 'zh-cn';
 		uni.clearStorageSync();
 		state.token = '';
 		state.managerToken = '';
@@ -129,6 +135,11 @@ const mutations = {
 		Cache.clear(SELECT_MERCHANT);
 		Cache.clear(MANAGER_STATUS);
 		Cache.clear(IS_EMPLOYEE);
+		state.locale = locale;
+		try {
+			uni.setStorageSync('locale', locale);
+			uni.setStorageSync('lang', locale);
+		} catch (e) {}
 	},
 	//清除所有本地缓存
 	clearStorage(state) {
@@ -289,6 +300,14 @@ const changeNodes = function(data) {
 };
 
 const actions = {
+	SetLocale({ commit }, code) {
+		const locale = persistLocale(code);
+		commit('SET_LOCALE', locale);
+		applyTabBar();
+		applyPageTitle();
+		uni.$emit('i18n-locale-changed', locale);
+		return locale;
+	},
 	/**
 	 * 全局配置信息
 	 */

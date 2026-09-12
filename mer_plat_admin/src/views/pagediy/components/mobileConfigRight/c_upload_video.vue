@@ -83,14 +83,14 @@ export default {
     uploadPic(formData, data) {
       let loading = this.$loading({
         lock: true,
-        text: '上传中，请稍候...',
+        text: this.$t('finance.uploading'),
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)',
       });
       fileFileApi(formData, data)
         .then((res) => {
           loading.close();
-          this.$message.success('上传成功');
+          this.$message.success(this.$t('finance.uploadSuccess'));
           this.$emit('getConfig', { name: 'video', values: res.url });
           this.configData.uploadVideo.url = res.url;
         })

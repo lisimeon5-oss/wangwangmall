@@ -6,13 +6,13 @@
 			<view class="input-item">
 				<view class="item">
 					<input class="ipt" type="number" v-model="account" placeholder-class='placeholder'
-						placeholder="输入手机号" maxlength="11" />
+						:placeholder="$t('login.phonePlaceholder')" maxlength="11" />
 				</view>
 			</view>
 			<view class="input-item">
 				<view class="item acea-row row-between-wrapper">
 					<input class="ipt codeIput" type="number" v-model="codeNum" placeholder-class='placeholder'
-						placeholder="输入验证码" maxlength="6" />
+						:placeholder="$t('login.codePlaceholder')" maxlength="6" />
 					<view class="line">
 				
 					</view>
@@ -20,10 +20,10 @@
 				</view>
 			</view>
 			<view class="sub_btn" @click="loginBtn">
-				{{(!userInfo.phone && isLogin) || (userInfo.phone && isLogin)?'立即绑定':'立即登录'}}
+				{{(!userInfo.phone && isLogin) || (userInfo.phone && isLogin)?$t('login.bindNow'):$t('login.loginNow')}}
 			</view>
 		</view>
-		<Verify @success="handlerOnVerSuccess" :captchaType="'clickWord'"
+		<Verify @success="handlerOnVerSuccess" :captchaType="'blockPuzzle'"
 			:imgSize="{ width: '330px', height: '155px' }" ref="verify"></Verify>
 	</view>
 </template>
@@ -133,10 +133,10 @@
 			code: Debounce(function() {
 				let that = this;
 				if (!that.account) return that.$util.Tips({
-					title: '请填写手机号码'
+					title: this.$t('请填写手机号码')
 				});
 				if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(that.account)) return that.$util.Tips({
-					title: '请输入正确的手机号码'
+					title: this.$t('请输入正确的手机号码')
 				});
 				that.$refs.verify.show();
 			}),
@@ -158,16 +158,16 @@
 			loginBtn() {
 				let that = this
 				if (!that.account) return that.$util.Tips({
-					title: '请填写手机号码'
+					title: this.$t('请填写手机号码')
 				});
 				if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(that.account)) return that.$util.Tips({
-					title: '请输入正确的手机号码'
+					title: this.$t('请输入正确的手机号码')
 				});
 				if (!that.codeNum) return that.$util.Tips({
-					title: '请填写验证码'
+					title: this.$t('请填写验证码')
 				});
 				if (!/^[\w\d]+$/i.test(that.codeNum)) return that.$util.Tips({
-					title: '请输入正确的验证码'
+					title: this.$t('请输入正确的验证码')
 				});
 				uni.showLoading({
 					title: !this.userInfo.phone && this.isLogin ? '正在绑定中' : '正在登录中'
@@ -234,7 +234,7 @@
 				let backUrl = this.$Cache.get(BACK_URL) || "/pages/index/index";
 				// #ifdef MP
 				this.$util.Tips({
-					title: '绑定手机号成功'
+					title: this.$t('绑定手机号成功')
 				}, {
 					tab: 4,
 					url: backUrl

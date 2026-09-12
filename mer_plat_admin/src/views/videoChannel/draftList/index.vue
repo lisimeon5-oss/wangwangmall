@@ -9,17 +9,17 @@
     >
       <div class="padding-add">
         <el-form inline @submit.native.prevent>
-          <el-form-item label="商品名称：">
+          <el-form-item :label="$t('videoChannel.productNameLabel')">
             <el-input
               v-model="search"
               @keyup.enter.native="getList(1)"
-              placeholder="请输入商品名称"
+              :placeholder="$t('product.pleaseEnterProductName')"
               class="selWidth"
               clearable
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -27,7 +27,7 @@
     <el-card class="box-card mt14" :body-style="{ padding: '20px' }" :bordered="false" shadow="never">
       <el-table v-loading="listLoading" :data="tableData.data" style="width: 100%" size="small" ref="multipleTable">
         <el-table-column prop="id" label="Id" min-width="80" />
-        <el-table-column label="名称" prop="title" min-width="300">
+        <el-table-column :label="$t('category.name')" prop="title" min-width="300">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="right" :open-delay="800">
               <div class="text_overflow" slot="reference">{{ scope.row.title }}</div>
@@ -35,38 +35,38 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column label="商品图片" min-width="80">
+        <el-table-column :label="$t('videoChannel.productImage')" min-width="80">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="JSON.parse(scope.row.headImg)[0]" :preview-src-list="JSON.parse(scope.row.headImg)" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="类目" min-width="150" prop="thirdCatName" />
-        <el-table-column label="获得积分" prop="giveIntegral" min-width="100" />
-        <el-table-column prop="sales" label="销量" min-width="90" />
-        <el-table-column prop="stock" label="库存" min-width="90" />
-        <el-table-column label="微信审核" min-width="90">
+        <el-table-column :label="$t('videoChannel.category')" min-width="150" prop="thirdCatName" />
+        <el-table-column :label="$t('videoChannel.earnPoints')" prop="giveIntegral" min-width="100" />
+        <el-table-column prop="sales" :label="$t('product.sales')" min-width="90" />
+        <el-table-column prop="stock" :label="$t('product.stock')" min-width="90" />
+        <el-table-column :label="$t('videoChannel.wechatAudit')" min-width="90">
           <template slot-scope="scope">
             <span>{{ scope.row.editStatus | editStatusFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="平台审核" min-width="90">
+        <el-table-column :label="$t('videoChannel.platformAudit')" min-width="90">
           <template slot-scope="scope">
             <span>{{ scope.row.platformEditStatus | platformStatusFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" prop="addTime" min-width="150" />
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column :label="$t('product.createTime')" prop="addTime" min-width="150" />
+        <el-table-column :label="$t('common.operate')" width="150" fixed="right">
           <template slot-scope="scope">
             <template
               v-if="scope.row.platformEditStatus === 2 && checkPermi(['platform:pay:component:product:draft:review'])"
             >
-              <a @click="handleAudit(scope.row.id, true)">审核 </a>
+              <a @click="handleAudit(scope.row.id, true)">{{ $t('finance.audit') }} </a>
               <el-divider direction="vertical"></el-divider>
             </template>
             <a @click="handleAudit(scope.row.id, false)" v-hasPermi="['platform:pay:component:product:draft:info']"
-              >详情
+              >{{ $t('common.detail') }}
             </a>
           </template>
         </el-table-column>
@@ -98,12 +98,12 @@
 // +---------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +---------------------------------------------------------------------
-import { draftListApi, seckillStoreUpdateApi, seckillStoreStatusApi, catListApi } from '@/api/videoChannel';
-import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { draftListApi, catListApi } from '@/api/videoChannel';
+import { checkPermi } from '@/utils/permission';
 import infoFrom from '../info';
 
 export default {
-  name: 'videoList',
+  name: 'draftList',
   data() {
     return {
       isAtud: false,
@@ -125,7 +125,13 @@ export default {
   components: { infoFrom },
   mounted() {
     if (checkPermi(['platform:pay:component:product:draft:list'])) this.getList();
-    if (!JSON.parse(sessionStorage.getItem('videoCategory'))) this.getCatList();
+    let videoCategory = null;
+    try {
+      videoCategory = JSON.parse(sessionStorage.getItem('videoCategory') || 'null');
+    } catch (e) {
+      videoCategory = null;
+    }
+    if (!videoCategory) this.getCatList();
   },
   methods: {
     checkPermi,

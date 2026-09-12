@@ -42,7 +42,7 @@ public class AgreementController {
     @ApiOperation(value = "用户注册协议 保存")
     @RequestMapping(value = "/usersave", method = RequestMethod.POST)
     public CommonResult<Boolean> userAgreementSave(@RequestBody @NotEmpty String agreement) {
-        return CommonResult.success(systemConfigService.updateOrSaveValueByName(SysConfigConstants.USER_REGISTER_AGREEMENT, agreement));
+        return CommonResult.success(systemConfigService.saveAgreement(SysConfigConstants.USER_REGISTER_AGREEMENT, agreement));
     }
 
     /**
@@ -52,7 +52,7 @@ public class AgreementController {
     @ApiOperation(value = "用户注册协议 详情")
     @RequestMapping(value = "/userinfo", method = RequestMethod.GET)
     public CommonResult<String> userAgreementInfo() {
-        return CommonResult.success(systemConfigService.getAgreementByKey(SysConfigConstants.USER_REGISTER_AGREEMENT));
+        return CommonResult.success(systemConfigService.getAgreementAdminByKey(SysConfigConstants.USER_REGISTER_AGREEMENT));
     }
 
     /**
@@ -62,7 +62,7 @@ public class AgreementController {
     @ApiOperation(value = "商户入驻协议 保存")
     @RequestMapping(value = "/merincommingsave", method = RequestMethod.POST)
     public CommonResult<Boolean> merincommingAgreementSave(@RequestBody @NotEmpty String agreement) {
-        return CommonResult.success(systemConfigService.updateOrSaveValueByName(SysConfigConstants.MERCHANT_SETTLEMENT_AGREEMENT, agreement));
+        return CommonResult.success(systemConfigService.saveAgreement(SysConfigConstants.MERCHANT_SETTLEMENT_AGREEMENT, agreement));
     }
 
     /**
@@ -72,7 +72,7 @@ public class AgreementController {
     @ApiOperation(value = "商户入驻协议 详情")
     @RequestMapping(value = "/merincomminginfo", method = RequestMethod.GET)
     public CommonResult<String> merincommingAgreementInfo() {
-        return CommonResult.success(systemConfigService.getAgreementByKey(SysConfigConstants.MERCHANT_SETTLEMENT_AGREEMENT));
+        return CommonResult.success(systemConfigService.getAgreementAdminByKey(SysConfigConstants.MERCHANT_SETTLEMENT_AGREEMENT));
     }
 
     /**
@@ -82,7 +82,7 @@ public class AgreementController {
     @ApiOperation(value = "用户隐私协议 保存")
     @RequestMapping(value = "/userprivacysave", method = RequestMethod.POST)
     public CommonResult<Boolean> userPrivacyAgreementSave(@RequestBody @NotEmpty String agreement) {
-        return CommonResult.success(systemConfigService.updateOrSaveValueByName(SysConfigConstants.USER_PRIVACY_AGREEMENT, agreement));
+        return CommonResult.success(systemConfigService.saveAgreement(SysConfigConstants.USER_PRIVACY_AGREEMENT, agreement));
     }
 
     /**
@@ -92,7 +92,7 @@ public class AgreementController {
     @ApiOperation(value = "用户隐私协议 详情")
     @RequestMapping(value = "/userprivacyinfo", method = RequestMethod.GET)
     public CommonResult<String> userPrivacyAgreementInfo() {
-        return CommonResult.success(systemConfigService.getAgreementByKey(SysConfigConstants.USER_PRIVACY_AGREEMENT));
+        return CommonResult.success(systemConfigService.getAgreementAdminByKey(SysConfigConstants.USER_PRIVACY_AGREEMENT));
     }
 
     /**
@@ -102,7 +102,7 @@ public class AgreementController {
     @ApiOperation(value = "用户注销协议 保存")
     @RequestMapping(value = "/useraccountcancelsave", method = RequestMethod.POST)
     public CommonResult<Boolean> userAccountCancelAgreementSave(@RequestBody @NotEmpty String agreement) {
-        return CommonResult.success(systemConfigService.updateOrSaveValueByName(SysConfigConstants.USER_CANCEL_AGREEMENT, agreement));
+        return CommonResult.success(systemConfigService.saveAgreement(SysConfigConstants.USER_CANCEL_AGREEMENT, agreement));
     }
 
     /**
@@ -112,7 +112,7 @@ public class AgreementController {
     @ApiOperation(value = "用户注销协议 详情")
     @RequestMapping(value = "/useraccountcancelinfo", method = RequestMethod.GET)
     public CommonResult<String> userAccountCancelAgreementInfo() {
-        return CommonResult.success(systemConfigService.getAgreementByKey(SysConfigConstants.USER_CANCEL_AGREEMENT));
+        return CommonResult.success(systemConfigService.getAgreementAdminByKey(SysConfigConstants.USER_CANCEL_AGREEMENT));
     }
 
 
@@ -123,7 +123,7 @@ public class AgreementController {
     @ApiOperation(value = "用户注销声明 保存")
     @RequestMapping(value = "/useraccountcancelnoticesave", method = RequestMethod.POST)
     public CommonResult<Boolean> userAccountCancelNoticeAgreementSave(@RequestBody @NotEmpty String agreement) {
-        return CommonResult.success(systemConfigService.updateOrSaveValueByName(SysConfigConstants.USER_CANCEL_NOTICE_AGREEMENT, agreement));
+        return CommonResult.success(systemConfigService.saveAgreement(SysConfigConstants.USER_CANCEL_NOTICE_AGREEMENT, agreement));
     }
 
     /**
@@ -133,7 +133,7 @@ public class AgreementController {
     @ApiOperation(value = "用户注销声明 详情")
     @RequestMapping(value = "/useraccountcancelnoticeinfo", method = RequestMethod.GET)
     public CommonResult<String> userAccountCancelNoticeAgreementInfo() {
-        return CommonResult.success(systemConfigService.getAgreementByKey(SysConfigConstants.USER_CANCEL_NOTICE_AGREEMENT));
+        return CommonResult.success(systemConfigService.getAgreementAdminByKey(SysConfigConstants.USER_CANCEL_NOTICE_AGREEMENT));
     }
 
     /**
@@ -143,7 +143,7 @@ public class AgreementController {
     @ApiOperation(value = "关于我们协议 保存")
     @RequestMapping(value = "/aboutussave", method = RequestMethod.POST)
     public CommonResult<Boolean> aboutusAgreementSave(@RequestBody @NotEmpty String agreement) {
-        return CommonResult.success(systemConfigService.updateOrSaveValueByName(SysConfigConstants.ABOUTUS_AGREEMENT, agreement));
+        return CommonResult.success(systemConfigService.saveAgreement(SysConfigConstants.ABOUTUS_AGREEMENT, agreement));
     }
 
     /**
@@ -153,7 +153,7 @@ public class AgreementController {
     @ApiOperation(value = "关于我们协议 详情")
     @RequestMapping(value = "/aboutusinfo", method = RequestMethod.GET)
     public CommonResult<String> aboutusAgreementInfo() {
-        return CommonResult.success(systemConfigService.getAgreementByKey(SysConfigConstants.ABOUTUS_AGREEMENT));
+        return CommonResult.success(systemConfigService.getAgreementAdminByKey(SysConfigConstants.ABOUTUS_AGREEMENT));
     }
 
     /**
@@ -163,7 +163,7 @@ public class AgreementController {
     @ApiOperation(value = "平台资质证明 保存")
     @RequestMapping(value = "/intelligentsave", method = RequestMethod.POST)
     public CommonResult<Boolean> intelligentAgreementSave(@RequestBody @NotEmpty String agreement) {
-        return CommonResult.success(systemConfigService.updateOrSaveValueByName(SysConfigConstants.PLATFROM_INTELLIGENT_AGREEMENT, agreement));
+        return CommonResult.success(systemConfigService.saveAgreement(SysConfigConstants.PLATFROM_INTELLIGENT_AGREEMENT, agreement));
     }
 
     /**
@@ -173,7 +173,7 @@ public class AgreementController {
     @ApiOperation(value = "平台资质证明 详情")
     @RequestMapping(value = "/intelligentinfo", method = RequestMethod.GET)
     public CommonResult<String> intelligentAgreementInfo() {
-        return CommonResult.success(systemConfigService.getAgreementByKey(SysConfigConstants.PLATFROM_INTELLIGENT_AGREEMENT));
+        return CommonResult.success(systemConfigService.getAgreementAdminByKey(SysConfigConstants.PLATFROM_INTELLIGENT_AGREEMENT));
     }
 
     /**
@@ -183,7 +183,7 @@ public class AgreementController {
     @ApiOperation(value = "平台规则 保存")
     @RequestMapping(value = "/platfromrulesave", method = RequestMethod.POST)
     public CommonResult<Boolean> platfromRuleAgreementSave(@RequestBody @NotEmpty String agreement) {
-        return CommonResult.success(systemConfigService.updateOrSaveValueByName(SysConfigConstants.PLATFROM_RULE_AGREEMENT, agreement));
+        return CommonResult.success(systemConfigService.saveAgreement(SysConfigConstants.PLATFROM_RULE_AGREEMENT, agreement));
     }
 
     /**
@@ -193,34 +193,34 @@ public class AgreementController {
     @ApiOperation(value = "平台规则 详情")
     @RequestMapping(value = "/platfromruleinfo", method = RequestMethod.GET)
     public CommonResult<String> platfromRuleAgreementInfo() {
-        return CommonResult.success(systemConfigService.getAgreementByKey(SysConfigConstants.PLATFROM_RULE_AGREEMENT));
+        return CommonResult.success(systemConfigService.getAgreementAdminByKey(SysConfigConstants.PLATFROM_RULE_AGREEMENT));
     }
 
     @PreAuthorize("hasAuthority('platform:system:agreement:coupon:agreement:save')")
     @ApiOperation(value = "优惠券规则 保存")
     @RequestMapping(value = "/coupon/agreement/save", method = RequestMethod.POST)
     public CommonResult<Boolean> couponAgreementSave(@RequestBody @NotEmpty String agreement) {
-        return CommonResult.success(systemConfigService.updateOrSaveValueByName(SysConfigConstants.COUPON_AGREEMENT, agreement));
+        return CommonResult.success(systemConfigService.saveAgreement(SysConfigConstants.COUPON_AGREEMENT, agreement));
     }
 
     @PreAuthorize("hasAuthority('platform:system:agreement:coupon:agreement:info')")
     @ApiOperation(value = "优惠券规则 详情")
     @RequestMapping(value = "/coupon/agreement/info", method = RequestMethod.GET)
     public CommonResult<String> couponAgreementInfo() {
-        return CommonResult.success(systemConfigService.getAgreementByKey(SysConfigConstants.COUPON_AGREEMENT));
+        return CommonResult.success(systemConfigService.getAgreementAdminByKey(SysConfigConstants.COUPON_AGREEMENT));
     }
 
     @PreAuthorize("hasAuthority('platform:system:agreement:paid:member:save')")
     @ApiOperation(value = "付费会员协议 保存")
     @RequestMapping(value = "/paid/member/save", method = RequestMethod.POST)
     public CommonResult<Boolean> paidMemberAgreementSave(@RequestBody @NotEmpty String agreement) {
-        return CommonResult.success(systemConfigService.updateOrSaveValueByName(SysConfigConstants.PAID_MEMBER_AGREEMENT, agreement));
+        return CommonResult.success(systemConfigService.saveAgreement(SysConfigConstants.PAID_MEMBER_AGREEMENT, agreement));
     }
 
     @PreAuthorize("hasAuthority('platform:system:agreement:paid:member:info')")
     @ApiOperation(value = "付费会员协议 详情")
     @RequestMapping(value = "/paid/member/info", method = RequestMethod.GET)
     public CommonResult<String> paidMemberAgreementInfo() {
-        return CommonResult.success(systemConfigService.getAgreementByKey(SysConfigConstants.PAID_MEMBER_AGREEMENT));
+        return CommonResult.success(systemConfigService.getAgreementAdminByKey(SysConfigConstants.PAID_MEMBER_AGREEMENT));
     }
 }

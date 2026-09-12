@@ -7,7 +7,7 @@
 						<input disabled='true' :value="userInfo.phone"></input>
 					</view>
 					<view class="item acea-row row-between-wrapper">
-						<input type='number' placeholder='填写验证码' placeholder-class='placeholder' class="codeIput"
+						<input type='number' :placeholder="$t('填写验证码')" placeholder-class='placeholder' class="codeIput"
 							v-model="captcha" maxlength="6"></input>
 						<button class="code" :class="disabled === true ? 'on' : ''" :disabled='disabled' @click="code">
 							{{ text }}
@@ -16,11 +16,11 @@
 				</block>
 				<block v-else>
 					<view class="item">
-						<input type='number' placeholder='新手机号' placeholder-class='placeholder' v-model="phone"
+						<input type='number' :placeholder="$t('新手机号')" placeholder-class='placeholder' v-model="phone"
 							maxlength="11"></input>
 					</view>
 					<view class="item acea-row row-between-wrapper">
-						<input type='number' placeholder='填写验证码' placeholder-class='placeholder' class="codeIput"
+						<input type='number' :placeholder="$t('填写验证码')" placeholder-class='placeholder' class="codeIput"
 							v-model="bindingCaptcha" maxlength="6"></input>
 						<button class="code" :class="disabled === true ? 'on' : ''" :disabled='disabled' @click="code">
 							{{ text }}
@@ -28,10 +28,10 @@
 					</view>
 				</block>
 			</view>
-			<button form-type="submit" v-if="isNew" class="confirmBnt bg_color" @click="next">下一步</button>
-			<button form-type="submit" v-if="!isNew" class="confirmBnt bg_color" @click="editPwd">保存</button>
+			<button form-type="submit" v-if="isNew" class="confirmBnt bg_color" @click="next">{{$t('下一步')}}</button>
+			<button form-type="submit" v-if="!isNew" class="confirmBnt bg_color" @click="editPwd">{{$t('保存')}}</button>
 		</view>
-		<Verify @success="handlerOnVerSuccess" :captchaType="'clickWord'" :imgSize="{ width: '330px', height: '155px' }"
+		<Verify @success="handlerOnVerSuccess" :captchaType="'blockPuzzle'" :imgSize="{ width: '330px', height: '155px' }"
 			ref="verify"></Verify>
 	</view>
 </template>
@@ -81,7 +81,7 @@
 				key: '',
 				isNew: true,
 				timer: '',
-				text: '获取验证码',
+				text: '',
 				nums: 60,
 				theme: app.globalData.theme,
 				bgColor: '',
@@ -107,14 +107,11 @@
 		methods: {
 			getTimes() {
 				this.nums = this.nums - 1;
-				this.text = "剩余 " + this.nums + "s";
+				this.text = this.$t('login.remain', { n: this.nums });
 				if (this.nums < 0) {
 					clearInterval(this.timer);
-				}
-				this.text = "剩余 " + this.nums + "s";
-				if (this.text < "剩余 " + 0 + "s") {
 					this.disabled = false;
-					this.text = "重新获取";
+					this.text = this.$t('login.retry');
 				}
 			},
 			onLoadFun: function() {},
@@ -124,33 +121,33 @@
 			},
 			next() {
 				if (!this.captcha) return this.$util.Tips({
-					title: '请填写验证码'
+					title: this.$t('请填写验证码')
 				});
 				this.isNew = false;
 				clearInterval(this.timer);
 				this.disabled = false;
-				this.text = "获取验证码";
+				this.text = this.$t('login.getCode');
 			},
 			editPwd: Debounce(function(e) {
 				let that = this;
 				if (!that.phone) return that.$util.Tips({
-					title: '请填写手机号码！'
+					title: this.$t('请填写手机号码！')
 				});
 				if (!(/^1(3|4|5|7|8|9|6)\d{9}$/i.test(that.phone))) return that.$util.Tips({
-					title: '请输入正确的手机号码！'
+					title: this.$t('请输入正确的手机号码！')
 				});
 				if (!that.bindingCaptcha) return that.$util.Tips({
-					title: '请填写验证码'
+					title: this.$t('请填写验证码')
 				});
 				uni.showModal({
-					title: '是否更换绑定账号',
+					title: this.$t('是否更换绑定账号'),
 					// #ifdef H5
-					title: '是否更换绑定账号,更换之后需重新登录',
+					title: this.$t('是否更换绑定账号,更换之后需重新登录'),
 					// #endif
-					confirmText: '绑定',
+					confirmText: this.$t('绑定'),
 					success(res) {
 						uni.showLoading({
-							title: '加载中',
+							title: that.$t('加载中'),
 							mask: true
 						});
 						if (res.confirm) {
@@ -163,12 +160,12 @@
 							}).catch(err => {
 								uni.hideLoading();
 								return that.$util.Tips({
-									title: err
+									title: that.$t(String(err || ''))
 								});
 							})
 						} else if (res.cancel) {
 							return that.$util.Tips({
-								title: '您已取消更换绑定！'
+								title: that.$t('您已取消更换绑定！')
 							}, {
 								tab: 5,
 								url: '/pages/users/user_info/index'
@@ -197,7 +194,7 @@
 					uni.hideLoading();
 				}).catch(err => {
 					return that.$util.Tips({
-						title: err.toString()
+						title: that.$t(String(err || ''))
 					}, {
 						tab: 3,
 						url: 1
@@ -212,7 +209,7 @@
 			code: Debounce(function() {
 				this.nums = 60;
 				uni.showLoading({
-					title: '加载中',
+					title: this.$t('加载中'),
 					mask: true
 				});
 				let that = this;
@@ -226,17 +223,17 @@
 						uni.hideLoading();
 					}).catch(err => {
 						return that.$util.Tips({
-							title: err
+							title: that.$t(String(err || ''))
 						});
 						uni.hideLoading();
 					});
 				} else {
 					uni.hideLoading();
 					if (!that.phone) return that.$util.Tips({
-						title: '请填写手机号码！'
+						title: this.$t('请填写手机号码！')
 					});
 					if (!(/^1(3|4|5|7|8|9|6)\d{9}$/i.test(that.phone))) return that.$util.Tips({
-						title: '请输入正确的手机号码！'
+						title: this.$t('请输入正确的手机号码！')
 					});
 					that.$refs.verify.show();
 				}

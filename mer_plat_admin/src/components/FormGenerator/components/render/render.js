@@ -1,3 +1,5 @@
+import { translateFormField } from '@/utils/i18nText';
+
 function vModel(self, dataObject, defaultValue) {
   dataObject.props.value = defaultValue;
   dataObject.on.input = (val) => {
@@ -33,6 +35,7 @@ export default {
       style: {},
     };
     const confClone = JSON.parse(JSON.stringify(this.conf));
+    translateFormField(confClone);
     const children = [];
 
     const childObjs = componentChild[confClone.__config__.tag];
@@ -51,6 +54,14 @@ export default {
         vModel(this, dataObject, confClone.__config__.defaultValue);
       } else if (dataObject[key]) {
         dataObject[key] = { ...dataObject[key], ...val };
+      } else if (
+        key === 'placeholder' ||
+        key === 'start-placeholder' ||
+        key === 'end-placeholder' ||
+        key === 'range-separator'
+      ) {
+        dataObject.props[key] = val;
+        dataObject.attrs[key] = val;
       } else {
         dataObject.attrs[key] = val;
       }

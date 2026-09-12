@@ -15,21 +15,21 @@
 								<image :src="Two.avatar"></image>
 							</view>
 							<view class="name line1">{{Two.nickname}}</view>
-							<view class="num">{{Two.spreadCount}}人</view>
+							<view class="num">{{Two.spreadCount}}{{$t('人')}}</view>
 						</view>
 						<view class="item" v-show="One.id">
 							<view class="pictrue">
 								<image :src="One.avatar"></image>
 							</view>
 							<view class="name line1">{{One.nickname}}</view>
-							<view class="num">{{One.spreadCount}}人</view>
+							<view class="num">{{One.spreadCount}}{{$t('人')}}</view>
 						</view>
 						<view class="item" v-show="Three.id">
 							<view class="pictrue">
 								<image :src="Three.avatar"></image>
 							</view>
 							<view class="name line1">{{Three.nickname}}</view>
-							<view class="num">{{Three.spreadCount}}人</view>
+							<view class="num">{{Three.spreadCount}}{{$t('人')}}</view>
 						</view>
 					</view>
 				</view>
@@ -44,13 +44,13 @@
 							</view>
 							<view class="text line1">{{item.nickname}}</view>
 						</view>
-						<view class="people font-color">{{item.spreadCount}}人</view>
+						<view class="people font-color">{{item.spreadCount}}{{$t('人')}}</view>
 					</view>
 				</view>
 				<view class='noCart' v-if="list.length == 0 && isShow && !loading">
 					<view class='pictrue'>
 						<image :src="urlDomain+'crmebimage/presets/noJilu.png'"></image>
-						<view class="default_txt">暂无排行榜哦~</view>
+						<view class="default_txt">{{$t('暂无排行榜哦~')}}</view>
 					</view>
 				</view>
 			</view>

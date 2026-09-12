@@ -20,7 +20,7 @@
 import { mapState } from 'vuex';
 export default {
   name: 'home_city',
-  cname: '城市',
+  cname: 'maintain.city',
   icon: 'icon-biaodanzujian-chengshi',
   configName: 'c_home_city',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -64,39 +64,39 @@ export default {
         name: 'citys',
         timestamp: this.num,
         titleConfig: {
-          title: '标题',
-          val: '城市',
-          place: '请输入标题',
+          title: this.$t('formGenerator.title'),
+          val: this.$t('maintain.city'),
+          place: this.$t('formGenerator.pleaseEnterTitle'),
           max: 10,
           type: 'form',
           isShow: 1,
         },
         valConfig: {
-          title: '默认值',
+          title: this.$t('formGenerator.defaultValue'),
           tabVal: 1,
           type: 'form',
           list: [
             {
-              name: '省市',
+              name: this.$t('maintain.provinceCity'),
             },
             {
-              name: '省市区',
+              name: this.$t('maintain.provinceCityDistrict'),
             },
             {
-              name: '省市区街道',
+              name: this.$t('maintain.provinceCityDistrictStreet'),
             },
           ],
         },
         tipConfig: {
-          title: '提示语',
-          val: '请选择',
-          place: '请输入提示语',
+          title: this.$t('maintain.prompt'),
+          val: this.$t('common.pleaseSelect'),
+          place: this.$t('maintain.pleaseEnterPrompt'),
           max: 10,
           type: 'form',
           isShow: 1,
         },
         titleShow: {
-          title: '是否必填',
+          title: this.$t('formGenerator.required'),
           val: true,
           type: 'form',
         },

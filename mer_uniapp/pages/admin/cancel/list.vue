@@ -1,12 +1,12 @@
 <template>
 	<view class="pagebox">
 		<view class="after_sale" v-if="info.userRefundSign" @click="skipList(info.orderNo)">
-			该订单存在处理中售后，请点击查看
+			{{$t('该订单存在处理中售后，请点击查看')}}
 			<text class="iconfont icon-you"></text>
 		</view>
 		<view class="order_info">
 			<view class="order_info_number">
-				订单号：{{info.orderNo}}
+				{{$t('订单号')}}：{{info.orderNo}}
 			</view>
 			<view class="order_info_item" v-for="(item,index) in info.infoResponseList">
 				<image class="product_img" :src="item.image" mode=""></image>
@@ -20,18 +20,18 @@
 						</view>
 					</view>
 					<view class="operate">
-						<text class="infor-num">购买 x{{item.payNum}} <text class="infor-text"> {{item.applyRefundNum||item.refundNum?`(${item.applyRefundNum}件售后中 ${item.refundNum}件已退款）`:''}}</text></text>
-						<text>核销：<text class="cancel_num">{{item.payNum-item.refundNum}}</text></text>
+						<text class="infor-num">{{$t('购买')}} x{{item.payNum}} <text class="infor-text"> {{item.applyRefundNum||item.refundNum?`(${item.applyRefundNum}${$t('件售后中')} ${item.refundNum}${$t('件已退款')}）`:''}}</text></text>
+						<text>{{$t('核销：')}}<text class="cancel_num">{{item.payNum-item.refundNum}}</text></text>
 					</view>
 				</view>
 			</view>
 		</view>
 		<view class="page_bottom">
 			<view class="page_bottom_num">
-				共{{info.totalNum}}件
+				{{$t('共')}}{{info.totalNum}}{{$t('件')}}
 			</view>
 			<view class="page_bottom_btn" @click="toCancel">
-				确认核销
+				{{$t('确认核销')}}
 			</view>
 		</view>
 	</view>
@@ -172,7 +172,7 @@
 	.infor-text{
 		color: #2A7EFB ;
 	}
-	/deep/ .uni-popup__wrapper {
+	::v-deep  .uni-popup__wrapper {
 		width: 600rpx;
 		height: 310rpx;
 		background: #FFFFFF;

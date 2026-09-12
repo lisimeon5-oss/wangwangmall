@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.zbkj.common.model.product.ProductAttrValue;
+import com.zbkj.common.model.product.ProductAttribute;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -44,6 +45,9 @@ public class SeckillProductPageResponse {
     @ApiModelProperty(value = "商品名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言商品名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "商品原价")
     private BigDecimal price;
 
@@ -68,6 +72,9 @@ public class SeckillProductPageResponse {
     @ApiModelProperty(value = "商户名称")
     private String merName;
 
+    @ApiModelProperty(value = "多语言商户名称(JSON)")
+    private String merNameJson;
+
     @ApiModelProperty(value = "商户分类ID")
     private Integer merCategoryId;
 
@@ -77,14 +84,23 @@ public class SeckillProductPageResponse {
     @ApiModelProperty(value = "商品分类名称")
     private String categoryName;
 
+    @ApiModelProperty(value = "多语言商品分类名称(JSON)")
+    private String categoryNameJson;
+
     @ApiModelProperty(value = "活动名称")
     private String activityName;
+
+    @ApiModelProperty(value = "多语言活动名称(JSON)")
+    private String activityNameJson;
 
     @ApiModelProperty(value = "活动状态:0未开始，1进行中，2已结束")
     private Integer activityStatus;
 
     @ApiModelProperty(value = "商品规格SKU")
     private List<ProductAttrValue> attrValue;
+
+    @ApiModelProperty(value = "主商品规格（含多语言规格值）")
+    private List<ProductAttribute> attrList;
 
     @ApiModelProperty(value = "关联的普通商品ID")
     private Integer productId;

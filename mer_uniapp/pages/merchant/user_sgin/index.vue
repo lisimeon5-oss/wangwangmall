@@ -2,7 +2,7 @@
 	<view :data-theme="theme">
 		<view class='sign'>
 			<view class='header'>
-				<view class="title mb30 flex">连续签到
+				<view class="title mb30 flex">{{$t('连续签到')}}
 					<view @click="toInfo()">
 						<text class="iconfont icon-shuoming"></text>
 					</view>
@@ -12,18 +12,18 @@
 					<view class='item bg_color'>{{signCount[1] || 0}}</view>
 					<view class='item bg_color'>{{signCount[2] || 0}}</view>
 					<view class='item bg_color'>{{signCount[3] || 0}}</view>
-					<view class='data'>天</view>
+					<view class='data'>{{$t('天')}}</view>
 				</view>
 				<view class="acea-row row-center-wrapper">
 					<view class='tip acea-row row-center-wrapper'>
 						<image src="../static/images/jinbi.png"></image>
-						<view>{{'今日签到+'+ integral + '积分，+' + experience + '经验' }}</view>
+						<view>{{$t('今日签到+')+ integral + $t('积分，+') + experience + $t('经验') }}</view>
 					</view>
 				</view>
 				<navigator hover-class='none'
 					url='/pages/merchant/user_sgin_list/index'>
 					<view class="record">
-						签到记录
+						{{$t('签到记录')}}
 						<text class="iconfont icon-xiangyou"></text>
 					</view>
 				</navigator>
@@ -37,9 +37,9 @@
 			<view class='signTipLight loadingpic'></view>
 			<view class='signTipCon'>
 				<view class="signTipBox"></view>
-				<view class='state'>签到成功</view>
-				<view class='integral'>获得{{integral}}积分，{{experience}}经验</view>
-				<view class='signTipBnt' @click='close'>好的</view>
+				<view class='state'>{{$t('签到成功')}}</view>
+				<view class='integral'>{{$t('获得')}}{{integral}}{{$t('积分')}}，{{experience}}{{$t('经验')}}</view>
+				<view class='signTipBnt' @click='close'>{{$t('好的')}}</view>
 			</view>
 		</view>
 		<view class='mask' @touchmove.stop.prevent="false" :hidden='active==false'></view>
@@ -106,7 +106,7 @@
 		},
 		onLoad: function(options) {
 			uni.showLoading({
-				title: "加载中",
+				title: this.$t('加载中'),
 				mask: true,
 			});
 			let now = new Date()

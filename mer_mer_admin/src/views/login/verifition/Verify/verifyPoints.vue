@@ -185,7 +185,7 @@ export default {
             if (res.repCode == '0000') {
               this.barAreaColor = '#4cae4c';
               this.barAreaBorderColor = '#5cb85c';
-              this.text = '验证成功';
+              this.text = this.$t('login.verifySuccess');
               this.bindingClick = false;
               if (this.mode == 'pop') {
                 setTimeout(() => {
@@ -203,7 +203,7 @@ export default {
               this.$parent.$emit('error', this);
               this.barAreaColor = '#d9534f';
               this.barAreaBorderColor = '#d9534f';
-              this.text = '验证失败';
+              this.text = this.$t('login.verifyFailed');
               setTimeout(() => {
                 this.refresh();
               }, 700);
@@ -236,7 +236,7 @@ export default {
       this.checkPosArr.splice(0, this.checkPosArr.length);
       this.num = 1;
       this.getPictrue();
-      this.text = '验证失败';
+      this.text = this.$t('login.verifyFailed');
       this.showRefresh = true;
     },
 
@@ -253,7 +253,7 @@ export default {
           this.backToken = res.repData.token;
           this.secretKey = res.repData.secretKey;
           this.poinTextList = res.repData.wordList;
-          this.text = '请依次点击【' + this.poinTextList.join(',') + '】';
+          this.text = this.$t('login.pleaseClickInOrder') + this.poinTextList.join(',') + '】';
         } else {
           this.text = res.repMsg;
         }

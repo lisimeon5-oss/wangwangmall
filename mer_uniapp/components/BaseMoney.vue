@@ -2,7 +2,7 @@
 	<view :class="{ line: line, weight: weight }"
 		:style="{color: '#' + incolor,fontWeight: fontWeight, display:(discount || inline) ? 'inline-block' : 'block' }"
 		class="base-money semiBold">
-		<text v-if="!discount" class="symbol" :style="{'font-size': symbolSize +'rpx'}">￥</text><text class="integer"
+		<text v-if="!discount" class="symbol" :style="{'font-size': symbolSize +'rpx'}">฿</text><text class="integer"
 			:style="{'font-size': integerSize +'rpx'}">{{ integer }}</text>
 		<text v-if="digits && decimal != '00' && decimal != '0'" class="decimal"
 			:style="{'font-size': decimalSize +'rpx'}">.{{ decimal }}</text>

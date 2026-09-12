@@ -1,6 +1,9 @@
 package com.zbkj.service.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,6 +15,7 @@ import com.zbkj.common.request.SystemUserLevelRuleRequest;
 import com.zbkj.common.request.SystemUserLevelUpdateShowRequest;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.SystemConfigResultCode;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.common.vo.SystemUserLevelConfigVo;
 import com.zbkj.service.dao.SystemUserLevelDao;
 import com.zbkj.service.service.*;
@@ -21,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,16 +102,18 @@ public class SystemUserLevelServiceImpl extends ServiceImpl<SystemUserLevelDao, 
      */
     private void checkLevel(SystemUserLevelRequest request) {
         SystemUserLevel temp;
-        // 校验名称
         LambdaQueryWrapper<SystemUserLevel> lqw = Wrappers.lambdaQuery();
-        lqw.eq(SystemUserLevel::getName, request.getName());
-        if (ObjectUtil.isNotNull(request.getId())) {
-            lqw.ne(SystemUserLevel::getId, request.getId());
-        }
-        lqw.eq(SystemUserLevel::getIsDel, false);
-        temp = dao.selectOne(lqw);
-        if (ObjectUtil.isNotNull(temp)) {
-            throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "用户等级名称重复");
+        // 校验名称
+        if (StrUtil.isNotBlank(request.getName())) {
+            lqw.eq(SystemUserLevel::getName, request.getName());
+            if (ObjectUtil.isNotNull(request.getId())) {
+                lqw.ne(SystemUserLevel::getId, request.getId());
+            }
+            lqw.eq(SystemUserLevel::getIsDel, false);
+            temp = dao.selectOne(lqw);
+            if (ObjectUtil.isNotNull(temp)) {
+                throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "用户等级名称重复");
+            }
         }
         // 校验等级级别
         lqw.clear();
@@ -202,11 +209,15 @@ public class SystemUserLevelServiceImpl extends ServiceImpl<SystemUserLevelDao, 
     @Override
     public List<SystemUserLevel> getH5LevelList() {
         LambdaQueryWrapper<SystemUserLevel> lqw = new LambdaQueryWrapper<>();
-        lqw.select(SystemUserLevel::getId, SystemUserLevel::getName, SystemUserLevel::getIcon, SystemUserLevel::getExperience);
+        lqw.select(SystemUserLevel::getId, SystemUserLevel::getName, SystemUserLevel::getNameJson, SystemUserLevel::getIcon, SystemUserLevel::getExperience);
         lqw.eq(SystemUserLevel::getIsShow, true);
         lqw.eq(SystemUserLevel::getIsDel, false);
         lqw.orderByAsc(SystemUserLevel::getGrade);
-        return dao.selectList(lqw);
+        List<SystemUserLevel> list = dao.selectList(lqw);
+        if (list != null) {
+            list.forEach(level -> level.setName(resolveDisplayName(level)));
+        }
+        return list;
     }
 
     /**
@@ -275,6 +286,19 @@ public class SystemUserLevelServiceImpl extends ServiceImpl<SystemUserLevelDao, 
         return systemConfigService.getValueByKey(UserLevelConstants.SYSTEM_USER_LEVEL_RULE);
     }
 
+    @Override
+    public SystemUserLevelRuleRequest getRuleForEdit() {
+        SystemUserLevelRuleRequest vo = new SystemUserLevelRuleRequest();
+        vo.setRule(getRule());
+        vo.setRuleJson(systemConfigService.getValueByKey(UserLevelConstants.SYSTEM_USER_LEVEL_RULE_JSON));
+        return vo;
+    }
+
+    @Override
+    public String resolveDisplayRule() {
+        return resolveLocalizedText(getRule(), systemConfigService.getValueByKey(UserLevelConstants.SYSTEM_USER_LEVEL_RULE_JSON));
+    }
+
     /**
      * 获取用户等级配置
      * @return 用户等级配置
@@ -302,6 +326,10 @@ public class SystemUserLevelServiceImpl extends ServiceImpl<SystemUserLevelDao, 
         }
         Boolean update = systemConfigService.updateOrSaveValueByName(UserLevelConstants.SYSTEM_USER_LEVEL_RULE, Optional.ofNullable(request.getRule()).orElse(""));
         if (!update) {
+            throw new CrmebException(CommonResultCode.ERROR.setMessage("编辑用户等级规则失败"));
+        }
+        Boolean updateJson = systemConfigService.updateOrSaveValueByName(UserLevelConstants.SYSTEM_USER_LEVEL_RULE_JSON, Optional.ofNullable(request.getRuleJson()).orElse(""));
+        if (!updateJson) {
             throw new CrmebException(CommonResultCode.ERROR.setMessage("编辑用户等级规则失败"));
         }
         return true;
@@ -377,6 +405,53 @@ public class SystemUserLevelServiceImpl extends ServiceImpl<SystemUserLevelDao, 
         lqw.orderByDesc(SystemUserLevel::getGrade);
         lqw.last(" limit 1");
         return dao.selectOne(lqw);
+    }
+
+    @Override
+    public String resolveDisplayName(SystemUserLevel level) {
+        if (ObjectUtil.isNull(level)) {
+            return "";
+        }
+        String language = getRequestLanguage();
+        if (StrUtil.isBlank(language) || "zh-cn".equals(language) || StrUtil.isBlank(level.getNameJson())) {
+            return level.getName();
+        }
+        try {
+            JSONObject jsonObject = JSON.parseObject(level.getNameJson());
+            String localized = jsonObject.getString(language);
+            if (StrUtil.isNotBlank(localized)) {
+                return localized;
+            }
+        } catch (Exception ignored) {
+            // 解析失败时保留默认名称
+        }
+        return level.getName();
+    }
+
+    private String resolveLocalizedText(String text, String json) {
+        String language = getRequestLanguage();
+        if (StrUtil.isBlank(language) || "zh-cn".equals(language) || StrUtil.isBlank(json)) {
+            return text;
+        }
+        try {
+            JSONObject jsonObject = JSON.parseObject(json);
+            String localized = jsonObject.getString(language);
+            if (StrUtil.isNotBlank(localized)) {
+                return localized;
+            }
+        } catch (Exception ignored) {
+            // 解析失败时保留默认文案
+        }
+        return text;
+    }
+
+    private String getRequestLanguage() {
+        HttpServletRequest request = RequestUtil.getRequest();
+        String language = null;
+        if (request != null) {
+            language = request.getHeader("lang");
+        }
+        return StrUtil.isBlank(language) ? "zh-cn" : language;
     }
 
 }

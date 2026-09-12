@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-tabs v-model="typeDate" class="list-tabs" @tab-click="radioChange">
-      <el-tab-pane label="图片" name="pic"></el-tab-pane>
-      <el-tab-pane v-if="modelName != 'diy'" label="视频" name="video"></el-tab-pane>
+      <el-tab-pane :label="$t('upload.image')" name="pic"></el-tab-pane>
+      <el-tab-pane v-if="modelName != 'diy'" :label="$t('upload.video')" name="video"></el-tab-pane>
     </el-tabs>
     <el-row :gutter="20" v-loading="loadingPic">
       <el-col
@@ -16,7 +16,7 @@
               <div class="trees" :style="{ maxHeight: !pictureType ? '500px' : '' }">
                 <el-tree
                   ref="tree"
-                  :data="treeData2"
+                  :data="localizedTreeData"
                   :filter-node-method="filterNode"
                   :props="defaultProps"
                   highlight-current
@@ -33,25 +33,25 @@
                       <el-dropdown>
                         <span class="el-dropdown-link">
                           <i
-                            :class="node.label !== '全部图片' ? 'el-icon-more' : 'el-icon-plus'"
-                            @click.stop="allAdd(node.label)"
+                            :class="isAllCategory(data) ? 'el-icon-plus' : 'el-icon-more'"
+                            @click.stop="allAdd(data)"
                           ></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                           <el-dropdown-item
                             @click.native="onAdd(data.id)"
-                            v-if="node.label !== '全部图片' && checkPermi(['platform:category:save'])"
-                            >添加分类</el-dropdown-item
+                            v-if="!isAllCategory(data) && checkPermi(['platform:category:save'])"
+                            >{{ $t('upload.addCategory') }}</el-dropdown-item
                           >
                           <el-dropdown-item
-                            v-if="node.label !== '全部图片' && checkPermi(['platform:category:update'])"
+                            v-if="!isAllCategory(data) && checkPermi(['platform:category:update'])"
                             @click.native="onEdit(data.id)"
-                            >编辑分类</el-dropdown-item
+                            >{{ $t('upload.editCategory') }}</el-dropdown-item
                           >
                           <el-dropdown-item
-                            v-if="node.label !== '全部图片' && checkPermi(['platform:category:delete'])"
+                            v-if="!isAllCategory(data) && checkPermi(['platform:category:delete'])"
                             @click.native="handleOpenDelete(data.id)"
-                            >删除分类</el-dropdown-item
+                            >{{ $t('upload.deleteCategory') }}</el-dropdown-item
                           >
                         </el-dropdown-menu>
                       </el-dropdown>
@@ -67,14 +67,14 @@
         <div class="conter mb15 relative">
           <div class="bnt" :style="{ paddingLeft: listType == 1 ? '17px' : '0' }">
             <el-button size="small" type="primary" class="mr10 mb20" @click="checkPics" v-if="!pictureType">
-              {{ typeDate === 'pic' ? '使用选中图片' : '使用选中视频' }}
+              {{ typeDate === 'pic' ? $t('upload.useSelectedImage') : $t('upload.useSelectedVideo') }}
             </el-button>
             <!--弹窗组件-->
 
             <!--素材管理-->
             <div class="acea-row">
               <div v-if="typeDate === 'pic' && checkPermi(['platform:upload:image', 'platform:upload:file'])">
-                <el-button class="mr10" type="primary" @click="handleChangeImage">上传图片 </el-button>
+                <el-button class="mr10" type="primary" @click="handleChangeImage">{{ $t('upload.uploadImage') }}</el-button>
               </div>
 
               <el-upload
@@ -87,11 +87,11 @@
                 :show-file-list="false"
                 multiple
               >
-                <el-button class="mr10" type="primary">上传视频</el-button>
+                <el-button class="mr10" type="primary">{{ $t('upload.uploadVideo') }}</el-button>
               </el-upload>
               <div v-hasPermi="['platform:attachment:delete']">
-                <el-button class="mr10" @click.stop="editPicList('图片')"
-                  >{{ typeDate === 'pic' ? '删除图片' : '删除视频' }}
+                <el-button class="mr10" @click.stop="editPicList($t('upload.image'))"
+                  >{{ typeDate === 'pic' ? $t('upload.deleteImage') : $t('upload.deleteVideo') }}
                 </el-button>
               </div>
             </div>
@@ -99,7 +99,7 @@
               v-hasPermi="['platform:attachment:move']"
               v-model="sleOptions.attachment_category_name"
               v-if="pictureType"
-              :placeholder="typeDate === 'pic' ? '图片移动至' : '视频移动至'"
+              :placeholder="typeDate === 'pic' ? $t('upload.moveImageTo') : $t('upload.moveVideoTo')"
               class="mb20"
               :size="pictureType ? '' : 'small'"
             >
@@ -111,7 +111,7 @@
               >
                 <el-tree
                   ref="tree2"
-                  :data="treeData2"
+                  :data="localizedTreeData"
                   :filter-node-method="filterNode"
                   :props="defaultProps"
                   highlight-current
@@ -125,7 +125,7 @@
                   v-model.trim="filterName"
                   class="searchInput"
                   v-if="false"
-                  :placeholder="typeDate == 'pic' ? '搜索图片名称' : '搜索视频名称'"
+                  :placeholder="typeDate == 'pic' ? $t('upload.searchImageName') : $t('upload.searchVideoName')"
                   suffix-icon="el-icon-search"
                   style="width: 100%"
                   clearable
@@ -145,7 +145,7 @@
           <div class="pictrueList acea-row">
             <div v-show="isShowPic" class="imagesNo">
               <i class="el-icon-picture" style="font-size: 60px; color: rgb(219, 219, 219)" />
-              <span class="imagesNo_sp">素材为空</span>
+              <span class="imagesNo_sp">{{ $t('upload.noMaterial') }}</span>
             </div>
             <!-- 宫格布局 -->
             <div
@@ -190,9 +190,9 @@
                 </div>
                 <!-- 删除/重命名/查看 -->
                 <div class="operate" v-if="pictureType && item.isCk">
-                  <span @click="deleteOperate(item)">删除</span>
-                  <span v-if="false">重命名</span>
-                  <span v-if="false">查看</span>
+                  <span @click="deleteOperate(item)">{{ $t('common.delete') }}</span>
+                  <span v-if="false">{{ $t('upload.rename') }}</span>
+                  <span v-if="false">{{ $t('upload.view') }}</span>
                 </div>
               </div>
               <div class="block">
@@ -222,7 +222,7 @@
                 v-show="!isShowPic"
               >
                 <el-table-column type="selection"> </el-table-column>
-                <el-table-column label="图片名称">
+                <el-table-column :label="$t('upload.imageName')">
                   <template slot-scope="scope">
                     <div class="imgDiv">
                       <img :src="scope.row.sattDir" alt="" class="listImg" v-if="typeDate == 'pic'" />
@@ -233,19 +233,19 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column prop="name" label="大小">
+                <el-table-column prop="name" :label="$t('upload.size')">
                   <template slot-scope="scope">{{ scope.row.attSize }}</template>
                 </el-table-column>
-                <el-table-column prop="address" label="上传时间">
+                <el-table-column prop="address" :label="$t('upload.uploadTime')">
                   <template slot-scope="scope">{{ scope.row.createTime }}</template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column :label="$t('common.operate')">
                   <template slot-scope="scope">
-                    <el-link type="primary" @click="deleteListFun(scope)">删除</el-link>
+                    <el-link type="primary" @click="deleteListFun(scope)">{{ $t('common.delete') }}</el-link>
                     <span class="decollator" v-if="false">|</span>
-                    <el-link type="primary" v-if="false">查看</el-link>
+                    <el-link type="primary" v-if="false">{{ $t('upload.view') }}</el-link>
                     <span class="decollator" v-if="false">|</span>
-                    <el-link type="primary" v-if="false">重命名</el-link>
+                    <el-link type="primary" v-if="false">{{ $t('upload.rename') }}</el-link>
                   </template>
                 </el-table-column>
               </el-table>
@@ -272,50 +272,66 @@
       :close-on-click-modal="false"
       :modal="true"
       @close="closeModel"
-      width="540px"
+      width="640px"
       :append-to-body="!pictureType ? true : false"
     >
-      <el-form ref="editPram" :model="editPram" label-width="75px" v-loading="loading">
+      <el-form ref="editPram" :model="editPram" label-width="110px" v-loading="loading">
         <el-form-item
-          label="上级分类"
+          :label="$t('upload.parentCategory')"
           prop="pid"
           :rules="[
             {
               type: 'number',
               required: true,
-              message: '请选择上级分类',
+              message: $t('upload.pleaseSelectParentCategory'),
               trigger: ['blur', 'change'],
             },
           ]"
         >
-          <el-cascader v-model="editPram.pid" :options="treeData2" :props="categoryProps" style="width: 100%" />
+          <el-cascader v-model="editPram.pid" :options="localizedTreeData" :props="categoryProps" style="width: 100%" />
         </el-form-item>
         <el-form-item
-          label="分类名称"
+          :label="$t('upload.categoryName')"
           prop="name"
-          :rules="[
-            {
-              required: true,
-              message: '请输入分类名称',
-              trigger: ['blur', 'change'],
-            },
-          ]"
+          :rules="categoryNameRules"
         >
-          <el-input v-model.trim="editPram.name" placeholder="分类名称" />
+          <div class="lang-name-switch">
+            <el-radio-group v-model="activeLang" size="small">
+              <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                {{ lang.label }}
+              </el-radio-button>
+            </el-radio-group>
+            <el-input
+              v-if="activeLang === defaultLangCode"
+              v-model.trim="editPram.name"
+              maxlength="50"
+              :placeholder="$t('upload.pleaseEnterCategoryName')"
+              class="lang-name-input"
+              @input="touchCategoryName"
+            />
+            <el-input
+              v-else
+              v-model.trim="nameJsonForm[activeLang]"
+              maxlength="50"
+              :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+              class="lang-name-input"
+              @input="touchCategoryName"
+            />
+          </div>
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item :label="$t('upload.sort')">
           <el-input-number v-model.trim="editPram.sort" />
         </el-form-item>
         <el-form-item class="rightBtn">
-          <el-button @click="visible = false">取 消</el-button>
-          <el-button type="primary" @click="handlerSubmit('editPram')">确定 </el-button>
+          <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
+          <el-button type="primary" @click="handlerSubmit('editPram')">{{ $t('common.confirm') }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
 
     <el-dialog
       custom-class="uploadDialog"
-      title="上传图片"
+      :title="$t('upload.uploadImage')"
       :visible.sync="visiblePic"
       @close="onCallback(false)"
       class="handleDialog"
@@ -326,7 +342,7 @@
         <div class="main">
           <div class="cropperContent">
             <div class="mb35">
-              <div class="title">原始图片</div>
+              <div class="title">{{ $t('upload.originalImage') }}</div>
               <div class="cropper mr20">
                 <vue-cropper
                   ref="cropper"
@@ -355,7 +371,7 @@
               <div class="scopeButton mt20 mb20">
                 <el-button-group>
                   <el-button type="primary">
-                    <label for="uploads">选择本地图片</label>
+                    <label for="uploads">{{ $t('upload.selectLocalImage') }}</label>
                     <input
                       type="file"
                       id="uploads"
@@ -364,9 +380,9 @@
                       @change="uploadImg($event)"
                     />
                   </el-button>
-                  <el-button type="primary" v-if="!crap" @click="startCrop">图片裁剪 </el-button>
-                  <el-button type="primary" @click="stopCrop" v-else>关闭裁剪 </el-button>
-                  <el-button type="primary" @click="clearCrop">清除裁剪 </el-button>
+                  <el-button type="primary" v-if="!crap" @click="startCrop">{{ $t('upload.cropImage') }}</el-button>
+                  <el-button type="primary" @click="stopCrop" v-else>{{ $t('upload.closeCrop') }}</el-button>
+                  <el-button type="primary" @click="clearCrop">{{ $t('upload.clearCrop') }}</el-button>
                   <el-button type="primary" @click="changeScale(1)" icon="el-icon-plus"></el-button>
                   <el-button type="primary" @click="changeScale(-1)" icon="el-icon-minus"></el-button>
                   <el-button type="primary" @click="rotateLeft" icon="el-icon-refresh-left"></el-button>
@@ -375,8 +391,8 @@
               </div>
               <div class="uploadButton acea-row">
                 <el-button-group>
-                  <el-button @click="down('blob')" type="primary" icon="el-icon-download">下载 </el-button>
-                  <el-button @click="uploadNewPic" type="primary" icon="el-icon-upload2">上传至图片库 </el-button>
+                  <el-button @click="down('blob')" type="primary" icon="el-icon-download">{{ $t('upload.download') }}</el-button>
+                  <el-button @click="uploadNewPic" type="primary" icon="el-icon-upload2">{{ $t('upload.uploadToImageLibrary') }}</el-button>
                   <el-upload
                     action
                     :http-request="handleUploadForm"
@@ -385,13 +401,13 @@
                     :show-file-list="false"
                     multiple
                   >
-                    <el-button icon="el-icon-upload2" type="primary" style="margin-left: 15px">多图上传 </el-button>
+                    <el-button icon="el-icon-upload2" type="primary" style="margin-left: 15px">{{ $t('upload.multiImageUpload') }}</el-button>
                   </el-upload>
                 </el-button-group>
               </div>
             </div>
             <div class="previewBox">
-              <div class="title">实时预览</div>
+              <div class="title">{{ $t('upload.realtimePreview') }}</div>
               <div
                 class="show-preview"
                 :style="{ width: previews.w + 'px', height: previews.h + 'px', overflow: 'hidden', margin: '5px' }"
@@ -421,10 +437,21 @@
 
 import { addCategroy, treeCategroy, infoCategroy, updateCategroy, deleteCategroy } from '@/api/categoryApi';
 import { fileImageApi, fileListApi, fileDeleteApi, attachmentMoveApi } from '@/api/systemSetting';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
 import { getToken } from '@/utils/auth';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
 import { VueCropper } from 'vue-cropper';
 import { Debounce } from '@/utils/validate';
+import {
+  resolveFormActiveLang,
+  hasI18nNameContent,
+  buildI18nNameJson,
+  pickFormName,
+  pickI18nSubmitName,
+  getLocalizedName,
+  getUiLocale,
+} from '@/utils/localizedName';
 export default {
   name: 'uploadPicture',
   props: {
@@ -459,7 +486,7 @@ export default {
       checkDialogData: {},
       //列表类型 1 宫格 0 列表
       listType: 1,
-      uploadName: '上传',
+      uploadName: this.$t('upload.upload'),
       fixed: false,
       fixedNumber: [16, 9],
       option: {
@@ -499,6 +526,7 @@ export default {
       editPram: {
         pid: 0,
         name: '',
+        nameJson: '',
         type: 2,
         sort: 1,
         status: 0,
@@ -575,20 +603,50 @@ export default {
         dialogVisible: false,
         forDeleteId: 0,
       },
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: {},
     };
   },
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val);
     },
+    visible(val) {
+      if (val) this.getLanguageList();
+    },
   },
   computed: {
+    allImagesLabel() {
+      return this.$t('upload.allImages');
+    },
     gridPicStyle() {
       return {
         width: this.pictureType ? `${(this.divWidth - 104) / 6}px` : '90px',
         marginLeft: this.pictureType ? '17px' : '20px',
         marginBottom: this.pictureType ? '42px' : '19px',
       };
+    },
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    localizedTreeData() {
+      this.$i18n.locale;
+      return this.localizeCategoryTree(this.treeData2);
+    },
+    categoryNameRules() {
+      this.$i18n.locale;
+      return [
+        {
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(pickFormName(this), this.nameJsonForm)) callback();
+            else callback(new Error(this.$t('upload.pleaseEnterCategoryName')));
+          },
+          trigger: ['blur', 'change'],
+        },
+      ];
     },
   },
   created() {
@@ -621,19 +679,80 @@ export default {
     getWindowInfo() {
       this.divWidth = this.$refs.myDiv.offsetWidth;
     },
-    allAdd(label) {
-      if (label == '全部图片') {
-        this.onAdd();
+    allAdd(data) {
+      if (this.isAllCategory(data)) {
+        this.onAdd(0);
       }
+    },
+    isAllCategory(data) {
+      return !!(data && (data.isAll || data.id === 0 || data.id === '0'));
+    },
+    localizeCategoryTree(nodes) {
+      if (!Array.isArray(nodes)) return [];
+      const locale = getUiLocale(this);
+      return nodes.map((node) => {
+        const name = this.isAllCategory(node)
+          ? this.$t('upload.allImages')
+          : getLocalizedName(node, locale) || node.name;
+        const item = { ...node, name };
+        if (node.child && node.child.length) item.child = this.localizeCategoryTree(node.child);
+        return item;
+      });
+    },
+    emptyNameJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    parseNameJson(nameJson) {
+      const form = this.emptyNameJsonForm();
+      if (!nameJson) return form;
+      try {
+        const obj = typeof nameJson === 'string' ? JSON.parse(nameJson) : nameJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // ignore
+      }
+      return form;
+    },
+    buildNameJson() {
+      return buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, pickFormName(this));
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseNameJson(this.editPram && this.editPram.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseNameJson(this.editPram && this.editPram.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
     },
     //宫格删除操作
     deleteOperate(item) {
       this.$modalSure().then(() => {
         fileDeleteApi(item.attId).then(() => {
-          this.$message.success('刪除成功');
+          this.$message.success(this.$t('upload.deleteSuccess'));
           this.tableData.page = 1;
           this.getFileList();
-          this.uploadName = '上传';
+          this.uploadName = this.$t('upload.upload');
         });
       });
     },
@@ -643,7 +762,7 @@ export default {
     },
     //查看模态框控制
     checkHandleClose(done) {
-      this.$confirm('确认关闭？')
+      this.$confirm(this.$t('upload.confirmClose'))
         .then((_) => {
           done();
         })
@@ -660,11 +779,11 @@ export default {
     deleteListFun(scope) {
       this.$modalSure().then(() => {
         fileDeleteApi(scope.row.attId).then(() => {
-          this.$message.success('刪除成功');
+          this.$message.success(this.$t('upload.deleteSuccess'));
           this.tableData.page = 1;
           this.getFileList();
           this.checkPicList = [];
-          this.uploadName = '上传';
+          this.uploadName = this.$t('upload.upload');
         });
       });
     },
@@ -737,6 +856,11 @@ export default {
       this.localImg = URL.createObjectURL(event.raw);
       // 转换后的地址为 blob:http://xxx/7bf54338-74bb-47b9-9a7f-7a7093c716b5
     },
+    touchCategoryName() {
+      this.$nextTick(() => {
+        if (this.$refs.editPram) this.$refs.editPram.validateField('name');
+      });
+    },
     closeModel() {
       this.$refs['editPram'].resetFields();
     },
@@ -744,16 +868,21 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.editPram.pid > 0) {
-            if (this.editPram.pid === this.editPram.id) return this.$message.warning('上级分类不能选当前分类');
+            if (this.editPram.pid === this.editPram.id) return this.$message.warning(this.$t('upload.parentCategoryCannotBeCurrent'));
           }
-          this.bizTitle === '添加分类'
-            ? addCategroy(this.editPram).then((data) => {
-                this.$message.success('创建成功');
+          const payload = {
+            ...this.editPram,
+            name: pickI18nSubmitName(pickFormName(this), this.nameJsonForm),
+            nameJson: this.buildNameJson(),
+          };
+          this.bizTitle === this.$t('upload.addCategory')
+            ? addCategroy(payload).then((data) => {
+                this.$message.success(this.$t('upload.createSuccess'));
                 this.visible = false;
                 this.getList();
               })
-            : updateCategroy(this.editPram).then((data) => {
-                this.$message.success('编辑成功');
+            : updateCategroy(payload).then((data) => {
+                this.$message.success(this.$t('upload.editSuccess'));
                 this.visible = false;
                 this.getList();
               });
@@ -765,8 +894,9 @@ export default {
     // 表单分类
     handlerGetList() {
       let datas = {
-        name: '全部图片',
-        id: '',
+        name: '',
+        id: 0,
+        isAll: true,
       };
       treeCategroy(this.treeFrom).then((data) => {
         this.allTreeList = data;
@@ -776,13 +906,18 @@ export default {
     // 搜索分类
     filterNode(value, data) {
       if (!value) return true;
-      return data.name.indexOf(value) !== -1;
+      const locale = getUiLocale(this);
+      const label = this.isAllCategory(data)
+        ? this.$t('upload.allImages')
+        : getLocalizedName(data, locale) || data.name || '';
+      return String(label).indexOf(value) !== -1;
     },
     // 所有分类
     getList() {
       const data = {
-        name: '全部图片',
+        name: '',
         id: 0,
+        isAll: true,
       };
       treeCategroy(this.treeFrom).then((res) => {
         this.treeData = res;
@@ -792,26 +927,31 @@ export default {
     },
     // 添加分类
     onAdd(id) {
-      this.tableData.pid = id;
-      this.bizTitle = '添加分类';
+      const pid = id === undefined || id === null || id === '' ? 0 : id;
+      this.tableData.pid = pid;
+      this.bizTitle = this.$t('upload.addCategory');
       this.visible = true;
-      if (id)
-        this.editPram = {
-          pid: id,
-          name: '',
-          type: 2,
-          sort: 1,
-          status: 0,
-          url: 'url',
-          id: 0,
-        };
+      this.editPram = {
+        pid,
+        name: '',
+        nameJson: '',
+        type: 2,
+        sort: 1,
+        status: 0,
+        url: 'url',
+        id: 0,
+      };
+      this.nameJsonForm = this.emptyNameJsonForm();
+      this.activeLang = resolveFormActiveLang(this);
     },
     // 编辑
     onEdit(id) {
-      this.bizTitle = '编辑分类';
+      this.bizTitle = this.$t('upload.editCategory');
       this.loading = true;
       infoCategroy(id).then((res) => {
         this.editPram = res;
+        this.nameJsonForm = this.parseNameJson(res.nameJson);
+        this.activeLang = resolveFormActiveLang(this);
         this.loading = false;
       });
       this.visible = true;
@@ -820,9 +960,9 @@ export default {
     handleOpenDelete(id) {
       this.picDeleteConfig.forDeleteId = id;
       this.picDeleteConfig.dialogVisible = true;
-      this.$modalSure('删除当前分类吗').then(() => {
+      this.$modalSure(this.$t('upload.deleteCurrentCategory')).then(() => {
         deleteCategroy(this.picDeleteConfig.forDeleteId).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('upload.deleteSuccess'));
           this.picDeleteConfig.forDeleteId = 0;
           this.getList();
         });
@@ -848,14 +988,14 @@ export default {
     uploadPic(formData, data) {
       let loading = this.$loading({
         lock: true,
-        text: '上传中，请稍候...',
+        text: this.$t('upload.uploading'),
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)',
       });
       fileImageApi(formData, data)
         .then((res) => {
           loading.close();
-          this.$message.success('上传成功');
+          this.$message.success(this.$t('upload.uploadSuccess'));
           this.tableData.page = 1;
           this.getFileList();
           this.onCallback();
@@ -916,9 +1056,9 @@ export default {
         this.ids.push(item.attId);
       });
       if (this.checkPicList.length > 0) {
-        this.uploadName = '裁剪图片';
+        this.uploadName = this.$t('upload.cropImage');
       } else {
-        this.uploadName = '上传';
+        this.uploadName = this.$t('upload.upload');
       }
 
       this.pictrueList.list.map((el, i) => {
@@ -938,7 +1078,7 @@ export default {
     },
     // 点击使用选中图片
     checkPics() {
-      if (!this.checkPicList.length) return this.$message.warning('请先选择图片');
+      if (!this.checkPicList.length) return this.$message.warning(this.$t('upload.pleaseSelectImageFirst'));
       if (this.$route && this.$route.query.field === 'dialog') {
         let str = '';
         for (let i = 0; i < this.checkPicList.length; i++) {
@@ -949,21 +1089,21 @@ export default {
         nowEditor.editor.setContent(str, true);
       } else {
         if (!this.multiple && this.checkPicList.length > 1) {
-          return this.$message.warning('最多只能选一张图片');
+          return this.$message.warning(this.$t('upload.maxOneImage'));
         }
         this.$emit('getImage', [...this.checkedMore, ...this.checkPicList]);
       }
     },
     // 删除图片
     editPicList(tit) {
-      if (!this.checkPicList.length) return this.$message.warning('请先选择图片');
+      if (!this.checkPicList.length) return this.$message.warning(this.$t('upload.pleaseSelectImageFirst'));
       this.$modalSure().then(() => {
         fileDeleteApi(this.ids.join(',')).then(() => {
-          this.$message.success('刪除成功');
+          this.$message.success(this.$t('upload.deleteSuccess'));
           this.tableData.page = 1;
           this.getFileList();
           this.checkPicList = [];
-          this.uploadName = '上传';
+          this.uploadName = this.$t('upload.upload');
         });
       });
     },
@@ -976,13 +1116,13 @@ export default {
         };
         this.getMove();
       } else {
-        this.$message.warning('请先选择图片');
+        this.$message.warning(this.$t('upload.pleaseSelectImageFirst'));
       }
     },
     getMove() {
       attachmentMoveApi(this.sleOptions)
         .then(async (res) => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('upload.operationSuccess'));
           this.clearBoth();
           this.tableData.page = 1;
           this.getFileList();
@@ -1036,7 +1176,7 @@ export default {
     },
     handleChangeImage() {
       if (this.checkPicList.length > 1) {
-        return this.$message.warning('最多只能选一张图片');
+        return this.$message.warning(this.$t('upload.maxOneImage'));
       }
       this.visiblePic = true;
       if (this.checkPicList.length > 0) this.imageToBase64(this.checkPicList[0].sattDir);
@@ -1146,7 +1286,7 @@ export default {
       //上传图片
       var file = e.target.files[0];
       if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
-        this.$message.warning('图片类型必须是.gif,jpeg,jpg,png,bmp中的一种');
+        this.$message.warning(this.$t('upload.imageTypeInvalid'));
         return false;
       }
       var reader = new FileReader();
@@ -1652,5 +1792,16 @@ export default {
 >>> .el-tree-node__content:hover {
   background-color: var(--prev-bg-menu-hover-ba-color) !important;
   color: var(--prev-MenuActiveColor) !important;
+}
+
+.lang-name-switch {
+  width: 100%;
+}
+.lang-name-switch .el-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+.lang-name-input {
+  margin-top: 10px;
 }
 </style>

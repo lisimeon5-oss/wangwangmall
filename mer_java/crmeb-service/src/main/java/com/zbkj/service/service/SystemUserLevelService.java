@@ -64,10 +64,20 @@ public interface SystemUserLevelService extends IService<SystemUserLevel> {
     Boolean updateShow(SystemUserLevelUpdateShowRequest request);
 
     /**
-     * 获取用户等级规则
+     * 获取用户等级规则（默认语言原文，供后台编辑）
      * @return 用户等级规则
      */
     String getRule();
+
+    /**
+     * 后台编辑用：默认规则 + 多语言 JSON
+     */
+    SystemUserLevelRuleRequest getRuleForEdit();
+
+    /**
+     * 按请求语言解析等级规则，缺省回退默认 rule
+     */
+    String resolveDisplayRule();
 
     /**
      * 获取用户等级配置
@@ -103,4 +113,9 @@ public interface SystemUserLevelService extends IService<SystemUserLevel> {
      * @param grade 用户等级级别
      */
     SystemUserLevel getPreviousGrade(Integer grade);
+
+    /**
+     * 按请求语言解析等级名称，缺省回退默认 name
+     */
+    String resolveDisplayName(SystemUserLevel level);
 }

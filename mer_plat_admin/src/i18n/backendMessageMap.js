@@ -1,0 +1,23 @@
+// 后端返回的中文提示 -> i18n key（接口 message 仍为中文时由前端按当前语言展示）
+export const backendMessageMap = {
+  '时间参数不正确 例如:01:00,02:00': 'marketing.invalidTimeFormat',
+  '开始时间必须小于结束时间': 'marketing.startTimeMustBeforeEnd',
+  '当前时间段的秒杀配置已存在': 'marketing.seckillIntervalExists',
+  '秒杀时段ID不能为空': 'marketing.seckillIntervalIdRequired',
+  '秒杀时段名称不能为空': 'marketing.periodNameRequired',
+  '秒杀时段名称最多30个字符': 'marketing.periodNameMaxLength',
+  '秒杀时段开始时间不能为空': 'marketing.startTimeRequired',
+  '秒杀时段结束时间不能为空': 'marketing.endTimeRequired',
+  '开启状态不能为空': 'marketing.statusRequired',
+  '位置的开启状态': 'marketing.statusInvalid',
+  '秒杀时段不存在': 'marketing.seckillIntervalNotExist',
+  '秒杀时段已使用': 'marketing.seckillIntervalUsed',
+  '秒杀时段不存在或未开启': 'marketing.seckillIntervalClosed',
+  '未登录，请登录！': 'common.pleaseLogin',
+  'token过期，请登录！': 'common.tokenExpired',
+  '无访问权限,请联系管理员授予权限': 'common.noAccessContactAdmin',
+  '参数检验失败': 'common.validateFailed',
+  '系统异常，请稍后重试': 'common.systemError',
+  '没有可导出的数据！': 'common.noExportableData',
+  '没有可导出的数据': 'common.noExportableData',
+};

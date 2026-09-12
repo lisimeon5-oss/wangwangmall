@@ -5,18 +5,18 @@
         <el-card :bordered="false" dis-hover :padding="12" shadow="never">
           <div class="acea-row row-between-wrapper">
             <div class="acea-row align-center">
-              <span class="main_tit">总数据</span>
+              <span class="main_tit">{{ $t('dashboard.totalData') }}</span>
             </div>
           </div>
           <div class="container" v-if="viewData">
             <div class="con_left">
               <span class="content-number spBlock m-b-15">{{ viewData.userNum || 0 }}</span>
-              <span class="main_tit">用户总数</span>
+              <span class="main_tit">{{ $t('dashboard.totalUsers') }}</span>
             </div>
             <div class="line"></div>
             <div class="con_right">
               <span class="content-number spBlock m-b-15">{{ viewData.merchantNum || 0 }}</span>
-              <span class="main_tit">商户总数</span>
+              <span class="main_tit">{{ $t('dashboard.totalMerchants') }}</span>
             </div>
           </div>
         </el-card>
@@ -25,16 +25,16 @@
         <el-card :bordered="false" dis-hover :padding="12" shadow="never">
           <div class="acea-row row-between-wrapper">
             <div class="acea-row align-center">
-              <span class="main_tit">今日新增商户数</span>
+              <span class="main_tit">{{ $t('dashboard.todayNewMerchants') }}</span>
             </div>
-            <el-tag type="primary">今日</el-tag>
+            <el-tag type="primary">{{ $t('dashboard.today') }}</el-tag>
           </div>
           <div class="content" v-if="viewData">
             <span class="content-number spBlock my15">{{ viewData.todayNewMerchantNum || 0 }}</span>
             <el-divider></el-divider>
             <div class="acea-row row-between-wrapper">
-              <span class="content-time">昨日数据</span>
-              <span class="content-time">{{ viewData.yesterdayNewMerchantNum || 0 }} 人</span>
+              <span class="content-time">{{ $t('dashboard.yesterdayData') }}</span>
+              <span class="content-time">{{ viewData.yesterdayNewMerchantNum || 0 }} {{ $t('dashboard.people') }}</span>
             </div>
           </div>
         </el-card>
@@ -43,16 +43,16 @@
         <el-card :bordered="false" dis-hover :padding="12" shadow="never">
           <div class="acea-row row-between-wrapper">
             <div class="acea-row align-center">
-              <span class="main_tit">今日新增用户数</span>
+              <span class="main_tit">{{ $t('dashboard.todayNewUsers') }}</span>
             </div>
-            <el-tag type="primary">今日</el-tag>
+            <el-tag type="primary">{{ $t('dashboard.today') }}</el-tag>
           </div>
           <div class="content" v-if="viewData">
             <span class="content-number spBlock my15">{{ viewData.todayNewUserNum || 0 }}</span>
             <el-divider></el-divider>
             <div class="acea-row row-between-wrapper">
-              <span class="content-time">昨日数据</span>
-              <span class="content-time">{{ viewData.yesterdayNewUserNum || 0 }} 人</span>
+              <span class="content-time">{{ $t('dashboard.yesterdayData') }}</span>
+              <span class="content-time">{{ viewData.yesterdayNewUserNum || 0 }} {{ $t('dashboard.people') }}</span>
             </div>
           </div>
         </el-card>
@@ -61,16 +61,16 @@
         <el-card :bordered="false" dis-hover :padding="12" shadow="never">
           <div class="acea-row row-between-wrapper">
             <div class="acea-row align-center">
-              <span class="main_tit">订单量</span>
+              <span class="main_tit">{{ $t('dashboard.orderNum') }}</span>
             </div>
-            <el-tag type="primary">今日</el-tag>
+            <el-tag type="primary">{{ $t('dashboard.today') }}</el-tag>
           </div>
           <div class="content" v-if="viewData">
             <span class="content-number spBlock my15">{{ viewData.orderNum || 0 }}</span>
             <el-divider></el-divider>
             <div class="acea-row row-between-wrapper">
-              <span class="content-time">昨日数据</span>
-              <span class="content-time">{{ viewData.yesterdayOrderNum || 0 }}单</span>
+              <span class="content-time">{{ $t('dashboard.yesterdayData') }}</span>
+              <span class="content-time">{{ viewData.yesterdayOrderNum || 0 }}{{ $t('dashboard.single') }}</span>
             </div>
           </div>
         </el-card>
@@ -79,15 +79,15 @@
         <el-card :bordered="false" dis-hover :padding="12" shadow="never">
           <div class="acea-row row-between-wrapper">
             <div class="acea-row align-center">
-              <span class="main_tit">用户访问量</span>
+              <span class="main_tit">{{ $t('dashboard.userVisits') }}</span>
             </div>
-            <el-tag type="primary">今日</el-tag>
+            <el-tag type="primary">{{ $t('dashboard.today') }}</el-tag>
           </div>
           <div class="content" v-if="viewData">
             <span class="content-number spBlock my15">{{ viewData.pageviews || 0 }}</span>
             <el-divider></el-divider>
             <div class="acea-row row-between-wrapper">
-              <span class="content-time">昨日数据</span>
+              <span class="content-time">{{ $t('dashboard.yesterdayData') }}</span>
               <span class="content-time">{{ viewData.yesterdayPageviews || 0 }}</span>
             </div>
           </div>
@@ -97,16 +97,16 @@
         <el-card :bordered="false" dis-hover :padding="12" shadow="never">
           <div class="acea-row row-between-wrapper">
             <div class="acea-row align-center">
-              <span class="main_tit">销售额</span>
+              <span class="main_tit">{{ $t('dashboard.salesAmount') }}</span>
             </div>
-            <el-tag type="primary">今日</el-tag>
+            <el-tag type="primary">{{ $t('dashboard.today') }}</el-tag>
           </div>
           <div class="content">
             <span class="content-number spBlock my15">{{ viewData.sales || 0 }}</span>
             <el-divider></el-divider>
             <div class="acea-row row-between-wrapper">
-              <span class="content-time">昨日数据</span>
-              <span class="content-time">{{ viewData.yesterdaySales || 0 }} 元</span>
+              <span class="content-time">{{ $t('dashboard.yesterdayData') }}</span>
+              <span class="content-time">{{ viewData.yesterdaySales || 0 }} {{ $t('dashboard.yuan') }}</span>
             </div>
           </div>
         </el-card>

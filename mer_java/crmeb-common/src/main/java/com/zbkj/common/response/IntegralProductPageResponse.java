@@ -39,6 +39,9 @@ public class IntegralProductPageResponse implements Serializable {
     @ApiModelProperty(value = "商品名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言商品名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "兑换积分")
     private Integer redeemIntegral;
 

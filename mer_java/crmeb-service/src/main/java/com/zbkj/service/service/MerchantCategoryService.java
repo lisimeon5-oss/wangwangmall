@@ -64,4 +64,9 @@ public interface MerchantCategoryService extends IService<MerchantCategory> {
     Map<Integer, MerchantCategory> allMap();
 
     MerchantCategory getByIdException(Integer categoryId);
+
+    /**
+     * 按请求语言解析分类名称，缺省回退默认 name
+     */
+    String resolveDisplayName(MerchantCategory category);
 }

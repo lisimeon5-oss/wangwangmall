@@ -22,26 +22,26 @@
                 <el-input
                   size="small"
                   v-model="item.name"
-                  placeholder="请输入标题"
+                  :placeholder="translateText('请输入标题')"
                   :maxlength="configData.max"
                 ></el-input>
               </div>
             </div>
             <div v-if="configData.isShowLinkUrl" class="info-item">
-              <span>链接</span>
+              <span>{{ translateText("链接") }}</span>
               <div class="input-box">
-                <el-input size="small" v-model="item.linkUrl" placeholder="请输入链接"></el-input>
+                <el-input size="small" v-model="item.linkUrl" :placeholder="translateText('请输入链接')"></el-input>
               </div>
             </div>
             <div v-if="configData.isShowStatus" class="info-item">
-              <span>状态</span>
+              <span>{{ translateText("状态") }}</span>
               <div class="input-box">
                 <el-switch
                   v-model="item.status"
                   :active-value="true"
                   :inactive-value="false"
-                  active-text="显示"
-                  inactive-text="隐藏"
+                  :active-text="translateText('显示')"
+                  :inactive-text="translateText('隐藏')"
                   @change="onchangeIsShow(item.status, index)"
                 />
               </div>
@@ -55,7 +55,7 @@
     </div>
     <template v-if="configData.isShowAddBtn">
       <div class="add-btn mt20" v-if="configData.list.length < configData.maxList || !configData.maxList">
-        <el-button class="button" icon="el-icon-plus" plain @click="addBox">添加模块</el-button>
+        <el-button class="button" icon="el-icon-plus" plain @click="addBox">{{ translateText("添加模块") }}</el-button>
       </div>
     </template>
     <!--    <linkaddress ref="linkaddres" @linkUrl="linkUrl"></linkaddress>-->

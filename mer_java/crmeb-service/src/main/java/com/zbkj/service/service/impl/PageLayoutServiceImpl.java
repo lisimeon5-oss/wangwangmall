@@ -241,6 +241,7 @@ public class PageLayoutServiceImpl implements PageLayoutService {
                 groupConfig.setName(data.getName());
                 groupConfig.setLinkUrl(data.getLinkUrl());
                 groupConfig.setImageUrl(data.getImageUrl());
+                groupConfig.setImageUrlJson(data.getImageUrlJson());
                 groupConfig.setSort(data.getSort());
                 groupConfig.setStatus(true);
                 return groupConfig;

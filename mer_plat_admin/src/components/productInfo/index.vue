@@ -2,7 +2,7 @@
   <div class="infoBox">
     <el-drawer
       :visible.sync="dialogVisibleInfoData"
-      :title="isAtud ? '商品审核' : '商品详情'"
+      :title="isAtud ? $t('product.auditTitle') : $t('product.productDetail')"
       :direction="direction"
       custom-class="demo-drawer"
       size="1000px"
@@ -17,9 +17,16 @@
             <div class="full">
               <img class="order_icon" :src="formValidate.image" alt="" />
               <div class="text">
-                <div class="title">{{ formValidate.name }}</div>
+                <div class="lang-name-switch mb8">
+                  <el-radio-group v-model="activeLang" size="mini">
+                    <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                      {{ lang.label }}
+                    </el-radio-button>
+                  </el-radio-group>
+                </div>
+                <div class="title">{{ displayName }}</div>
                 <div>
-                  <span class="mr20">商品ID：{{ formValidate.id }}</span>
+                  <span class="mr20">{{ $t('product.productIdLabel') }}{{ formValidate.id }}</span>
                 </div>
               </div>
             </div>
@@ -32,7 +39,7 @@
                   }
                 "
                 style="margin-left: 0"
-                >{{ loadingBtn ? '提交中 ...' : '审核拒绝' }}</el-button
+                >{{ loadingBtn ? $t('common.submitting') : $t('product.auditRejected') }}</el-button
               >
               <el-button
                 size="small"
@@ -42,49 +49,49 @@
                     onSubmit('success');
                   }
                 "
-                >{{ loadingBtn ? '提交中 ...' : '审核通过' }}</el-button
+                >{{ loadingBtn ? $t('common.submitting') : $t('finance.auditPassed') }}</el-button
               >
             </div>
           </div>
           <ul class="list">
             <li v-show="formValidate.type >= 0" class="item">
-              <div class="title">商品类型</div>
+              <div class="title">{{ $t('product.productType') }}</div>
               <div>{{ formValidate.type | productTpyeFilter }}</div>
             </li>
             <li class="item">
-              <div class="title">商品状态</div>
-              <div class="color-warning">{{ formValidate.isShow ? '上架' : '下架' }}</div>
+              <div class="title">{{ $t('product.productStatus') }}</div>
+              <div class="color-warning">{{ formValidate.isShow ? $t('product.onShelf') : $t('product.offShelf') }}</div>
             </li>
             <li v-show="!formValidate.type && formValidate.type !== 0" class="item">
-              <div class="title">兑换积分</div>
+              <div class="title">{{ $t('marketing.exchangePoints') }}</div>
               <div>{{ formValidate.redeemIntegral }}</div>
             </li>
             <li class="item">
               <div class="title">
-                {{ !formValidate.type && formValidate.type !== 0 ? '兑换金额（元）' : '商品售价' }}
+                {{ !formValidate.type && formValidate.type !== 0 ? $t('marketing.exchangeAmount') : $t('product.productPrice') }}
               </div>
-              <div>{{ formValidate.price }}元</div>
+              <div>{{ formValidate.price }}{{ $t('product.yuan') }}</div>
             </li>
             <li class="item">
-              <div class="title">{{ !formValidate.type && formValidate.type !== 0 ? '已兑换数' : '销量' }}</div>
+              <div class="title">{{ !formValidate.type && formValidate.type !== 0 ? $t('marketing.exchangedCount') : $t('product.sales') }}</div>
               <div>{{ formValidate.sales }}</div>
             </li>
             <li class="item">
-              <div class="title">{{ formValidate.type >= 0 ? '库存' : '剩余库存' }}</div>
+              <div class="title">{{ formValidate.type >= 0 ? $t('product.stock') : $t('marketing.remainingStock') }}</div>
               <div>{{ formValidate.stock }}</div>
             </li>
             <li v-show="formValidate.type >= 0" class="item">
-              <div class="title">创建时间</div>
+              <div class="title">{{ $t('product.createTime') }}</div>
               <div></div>
             </li>
           </ul>
         </div>
         <el-tabs type="border-card" v-model="currentTab" v-if="formValidate.id && isShow">
-          <el-tab-pane label="基本信息" name="0">
+          <el-tab-pane :label="$t('product.basicInfo')" name="0">
             <div class="detailSection divBox">
               <ul class="list mt-16">
                 <li v-show="formValidate.categoryId" class="item">
-                  <div class="lang">平台商品分类：</div>
+                  <div class="lang">{{ $t('product.platformCategoryLabel') }}</div>
                   <div class="value">
                     <el-cascader
                       v-model="formValidate.categoryId"
@@ -96,68 +103,68 @@
                   </div>
                 </li>
                 <li v-show="formValidate.type >= 0" class="item">
-                  <div class="lang">品牌：</div>
+                  <div class="lang">{{ $t('product.brandLabel') }}</div>
                   <div class="value">
-                    {{ getListName(brandList, formValidate.brandId) }}
+                    {{ getLocalizedName(getBrandRow(formValidate.brandId), activeLang) || getListName(brandList, formValidate.brandId) }}
                   </div>
                 </li>
                 <li class="item">
-                  <div class="lang">商品单位：</div>
-                  <div class="value">{{ formValidate.unitName }}</div>
+                  <div class="lang">{{ $t('product.unitNameLabel') }}</div>
+                  <div class="value">{{ displayUnitName }}</div>
                 </li>
                 <li v-show="!formValidate.type && formValidate.type !== 0" class="item">
-                  <div class="lang">兑换数量限制：</div>
+                  <div class="lang">{{ $t('marketing.exchangeCountLimitLabel') }}</div>
                   <div class="value">{{ formValidate.exchangeNum }}</div>
                 </li>
                 <li v-show="!formValidate.type && formValidate.type !== 0" class="item">
-                  <div class="lang">热门推荐：</div>
-                  <div class="value">{{ formValidate.isHot == 1 ? '开启' : '关闭' }}</div>
+                  <div class="lang">{{ $t('product.hotRecommendLabel') }}</div>
+                  <div class="value">{{ formValidate.isHot == 1 ? $t('common.open') : $t('common.close') }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">排序：</div>
+                  <div class="lang">{{ $t('product.sortLabel') }}</div>
                   <div class="value">{{ formValidate.sort }}</div>
                 </li>
                 <li v-show="formValidate.type === 2" class="item">
-                  <div class="lang">用户申请售后：</div>
-                  <div class="value">{{ formValidate.refundSwitch ? '开启' : '关闭' }}</div>
+                  <div class="lang">{{ $t('product.userRefundApplyLabel') }}</div>
+                  <div class="value">{{ formValidate.refundSwitch ? $t('common.open') : $t('common.close') }}</div>
                 </li>
                 <li v-if="(formValidate.type && formValidate.type !== 2) || formValidate.type === 0" class="item">
-                  <div class="lang">配送方式：</div>
+                  <div class="lang">{{ $t('order.deliveryMethod') }}</div>
                   <template v-if="Number(formValidate.type) > 4">
-                    <div class="value">自动发货</div>
+                    <div class="value">{{ $t('product.autoShip') }}</div>
                   </template>
                   <template v-else>
-                    <div v-show="formValidate.deliveryMethod.includes('1')" style="color: #303133">商家配送</div>
+                    <div v-show="formValidate.deliveryMethod.includes('1')" style="color: #303133">{{ $t('order.merchantDelivery') }}</div>
                     <div
                       v-show="formValidate.deliveryMethod.includes('1') && formValidate.deliveryMethod.includes('2')"
                       style="color: #303133"
                     >
                       、
                     </div>
-                    <div v-show="formValidate.deliveryMethod.includes('2')" style="color: #303133">到店自提</div>
+                    <div v-show="formValidate.deliveryMethod.includes('2')" style="color: #303133">{{ $t('order.storePickup') }}</div>
                   </template>
                 </li>
               </ul>
               <div class="list" style="display: block">
                 <div class="item">
-                  <div class="lang">关键字：</div>
+                  <div class="lang">{{ $t('product.keywordLabel') }}</div>
                   <div class="value">{{ formValidate.keyword }}</div>
                 </div>
                 <div v-show="formValidate.guaranteeList" class="item">
-                  <div class="lang line-heightOne">保障服务：</div>
+                  <div class="lang line-heightOne">{{ $t('product.guaranteeServiceLabel') }}</div>
                   <div class="value acea-row">
                     <div v-for="item in formValidate.guaranteeList" :key="item.id" class="mr20">
-                      <span class="iconfont icon-ic-complete1 mr5 font14"></span>{{ item.name }}
+                      <span class="iconfont icon-ic-complete1 mr5 font14"></span>{{ getLocalizedName(item, activeLang) }}
                     </div>
                   </div>
                 </div>
                 <div class="item">
-                  <div class="lang">商品简介：</div>
-                  <div class="value">{{ formValidate.intro }}</div>
+                  <div class="lang">{{ $t('product.productIntroLabel') }}</div>
+                  <div class="value">{{ displayIntro }}</div>
                 </div>
                 <div class="item">
                   <div class="acea-row row-middle">
-                    <div class="lang">封面图：</div>
+                    <div class="lang">{{ $t('product.coverLabel') }}</div>
                     <div class="upLoadPicBox">
                       <el-image class="pictrue" :src="formValidate.image" :preview-src-list="[formValidate.image]" />
                     </div>
@@ -165,15 +172,15 @@
                 </div>
                 <div v-show="videoLink" class="item">
                   <div class="acea-row row-middle">
-                    <div class="lang">主图视频：</div>
+                    <div class="lang">{{ $t('marketing.mainVideoLabel') }}</div>
                     <div class="upLoadPicBox">
-                      <video class="pictrue" :src="videoLink" controls="controls">您的浏览器不支持 video 标签。</video>
+                      <video class="pictrue" :src="videoLink" controls="controls">{{ $t('product.videoNotSupported') }}</video>
                     </div>
                   </div>
                 </div>
                 <div class="item">
                   <div class="acea-row row-middle">
-                    <div class="lang">轮播图：</div>
+                    <div class="lang">{{ $t('product.sliderImagesLabel') }}</div>
                     <div v-for="(item, index) in formValidate.sliderImages" :key="index" class="pictrue">
                       <el-image class="pictrue" :src="item" :preview-src-list="formValidate.sliderImages" />
                     </div>
@@ -181,7 +188,7 @@
                 </div>
                 <div v-if="formValidate.couponList && formValidate.couponList.length" class="item">
                   <div class="acea-row row-middle">
-                    <div class="lang">购买回馈券：</div>
+                    <div class="lang">{{ $t('product.purchaseFeedbackCoupon') }}</div>
                     <div class="acea-row" style="margin-top: -10px">
                       <el-tag
                         v-for="(tag, index) in formValidate.couponList"
@@ -193,13 +200,13 @@
                       >
                         {{ tag.name }}
                       </el-tag>
-                      <span v-if="formValidate.couponList.length === 0" class="mt10">无</span>
+                      <span v-if="formValidate.couponList.length === 0" class="mt10">{{ $t('finance.none') }}</span>
                     </div>
                   </div>
                 </div>
                 <div class="item" v-if="formValidate.systemFormValue">
                   <div class="acea-row row-middle">
-                    <div class="lang">关联表单：</div>
+                    <div class="lang">{{ $t('product.relatedForm') }}</div>
                     <div>
                       <iframe
                         :src="`${getFrontDomainUrl()}/pages/goods/systemIframe/index?id=${formValidate.systemFormId}`"
@@ -212,77 +219,74 @@
               </div>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="规格库存" name="1">
+          <el-tab-pane :label="$t('product.specStockTab')" name="1">
             <div class="detailSection divBox">
-              <ul class="list mt-16">
+              <ul class="spec-meta">
                 <li class="item">
-                  <div class="tips tipsWidth">商品规格：</div>
-                  <div class="value">{{ formValidate.specType ? '多规格' : '单规格' }}</div>
+                  <div class="tips">{{ $t('product.productSpecLabel') }}</div>
+                  <div class="value">{{ formValidate.specType ? $t('product.multiSpec') : $t('product.singleSpec') }}</div>
                 </li>
                 <li v-show="formValidate.type >= 0" class="item">
-                  <div class="tips tipsWidth">佣金设置：</div>
-                  <div class="value">{{ formValidate.isSub ? '单独设置' : '默认设置' }}</div>
+                  <div class="tips">{{ $t('product.commissionSettingLabel') }}</div>
+                  <div class="value">{{ formValidate.isSub ? $t('product.separateSetting') : $t('product.defaultSetting') }}</div>
                 </li>
                 <li v-show="formValidate.type >= 0" class="item">
-                  <div class="tips tipsWidth">会员商品：</div>
-                  <div class="value">{{ formValidate.isPaidMember ? '是' : '否' }}</div>
+                  <div class="tips">{{ $t('product.memberProductLabel') }}</div>
+                  <div class="value">{{ formValidate.isPaidMember ? $t('common.yes') : $t('common.no') }}</div>
                 </li>
               </ul>
-              <div style="margin-top: 16px">
-                <div class="tips tipsWidth mb10">商品属性：</div>
-                <template>
-                  <el-table :data="AttrValueList" class="tabNumWidth" size="small">
-                    <template v-if="manyTabDate">
-                      <el-table-column v-for="(item, iii) in manyTabDate" :key="iii" :label="manyTabTit[iii].title">
-                        <template slot-scope="scope">
-                          <span class="priceBox" v-text="scope.row[iii]" />
-                        </template>
-                      </el-table-column>
-                    </template>
-                    <el-table-column label="图片" width="60">
+              <div class="spec-table-wrap">
+                <div class="tips mb10">{{ $t('product.productAttrLabel') }}</div>
+                <el-table :data="AttrValueList" size="small">
+                    <el-table-column
+                      v-for="(item, iii) in manyTabDate"
+                      :key="'spec-' + iii + '-' + activeLang"
+                      :label="specColumnTitle(iii)"
+                      min-width="140"
+                      show-overflow-tooltip
+                    >
                       <template slot-scope="scope">
-                        <div class="upLoadPicBox">
-                          <div v-if="scope.row.image" class="pictrue tabPic">
-                            <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]"> </el-image>
-                          </div>
-                          <div v-else class="upLoad tabPic">
-                            <i class="el-icon-camera cameraIconfont" />
-                          </div>
-                        </div>
+                        <span class="priceBox">{{ localizeSpecCell(iii, scope.row[iii]) }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column :label="$t('product.image')" width="70">
+                      <template slot-scope="scope">
+                        <img v-if="scope.row.image" :src="scope.row.image" class="spec-thumb" alt="" />
                       </template>
                     </el-table-column>
                     <el-table-column
-                      v-for="(item, iii) in tableAttrValue"
-                      :key="iii"
-                      :label="formThead[iii] && formThead[iii].title"
+                      v-for="key in attrValueColumns"
+                      :key="'attr-' + key"
+                      :label="localizedFormThead[key] && localizedFormThead[key].title"
+                      min-width="130"
+                      show-overflow-tooltip
                     >
                       <template slot-scope="scope">
-                        <span>{{ scope.row[iii] || '-' }}</span>
+                        <span>{{ scope.row[key] || '-' }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column v-if="formValidate.type >= 0" label="商品条码" width="100">
+                    <el-table-column v-if="formValidate.type >= 0" :label="$t('product.barcode')" width="100">
                       <template slot-scope="scope">
                         <span>{{ scope.row.itemNumber }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column v-if="formValidate.specType" label="默认选中" width="100">
+                    <el-table-column v-if="formValidate.specType" :label="$t('product.defaultSelected')" width="100">
                       <template slot-scope="scope">
-                        <span>{{ scope.row.isDefault ? '是' : '否' }}</span>
+                        <span>{{ scope.row.isDefault ? $t('common.yes') : $t('common.no') }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column v-if="formValidate.specType" label="是否显示" width="100">
+                    <el-table-column v-if="formValidate.specType" :label="$t('product.isShow')" width="100">
                       <template slot-scope="scope">
-                        <span>{{ scope.row.isShow ? '显示' : '隐藏' }}</span>
+                        <span>{{ scope.row.isShow ? $t('product.show') : $t('product.hide') }}</span>
                       </template>
                     </el-table-column>
                   </el-table>
-                </template>
               </div>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="商品详情" name="2">
+          <el-tab-pane :label="$t('product.productDetail')" name="2">
             <div class="detailSection divBox">
-              <div class="contentPic" v-html="formValidate.content || '无'"></div>
+              <div class="contentPic" v-html="formValidate.content || $t('finance.none')"></div>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -303,7 +307,10 @@
 // +---------------------------------------------------------------------
 import Tinymce from '@/components/Tinymce/index';
 import { productAuditApi } from '@/api/product';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
 import { getListName, getFrontDomainUrl } from '@/utils/ZBKJIutil';
+import { getLocalizedName, getLocalizedText, resolveFormActiveLang, localizeProductSpecName, localizeProductSpecValue } from '@/utils/localizedName';
 import product from '@/mixins/product';
 import { defaultObj, objTitle } from '@/views/marketing/pointsMall/default';
 
@@ -358,6 +365,7 @@ export default {
         this.loading = true;
         this.AttrValueList = [];
         if (val) {
+          this.activeLang = resolveFormActiveLang(this);
           if (this.fromType === 'product') {
             //普通商品详情
             this.getProductInfo(this.productId);
@@ -384,8 +392,8 @@ export default {
       ManyAttrValue: [Object.assign({}, defaultObj.attrValueList[0])], // 多规格
       tableAttrValue: {}, //商品规格
       rules: {
-        auditStatus: [{ required: true, message: '请选择审核状态', trigger: 'change' }],
-        reason: [{ required: true, message: '请填写拒绝原因', trigger: 'blur' }],
+        auditStatus: [{ required: true, message: this.$t('product.pleaseSelectAuditStatus'), trigger: 'change' }],
+        reason: [{ required: true, message: this.$t('product.pleaseEnterRejectReason'), trigger: 'blur' }],
       },
       ruleForm: {
         reason: '',
@@ -408,7 +416,43 @@ export default {
       isAttr: false,
       loadingBtn: false,
       frontDomain: localStorage.getItem('frontDomain'),
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
     };
+  },
+  computed: {
+    displayName() {
+      return getLocalizedText(this.formValidate.name, this.formValidate.nameJson, this.activeLang);
+    },
+    displayUnitName() {
+      return getLocalizedText(this.formValidate.unitName, this.formValidate.unitNameJson, this.activeLang);
+    },
+    displayIntro() {
+      return getLocalizedText(this.formValidate.intro, this.formValidate.introJson, this.activeLang);
+    },
+    localizedFormThead() {
+      const map = {
+        price: this.$t('product.attrPrice'),
+        vipPrice: this.$t('product.attrVipPrice'),
+        cost: this.$t('product.attrCost'),
+        otPrice: this.$t('product.attrOtPrice'),
+        stock: this.$t('product.stock'),
+        weight: this.$t('product.attrWeight'),
+        volume: this.$t('product.attrVolume'),
+        brokerage: this.$t('product.attrBrokerage1'),
+        brokerageTwo: this.$t('product.attrBrokerage2'),
+        barCode: this.$t('product.attrBarCode'),
+      };
+      const out = {};
+      Object.keys(this.formThead || {}).forEach((key) => {
+        out[key] = { title: map[key] || (this.formThead[key] && this.formThead[key].title) };
+      });
+      return out;
+    },
+    attrValueColumns() {
+      return Object.keys(this.tableAttrValue || {}).filter((key) => this.localizedFormThead[key]);
+    },
   },
   created() {
     this.tempRoute = Object.assign({}, this.$route);
@@ -417,6 +461,7 @@ export default {
       //    this.$watch(this.formValidate.attrList, this.watCh);
     }
     if (!localStorage.getItem('merPlatProductClassify')) this.$store.dispatch('product/getAdminProductClassify');
+    this.getLanguageList();
   },
   mounted() {
     this.getTableAttrValue();
@@ -428,6 +473,53 @@ export default {
   methods: {
     getListName,
     getFrontDomainUrl,
+    getLocalizedName,
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
+    getBrandRow(brandId) {
+      return (this.brandList || []).find((item) => item.id === brandId) || {};
+    },
+    specColumnTitle(key) {
+      const attr = (this.formValidate.attrList || []).find((item) => item.attributeName === key);
+      const title = localizeProductSpecName(attr, this.activeLang) || (this.manyTabTit[key] && this.manyTabTit[key].title) || key;
+      return this.localizeSpecText(title);
+    },
+    localizeSpecCell(specKey, text) {
+      const attr = (this.formValidate.attrList || []).find((item) => item.attributeName === specKey);
+      const localized = localizeProductSpecValue(attr, text, this.activeLang);
+      return this.localizeSpecText(localized || text);
+    },
+    localizeSpecText(text) {
+      if (!text) return text;
+      if (text === '规格') return this.tByLang('product.specName');
+      if (text === '默认') return this.tByLang('product.specDefault');
+      return text;
+    },
+    tByLang(key) {
+      const lang = this.activeLang || this.$i18n.locale || 'zh-cn';
+      const messages = this.$i18n.messages[lang] || this.$i18n.messages['zh-cn'] || {};
+      const val = key.split('.').reduce((obj, part) => (obj && obj[part] !== undefined ? obj[part] : undefined), messages);
+      return typeof val === 'string' ? val : this.$t(key);
+    },
     //表格内的数据
     getTableAttrValue() {
       let obj = Object.assign({}, defaultObj.attrValueList[0]);
@@ -457,7 +549,7 @@ export default {
     },
     //审核拒绝
     cancelForm() {
-      this.$modalPrompt('textarea', '拒绝原因').then((V) => {
+      this.$modalPrompt('textarea', this.$t('product.rejectReason')).then((V) => {
         this.ruleForm.reason = V;
         this.submit();
       });
@@ -466,7 +558,7 @@ export default {
     onSubmit(type) {
       this.ruleForm.auditStatus = type;
       if (type === 'success') {
-        this.$modalSure('审核通过该商品吗？').then(() => {
+        this.$modalSure(this.$t('product.approveProductConfirm')).then(() => {
           this.submit();
         });
       } else {
@@ -478,7 +570,7 @@ export default {
       this.ruleForm.id = this.productId;
       productAuditApi(this.ruleForm)
         .then((res) => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('product.operateSuccess'));
           //this.dialogVisible = false;
           this.currentTab = '0';
           this.$emit('subSuccess');
@@ -501,7 +593,7 @@ export default {
       return data;
     },
     setTagsViewTitle() {
-      const title = this.isDisabled ? '商品详情' : '编辑商品';
+      const title = this.isDisabled ? this.$t('product.productDetail') : this.$t('product.editProduct');
       const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.$route.params.id}` });
       this.$store.dispatch('tagsView/updateVisitedView', route);
     },
@@ -530,12 +622,59 @@ export default {
   border: none !important;
 }
 
+.mb8 {
+  margin-bottom: 8px;
+}
+
+.lang-name-switch {
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
 .tipsWidth {
-  width: 65px !important;
+  width: auto !important;
+  min-width: 110px;
+}
+
+.spec-meta {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  gap: 12px 32px;
+
+  .item {
+    flex: 0 1 auto;
+    display: flex;
+    align-items: flex-start;
+    margin-top: 0;
+    min-width: 220px;
+  }
+
+  .tips {
+    width: auto !important;
+    min-width: 110px;
+    text-align: left;
+    flex-shrink: 0;
+    margin-right: 8px;
+  }
+}
+
+.spec-table-wrap {
+  margin-top: 8px;
+}
+
+.spec-thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 .tabNumWidth {
-  margin-left: -15px;
+  margin-left: 0;
 }
 
 .contentPic {

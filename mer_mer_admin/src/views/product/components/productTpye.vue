@@ -3,7 +3,7 @@
     <!-- 商品添加选择-->
     <el-dialog
       :visible.sync="proTypedialogVisible"
-      title="选择商品类型"
+      :title="$t('product.typeSelectTitle')"
       destroy-on-close
       :close-on-click-modal="false"
       width="700px"
@@ -15,7 +15,7 @@
         label-width="120px"
         @submit.native.prevent
       >
-        <el-form-item label="商品类型：" required>
+        <el-form-item :label="$t('product.typeLabel')" required>
           <div class="acea-row">
             <div
               v-for="(item, index) in productType"
@@ -30,12 +30,12 @@
               <div v-if="formValidate.type == item.id" class="virtual_dui">✓</div>
             </div>
           </div>
-          <div class="font12 add-product-title">云盘商品、卡密商品不支持用户申请售后。</div>
+          <div class="font12 add-product-title">{{ $t('product.typeNoAfterSale') }}</div>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="proTypedialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleSureType">确 定</el-button>
+        <el-button @click="proTypedialogVisible = false">{{ $t('product.cancel') }}</el-button>
+        <el-button type="primary" @click="handleSureType">{{ $t('product.confirm') }}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -48,12 +48,6 @@ export default {
       formValidate: {
         type: 0,
       },
-      productType: [
-        { tit: '普通商品', id: 0, tips: '实体货物' },
-        { tit: '云盘商品', id: 5, tips: '同一链接发货' },
-        { tit: '卡密商品', id: 6, tips: '不同充值码发货' },
-        { tit: '虚拟商品', id: 2, tips: '虚拟发货' },
-      ], //商品类型
       proTypedialogVisible: false, //选择商品类型弹窗
     };
   },
@@ -63,6 +57,16 @@ export default {
       default: function () {
         return 'isAdd';
       },
+    },
+  },
+  computed: {
+    productType() {
+      return [
+        { tit: this.$t('product.typeNormal'), id: 0, tips: this.$t('product.typeEntityGoods') },
+        { tit: this.$t('product.typeCloudDisk'), id: 5, tips: this.$t('product.typeSameLinkShipping') },
+        { tit: this.$t('product.typeCardPassword'), id: 6, tips: this.$t('product.typeDifferentRechargeShipping') },
+        { tit: this.$t('product.typeVirtual'), id: 2, tips: this.$t('product.typeVirtualShipping') },
+      ];
     },
   },
   methods: {

@@ -3,6 +3,8 @@ package com.zbkj.service.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,6 +19,7 @@ import com.zbkj.common.request.SystemConfigAdminRequest;
 import com.zbkj.common.request.SystemFormCheckRequest;
 import com.zbkj.common.request.SystemFormItemCheckRequest;
 import com.zbkj.common.result.CommonResultCode;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.utils.RedisUtil;
 import com.zbkj.common.vo.MyRecord;
 import com.zbkj.service.dao.SystemConfigDao;
@@ -177,6 +180,7 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigDao, System
             systemConfig.setValue(value);
             systemConfig.setFormId(systemFormCheckRequest.getId());
             systemConfig.setTitle(systemFormItemCheckRequest.getTitle());
+            systemConfig.setStatus(false);
             if (systemFormCheckRequest.getId() > 0) {
                 systemConfig.setFormName(systemFormTemp.getName());
             }
@@ -361,8 +365,13 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigDao, System
         }
         Object data = redisUtil.hget(SysConfigConstants.CONFIG_LIST, name);
         if (ObjectUtil.isNull(data)) {
-            asyncBlank(name);
-            return "";
+            SystemConfig systemConfig = getByName(name);
+            if (ObjectUtil.isNull(systemConfig) || StrUtil.isBlank(systemConfig.getValue())) {
+                asyncBlank(name);
+                return "";
+            }
+            async(systemConfig);
+            return systemConfig.getValue();
         }
         return data.toString();
     }
@@ -371,10 +380,21 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigDao, System
         PageHelper.clearPage();
         LambdaQueryWrapper<SystemConfig> lqw = Wrappers.lambdaQuery();
         lqw.select(SystemConfig::getId, SystemConfig::getName, SystemConfig::getValue);
-        lqw.eq(SystemConfig::getStatus, false);
         lqw.eq(SystemConfig::getName, name);
+        lqw.and(w -> w.isNotNull(SystemConfig::getValue).ne(SystemConfig::getValue, ""));
+        lqw.orderByDesc(SystemConfig::getId);
         lqw.last(" limit 1");
-        return getOne(lqw);
+        SystemConfig hit = getOne(lqw);
+        if (hit != null) {
+            return hit;
+        }
+        PageHelper.clearPage();
+        LambdaQueryWrapper<SystemConfig> fallback = Wrappers.lambdaQuery();
+        fallback.select(SystemConfig::getId, SystemConfig::getName, SystemConfig::getValue);
+        fallback.eq(SystemConfig::getName, name);
+        fallback.orderByDesc(SystemConfig::getId);
+        fallback.last(" limit 1");
+        return getOne(fallback);
     }
 
     /**
@@ -387,6 +407,63 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigDao, System
         if (ObjectUtil.isEmpty(agreementName)) {
             return "Key Not Empty";
         }
+        String html = extractAgreementHtml(readAgreementRaw(agreementName));
+        String json = getValueByKey(SysConfigConstants.agreementJsonKey(agreementName));
+        String localized = I18nJsonUtil.resolveByRequest(html, json);
+        JSONObject out = new JSONObject();
+        out.put("agreement", localized == null ? "" : localized);
+        return out.toJSONString();
+    }
+
+    @Override
+    public String getAgreementAdminByKey(String agreementName) {
+        if (ObjectUtil.isEmpty(agreementName)) {
+            return "Key Not Empty";
+        }
+        String html = extractAgreementHtml(readAgreementRaw(agreementName));
+        String json = getValueByKey(SysConfigConstants.agreementJsonKey(agreementName));
+        JSONObject out = new JSONObject();
+        out.put("agreement", html == null ? "" : html);
+        out.put("agreementJson", json == null ? "" : json);
+        return out.toJSONString();
+    }
+
+    @Override
+    public Boolean saveAgreement(String agreementName, String body) {
+        if (StrUtil.isBlank(agreementName)) {
+            return Boolean.FALSE;
+        }
+        String html = "";
+        String json = "";
+        if (StrUtil.isNotBlank(body)) {
+            try {
+                JSONObject obj = JSON.parseObject(body);
+                if (obj != null) {
+                    html = obj.getString("agreement");
+                    if (html == null) {
+                        html = "";
+                    }
+                    Object jsonVal = obj.get("agreementJson");
+                    if (jsonVal instanceof String) {
+                        json = (String) jsonVal;
+                    } else if (jsonVal != null) {
+                        json = JSON.toJSONString(jsonVal);
+                    }
+                } else {
+                    html = body;
+                }
+            } catch (Exception e) {
+                html = body;
+            }
+        }
+        JSONObject stored = new JSONObject();
+        stored.put("agreement", html);
+        updateOrSaveValueByName(agreementName, stored.toJSONString());
+        updateOrSaveValueByName(SysConfigConstants.agreementJsonKey(agreementName), json == null ? "" : json);
+        return Boolean.TRUE;
+    }
+
+    private String readAgreementRaw(String agreementName) {
         LambdaQueryWrapper<SystemConfig> lqw = Wrappers.lambdaQuery();
         lqw.eq(SystemConfig::getName, agreementName);
         lqw.eq(SystemConfig::getStatus, 0);
@@ -395,6 +472,22 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigDao, System
             return "";
         }
         return systemConfig.getValue();
+    }
+
+    private String extractAgreementHtml(String raw) {
+        if (StrUtil.isBlank(raw)) {
+            return "";
+        }
+        try {
+            JSONObject obj = JSON.parseObject(raw);
+            if (obj != null && obj.containsKey("agreement")) {
+                String html = obj.getString("agreement");
+                return html == null ? "" : html;
+            }
+        } catch (Exception ignored) {
+            // 历史数据可能不是 JSON
+        }
+        return raw;
     }
 
     /**

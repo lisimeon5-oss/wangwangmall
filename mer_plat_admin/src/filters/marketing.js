@@ -11,14 +11,28 @@
 /**
  *优惠券 类型
  */
+import i18n from '@/i18n';
+
 export function couponCategory(status) {
   const statusMap = {
-    1: '店铺',
-    2: '商品',
-    3: '通用',
-    4: '品类',
-    5: '品牌',
-    6: '跨店',
+    1: i18n.t('marketing.shop'),
+    2: i18n.t('marketing.product'),
+    3: i18n.t('marketing.general'),
+    4: i18n.t('marketing.category'),
+    5: i18n.t('marketing.brand'),
+    6: i18n.t('marketing.crossStore'),
   };
   return statusMap[status];
+}
+
+/**
+ * 优惠券领取方式
+ */
+export function receiveType(val) {
+  const typeObj = {
+    1: i18n.t('marketing.userReceive'),
+    2: i18n.t('user.productGiftCoupon'),
+    3: i18n.t('marketing.platformActivityUse'),
+  };
+  return typeObj[val];
 }

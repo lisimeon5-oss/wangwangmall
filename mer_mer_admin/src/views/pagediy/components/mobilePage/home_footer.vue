@@ -21,7 +21,7 @@
               color: curIndex === index ? (themeStyle ? configObj.checkColor.color[0].item : themeColor) : fontColor,
             }"
           >
-            {{ item.name }}
+            {{ menuDisplayName(item) }}
           </p>
         </div>
       </div>
@@ -42,10 +42,12 @@
 import { mapState, mapGetters } from 'vuex';
 import Cookies from 'js-cookie';
 import { getServiceInfo } from '@/utils/ZBKJIutil';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
+import { getLocalizedName, getUiLocale } from '@/utils/localizedName';
 const JavaMerchantId = Cookies.get('JavaMerchantId');
 export default {
   name: 'home_footer',
-  cname: '底部菜单',
+  ...diyCname('pagediy.bottomMenu'),
   configName: 'c_home_footer',
   icon: 't-icon-zujian-dibucaidan',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -116,12 +118,12 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '底部菜单',
+          cname: this.$t('pagediy.bottomMenu'),
         },
         // 背景颜色
         bgColor: {
-          title: '背景颜色',
-          tabTitle: '颜色设置',
+          title: this.$t('pagediy.backgroundColor'),
+          tabTitle: this.$t('pagediy.colorSettings'),
           color: [
             {
               item: '#FFFFFF',
@@ -140,8 +142,8 @@ export default {
           ],
         },
         fontColor: {
-          tabTitle: '标签设置',
-          title: '文字颜色',
+          tabTitle: this.$t('pagediy.tagSettings'),
+          title: this.$t('pagediy.textColor'),
           name: 'fontColor',
           color: [
             {
@@ -156,20 +158,20 @@ export default {
         },
         //色调
         themeStyleConfig: {
-          title: '色调',
+          title: this.$t('pagediy.colorTone'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '跟随主题风格',
+              val: this.$t('pagediy.followTheme'),
             },
             {
-              val: '自定义',
+              val: this.$t('pagediy.customStyle'),
             },
           ],
         },
         checkColor: {
-          title: '选中颜色',
+          title: this.$t('pagediy.selectedColor'),
           name: 'checkColor',
           isShow: 0,
           color: [
@@ -184,45 +186,49 @@ export default {
           ],
         },
         lrConfig: {
-          title: '左右边距',
-          tabTitle: '边距设置',
+          title: this.$t('pagediy.leftRightMargin'),
+          tabTitle: this.$t('pagediy.marginSettings'),
           val: 0,
           min: 0,
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         menuList: {
-          tabTitle: '内容设置',
+          tabTitle: this.$t('pagediy.contentSettings'),
           tabVal: 0,
           list: [
             {
               checked: require('@/assets/imgs/foot-002.png'),
               unchecked: require('@/assets/imgs/foot-001.png'),
-              name: '首页',
+              name: this.$t('pagediy.homeTag'),
+              nameJson: '',
               link: `/pages/merchant/home/index?merId=${JavaMerchantId}`,
             },
             {
               checked: require('@/assets/imgs/foot-004.png'),
               unchecked: require('@/assets/imgs/foot-003.png'),
               name: '分类',
+              nameJson: '',
               link: `/pages/merchant/classify_coupon/index?id=${JavaMerchantId}&tabActive=1`,
             },
             {
               checked: require('@/assets/imgs/foot-006.png'),
               unchecked: require('@/assets/imgs/foot-005.png'),
               name: '领券',
+              nameJson: '',
               link: `/pages/merchant/classify_coupon/index?id=${JavaMerchantId}&tabActive=2`,
             },
             {
               checked: require('@/assets/imgs/foot-008.png'),
               unchecked: require('@/assets/imgs/foot-007.png'),
               name: '客服',
+              nameJson: '',
               link: getServiceInfo(),
             },
           ],
@@ -251,7 +257,7 @@ export default {
       //   if (i == 'pageFoot') {
       //     obj = mConfig[i];
       //     obj.configName = mConfig[i].name;
-      //     obj.cname = '底部菜单';
+      //     obj.cname = this.$t('pagediy.bottomMenu');
       //   }
       // }
       // let abc = obj;
@@ -261,11 +267,14 @@ export default {
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
         this.menuList = data.menuList.list;
         this.themeStyle = data.themeStyleConfig.tabVal;
         this.themeColor = this.$options.filters.filterTheme(this.mobileTheme - 1);
       }
+    },
+    menuDisplayName(item) {
+      return getLocalizedName(item, getUiLocale(this));
     },
   },
 };

@@ -2,45 +2,45 @@
 	<view :data-theme="theme">
 		<view class='integral-details'>
 			<view class='header'>
-				<view class='currentScore'>当前积分</view>
+				<view class='currentScore'>{{$t('当前积分')}}</view>
 				<view class="scoreNum">{{integral.integral||0}}</view>
 				<view class='line'></view>
 				<view class='nav acea-row'>
 					<view class='item'>
 						<view class='num'>{{integral.settledIntegral||0}}</view>
-						<view>累计积分</view>
+						<view>{{$t('累计积分')}}</view>
 					</view>
 					<view class='item'>
 						<view class='num'>{{integral.useIntegral||0}}</view>
-						<view>累计消费</view>
+						<view>{{$t('累计消费')}}</view>
 					</view>
 					<view class='item'>
 						<view class='num'>{{integral.freezeIntegral||0}}</view>
-						<view>冻结积分</view>
+						<view>{{$t('冻结积分')}}</view>
 					</view>
 				</view>
 			</view>
 			<view class='wrapper'>
 				<view class='nav acea-row'>
 					<view class='item acea-row row-center-wrapper' :class='current==index?"on":""' v-for="(item,index) in navList" :key='index'
-					 @click='nav(index)'><text class='iconfont' :class="item.icon"></text>{{item.name}}</view>
+					 @click='nav(index)'><text class='iconfont' :class="item.icon"></text>{{$t(item.name)}}</view>
 				</view>
 				<view class='list' :hidden='current!=0'>
 					<view class='item acea-row row-between-wrapper' v-for="(item,index) in integralList" :key="index">
 						<view>
-							<view class='state'>{{item.title}}</view>
+							<view class='state'>{{$t(item.title)}}</view>
 							<view>{{item.updateTime}}</view>
 						</view>
 						<view class='num font_color' v-if="item.type===1">+{{item.integral}}</view>
 						<view class='num' v-else>-{{item.integral}}</view>
 					</view>
 					<view class='loadingicon acea-row row-center-wrapper' v-if="integralList.length>0">
-						<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{loadTitle}}
+						<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{$t(loadTitle)}}
 					</view>
 					<view class='noCart' v-if="integralList.length == 0">
 						<view class='pictrue'>
               <image :src="urlDomain+'crmebimage/presets/noJilu.png'"></image>
-							<view class="default_txt">暂无积分记录哦~</view>
+							<view class="default_txt">{{$t('暂无积分记录哦~')}}</view>
 						</view>
 					</view>
 				</view>
@@ -49,15 +49,15 @@
 						<view class='pictrue'>
 							<image src='../static/images/score.png'></image>
 						</view>
-						<view class='name'>购买商品可获得积分奖励</view>
-						<view class='earn'>赚积分</view>
+						<view class='name'>{{$t('购买商品可获得积分奖励')}}</view>
+						<view class='earn'>{{$t('赚积分')}}</view>
 					</navigator>
 					<navigator class='item acea-row row-between-wrapper' hover-class='none' url='/pages/merchant/user_sgin/index'>
 						<view class='pictrue'>
 							<image src='../static/images/score.png'></image>
 						</view>
-						<view class='name'>每日签到可获得积分奖励</view>
-						<view class='earn'>赚积分</view>
+						<view class='name'>{{$t('每日签到可获得积分奖励')}}</view>
+						<view class='earn'>{{$t('赚积分')}}</view>
 					</navigator>
 				</view>
 			</view>
@@ -161,7 +161,7 @@
 					that.page = that.page + 1;
 					that.loading = false;
 					that.loadend = loadend;
-					that.loadTitle = loadend ? '哼~??我也是有底线的~' : "加载更多";
+					that.loadTitle = loadend ? '我是有底线的' : '加载更多';
 				}, function(res) {
 					this.loading = false;
 					that.loadTitle = '加载更多';

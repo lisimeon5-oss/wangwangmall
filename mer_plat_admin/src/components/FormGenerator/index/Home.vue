@@ -15,7 +15,7 @@
           <div v-for="(item, listIndex) in leftComponents" :key="listIndex">
             <div class="components-title">
               <svg-icon icon-class="component" />
-              {{ item.title }}
+              {{ fgT(item.title) }}
             </div>
             <draggable
               class="components-draggable"
@@ -34,7 +34,7 @@
               >
                 <div class="components-body">
                   <svg-icon :icon-class="element.__config__.tagIcon" />
-                  {{ element.__config__.label }}
+                  {{ fgT(element.__config__.label) }}
                 </div>
               </div>
             </draggable>
@@ -60,24 +60,45 @@
         <!--                <el-button class="delete-btn" icon="el-icon-delete" type="text" @click="empty">-->
         <!--                  清空-->
         <!--                </el-button>-->
-        <el-form ref="selfForm" inline :model="selfForm">
-          <el-form-item
-            label="名称"
-            prop="name"
-            :rules="[{ required: true, message: '请填写名称', trigger: ['blur', 'change'] }]"
-          >
-            <el-input v-model.trim="selfForm.name" placeholder="名称" />
+        <el-form ref="selfForm" inline :model="selfForm" :rules="selfFormRules" class="form-meta-bar">
+          <el-form-item>
+            <el-radio-group v-model="activeLang" size="small">
+              <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                {{ lang.label }}
+              </el-radio-button>
+            </el-radio-group>
           </el-form-item>
-          <el-form-item
-            label="描述"
-            prop="info"
-            :rules="[{ required: true, message: '请填写描述', trigger: ['blur', 'change'] }]"
-          >
-            <el-input v-model.trim="selfForm.info" placeholder="描述" />
+          <el-form-item :label="$t('category.name')" prop="name">
+            <el-input
+              v-if="activeLang === defaultLangCode"
+              v-model.trim="selfForm.name"
+              maxlength="500"
+              :placeholder="$t('category.name')"
+            />
+            <el-input
+              v-else
+              v-model.trim="nameJsonForm[activeLang]"
+              maxlength="500"
+              :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+            />
+          </el-form-item>
+          <el-form-item :label="$t('maintain.description')" prop="info">
+            <el-input
+              v-if="activeLang === defaultLangCode"
+              v-model.trim="selfForm.info"
+              maxlength="500"
+              :placeholder="$t('maintain.description')"
+            />
+            <el-input
+              v-else
+              v-model.trim="infoJsonForm[activeLang]"
+              maxlength="500"
+              :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+            />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handlerSaveJSON('selfForm')" v-hasPermi="['platform:system:form:update']"
-              >保存</el-button
+              >{{ $t('common.save') }}</el-button
             >
           </el-form-item>
         </el-form>
@@ -104,7 +125,7 @@
                 @deleteItem="drawingItemDelete"
               />
             </draggable>
-            <div v-show="!drawingList.length" class="empty-info">从左侧拖入或点选组件进行表单设计</div>
+            <div v-show="!drawingList.length" class="empty-info">{{ $t('formGenerator.dragHint') }}</div>
           </el-form>
         </el-row>
       </el-scrollbar>
@@ -169,6 +190,10 @@ import DraggableItem from './DraggableItem';
 import { getDrawingList, saveDrawingList, getIdGlobal, saveIdGlobal, getFormConf, getFormConfSelf } from '../utils/db';
 import loadBeautifier from '../utils/loadBeautifier';
 import { Debounce } from '@/utils/validate';
+import formGeneratorI18n from '../utils/formGeneratorI18n';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { resolveFormActiveLang, hasI18nNameContent, buildI18nNameJson, parseLangJsonMap } from '@/utils/localizedName';
 let beautifier;
 const emptyActiveData = { style: {}, autosize: {} };
 let oldActiveId;
@@ -178,6 +203,7 @@ const formConfInDB = getFormConf();
 const idGlobal = getIdGlobal();
 
 export default {
+  mixins: [formGeneratorI18n],
   components: {
     draggable,
     render,
@@ -233,24 +259,69 @@ export default {
         },
       ],
       selfForm: {
-        name: null,
-        info: null,
+        name: '',
+        info: '',
         id: null,
+        nameJson: '',
+        infoJson: '',
       },
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: 'zh-cn',
+      nameJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
+      infoJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
     };
   },
-  computed: {},
+  computed: {
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    selfFormRules() {
+      return {
+        name: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(this.selfForm.name, this.nameJsonForm)) callback();
+            else callback(new Error(this.$t('formGenerator.pleaseFillName')));
+          },
+          trigger: ['blur', 'change'],
+        }],
+        info: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(this.selfForm.info, this.infoJsonForm)) callback();
+            else callback(new Error(this.$t('formGenerator.pleaseFillDesc')));
+          },
+          trigger: ['blur', 'change'],
+        }],
+      };
+    },
+  },
   watch: {
     // eslint-disable-next-line func-names
     'activeData.__config__.label': function (val, oldVal) {
       if (
         this.activeData.placeholder === undefined ||
         !this.activeData.__config__.tag ||
-        oldActiveId !== this.activeId
+        oldActiveId !== this.activeId ||
+        !oldVal
       ) {
         return;
       }
-      this.activeData.placeholder = this.activeData.placeholder.replace(oldVal, '') + val;
+      const ph = this.activeData.placeholder;
+      if (typeof ph !== 'string' || ph.indexOf(oldVal) === -1) return;
+      const prefixes = ['请选择', '请输入', '请填写'];
+      for (let i = 0; i < prefixes.length; i++) {
+        if (ph === prefixes[i] + oldVal) {
+          this.activeData.placeholder = prefixes[i];
+          return;
+        }
+      }
     },
     activeId: {
       handler(val) {
@@ -274,16 +345,21 @@ export default {
   },
   mounted() {
     if (this.editData.content) {
-      let { id, name, info, content } = this.editData;
-      this.selfForm.name = name;
+      let { id, name, info, content, nameJson, infoJson } = this.editData;
+      this.selfForm.name = name || '';
       this.selfForm.id = id;
-      this.selfForm.info = info;
+      this.selfForm.info = info || '';
+      this.selfForm.nameJson = nameJson || '';
+      this.selfForm.infoJson = infoJson || '';
+      this.nameJsonForm = this.parseLangForm(nameJson);
+      this.infoJsonForm = this.parseLangForm(infoJson);
       content = JSON.parse(content);
       this.drawingList = content.fields;
       const _content = JSON.parse(JSON.stringify(content));
       delete _content.fields;
       this.formConf = _content;
     }
+    this.getLanguageList();
     // if (Array.isArray(drawingListInDB) && drawingListInDB.length > 0) {
     //   this.drawingList = drawingListInDB
     // } else {
@@ -312,6 +388,46 @@ export default {
     });
   },
   methods: {
+    emptyLangForm() {
+      const form = {};
+      (this.langOptions || []).forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    parseLangForm(json) {
+      const form = this.emptyLangForm();
+      const obj = parseLangJsonMap(json);
+      Object.keys(form).forEach((key) => {
+        form[key] = obj[key] || '';
+      });
+      return form;
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseLangForm(this.selfForm.nameJson);
+          this.infoJsonForm = this.parseLangForm(this.selfForm.infoJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseLangForm(this.selfForm.nameJson);
+          this.infoJsonForm = this.parseLangForm(this.selfForm.infoJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     activeFormItem(element) {
       this.activeData = element;
       this.activeId = element.__config__.formId;
@@ -335,7 +451,6 @@ export default {
       config.renderKey = +new Date(); // 改变renderKey后可以实现强制更新组件
       if (config.layout === 'colFormItem') {
         clone.__vModel__ = `field${this.idGlobal}`;
-        clone.placeholder !== undefined && (clone.placeholder += config.label);
       } else if (config.layout === 'rowFormItem') {
         config.componentName = `row${this.idGlobal}`;
         config.gutter = this.formConf.gutter;
@@ -429,6 +544,18 @@ export default {
           return;
         }
         this.selfForm.content = JSON.stringify(formConfig);
+        this.selfForm.nameJson = buildI18nNameJson(
+          this.langOptions,
+          this.nameJsonForm,
+          this.defaultLangCode,
+          this.selfForm.name,
+        );
+        this.selfForm.infoJson = buildI18nNameJson(
+          this.langOptions,
+          this.infoJsonForm,
+          this.defaultLangCode,
+          this.selfForm.info,
+        );
         this.$emit('getFormConfigDataResult', this.selfForm);
       });
     }),
@@ -488,4 +615,13 @@ export default {
 
 <style lang="scss">
 @import '../styles/home';
+.form-meta-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  text-align: left;
+}
+.form-meta-bar .el-form-item {
+  margin-bottom: 0;
+}
 </style>

@@ -5,7 +5,7 @@
 				<mp-html :content="agreementData?agreementData.replace(/<br\/>/ig, ''):''" />
 			</view>
 			<view v-if="type === 'useraccountcancelnoticeinfo'" class="btn">
-				<button @click="cancelBtn" class="sure-btn">申请注销</button>
+				<button @click="cancelBtn" class="sure-btn">{{$t('申请注销')}}</button>
 			</view>
 		</view>
 		<view class="cancel" v-if="type == 'useraccountcancelnoticeinfo' && loaded">
@@ -14,15 +14,15 @@
 					<text v-if="!check" class="iconfont icon-weixuanzhong"></text>
 					<text v-else class="iconfont icon-xuanzhong1"></text>
 				</view>
-				<view class="ml10">已阅读并同意<text class="font font-color" @click="toCancel">《重要提醒》</text></view>
+				<view class="ml10">{{$t('已阅读并同意')}}<text class="font font-color" @click="toCancel">{{$t('《重要提醒》')}}</text></view>
 			</view>
 		</view>
 		<view class="outMoal" v-if="moal">
 			<view class="box">
-				<view class="title">该账号将永久注销</view>
+				<view class="title">{{$t('该账号将永久注销')}}</view>
 				<view class="moalBtn">
-					<view class="ok" @click="ok">确定</view>
-					<view class="no" @click="cancelMoal">取消</view>
+					<view class="ok" @click="ok">{{$t('确定')}}</view>
+					<view class="no" @click="cancelMoal">{{$t('取消')}}</view>
 				</view>
 			</view>
 		</view>
@@ -90,7 +90,7 @@
 			},
 			ok() {
 				uni.showLoading({
-					title: '注销中',
+					title: this.$t('注销中'),
 					mask: true
 				});
 				this.moal = false;
@@ -116,7 +116,7 @@
 			cancelBtn() {
 				if (!this.check) {
 					return uni.showToast({
-						title: "请勾选已阅读",
+						title: this.$t('请勾选已阅读'),
 						icon: 'none',
 						duration: 2000,
 					})
@@ -136,58 +136,20 @@
 				})
 			},
 			setTitle(e) {
-				switch (e) {
-					case 'aboutusinfo':
-						uni.setNavigationBarTitle({
-							title: '关于我们协议'
-						})
-						break;
-					case 'intelligentinfo':
-						uni.setNavigationBarTitle({
-							title: '平台资质证明'
-						})
-						break;
-					case 'merincomminginfo':
-						uni.setNavigationBarTitle({
-							title: '商户入驻协议'
-						})
-						break;
-					case 'useraccountcancelinfo':
-						uni.setNavigationBarTitle({
-							title: '用户注销协议'
-						})
-						break;
-					case 'useraccountcancelnoticeinfo':
-						uni.setNavigationBarTitle({
-							title: '用户注销声明'
-						})
-						break;
-					case 'userinfo':
-						uni.setNavigationBarTitle({
-							title: '用户注册协议'
-						})
-						break;
-					case 'platfromruleinfo':
-						uni.setNavigationBarTitle({
-							title: '平台规则'
-						})
-						break;
-					case 'coupon/agreement/info':
-						uni.setNavigationBarTitle({
-							title: '优惠券协议'
-						})
-						break;
-					case 'paid/member/agreement/info':
-						uni.setNavigationBarTitle({
-							title: '会员服务协议'
-						})
-						break;
-					default:
-						uni.setNavigationBarTitle({
-							title: '用户隐私协议'
-						})
-						break;
+				const titles = {
+					aboutusinfo: '关于我们',
+					intelligentinfo: '资质证照',
+					merincomminginfo: '商户入驻协议',
+					useraccountcancelinfo: '注销提示',
+					useraccountcancelnoticeinfo: '注销声明',
+					userinfo: '用户协议',
+					platfromruleinfo: '平台规则',
+					'coupon/agreement/info': '优惠券协议',
+					'paid/member/agreement/info': '会员服务协议'
 				}
+				uni.setNavigationBarTitle({
+					title: this.$t(titles[e] || '隐私政策')
+				})
 			}
 		}
 	}

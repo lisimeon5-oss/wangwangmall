@@ -1,0 +1,115 @@
+212:                              refundInfo.refundStatus === 1 && refundInfo.statusList.length === 2
+213:                                ? '拒绝退款'
+214:                                : '同意退款'
+215:                            }}</span>
+216:                          </div>
+217:                          <div
+218:                            v-if="refundInfo.refundStatus === 1 && refundInfo.statusList.length === 2"
+219:                            class="detail-term"
+220:                          >
+221:                            <span class="detail-infoTitle">拒绝原因：</span>
+222:                            <span class="detail-info">{{ refundInfo.refundReason | filterEmpty }}</span>
+223:                          </div>
+224:                          <div
+225:                            v-if="refundInfo.returnGoodsType === 1 && refundInfo.refundStatus !== 1"
+226:                            class="detail-term"
+227:                          >
+228:                            <div>
+229:                              <span class="detail-infoTitle">退货地址：</span>
+230:                              <span class="detail-info">{{ refundInfo.receiverAddressDetail }}</span>
+231:                            </div>
+232:                            <div>
+233:                              <span class="detail-infoTitle"></span>
+234:                              <span class="detail-info">{{ refundInfo.receiver }} {{ refundInfo.receiverPhone }}</span>
+235:                            </div>
+236:                          </div>
+237:                        </div>
+238:                      </template>
+239:                    </el-step>
+240:                    <el-step
+241:                      title="商品退回信息-用户"
+242:                      v-if="
+243:                        refundInfo.statusList &&
+244:                        refundInfo.statusList.length &&
+245:                        refundInfo.statusList.find((item) => item.changeType === 'returning')
+246:                      "
+247:                    >
+248:                      <template slot="description" v-if="refundInfo.statusList && refundInfo.statusList.length">
+249:                        <div class="mb10">
+250:                          {{ refundInfo.statusList.filter((item) => item.changeType === 'returning')[0].createTime }}
+251:                        </div>
+252:                        <div v-if="refundInfo.returnGoodsType === 1" class="refundReasonWap">
+253:                          <div class="acea-row">
+254:                            <div class="detail-term" style="width: 58%">
+255:                              <span class="detail-infoTitle">物流公司：</span
+256:                              ><span class="detail-info">{{ refundInfo.expressName }}</span>
+257:                            </div>
+258:                            <div class="detail-term">
+259:                              <span class="detail-infoTitle">物流单号：</span>
+260:                              <span class="detail-info">{{ refundInfo.trackingNumber }}</span>
+261:                            </div>
+262:                          </div>
+263:                          <div class="detail-term">
+264:                            <div>
+265:                              <span class="detail-infoTitle">联系电话：</span>
+266:                              <span class="detail-info">{{ refundInfo.telephone }}</span>
+267:                            </div>
+268:                          </div>
+269:                        </div>
+270:                        <div v-if="refundInfo.returnGoodsType === 2" class="refundReasonWap">
+271:                          <div class="detail-term">
+272:                            <div>
+273:                              <span class="detail-infoTitle">联系电话：</span>
+274:                              <span class="detail-info">{{ refundInfo.telephone }}</span>
+275:                            </div>
+276:                          </div>
+277:                        </div>
+278:                      </template>
+279:                    </el-step>
+280:                    <el-step
+281:                      title="商家确认收货-商家"
+282:                      v-if="
+283:                        refundInfo.refundStatus !== 1 &&
+284:                        refundInfo.refundStatus !== 6 &&
+285:                        refundInfo.statusList &&
+286:                        refundInfo.statusList.length &&
+287:                        refundInfo.statusList.find((item) => item.changeType === 'receiving')
+288:                      "
+289:                    >
+290:                      <template slot="description" v-if="refundInfo.statusList && refundInfo.statusList.length">
+291:                        <div class="mb10">
+292:                          {{
+293:                            refundInfo.statusList.filter((item) => item.changeType === 'receiving').length
+294:                              ? refundInfo.statusList.filter((item) => item.changeType === 'receiving')[0].createTime
+295:                              : ''
+296:                          }}
+297:                        </div>
+298:                      </template>
+299:                    </el-step>
+300:                    <el-step
+301:                      title="商品拒绝收货-商家"
+302:                      v-if="
+303:                        refundInfo.statusList &&
+304:                        refundInfo.statusList.length &&
+305:                        refundInfo.statusList.find((item) => item.changeType === 'rejectionGoods')
+306:                      "
+307:                    >
+308:                      <template slot="description" v-if="refundInfo.statusList && refundInfo.statusList.length">
+309:                        <div class="mb10">
+310:                          {{
+311:                            refundInfo.statusList.filter((item) => item.changeType === 'rejectionGoods')[0].createTime
+312:                          }}
+313:                        </div>
+314:                        <div v-if="refundInfo.refundStatus > 0" class="refundReasonWap">
+315:                          <div class="detail-term">
+316:                            <span class="detail-infoTitle">审核结果：</span
+317:                            ><span class="detail-info">{{
+318:                              refundInfo.refundStatus === 1 ? '拒绝退款' : '同意退款'
+319:                            }}</span>
+320:                          </div>
+321:                          <div v-if="refundInfo.refundStatus === 1" class="detail-term">
+322:                            <span class="detail-infoTitle">拒绝原因：</span>
+323:                            <span class="detail-info">{{ refundInfo.refundReason | filterEmpty }}</span>
+324:                          </div>
+325:                          <div
+326:                            v-if="refundInfo.returnGoodsType === 1 && refundInfo.refundStatus !== 1"

@@ -15,9 +15,10 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapMutations } from 'vuex';
+import { diyCname } from '@/utils/diyCname';
 export default {
   name: 'z_auxiliary_line',
-  cname: '辅助线',
+  ...diyCname('pagediy.guideLine'),
   configName: 'c_auxiliary_line',
   icon: 't-icon-zujian-fuzhuxian',
   type: 2, // 0 基础组件 1 营销组件 2工具组件
@@ -85,13 +86,13 @@ export default {
       defaultConfig: {
         name: 'guide',
         setUp: {
-          cname: '辅助线',
+          cname: this.$t('pagediy.guideLine'),
         },
         timestamp: this.num,
         // 背景颜色
         bgColor: {
-          title: '背景颜色',
-          tabTitle: '颜色设置',
+          title: this.$t('pagediy.backgroundColor'),
+          tabTitle: this.$t('pagediy.colorSettings'),
           color: [
             {
               item: '#FFFFFF',
@@ -110,7 +111,7 @@ export default {
           ],
         },
         lineColor: {
-          title: '线条颜色',
+          title: this.$t('pagediy.lineColor'),
           color: [
             {
               item: '#979797',
@@ -123,40 +124,40 @@ export default {
           ],
         },
         lineStyle: {
-          tabTitle: '样式设置',
-          title: '线条样式',
+          tabTitle: this.$t('pagediy.styleSettings'),
+          title: this.$t('pagediy.lineStyle'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '虚线',
+              val: this.$t('pagediy.dashedLine'),
               style: 'dashed',
               icon: 'icon-xuxian',
             },
             {
-              val: '实线',
+              val: this.$t('pagediy.solidLine'),
               style: 'solid',
               icon: 'icon-shixian',
             },
             {
-              val: '点状线',
+              val: this.$t('pagediy.dottedLine'),
               style: 'dotted',
               icon: 'icon-dianzhuangxian',
             },
           ],
         },
         heightConfig: {
-          title: '线条高度',
+          title: this.$t('pagediy.guideLineHeight'),
           val: 1,
           min: 1,
         },
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 0,
           min: 0,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },

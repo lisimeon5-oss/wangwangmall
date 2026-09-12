@@ -102,7 +102,7 @@ export default {
   methods: {
     handlerGetTreeList(id) {
       if (!id) {
-        this.$message.error('当前数据id不正确');
+        this.$message.error(this.translateText('当前数据id不正确'));
         return;
       }
       categoryApi.treeCategroy({ pid: id }).then((data) => {

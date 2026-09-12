@@ -125,6 +125,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             groupConfig.setTag(GroupConfigConstants.TAG_HOME_BANNER);
             groupConfig.setImageUrl(vo.getImageUrl());
             groupConfig.setName(vo.getName());
+            groupConfig.setNameJson(vo.getNameJson());
             groupConfig.setLinkUrl(vo.getLinkUrl());
             groupConfig.setStatus(vo.getStatus());
             groupConfig.setSort(vo.getSort());
@@ -146,6 +147,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             PcHomeRecommendedVo vo = new PcHomeRecommendedVo();
             vo.setId(config.getId());
             vo.setName(config.getName());
+            vo.setNameJson(config.getNameJson());
             vo.setImageUrl(config.getImageUrl());
             vo.setLinkUrl(config.getLinkUrl());
             vo.setSort(config.getSort());
@@ -172,12 +174,13 @@ public class PcShoppingServiceImpl implements PcShoppingService {
         if (count >= 10) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "PC首页推荐板块数量已达上限");
         }
-        if (groupConfigService.isExistName(voRequest.getName(), GroupConfigConstants.TAG_HOME_RECOMMEND)) {
+        if (StrUtil.isNotBlank(voRequest.getName()) && groupConfigService.isExistName(voRequest.getName(), GroupConfigConstants.TAG_HOME_RECOMMEND)) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "PC首页推荐板块名称不能重复");
         }
         GroupConfig groupConfig = new GroupConfig();
         groupConfig.setTag(GroupConfigConstants.TAG_HOME_RECOMMEND);
         groupConfig.setName(voRequest.getName());
+        groupConfig.setNameJson(voRequest.getNameJson());
         groupConfig.setImageUrl(systemAttachmentService.clearPrefix(voRequest.getImageUrl()));
         if (StrUtil.isNotBlank(voRequest.getLinkUrl())) {
             groupConfig.setLinkUrl(voRequest.getLinkUrl());
@@ -212,12 +215,13 @@ public class PcShoppingServiceImpl implements PcShoppingService {
         if (!groupConfig.getTag().equals(GroupConfigConstants.TAG_HOME_RECOMMEND)) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "推荐板块数据不存在");
         }
-        if (!groupConfig.getName().equals(voRequest.getName())) {
+        if (StrUtil.isNotBlank(voRequest.getName()) && !voRequest.getName().equals(groupConfig.getName())) {
             if (groupConfigService.isExistName(voRequest.getName(), GroupConfigConstants.TAG_HOME_RECOMMEND)) {
                 throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "PC首页推荐板块名称不能重复");
             }
-            groupConfig.setName(voRequest.getName());
         }
+        groupConfig.setName(voRequest.getName());
+        groupConfig.setNameJson(voRequest.getNameJson());
         groupConfig.setImageUrl(systemAttachmentService.clearPrefix(voRequest.getImageUrl()));
         if (StrUtil.isNotBlank(voRequest.getLinkUrl())) {
             groupConfig.setLinkUrl(voRequest.getLinkUrl());
@@ -299,6 +303,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             groupConfig.setTag(GroupConfigConstants.TAG_PHILOSOPHY);
             groupConfig.setImageUrl(vo.getImageUrl());
             groupConfig.setName(vo.getName());
+            groupConfig.setNameJson(vo.getNameJson());
             groupConfig.setSort(vo.getSort());
             groupConfig.setStatus(true);
             return groupConfig;
@@ -354,6 +359,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             PcQuickEntryVo quickEntryVo = new PcQuickEntryVo();
             quickEntryVo.setId(confing.getId());
             quickEntryVo.setName(confing.getName());
+            quickEntryVo.setNameJson(confing.getNameJson());
             quickEntryVo.setSort(confing.getSort());
             if (StrUtil.isNotBlank(confing.getExpand())) {
                 List<PcQuickEntryLinksVo> linksVoList = JSONArray.parseArray(confing.getExpand(), PcQuickEntryLinksVo.class);
@@ -375,6 +381,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             GroupConfig config = new GroupConfig();
             config.setTag(GroupConfigConstants.TAG_QUICK_ENTRY);
             config.setName(voRequest.getName());
+            config.setNameJson(voRequest.getNameJson());
             config.setSort(voRequest.getSort());
             if (CollUtil.isNotEmpty(voRequest.getLinkList())) {
                 config.setExpand(JSONArray.toJSONString(voRequest.getLinkList()));
@@ -490,6 +497,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             codeVo.setImageUrl(codeConfig.getImageUrl());
             codeVo.setSort(codeConfig.getSort());
             codeVo.setName(codeConfig.getName());
+            codeVo.setNameJson(codeConfig.getNameJson());
             return codeVo;
         }).collect(Collectors.toList());
     }
@@ -506,6 +514,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             GroupConfig config = new GroupConfig();
             config.setTag(GroupConfigConstants.TAG_BOTTOM_QR_CODE);
             config.setName(voRequest.getName());
+            config.setNameJson(voRequest.getNameJson());
             config.setImageUrl(voRequest.getImageUrl());
             config.setSort(voRequest.getSort());
             config.setStatus(true);
@@ -550,6 +559,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             PcFriendlyLinkVo vo = new PcFriendlyLinkVo();
             vo.setId(config.getId());
             vo.setName(config.getName());
+            vo.setNameJson(config.getNameJson());
             vo.setLinkUrl(config.getLinkUrl());
             vo.setSort(config.getSort());
             voList.add(vo);
@@ -571,6 +581,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             groupConfig.setTag(GroupConfigConstants.TAG_FRIENDLY_LINKS);
             groupConfig.setMerId(0);
             groupConfig.setName(vo.getName());
+            groupConfig.setNameJson(vo.getNameJson());
             groupConfig.setLinkUrl(vo.getLinkUrl());
             groupConfig.setSort(vo.getSort());
             groupConfig.setStatus(true);
@@ -630,6 +641,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             PcHomeNavigationVo vo = new PcHomeNavigationVo();
             vo.setId(config.getId());
             vo.setName(config.getName());
+            vo.setNameJson(config.getNameJson());
             vo.setLinkUrl(config.getLinkUrl());
             vo.setSort(config.getSort());
             vo.setStatus(config.getStatus());
@@ -654,7 +666,9 @@ public class PcShoppingServiceImpl implements PcShoppingService {
 //        if (counted > 6) {
 //            throw new CrmebException("自定义首页导航最多开启6个");
 //        }
-        PcHomeNavigationVo pcHomeNavigationVo = voListRequest.stream().filter(e -> e.getName().length() > 6).findFirst().orElse(null);
+        PcHomeNavigationVo pcHomeNavigationVo = voListRequest.stream()
+                .filter(e -> StrUtil.isNotBlank(e.getName()) && e.getName().length() > 6)
+                .findFirst().orElse(null);
         if (ObjectUtil.isNotNull(pcHomeNavigationVo)) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "自定义首页导航名称最长为6个字符");
         }
@@ -663,6 +677,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             groupConfig.setTag(GroupConfigConstants.TAG_HOME_NAVIGATION);
             groupConfig.setMerId(0);
             groupConfig.setName(vo.getName());
+            groupConfig.setNameJson(vo.getNameJson());
             groupConfig.setLinkUrl(vo.getLinkUrl());
             groupConfig.setSort(vo.getSort());
             groupConfig.setStatus(vo.getStatus());

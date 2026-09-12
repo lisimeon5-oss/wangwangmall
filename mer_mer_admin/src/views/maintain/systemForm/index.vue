@@ -7,19 +7,19 @@
           size="small"
           type="primary"
           @click="handlerCreatFrom(0, 'add')"
-          >添加表单</el-button
+          >{{ $t('maintain.addForm') }}</el-button
         >
       </div>
       <el-table v-loading="listLoading" :data="tableData.data" size="small">
         <el-table-column label="ID" prop="id" min-width="80" />
-        <el-table-column label="表单名称" prop="formName" min-width="150" />
-        <el-table-column prop="createTime" label="添加时间" min-width="150" />
-        <el-table-column prop="updateTime" label="更新时间" min-width="150" />
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column :label="$t('maintain.formName')" prop="formName" min-width="150" />
+        <el-table-column prop="createTime" :label="$t('marketing.addTime')" min-width="150" />
+        <el-table-column prop="updateTime" :label="$t('maintain.updateTime')" min-width="150" />
+        <el-table-column :label="$t('common.operate')" width="150" fixed="right">
           <template slot-scope="scope">
-            <a v-hasPermi="['merchant:system:form:update']" @click="handlerCreatFrom(scope.row.id, 'edit')">编辑</a>
+            <a v-hasPermi="['merchant:system:form:update']" @click="handlerCreatFrom(scope.row.id, 'edit')">{{ $t('common.edit') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a v-hasPermi="['merchant:system:form:delete']" @click="handlerDelete(scope.row.id)">删除</a>
+            <a v-hasPermi="['merchant:system:form:delete']" @click="handlerDelete(scope.row.id)">{{ $t('common.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -101,9 +101,9 @@ export default {
     },
     //删除
     handlerDelete(id) {
-      this.$modalSure('确定要删除此表单吗？').then(() => {
+      this.$modalSure(this.$t('maintain.deleteFormConfirm')).then(() => {
         systemFormDeleteApi(id).then((res) => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableFrom);
           this.$store.commit('mobildConfig/SET_SystemForm', []);
           this.getList();

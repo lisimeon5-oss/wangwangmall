@@ -8,19 +8,19 @@
 			<!-- 上一个月,只能往前翻一个月 -->
 			<view class="previous" :class="Number(toMonth-nowMonth) ===0 ? 'newCol' : 'next'" @click="changeMonth(-1)">
 				<text class="iconfont icon-xiangzuo"></text>
-				<!-- <button class="barbtn">{{langType=='ch'?'上一月':'Last'}}</button> -->
+				<!-- <button class="barbtn">{{langType=='ch'?$t('上一月'):'Last'}}</button> -->
 			</view>
 			<!-- 显示年月 toMonth-->
-			<view class="date">{{nowYear || "--"}} 年 {{nowMonth || "--"}} 月</view>
+			<view class="date">{{nowYear || "--"}} {{$t('年')}} {{nowMonth || "--"}} {{$t('月')}}</view>
 			<!-- 下一个月, 往后翻的月份不能大于当前月份-->
 			<view class="previous" :class="Number(toMonth-nowMonth) ===0 ? 'next' : 'newCol'" @click="changeMonth(1)">
 				<text class="iconfont icon-xiangyou"></text>
-				<!-- <button class="barbtn">{{langType=='ch'?'下一月':'Nex/'}}</button> -->
+				<!-- <button class="barbtn">{{langType=='ch'?$t('下一月'):'Nex/'}}</button> -->
 			</view>
 		</view>
 		<!-- 显示星期 -->
 		<view class="week-area">
-			<view class="week-txt" v-for="(item,index) in weeksTxt[langType]" :key="index">{{item}}</view>
+			<view class="week-txt" v-for="(item,index) in weekLabels" :key="index">{{item}}</view>
 		</view>
 
 		<view class="myDateTable">
@@ -79,10 +79,18 @@
 				toMonth: parseInt(new Date().getMonth() + 1), //系统本月
 				toYear: parseInt(new Date().getFullYear()), //系统本年
 				weeksTxt: {
-					ch: ['日', '一', '二', '三', '四', '五', '六'],
-					en: ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat'],
-				},
+					'zh-cn': ['日', '一', '二', '三', '四', '五', '六'],
+					en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+					th: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'],
+					my: ['နွေ', 'လာ', 'ဂါ', 'ဟူး', 'ကြာ', 'သော', 'စနေ']
+				}
 			};
+		},
+		computed: {
+			weekLabels() {
+				const locale = this.i18nLocale || 'zh-cn'
+				return this.weeksTxt[locale] || this.weeksTxt['zh-cn']
+			}
 		},
 		props: {
 			isReplenishSign: { // 是否允许过期补签
@@ -103,15 +111,12 @@
 					return []
 				}
 			},
-			langType: { //只是示例一个翻译而已，要想所有都翻译自己可以再加加
+			langType: {
 				type: String,
-				default: "ch" //en
-			},
+				default: 'zh-cn'
+			}
 		},
 		created() {
-			if (!(/en|ch/g.test(this.langType))) {
-				this.langType = 'ch'; // 非中英，则固定中文
-			}
 			const ymArr = this.yearMonth.split('-');
 			this.buildCalendar(ymArr[0], ymArr[1]);
 			this.onSignDataChange(this.dataSource);
@@ -121,17 +126,17 @@
 		},
 		methods: {
 			clickSign(date, type) { //type=0补签，type=1当日签到
-				var strTip = "签到";
+				var strTip = this.$t('签到');
 
 				if (type == 0) {
 					if (!this.isReplenishSign) { // 未开启补签，阻止继续执行
 						console.log("————补签功能未开启————");
 						return;
 					}
-					strTip = "补签";
+					strTip = this.$t('补签');
 				}
 				uni.showToast({
-					title: date + "号" + strTip + "成功",
+					title: date + this.$t('号') + strTip + this.$t('成功'),
 					icon: 'success',
 					position: "bottom",
 				});

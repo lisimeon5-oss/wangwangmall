@@ -4,8 +4,8 @@
       <el-alert type="warning" class="mb35" :closable="false" show-icon>
         <slot name="title">
           <div class="acea-row">
-            <div>社区状态在页面设计中进行开启/关闭；</div>
-            <el-link type="primary" @click="handlerToLink">立即前往</el-link>
+            <div>{{ $t('community.communityStatusTip') }}</div>
+            <el-link type="primary" @click="handlerToLink">{{ $t('user.goNow') }}</el-link>
           </div>
         </slot>
       </el-alert>
@@ -54,14 +54,14 @@ export default {
       if (checkPermi(['platform:community:update:config'])) {
         communityConfigUpdateApi(formValue)
           .then((res) => {
-            this.$message.success('操作成功');
+            this.$message.success(this.$t('product.operateSuccess'));
             this.getConfigInfo();
           })
           .catch(() => {
             this.loading = false;
           });
       } else {
-        this.$message.warning('暂无操作权限');
+        this.$message.warning(this.$t('user.noPermission'));
       }
     },
     // 获取配置信息

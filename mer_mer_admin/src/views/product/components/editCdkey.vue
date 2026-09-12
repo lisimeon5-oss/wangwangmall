@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :visible.sync="cdkeyShow"
-    title="编辑卡密"
+    :title="$t('product.editCdkey')"
     width="950px"
     :close-on-click-modal="false"
     :before-close="handleClose"
@@ -11,11 +11,11 @@
       <div class="type-radio">
         <el-form label-width="80px" :model="carMyValidateForm" ref="carMyValidateForm" :inline="true">
           <el-form-item
-            label="卡号"
+            :label="$t('product.cardNumber')"
             prop="cardNumber"
             :rules="{
               required: true,
-              message: '卡号不能为空',
+              message: $t('product.cardNumberRequired'),
               trigger: 'blur',
             }"
           >
@@ -23,15 +23,15 @@
               v-model="carMyValidateForm.cardNumber"
               style="width: 300px"
               class="mr15"
-              placeholder="请输入卡号"
+              :placeholder="$t('product.cardNumberPlaceholder')"
             ></el-input>
           </el-form-item>
           <el-form-item
-            label="卡密"
+            :label="$t('product.cdkey')"
             prop="secretNum"
             :rules="{
               required: true,
-              message: '卡密不能为空',
+              message: $t('product.cdkeyRequired'),
               trigger: 'blur',
             }"
           >
@@ -39,20 +39,20 @@
               v-model="carMyValidateForm.secretNum"
               style="width: 300px"
               class="mr15"
-              placeholder="请输入卡密"
+              :placeholder="$t('product.cdkeyPlaceholder')"
             ></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div class="dialog-footer-inner dialog-bottom-top">
-        <el-button class="btns" size="small" @click="handleClose">取消</el-button>
+        <el-button class="btns" size="small" @click="handleClose">{{ $t('product.cancel') }}</el-button>
         <el-button
           :loading="btnloading"
           type="primary"
           class="btns"
           size="small"
           @click="submitForm('carMyValidateForm')"
-          >保存</el-button
+          >{{ $t('product.save') }}</el-button
         >
       </div>
     </div>
@@ -124,7 +124,7 @@ export default {
           this.btnloading = true;
           cardSecretUpdateApi(this.carMyValidateForm)
             .then((res) => {
-              this.$message.success('编辑成功');
+              this.$message.success(this.$t('product.editSuccess'));
               this.btnloading = false;
               this.handleClose();
               this.$emit('handlerEditSubSuccess');

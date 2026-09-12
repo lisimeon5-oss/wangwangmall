@@ -1,10 +1,10 @@
 <template>
   <div class="divBox">
     <el-tabs type="border-card">
-      <el-tab-pane label="类目申请">
+      <el-tab-pane :label="$t('videoChannel.categoryApplication')">
         <category-list></category-list>
       </el-tab-pane>
-      <el-tab-pane label="品牌申请">
+      <el-tab-pane :label="$t('videoChannel.brandApplication')">
         <brand-list></brand-list>
       </el-tab-pane>
     </el-tabs>

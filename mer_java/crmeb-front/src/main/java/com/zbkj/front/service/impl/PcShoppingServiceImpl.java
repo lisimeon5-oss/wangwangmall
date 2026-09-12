@@ -20,6 +20,7 @@ import com.zbkj.common.response.PcShoppingConfigResponse;
 import com.zbkj.common.response.ProductRecommendedResponse;
 import com.zbkj.common.response.ProductTagsFrontResponse;
 import com.zbkj.common.result.CommonResultCode;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.vo.*;
 import com.zbkj.front.service.PcShoppingService;
 import com.zbkj.service.service.GroupConfigService;
@@ -101,7 +102,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             GroupConfig config = iterator.next();
             PcHomeNavigationVo vo = new PcHomeNavigationVo();
             vo.setId(config.getId());
-            vo.setName(config.getName());
+            vo.setName(I18nJsonUtil.resolveByRequest(config.getName(), config.getNameJson()));
             vo.setLinkUrl(config.getLinkUrl());
             vo.setSort(config.getSort());
             voList.add(vo);
@@ -125,7 +126,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             PcHomeBannerVo vo = new PcHomeBannerVo();
             vo.setId(config.getId());
             vo.setImageUrl(config.getImageUrl());
-            vo.setName(config.getName());
+            vo.setName(I18nJsonUtil.resolveByRequest(config.getName(), config.getNameJson()));
             vo.setLinkUrl(config.getLinkUrl());
             vo.setSort(config.getSort());
             voList.add(vo);
@@ -143,7 +144,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
         return configList.stream().map(config -> {
             PcHomeRecommendedResponse response = new PcHomeRecommendedResponse();
             response.setId(config.getId());
-            response.setName(config.getName());
+            response.setName(I18nJsonUtil.resolveByRequest(config.getName(), config.getNameJson()));
             response.setImageUrl(config.getImageUrl());
             response.setLinkUrl(config.getLinkUrl());
             response.setSort(config.getSort());
@@ -227,7 +228,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             PcPhilosophyVo vo = new PcPhilosophyVo();
             vo.setId(config.getId());
             vo.setImageUrl(config.getImageUrl());
-            vo.setName(config.getName());
+            vo.setName(I18nJsonUtil.resolveByRequest(config.getName(), config.getNameJson()));
             vo.setSort(config.getSort());
             voList.add(vo);
         }
@@ -245,7 +246,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             GroupConfig config = iterator.next();
             PcFriendlyLinkVo vo = new PcFriendlyLinkVo();
             vo.setId(config.getId());
-            vo.setName(config.getName());
+            vo.setName(I18nJsonUtil.resolveByRequest(config.getName(), config.getNameJson()));
             vo.setLinkUrl(config.getLinkUrl());
             vo.setSort(config.getSort());
             voList.add(vo);
@@ -261,10 +262,14 @@ public class PcShoppingServiceImpl implements PcShoppingService {
         return configList.stream().map(confing -> {
             PcQuickEntryVo quickEntryVo = new PcQuickEntryVo();
             quickEntryVo.setId(confing.getId());
-            quickEntryVo.setName(confing.getName());
+            quickEntryVo.setName(I18nJsonUtil.resolveByRequest(confing.getName(), confing.getNameJson()));
             quickEntryVo.setSort(confing.getSort());
             if (StrUtil.isNotBlank(confing.getExpand())) {
                 List<PcQuickEntryLinksVo> linksVoList = JSONArray.parseArray(confing.getExpand(), PcQuickEntryLinksVo.class);
+                if (CollUtil.isNotEmpty(linksVoList)) {
+                    linksVoList.forEach(link ->
+                            link.setName(I18nJsonUtil.resolveByRequest(link.getName(), link.getNameJson())));
+                }
                 quickEntryVo.setLinkList(linksVoList);
             }
             return quickEntryVo;
@@ -281,7 +286,7 @@ public class PcShoppingServiceImpl implements PcShoppingService {
             codeVo.setId(codeConfig.getId());
             codeVo.setImageUrl(codeConfig.getImageUrl());
             codeVo.setSort(codeConfig.getSort());
-            codeVo.setName(codeConfig.getName());
+            codeVo.setName(I18nJsonUtil.resolveByRequest(codeConfig.getName(), codeConfig.getNameJson()));
             return codeVo;
         }).collect(Collectors.toList());
     }

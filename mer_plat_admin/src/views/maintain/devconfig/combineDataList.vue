@@ -2,12 +2,12 @@
   <div class="components-container">
     <div class="container" v-hasPermi="['platform:system:group:data:list']">
       <el-form inline>
-        <el-form-item label="状态">
-          <el-select v-model="listPram.status" placeholder="状态" clearable @change="handlerSearch" class="selWidth">
+        <el-form-item :label="$t('common.status')">
+          <el-select v-model="listPram.status" :placeholder="$t('common.status')" clearable @change="handlerSearch" class="selWidth">
             <el-option
               v-for="item in constants.roleListStatus"
               :key="item.value"
-              :label="item.label"
+              :label="translateText(item.label)"
               :value="item.value"
             />
           </el-select>
@@ -19,11 +19,11 @@
       size="mini"
       @click="handlerOpenEditData({}, 0)"
       v-hasPermi="['platform:system:group:data:save']"
-      >添加数据</el-button
+      >{{ $t('maintain.addData') }}</el-button
     >
-    <!-- v-if="((formData.id==55 || formData.name==='签到天数配置') && dataList.list.length<7) || (formData.id!=55|| formData.name!=='签到天数配置')" -->
+    <!-- v-if="((formData.id==55 || formData.name===$t('maintain.checkinDaysConfig')) && dataList.list.length<7) || (formData.id!=55|| formData.name!==$t('maintain.checkinDaysConfig'))" -->
     <el-dialog
-      :title="editDataConfig.isCreate === 0 ? '添加数据' : '编辑数据'"
+      :title="editDataConfig.isCreate === 0 ? $t('maintain.addData') : $t('maintain.editData')"
       :visible.sync="editDataConfig.visible"
       append-to-body
       destroy-on-close
@@ -39,33 +39,33 @@
       />
     </el-dialog>
     <el-table size="small" :data="dataList.list" style="width: 100%" class="mt20 mb20 table-top">
-      <el-table-column label="编号" prop="id" />
+      <el-table-column :label="$t('maintain.number')" prop="id" />
       <el-table-column
         v-for="(item, index) in formConf.fields"
         :key="index"
-        :label="item.__config__.label"
+        :label="translateText(item.__config__.label)"
         :prop="item.__vModel__"
       >
         <template slot-scope="scope">
           <div v-if="['img', 'image', 'pic'].indexOf(item.__vModel__) > -1" class="demo-image__preview line-heightOne">
             <el-image :src="scope.row[item.__vModel__]" :preview-src-list="[scope.row[item.__vModel__]]" />
           </div>
-          <span v-else>{{ scope.row[item.__vModel__] }}</span>
+          <span v-else>{{ displayField(scope.row, item) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="status">
+      <el-table-column :label="$t('common.status')" prop="status">
         <template slot-scope="scope">
           <span>{{ scope.row.status | filterShowOrHide }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column :label="$t('common.operate')" width="200">
         <template slot-scope="scope">
-          <a @click="handlerOpenEditData(scope.row, 1)" v-hasPermi="['platform:system:group:data:update']">编辑</a>
+          <a @click="handlerOpenEditData(scope.row, 1)" v-hasPermi="['platform:system:group:data:update']">{{ $t('common.edit') }}</a>
           <el-divider direction="vertical"></el-divider>
           <a
             @click="handlerDelete(scope.row)"
             v-if="formMark !== 99 && checkPermi(['platform:system:group:data:delete'])"
-            >删除</a
+            >{{ $t('common.delete') }}</a
           >
         </template>
       </el-table-column>
@@ -98,6 +98,8 @@ import edit from './combineEdit';
 import * as systemGroupDataApi from '@/api/systemGroupData.js';
 import * as systemFormConfigApi from '@/api/systemFormConfig.js';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { translateText } from '@/utils/i18nText';
+import { getLocalizedText } from '@/utils/localizedName';
 export default {
   // name: "combineDataList"
   components: { edit },
@@ -134,6 +136,23 @@ export default {
   },
   methods: {
     checkPermi,
+    translateText,
+    currentLocale() {
+      return (
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn'
+      );
+    },
+    displayField(row, item) {
+      const key = item && item.__vModel__;
+      if (['name', 'title', 'tag', 'label', 'info'].indexOf(key) > -1) {
+        return getLocalizedText(row[key], row[`${key}Json`], this.currentLocale());
+      }
+      return row[key];
+    },
     handlerSearch() {
       this.listPram.page = 1;
       this.handlerGetListData(this.listPram);
@@ -176,9 +195,9 @@ export default {
       this.editDataConfig.visible = false;
     },
     handlerDelete(rowData) {
-      this.$modalSure('删除当前数据吗').then(() => {
+      this.$modalSure(this.$t('maintain.deleteCurrentDataConfirm')).then(() => {
         systemGroupDataApi.groupDataDelete(rowData).then((data) => {
-          this.$message.success('删除数据成功');
+          this.$message.success(this.$t('content.deleteDataSuccess'));
           this.handlerHideDia();
         });
       });

@@ -7,11 +7,11 @@
 					@click="goRouter(item)">
 					<block v-if="item.link.split('?')[0] == activeRouter">
 						<image :src="item.imgList[0]"></image>
-						<view class="txt">{{item.name}}</view>
+						<view class="txt">{{menuName(item)}}</view>
 					</block>
 					<block v-else>
 						<image :src="item.imgList[1]"></image>
-						<view class="unchecked">{{item.name}}</view>
+						<view class="unchecked">{{menuName(item)}}</view>
 					</block>
 				</view>
 			</view>
@@ -29,6 +29,7 @@
 	// +----------------------------------------------------------------------
 	// | Author: CRMEB Team <admin@crmeb.com>
 	// +----------------------------------------------------------------------
+	import { getLocalizedName } from '@/utils/localizedName';
 	import {
 		mapState,
 		mapGetters
@@ -74,6 +75,32 @@
 						2 + 'rpx'
 				}
 			},
+		},
+		methods: {
+			menuName(item) {
+				return getLocalizedName(item, this.i18nLocale);
+			},
+			goRouter(item) {
+				var pages = getCurrentPages();
+				var page = (pages[pages.length - 1]).$page.fullPath;
+				if (item.link == page) return
+				if (['/pages/index/index', '/pages/order_addcart/order_addcart',
+						'/pages/user/index', '/pages/discover_index/index', '/pages/goods_cate/index'
+					].indexOf(item.link) > -1) {
+					uni.switchTab({
+						url: item.link,
+						fail() {
+							uni.redirectTo({
+								url: item.link
+							})
+						}
+					})
+				} else {
+					uni.navigateTo({
+						url: item.link
+					})
+				}
+			}
 		}
 	}
 </script>
@@ -92,7 +119,7 @@
 		align-items: center;
 		justify-content: space-around;
 		width: 100%;
-		height: calc(98rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(98rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(98rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 		box-sizing: border-box;
 		border-top: solid 1rpx #F3F3F3;

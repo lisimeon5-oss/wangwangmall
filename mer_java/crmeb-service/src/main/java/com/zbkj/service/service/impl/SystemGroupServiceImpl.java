@@ -50,7 +50,10 @@ public class SystemGroupServiceImpl extends ServiceImpl<SystemGroupDao, SystemGr
         LambdaQueryWrapper<SystemGroup> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (StrUtil.isNotBlank(request.getKeywords())) {
             String keywords = URLUtil.decode(request.getKeywords());
-            lambdaQueryWrapper.like(SystemGroup::getName, keywords);
+            lambdaQueryWrapper.and(w -> w.like(SystemGroup::getName, keywords)
+                    .or().like(SystemGroup::getNameJson, keywords)
+                    .or().like(SystemGroup::getInfo, keywords)
+                    .or().like(SystemGroup::getInfoJson, keywords));
         }
         lambdaQueryWrapper.orderByDesc(SystemGroup::getId);
         return dao.selectList(lambdaQueryWrapper);

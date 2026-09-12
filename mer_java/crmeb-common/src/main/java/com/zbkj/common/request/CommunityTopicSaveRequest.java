@@ -1,17 +1,13 @@
 package com.zbkj.common.request;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 
@@ -34,7 +30,10 @@ public class CommunityTopicSaveRequest implements Serializable {
     private Integer id;
 
     @ApiModelProperty("话题名称")
-    @NotBlank(message = "话题名称不能为空")
-    @Length(max = 10, message = "话题名称最多为8个字符")
+    @Length(max = 10, message = "话题名称最多为10个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言话题名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言话题名称不能为空")
+    private String nameJson;
 }

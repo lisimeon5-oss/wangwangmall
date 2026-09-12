@@ -43,14 +43,23 @@ public class IntegralProductDetailResponse implements Serializable {
     @ApiModelProperty(value = "商品名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言商品名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "商品简介")
     private String intro;
+
+    @ApiModelProperty(value = "多语言商品简介(JSON)")
+    private String introJson;
 
     @ApiModelProperty(value = "关键字")
     private String keyword;
 
     @ApiModelProperty(value = "单位名")
     private String unitName;
+
+    @ApiModelProperty(value = "多语言商品单位(JSON)")
+    private String unitNameJson;
 
     @ApiModelProperty(value = "排序")
     private Integer sort;

@@ -12,20 +12,20 @@
 						</view>
 					</view>
 					<view class="input" @click="goEdit()">
-						个人信息<text class="iconfont icon-xiangyou"></text>
+						{{$t('setting.profile')}}<text class="iconfont icon-xiangyou"></text>
 					</view>
 				</view>
 			</view>
 			<view class='list borRadius14'>
 				<view class='item acea-row row-between-wrapper'>
-					<view>ID号</view>
+					<view>{{$t('setting.idNo')}}</view>
 					<view class='input acea-row row-between-wrapper'>
 						<input type='text' :value='uid' disabled='true' class='id fontColor'></input>
 						<text class='iconfont icon-suozi'></text>
 					</view>
 				</view>
 				<view class='item acea-row row-between-wrapper'>
-					<view>手机号码</view>
+					<view>{{$t('setting.phone')}}</view>
 					<navigator url="/pages/users/user_phone/index" hover-class="none" class="input">
 						<view class='input acea-row row-between-wrapper'>
 							<span type='number' disabled='true' name='phone'
@@ -36,68 +36,89 @@
 				</view>
 				<!-- #ifdef H5 -->
 				<view class="item acea-row row-between-wrapper" v-if="userInfo.phone && wechat">
-					<view>密码</view>
+					<view>{{$t('setting.password')}}</view>
 					<navigator url="/pages/users/user_pwd_edit/index" hover-class="none" class="input">
-						点击修改密码<text class="iconfont icon-xiangyou"></text>
+						{{$t('setting.changePassword')}}<text class="iconfont icon-xiangyou"></text>
 					</navigator>
 				</view>
 				<!-- #endif -->
 				<!-- #ifdef APP-PLUS -->
 				<view class="item acea-row row-between-wrapper" v-if="userInfo.phone">
-					<view>密码</view>
+					<view>{{$t('setting.password')}}</view>
 					<navigator url="/pages/users/user_pwd_edit/index" hover-class="none" class="input">
-						点击修改密码<text class="iconfont icon-xiangyou"></text>
+						{{$t('setting.changePassword')}}<text class="iconfont icon-xiangyou"></text>
 					</navigator>
 				</view>
 				<!-- #endif -->
 				<view class='item acea-row row-between-wrapper'>
-					<view>地址管理</view>
+					<view>{{$t('setting.address')}}</view>
 					<navigator url="/pages/address/user_address_list/index" hover-class="none" class="input">
-						立即设置<text class="iconfont icon-xiangyou"></text>
+						{{$t('setting.setNow')}}<text class="iconfont icon-xiangyou"></text>
 					</navigator>
 				</view>
 				<!-- #ifdef APP-PLUS -->
 				<view class='item acea-row row-between-wrapper'>
-					<view>检查更新</view>
+					<view>{{$t('setting.checkUpdate')}}</view>
 					<view class="input" @click="appUpdate">
-						立即设置<text class="iconfont icon-xiangyou"></text>
+						{{$t('setting.setNow')}}<text class="iconfont icon-xiangyou"></text>
 					</view>
 				</view>
 				<!-- #endif -->
 				<!-- #ifdef MP -->
 				<view class='item acea-row row-between-wrapper'>
-					<view>权限设置</view>
+					<view>{{$t('setting.permission')}}</view>
 					<view class="input" @click="Setting">
-						点击管理<text class="iconfont icon-xiangyou"></text>
+						{{$t('setting.manage')}}<text class="iconfont icon-xiangyou"></text>
 					</view>
 				</view>
 				<!-- #endif -->
 				<view class="item acea-row row-between-wrapper">
-					<view>资质证明</view>
+					<view>{{$t('setting.qualification')}}</view>
 					<navigator url="/pages/goods/agreement_info/index?from=intelligentinfo" hover-class="none"
 						class="input">
-						点击查看<text class="iconfont icon-xiangyou"></text>
+						{{$t('setting.view')}}<text class="iconfont icon-xiangyou"></text>
 					</navigator>
 				</view>
 				<view class="item acea-row row-between-wrapper">
-					<view>协议规则</view>
+					<view>{{$t('setting.agreement')}}</view>
 					<navigator url="/pages/goods/agreement_rules/index" hover-class="none" class="input">
-						点击查看<text class="iconfont icon-xiangyou"></text>
+						{{$t('setting.view')}}<text class="iconfont icon-xiangyou"></text>
 					</navigator>
 				</view>
 				<view class="item acea-row row-between-wrapper">
-					<view>账号注销</view>
+					<view>{{$t('setting.language')}}</view>
+					<view class="input acea-row row-between-wrapper" @click="openLangPicker">
+						<span class="id fontColor">{{ currentLangName }}</span>
+						<text class="iconfont icon-xiangyou"></text>
+					</view>
+				</view>
+				<view class="item acea-row row-between-wrapper">
+					<view>{{$t('setting.cancelAccount')}}</view>
 					<view class="input" @click="changeCancel">
-						注销后无法恢复<text class="iconfont icon-xiangyou"></text>
+						{{$t('setting.cancelTip')}}<text class="iconfont icon-xiangyou"></text>
 					</view>
 				</view>
 				<!-- #ifdef H5 -->
 				<view class="logOut cart-color acea-row row-center-wrapper" @click="outLogin"
-					v-if="!this.$wechat.isWeixin() || (this.$wechat.isWeixin() && publicLoginType ==2)">退出登录</view>
+					v-if="!this.$wechat.isWeixin() || (this.$wechat.isWeixin() && publicLoginType ==2)">{{$t('setting.logout')}}</view>
 				<!-- #endif -->
 				<!-- #ifdef APP-PLUS -->
-				<view class="logOut cart-color acea-row row-center-wrapper" @click="outLogin">退出登录</view>
+				<view class="logOut cart-color acea-row row-center-wrapper" @click="outLogin">{{$t('setting.logout')}}</view>
 				<!-- #endif -->
+			</view>
+		</view>
+		<view v-if="langPickerShow" class="lang-mask" @click="closeLangPicker" @touchmove.stop.prevent>
+			<view class="lang-panel" @click.stop>
+				<view class="lang-bar">
+					<text class="lang-bar-btn" @click="closeLangPicker">{{$t('取消')}}</text>
+					<text class="lang-bar-btn lang-bar-ok" @click="confirmLangPicker">{{$t('完成')}}</text>
+				</view>
+				<picker-view class="lang-view" indicator-style="height: 44px;" :value="[langPickIndex]"
+					@change="onLangPickChange">
+					<picker-view-column>
+						<view class="lang-item" v-for="(item, i) in langList" :key="item.code || i">{{item.name}}</view>
+					</picker-view-column>
+				</picker-view>
 			</view>
 		</view>
 	</view>
@@ -118,6 +139,11 @@
 		mapGetters
 	} from "vuex";
   import {goToAgreement} from "@/libs/order";
+	import { languageListApi } from '@/api/public';
+	import { DEFAULT_LANG_LIST, getLocale, normalizeLang } from '@/i18n';
+	import Cache from '@/utils/cache';
+	import { toLogin } from '@/libs/login';
+	import { BACK_URL } from '@/config/cache';
 	let app = getApp();
 	export default {
 		data() {
@@ -126,17 +152,31 @@
 				wechat: false,
 				loginType: 'h5',
 				avatarUrl: '',
-				publicLoginType: app.globalData.publicLoginType //公众号登录方式(单选),1微信授权，2手机号登录
+				publicLoginType: app.globalData.publicLoginType, //公众号登录方式(单选),1微信授权，2手机号登录
+				langList: DEFAULT_LANG_LIST,
+				langPickerShow: false,
+				langPickIndex: 0
 			}
 		},
 		computed: {
-			...mapGetters(['isLogin', 'uid', 'userInfo'])
+			...mapGetters(['isLogin', 'uid', 'userInfo', 'locale']),
+			langIndex() {
+				const code = getLocale();
+				const idx = this.langList.findIndex((item) => item.code === code);
+				return idx < 0 ? 0 : idx;
+			},
+			currentLangName() {
+				const item = this.langList[this.langIndex];
+				return item ? item.name : '';
+			}
 		},
 		onLoad() {
 			if (!this.isLogin) {
 				toLogin();
 			}
 			this.avatarUrl = this.userInfo.avatar ? this.userInfo.avatar : '../static/images/f.png';
+			this.loadLangList();
+			uni.setNavigationBarTitle({ title: this.$t('user.setting') });
 			// #ifdef H5
 			let ua = navigator.userAgent.toLowerCase();
 			if (ua.match(/MicroMessenger/i) == "micromessenger") {
@@ -147,6 +187,35 @@
 			// #endif
 		},
 		methods: {
+			loadLangList() {
+				languageListApi().then((res) => {
+					const list = (res && res.data) || [];
+					if (list.length) {
+						this.langList = list.map((item) => ({
+							name: item.name,
+							code: normalizeLang(item.code)
+						})).filter((item) => item.code);
+					}
+				}).catch(() => {});
+			},
+			openLangPicker() {
+				this.langPickIndex = this.langIndex;
+				this.langPickerShow = true;
+			},
+			closeLangPicker() {
+				this.langPickerShow = false;
+			},
+			onLangPickChange(e) {
+				const idx = Number((e.detail.value && e.detail.value[0]) || 0);
+				this.langPickIndex = idx;
+			},
+			confirmLangPicker() {
+				const item = this.langList[this.langPickIndex];
+				this.langPickerShow = false;
+				if (!item) return;
+				this.$store.dispatch('SetLocale', item.code);
+				uni.setNavigationBarTitle({ title: this.$t('user.setting') });
+			},
 			/**
 			 * 注销账号
 			 *
@@ -189,8 +258,10 @@
 				let that = this;
 				if (that.loginType == 'h5') {
 					uni.showModal({
-						title: '提示',
-						content: '确认退出登录?',
+						title: this.$t('common.tip'),
+						content: this.$t('setting.logoutConfirm'),
+						confirmText: this.$t('common.confirm'),
+						cancelText: this.$t('common.cancel'),
 						success: function(res) {
 							if (res.confirm) {
 								that.$store.dispatch('GETLOGOUT');
@@ -216,6 +287,58 @@
 </script>
 
 <style scoped lang="scss">
+	.lang-mask {
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.45);
+		z-index: 999;
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+	}
+
+	.lang-panel {
+		width: 100%;
+		background: #fff;
+		border-radius: 24rpx 24rpx 0 0;
+		padding-bottom: env(safe-area-inset-bottom);
+	}
+
+	.lang-bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 24rpx 32rpx;
+		border-bottom: 1rpx solid #eee;
+	}
+
+	.lang-bar-btn {
+		font-size: 30rpx;
+		color: #666;
+	}
+
+	.lang-bar-ok {
+		color: #007aff;
+		font-weight: 600;
+	}
+
+	.lang-view {
+		width: 100%;
+		height: 440rpx;
+	}
+
+	.lang-item {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 44px;
+		font-size: 30rpx;
+		color: #333;
+	}
+
 	.fontColor {
 		color: #666666;
 	}

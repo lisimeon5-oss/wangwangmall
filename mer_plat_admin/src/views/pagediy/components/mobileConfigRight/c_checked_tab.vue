@@ -2,9 +2,9 @@
   <!--右侧头部组件，标题，按钮选择框-->
   <div class="acea-row row-between title-config-diy">
     <div class="title-tips" v-if="configData.title">
-      <span>{{ configData.title }}</span>
+      <span>{{ diyUiText(configData.title) }}</span>
     </div>
-    <div v-show="configData.cname" class="title-bar">{{ configData.cname }}</div>
+    <div v-show="configData.cname" class="title-bar">{{ diyUiText(configData.cname) }}</div>
     <div v-if="configData.tabVal < 2" class="radio-boxs acea-row">
       <div
         v-for="(item, index) in list"
@@ -29,6 +29,7 @@
 // +---------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +---------------------------------------------------------------------
+import { diyUiText } from '@/utils/diyCname';
 export default {
   name: 'c_checked_tab',
   props: {
@@ -41,7 +42,6 @@ export default {
   },
   data() {
     return {
-      list: ['内容', '样式'],
       actived: 0,
       formData: {
         type: 0,
@@ -49,6 +49,11 @@ export default {
       defaults: {},
       configData: {},
     };
+  },
+  computed: {
+    list() {
+      return [this.$t('pagediy.content'), this.$t('pagediy.styleTab')];
+    },
   },
   watch: {
     configObj: {
@@ -67,6 +72,7 @@ export default {
     });
   },
   methods: {
+    diyUiText,
     onClick(index) {
       this.actived = index;
       this.configData.tabVal = this.actived;

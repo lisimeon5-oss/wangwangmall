@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -46,6 +48,9 @@ public class ProductAddRequest implements Serializable {
     @Length(max = 255, message = "商品图片名称长度不能超过255个字符")
     private String image;
 
+    @ApiModelProperty(value = "多语言商品封面图(JSON)")
+    private String imageJson;
+
     @ApiModelProperty(value = "展示图")
     @Length(max = 1000, message = "展示图名称长度不能超过1000个字符")
     private String flatPattern;
@@ -55,15 +60,24 @@ public class ProductAddRequest implements Serializable {
     @Length(max = 2000, message = "轮播图名称长度不能超过2000个字符")
     private String sliderImage;
 
-    @ApiModelProperty(value = "商品名称", required = true)
-    @NotBlank(message = "商品名称不能为空")
+    @ApiModelProperty(value = "多语言商品轮播图(JSON)")
+    private String sliderImageJson;
+
+    @ApiModelProperty(value = "商品名称")
     @Length(max = 50, message = "商品名称长度不能超过50个字符")
     private String name;
 
-    @ApiModelProperty(value = "商品简介", required = true)
-    @NotBlank(message = "商品简介不能为空")
+    @ApiModelProperty(value = "多语言商品名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言商品名称不能为空")
+    private String nameJson;
+
+    @ApiModelProperty(value = "商品简介")
     @Length(max = 100, message = "商品简介长度不能超过100个字符")
     private String intro;
+
+    @ApiModelProperty(value = "多语言商品简介(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言商品简介不能为空")
+    private String introJson;
 
     @ApiModelProperty(value = "关键字")
 //    @Length(max = 255, message = "关键字长度不能超过255个字符")
@@ -86,10 +100,13 @@ public class ProductAddRequest implements Serializable {
     @ApiModelProperty(value = "保障服务ids(英文逗号拼接)")
     private String guaranteeIds;
 
-    @ApiModelProperty(value = "单位名", required = true)
-    @NotBlank(message = "单位名称不能为空")
+    @ApiModelProperty(value = "单位名")
     @Length(max = 32, message = "单位名长度不能超过32个字符")
     private String unitName;
+
+    @ApiModelProperty(value = "多语言商品单位(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言商品单位不能为空")
+    private String unitNameJson;
 
     @ApiModelProperty(value = "运费模板ID", required = true)
     @NotNull(message = "运费模板ID不能为空")
@@ -118,6 +135,9 @@ public class ProductAddRequest implements Serializable {
 
     @ApiModelProperty(value = "商品描述")
     private String content;
+
+    @ApiModelProperty(value = "多语言商品详情(JSON)")
+    private String contentJson;
 
     @ApiModelProperty(value = "优惠券id集合")
     private List<Integer> couponIds;

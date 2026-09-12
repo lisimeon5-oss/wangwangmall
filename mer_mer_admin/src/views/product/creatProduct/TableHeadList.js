@@ -1,62 +1,63 @@
 // 导出TableHead 数据
-export const GoodsTableHead = [
+import i18n from '@/i18n';
+export const GoodsTableHead = () => [
   {
-    title: '售价',
+    title: i18n.t('product.salePriceShort'),
     slot: 'price',
     align: 'center',
-    minWidth: '100px',
+    minWidth: '130px',
   },
   {
-    title: '成本价',
+    title: i18n.t('product.costPriceShort'),
     slot: 'cost',
     align: 'center',
     minWidth: 120,
   },
   {
-    title: '划线价',
+    title: i18n.t('product.strikePriceShort'),
     slot: 'otPrice',
     align: 'center',
-    minWidth: '100px',
+    minWidth: '150px',
   },
   {
-    title: '库存',
+    title: i18n.t('product.stock'),
     slot: 'stock',
     align: 'center',
-    minWidth: '80px',
+    minWidth: '90px',
   },
   {
-    title: '商品编码',
+    title: i18n.t('product.productCode'),
     slot: 'barCode',
     align: 'center',
     minWidth: '120px',
   },
   {
-    title: '商品条码',
+    title: i18n.t('product.productBarcode'),
     slot: 'itemNumber',
     align: 'center',
     minWidth: '120px',
   },
   {
-    title: '重量（KG）',
+    title: i18n.t('product.weightKG'),
     slot: 'weight',
     align: 'center',
-    minWidth: '90px',
+    minWidth: '130px',
   },
   {
-    title: '体积(m³)',
+    title: i18n.t('product.volumeM3'),
     slot: 'volume',
     align: 'center',
-    minWidth: '80px',
+    minWidth: '120px',
   },
   {
-    title: '默认选中规格',
+    title: i18n.t('product.defaultSelectedSpec'),
     slot: 'isDefault',
     fixed: 'right',
     align: 'center',
     minWidth: '100px',
   },
   {
-    title: '操作',
+    title: i18n.t('product.operate'),
     slot: 'action',
     fixed: 'right',
     align: 'center',
@@ -65,15 +66,15 @@ export const GoodsTableHead = [
 ];
 
 // 佣金
-export const commissionTableHead = [
+export const commissionTableHead = () => [
   {
-    title: '一级返佣(%)',
+    title: i18n.t('product.firstCommission'),
     slot: 'brokerage',
     align: 'center',
     minWidth: 100,
   },
   {
-    title: '二级返佣(%)',
+    title: i18n.t('product.secondCommission'),
     slot: 'brokerageTwo',
     align: 'center',
     minWidth: 100,
@@ -81,9 +82,9 @@ export const commissionTableHead = [
 ];
 
 // 图片
-export const imageTableHead = [
+export const imageTableHead = () => [
   {
-    title: '图片',
+    title: i18n.t('product.image'),
     slot: 'image',
     align: 'center',
     minWidth: 60,
@@ -91,9 +92,9 @@ export const imageTableHead = [
 ];
 
 // 会员价
-export const vipPriceTableHead = [
+export const vipPriceTableHead = () => [
   {
-    title: '会员价',
+    title: i18n.t('product.memberPriceShort'),
     slot: 'vipPrice',
     align: 'center',
     minWidth: 120,
@@ -101,52 +102,52 @@ export const vipPriceTableHead = [
 ];
 
 // 云盘
-export const VirtualTableHead = [
+export const VirtualTableHead = () => [
   {
-    title: '售价',
+    title: i18n.t('product.salePriceShort'),
     slot: 'price',
     align: 'center',
     minWidth: 120,
   },
   {
-    title: '成本价',
+    title: i18n.t('product.costPriceShort'),
     slot: 'cost',
     align: 'center',
     minWidth: 120,
   },
   {
-    title: '划线价',
+    title: i18n.t('product.strikePriceShort'),
     slot: 'otPrice',
     align: 'center',
     minWidth: 120,
   },
   {
-    title: '库存',
+    title: i18n.t('product.stock'),
     slot: 'stock',
     align: 'center',
     minWidth: 120,
   },
   {
-    title: '商品编码',
+    title: i18n.t('product.productCode'),
     slot: 'barCode',
     align: 'center',
     minWidth: 120,
   },
   {
-    title: '云盘设置',
+    title: i18n.t('product.cloudDiskSettings'),
     slot: 'fictitious',
     align: 'center',
     minWidth: 120,
   },
   {
-    title: '默认选中规格',
+    title: i18n.t('product.defaultSelectedSpec'),
     slot: 'isDefault',
     fixed: 'right',
     align: 'center',
     minWidth: 90,
   },
   {
-    title: '操作',
+    title: i18n.t('product.operate'),
     slot: 'action',
     fixed: 'right',
     align: 'center',
@@ -154,52 +155,52 @@ export const VirtualTableHead = [
   },
 ];
 //   卡密设置
-export const VirtualTableHead2 = [
+export const VirtualTableHead2 = () => [
   {
-    title: '售价',
+    title: i18n.t('product.salePriceShort'),
     slot: 'price',
     align: 'center',
     minWidth: 100,
   },
   {
-    title: '成本价',
+    title: i18n.t('product.costPriceShort'),
     slot: 'cost',
     align: 'center',
     minWidth: 100,
   },
   {
-    title: '划线价',
+    title: i18n.t('product.strikePriceShort'),
     slot: 'otPrice',
     align: 'center',
     minWidth: 100,
   },
   {
-    title: '库存',
+    title: i18n.t('product.stock'),
     slot: 'stock',
     align: 'center',
     minWidth: 100,
   },
   {
-    title: '商品编码',
+    title: i18n.t('product.productCode'),
     slot: 'barCode',
     align: 'center',
     minWidth: 120,
   },
   {
-    title: '卡密设置',
+    title: i18n.t('product.cdkeySettings'),
     slot: 'fictitious',
     align: 'center',
     minWidth: 150,
   },
   {
-    title: '默认选中规格',
+    title: i18n.t('product.defaultSelectedSpec'),
     slot: 'isDefault',
     fixed: 'right',
     align: 'center',
     minWidth: 90,
   },
   {
-    title: '操作',
+    title: i18n.t('product.operate'),
     slot: 'action',
     fixed: 'right',
     align: 'center',
@@ -208,58 +209,58 @@ export const VirtualTableHead2 = [
 ];
 
 //虚拟商品
-export const FictitiousTableHead = [
+export const FictitiousTableHead = () => [
   {
-    title: '售价',
+    title: i18n.t('product.salePriceShort'),
     slot: 'price',
     align: 'center',
-    minWidth: '100px',
+    minWidth: '130px',
   },
   {
-    title: '成本价',
+    title: i18n.t('product.costPriceShort'),
     slot: 'cost',
     align: 'center',
     minWidth: 120,
   },
   {
-    title: '划线价',
+    title: i18n.t('product.strikePriceShort'),
     slot: 'otPrice',
     align: 'center',
-    minWidth: '100px',
+    minWidth: '150px',
   },
   {
-    title: '库存',
+    title: i18n.t('product.stock'),
     slot: 'stock',
     align: 'center',
-    minWidth: '80px',
+    minWidth: '90px',
   },
   {
-    title: '商品编码',
+    title: i18n.t('product.productCode'),
     slot: 'barCode',
     align: 'center',
     minWidth: '120px',
   },
   {
-    title: '重量（KG）',
+    title: i18n.t('product.weightKG'),
     slot: 'weight',
     align: 'center',
-    width: '90px',
+    width: '130px',
   },
   {
-    title: '体积(m³)',
+    title: i18n.t('product.volumeM3'),
     slot: 'volume',
     align: 'center',
-    minWidth: '80px',
+    minWidth: '120px',
   },
   {
-    title: '默认选中规格',
+    title: i18n.t('product.defaultSelectedSpec'),
     slot: 'isDefault',
     fixed: 'right',
     align: 'center',
     minWidth: '100px',
   },
   {
-    title: '操作',
+    title: i18n.t('product.operate'),
     slot: 'action',
     fixed: 'right',
     align: 'center',

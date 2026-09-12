@@ -8,64 +8,64 @@
             <div class="text">
               <div class="title">{{ orderDatalist.type | orderTypeFilter }}</div>
               <div>
-                <span class="mr20">订单号：{{ orderDatalist.orderNo }}</span>
+                <span class="mr20">{{ $t('order.orderNoColon') }}{{ orderDatalist.orderNo }}</span>
               </div>
             </div>
           </div>
           <ul class="list">
             <li class="item">
-              <div class="title">订单状态</div>
+              <div class="title">{{ $t('order.orderStatus') }}</div>
               <div class="color-warning">
-                <span v-if="orderDatalist.refundStatus === 3">已退款</span>
+                <span v-if="orderDatalist.refundStatus === 3">{{ $t('order.refunded') }}</span>
                 <span v-else>{{ orderDatalist.status | orderStatusFilter }}</span>
               </div>
             </li>
             <li class="item">
-              <div class="title">实际支付</div>
-              <div>¥ {{ orderDatalist.payPrice || '0.0' }}</div>
+              <div class="title">{{ $t('order.payPrice') }}</div>
+              <div>฿ {{ orderDatalist.payPrice || '0.0' }}</div>
             </li>
             <li class="item">
-              <div class="title">支付方式</div>
+              <div class="title">{{ $t('order.payType') }}</div>
               <div>{{ orderDatalist.payType | payTypeFilter }}</div>
             </li>
             <li class="item">
-              <div class="title">支付时间</div>
+              <div class="title">{{ $t('order.payTime') }}</div>
               <div>{{ orderDatalist.payTime | filterEmpty }}</div>
             </li>
           </ul>
         </div>
         <el-tabs type="border-card" v-model="activeName">
-          <el-tab-pane label="订单信息" name="detail">
+          <el-tab-pane :label="$t('order.orderInfo')" name="detail">
             <div class="detailSection" style="border: none">
-              <div class="title">用户信息</div>
+              <div class="title">{{ $t('order.userInfo') }}</div>
               <ul class="list">
                 <li class="item">
-                  <div class="lang">用户名称：</div>
+                  <div class="lang">{{ $t('order.userNickname') }}</div>
                   <div class="value">{{ orderDatalist.nikeName }} | {{ orderDatalist.uid }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">用户电话：</div>
+                  <div class="lang">{{ $t('order.userPhone') }}</div>
                   <div class="value">{{ orderDatalist.phone }}</div>
                 </li>
               </ul>
             </div>
             <div v-show="orderDatalist.shippingType < 2 && orderDatalist.secondType !== 2" class="detailSection">
-              <div class="title">收货信息</div>
+              <div class="title">{{ $t('order.receivingInfo') }}</div>
               <ul class="list">
                 <li class="item">
-                  <div class="lang">收货人：</div>
+                  <div class="lang">{{ $t('order.receiver') }}</div>
                   <div class="value">
                     {{ orderDatalist.realName }}
                   </div>
                 </li>
                 <li class="item">
-                  <div class="lang">收货电话：</div>
+                  <div class="lang">{{ $t('order.receiverPhone') }}</div>
                   <div class="value">
                     {{ orderDatalist.userPhone }}
                   </div>
                 </li>
                 <li class="item">
-                  <div class="lang">收货地址：</div>
+                  <div class="lang">{{ $t('order.receiverAddress') }}</div>
                   <div class="value">
                     {{ orderDatalist.userAddress }}
                   </div>
@@ -73,66 +73,66 @@
               </ul>
             </div>
             <div class="detailSection">
-              <div class="title">订单信息</div>
+              <div class="title">{{ $t('order.orderInfo') }}</div>
               <ul class="list">
                 <li class="item">
-                  <div class="lang">商品总价：</div>
+                  <div class="lang">{{ $t('order.productTotalPrice') }}</div>
                   <div class="value">{{ orderDatalist.proTotalPrice }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">商品总数：</div>
+                  <div class="lang">{{ $t('order.productTotal') }}</div>
                   <div class="value">{{ orderDatalist.totalNum }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">平台优惠金额：</div>
+                  <div class="lang">{{ $t('order.platformDiscount') }}</div>
                   <div class="value">{{ orderDatalist.platCouponPrice }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">支付状态：</div>
-                  <div class="value">{{ orderDatalist.paid ? '已支付' : '未支付' }}</div>
+                  <div class="lang">{{ $t('order.payStatus') }}</div>
+                  <div class="value">{{ orderDatalist.paid ? $t('order.paid') : $t('order.unpaid') }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">实际支付：</div>
+                  <div class="lang">{{ $t('order.actualPayColon') }}</div>
                   <div class="value">{{ orderDatalist.payPrice || '0.0' }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">商户优惠金额：</div>
+                  <div class="lang">{{ $t('order.merchantDiscount') }}</div>
                   <div class="value">{{ orderDatalist.merCouponPrice || '0.0' }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">会员抵扣金额：</div>
+                  <div class="lang">{{ $t('order.memberDeduct') }}</div>
                   <div class="value">{{ orderDatalist.svipDiscountPrice || '0.0' }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">支付邮费：</div>
+                  <div class="lang">{{ $t('order.payFreight') }}</div>
                   <div class="value">{{ orderDatalist.payPostage }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">赠送积分：</div>
+                  <div class="lang">{{ $t('order.giftIntegral') }}</div>
                   <div class="value">{{ orderDatalist.gainIntegral }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">积分抵扣金额：</div>
+                  <div class="lang">{{ $t('order.integralDeduct') }}</div>
                   <div class="value">{{ orderDatalist.integralPrice || '0.0' }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">支付方式：</div>
+                  <div class="lang">{{ $t('order.payTypeColon') }}</div>
                   <div class="value">{{ orderDatalist.payType | payTypeFilter }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">配送方式：</div>
-                  <div v-if="Number(orderDatalist.secondType) > 4" class="value">自动发货</div>
-                  <div v-else-if="Number(orderDatalist.secondType) == 2" class="value">虚拟发货</div>
+                  <div class="lang">{{ $t('order.deliveryMethod') }}</div>
+                  <div v-if="Number(orderDatalist.secondType) > 4" class="value">{{ $t('order.autoShipment') }}</div>
+                  <div v-else-if="Number(orderDatalist.secondType) == 2" class="value">{{ $t('order.virtualShipment') }}</div>
                   <div v-else class="value">{{ orderDatalist.shippingType | shippingTypeFilter }}</div>
                 </li>
                 <li class="item">
-                  <div class="lang">支付时间：</div>
+                  <div class="lang">{{ $t('order.payTime') }}</div>
                   <div class="value">{{ orderDatalist.payTime | filterEmpty }}</div>
                 </li>
               </ul>
             </div>
             <div class="detailSection">
-              <div class="title">买家留言</div>
+              <div class="title">{{ $t('order.buyerMessage') }}</div>
               <ul class="list">
                 <li class="item">
                   <div>{{ orderDatalist.userRemark | filterEmpty }}</div>
@@ -140,7 +140,7 @@
               </ul>
             </div>
             <div class="detailSection">
-              <div class="title">商家备注</div>
+              <div class="title">{{ $t('order.merchantRemark') }}</div>
               <ul class="list">
                 <li class="item">
                   <div>{{ orderDatalist.merchantRemark | filterEmpty }}</div>
@@ -148,7 +148,7 @@
               </ul>
             </div>
             <div v-if="orderExtend.length" class="detailSection">
-              <div class="title">自定义留言</div>
+              <div class="title">{{ $t('order.customMessage') }}</div>
               <ul class="list">
                 <li class="item" v-for="(item, index) in orderExtend" :key="index">
                   <div class="lang" :title="item.title">{{ item.title }}</div>
@@ -170,9 +170,9 @@
               </ul>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="商品信息" name="goods" class="tabBox">
+          <el-tab-pane :label="$t('order.productInfo')" name="goods" class="tabBox">
             <el-table class="mt20 orderDetailList" :data="orderDatalist.orderDetailList" size="small">
-              <el-table-column label="商品信息" min-width="400" :show-overflow-tooltip="true">
+              <el-table-column :label="$t('order.productInfo')" min-width="400" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                   <div class="acea-row row-middle">
                     <div class="demo-image__preview mr15">
@@ -180,12 +180,12 @@
                     </div>
                     <div style="width: 408px">
                       <div class="line1 mb10">{{ scope.row.productName }}</div>
-                      <div class="line1 color-909399 line-heightOne">规格：{{ scope.row.sku }}</div>
+                      <div class="line1 color-909399 line-heightOne">{{ $t('order.specLabel') }}{{ scope.row.sku }}</div>
                     </div>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="商品售价" min-width="90">
+              <el-table-column :label="$t('order.productPrice')" min-width="90">
                 <template slot-scope="scope">
                   <div class="acea-row row-middle">
                     <div class="line1">
@@ -194,7 +194,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="购买数量" min-width="90">
+              <el-table-column :label="$t('order.purchaseQuantityText')" min-width="90">
                 <template slot-scope="scope">
                   <div class="acea-row row-middle">
                     <div class="line1">
@@ -203,7 +203,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column :label="orderDatalist.shippingType == 2 ? '核销数量' : '发货数量'" min-width="90">
+              <el-table-column :label="orderDatalist.shippingType == 2 ? $t('order.verificationQuantity') : $t('order.shippingQuantity')" min-width="90">
                 <template slot-scope="scope">
                   <div class="acea-row row-middle">
                     <div class="line1">
@@ -212,11 +212,11 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="售后数量" min-width="90">
+              <el-table-column :label="$t('order.afterSalesQuantity')" min-width="90">
                 <template slot-scope="scope">
                   <div class="acea-row row-middle">
-                    <div class="line1 mb10 line-heightOne">退款中：{{ scope.row.applyRefundNum }}</div>
-                    <div class="line1 line-heightOne">退款成功：{{ scope.row.refundNum }}</div>
+                    <div class="line1 mb10 line-heightOne">{{ $t('order.refundInProgressLabel') }}{{ scope.row.applyRefundNum }}</div>
+                    <div class="line1 line-heightOne">{{ $t('order.refundSuccessLabel') }}{{ scope.row.refundNum }}</div>
                   </div>
                 </template>
               </el-table-column>
@@ -230,7 +230,7 @@
               orderDatalist.status !== 3 &&
               orderDatalist.shippingType != 2
             "
-            label="发货记录"
+            :label="$t('order.deliveryRecord')"
             name="delivery"
             class="tabBox"
           >
@@ -240,19 +240,19 @@
                   <el-table-column min-width="400">
                     <template slot="header" slot-scope="scope">
                       <template v-if="item.deliveryType === 'express'">
-                        <span class="font-color">【快递配送】</span>
+                        <span class="font-color">【{{ $t('order.expressDelivery') }}】</span>
                         <span>{{ item.expressName + '：' + item.trackingNumber }}</span>
                         <span class="ml30">{{ item.createTime }}</span>
                       </template>
                       <template v-else-if="item.deliveryType === 'merchant'">
-                        <span class="font-color">【商家送货】</span>
+                        <span class="font-color">【{{ $t('order.merchantDeliveryOption') }}】</span>
                         <span>{{ item.deliveryCarrier + '：' + item.carrierPhone }}</span>
                         <span class="ml30">{{ item.createTime }}</span>
                       </template>
                       <template v-else>
                         <span class="font-color"
                           >【{{
-                            orderDatalist.secondType === OrderSecondTypeEnum.Fictitious ? '虚拟发货' : '无需配送'
+                            orderDatalist.secondType === OrderSecondTypeEnum.Fictitious ? $t('order.virtualShipment') : $t('order.noDelivery')
                           }}】</span
                         >
                         <span>{{ item.createTime }}</span>
@@ -265,7 +265,7 @@
                         </div>
                         <div style="width: 408px">
                           <div class="line1 mb10 line-heightOne">{{ scope.row.productName }}</div>
-                          <div class="line1 color-909399 line-heightOne">规格：{{ scope.row.sku }}</div>
+                          <div class="line1 color-909399 line-heightOne">{{ $t('order.specLabel') }}{{ scope.row.sku }}</div>
                         </div>
                         <div class="acea-row row-middle ml30">
                           <div class="line1 font12 color-text">X {{ scope.row.num }}</div>
@@ -280,20 +280,20 @@
                           @click="handleEditLogistics(item)"
                           style="line-height: 1; height: auto"
                           v-hasPermi="['merchant:order:invoice:update']"
-                          >修改配送信息
+                          >{{ $t('order.modifyDeliveryInfo') }}
                         </a>
                         <a
                           class="ml20"
                           @click="openLogistics(item.id, item.expressName)"
                           style="line-height: 1; height: auto"
                           v-if="checkPermi(['merchant:order:logistics:info']) && item.deliveryType === 'express'"
-                          >查看物流
+                          >{{ $t('order.viewLogistics') }}
                         </a>
                       </div>
                     </template>
                     <template v-if="item.deliveryType === 'noNeed'" slot-scope="scope">
                       <div class="acea-row row-middle">
-                        <div class="font12 color-text">发货备注：{{ item.deliveryMark }}</div>
+                        <div class="font12 color-text">{{ $t('order.shipmentRemarkLabel') }}{{ item.deliveryMark }}</div>
                       </div>
                     </template>
                   </el-table-column>
@@ -304,7 +304,7 @@
               <div class="detailSection">
                 <ul class="list">
                   <li class="item">
-                    <div>核销员名称：</div>
+                    <div>{{ $t('order.clerkNameLabel') }}</div>
                     <div class="value">{{ orderDatalist.clerkName }} | {{ orderDatalist.clerkId }}</div>
                   </li>
                 </ul>
@@ -314,14 +314,14 @@
         </el-tabs>
       </div>
     </el-drawer>
-    <el-dialog v-if="orderDatalist" title="提示" :visible.sync="modal2" width="600px">
+    <el-dialog v-if="orderDatalist" :title="$t('common.tip')" :visible.sync="modal2" width="600px">
       <div class="logistics acea-row row-top">
         <div class="logistics_img"><img src="@/assets/imgs/expressi.jpg" /></div>
         <div class="logistics_cent">
-          <span class="mb10">物流公司：{{ expressName }}</span>
-          <span>物流单号：{{ resultInfo.number }}</span>
-          <span v-show="resultInfo.courierPhone">快递站：{{ resultInfo.courierPhone }}</span>
-          <span v-show="resultInfo.courierPhone">快递员电话：{{ resultInfo.courierPhone }}</span>
+          <span class="mb10">{{ $t('order.logisticsCompany') }}{{ expressName }}</span>
+          <span>{{ $t('order.logisticsNo') }}{{ resultInfo.number }}</span>
+          <span v-show="resultInfo.courierPhone">{{ $t('order.courierStationLabel') }}{{ resultInfo.courierPhone }}</span>
+          <span v-show="resultInfo.courierPhone">{{ $t('order.courierPhoneLabel') }}{{ resultInfo.courierPhone }}</span>
         </div>
       </div>
       <div class="acea-row row-column-around trees-coadd">
@@ -335,7 +335,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="modal2 = false">关闭</el-button>
+        <el-button type="primary" @click="modal2 = false">{{ $t('common.close') }}</el-button>
       </span>
     </el-dialog>
 

@@ -7,13 +7,13 @@
             class="clearfix acea-row"
             v-hasPermi="['platform:product:category:add', 'platform:article:category:add']"
           >
-            <el-button size="mini" type="primary" @click="handleAddMenu({ id: 0, name: '顶层目录' })"
-              >新增{{ biztype.name }}
+            <el-button size="mini" type="primary" @click="handleAddMenu({ id: 0, name: $t('category.topLevelDirectory') })"
+              >{{ $t('category.addType', { name: typeName }) }}
             </el-button>
             <el-alert
               v-show="biztype.value === 1"
               class="w100 mt20"
-              title="平台分类必须要设置三级分类"
+              :title="$t('category.platformCategoryThreeLevels')"
               type="warning"
               effect="light"
             >
@@ -21,6 +21,7 @@
           </div>
           <el-table
             ref="treeList"
+            :key="tableKey"
             :data="dataList"
             size="mini"
             class="table mt20"
@@ -28,14 +29,14 @@
             row-key="id"
             :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           >
-            <el-table-column v-if="biztype.value === 1" prop="name" label="名称" min-width="200">
-              <template slot-scope="scope"> {{ scope.row.name }} | {{ scope.row.id }}</template>
+            <el-table-column v-if="biztype.value === 1" prop="name" :label="$t('category.name')" min-width="200">
+              <template slot-scope="scope"> {{ getLocalizedName(scope.row) }} | {{ scope.row.id }}</template>
             </el-table-column>
-            <el-table-column v-else prop="name" label="名称" min-width="120">
-              <template slot-scope="scope"> {{ scope.row.name }} | {{ scope.row.id }}</template>
+            <el-table-column v-else prop="name" :label="$t('category.name')" min-width="120">
+              <template slot-scope="scope"> {{ getLocalizedName(scope.row) }} | {{ scope.row.id }}</template>
             </el-table-column>
             <template v-if="!selectModel">
-              <el-table-column label="分类图标" min-width="120">
+              <el-table-column :label="$t('category.categoryIcon')" min-width="120">
                 <template slot-scope="scope">
                   <div class="demo-image__preview line-heightOne">
                     <el-image :src="scope.row.icon" :preview-src-list="[scope.row.icon]" v-if="scope.row.icon" />
@@ -48,36 +49,36 @@
                   <span>{{ scope.row.url }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="排序" prop="sort" min-width="120" />
-              <el-table-column label="状态" min-width="80" fixed="right" v-if="biztype.value === 2">
+              <el-table-column :label="$t('category.sort')" prop="sort" min-width="120" />
+              <el-table-column :label="$t('category.status')" min-width="80" fixed="right" v-if="biztype.value === 2">
                 <template slot-scope="scope">
                   <el-switch
                     v-if="checkPermi(['platform:article:category:switch'])"
                     v-model="scope.row.status"
                     :active-value="true"
                     :inactive-value="false"
-                    active-text="显示"
-                    inactive-text="隐藏"
+                    :active-text="$t('category.show')"
+                    :inactive-text="$t('category.hide')"
                     @change="onchangeIsShow(scope.row)"
                   />
-                  <div v-else>{{ scope.row.status ? '显示' : '隐藏' }}</div>
+                  <div v-else>{{ scope.row.status ? $t('category.show') : $t('category.hide') }}</div>
                 </template>
               </el-table-column>
-              <el-table-column label="状态" min-width="120" fixed="right" v-if="biztype.value === 1">
+              <el-table-column :label="$t('category.status')" min-width="120" fixed="right" v-if="biztype.value === 1">
                 <template slot-scope="scope">
                   <el-switch
                     v-if="checkPermi(['platform:product:category:show:status'])"
                     v-model="scope.row.isShow"
                     :active-value="true"
                     :inactive-value="false"
-                    active-text="显示"
-                    inactive-text="隐藏"
+                    :active-text="$t('category.show')"
+                    :inactive-text="$t('category.hide')"
                     @change="onchangeIsShow(scope.row)"
                   />
-                  <div v-else>{{ scope.row.isShow ? '显示' : '隐藏' }}</div>
+                  <div v-else>{{ scope.row.isShow ? $t('category.show') : $t('category.hide') }}</div>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" :width="biztype.value === 1 ? 180 : 110" fixed="right">
+              <el-table-column :label="$t('category.operate')" :width="biztype.value === 1 ? 180 : 110" fixed="right">
                 <template slot-scope="scope">
                   <template
                     v-if="
@@ -86,19 +87,19 @@
                       checkPermi(['platform:product:category:add', 'platform:article:category:add'])
                     "
                   >
-                    <a @click="handleAddMenu(scope.row)">添加子目录 </a>
+                    <a @click="handleAddMenu(scope.row)">{{ $t('category.addSubdirectory') }} </a>
                     <el-divider direction="vertical"></el-divider>
                   </template>
                   <a
                     @click="handleEditMenu(scope.row)"
                     v-hasPermi="['platform:product:category:update', 'platform:article:category:update']"
-                    >编辑
+                    >{{ $t('category.edit') }}
                   </a>
                   <el-divider direction="vertical"></el-divider>
                   <a
                     @click="handleDelete(scope.row)"
                     v-hasPermi="['platform:product:category:delete', 'platform:article:category:delete']"
-                    >删除
+                    >{{ $t('category.delete') }}
                   </a>
                 </template>
               </el-table-column>
@@ -108,7 +109,7 @@
       </div>
     </template>
     <el-dialog
-      :title="editDialogConfig.isCreate === 0 ? `创建${biztype.name}` : `编辑${biztype.name}`"
+      :title="editDialogConfig.isCreate === 0 ? $t('category.createType', { name: typeName }) : $t('category.editType', { name: typeName })"
       :visible.sync="editDialogConfig.visible"
       destroy-on-close
       :close-on-click-modal="false"
@@ -211,6 +212,28 @@ export default {
       defaultImg: require('@/assets/imgs/moren.jpg'),
     };
   },
+  computed: {
+    typeName() {
+      const names = {
+        1: this.$t('category.typeProduct'),
+        2: this.$t('category.typeArticle'),
+        3: this.$t('category.typeAttachment'),
+        4: this.$t('category.typeSetting'),
+        5: this.$t('category.typeMenu'),
+        6: this.$t('category.typeConfig'),
+        7: this.$t('category.typeSeckill'),
+      };
+      return names[this.biztype.value] || this.biztype.name;
+    },
+    // 当前界面语言（用于分类名称多语言展示）
+    currentLocale() {
+      return this.$i18n.locale || 'zh-cn';
+    },
+    // 语言切换时强制表格重渲染，确保分类名称随语言更新
+    tableKey() {
+      return `category-list-${this.currentLocale}`;
+    },
+  },
   mounted() {
     if (this.biztype.value === 2) {
       if (checkPermi(['platform:article:category:list'])) this.handlerGetList();
@@ -220,12 +243,29 @@ export default {
   },
   methods: {
     checkPermi, //权限控制
+    /**
+     * 获取分类名称在当前语言下的显示名称。
+     * nameJson 仅存储非默认语言名称，命中当前语言则返回，否则回退默认名称 name。
+     */
+    getLocalizedName(row) {
+      const locale = this.currentLocale;
+      if (row.nameJson) {
+        try {
+          const nameObj = typeof row.nameJson === 'string' ? JSON.parse(row.nameJson) : row.nameJson;
+          const val = nameObj[locale];
+          if (val) return val;
+        } catch (e) {
+          // 解析失败时回退默认名称
+        }
+      }
+      return row.name;
+    },
     onchangeIsShow(row) {
       if (this.biztype.value === 2) {
         articleApi
           .articleCategorySwitchApi(row.id)
           .then(() => {
-            this.$message.success('修改成功');
+            this.$message.success(this.$t('category.updateSuccess'));
             localStorage.removeItem('articleClass');
             this.handlerGetList();
           })
@@ -236,7 +276,7 @@ export default {
         storeApi
           .productCategoryShowApi(row.id)
           .then(() => {
-            this.$message.success('修改成功');
+            this.$message.success(this.$t('category.updateSuccess'));
             this.$store.commit('product/SET_AdminProductClassify', []);
             this.handlerGetTreeList();
           })
@@ -290,17 +330,17 @@ export default {
       }
     },
     handleDelete(rowData) {
-      this.$modalSure(this.biztype.value === 2 ? '删除当前数据?' : '删除品类吗？该品类优惠券将同步删除。').then(() => {
+      this.$modalSure(this.biztype.value === 2 ? this.$t('category.deleteCurrentDataConfirm') : this.$t('category.deleteCategoryConfirm')).then(() => {
         if (this.biztype.value === 2) {
           articleApi.articleCategoryDelApi(rowData).then((data) => {
             this.handlerGetList();
             localStorage.removeItem('articleClass');
-            this.$message.success('删除成功');
+            this.$message.success(this.$t('category.deleteSuccess'));
           });
         } else {
           storeApi.productCategoryDeleteApi(rowData.id).then((data) => {
             this.handlerGetTreeList();
-            this.$message.success('删除成功');
+            this.$message.success(this.$t('category.deleteSuccess'));
           });
         }
       });

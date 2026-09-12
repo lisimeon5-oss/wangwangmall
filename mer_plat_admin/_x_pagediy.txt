@@ -1,0 +1,519 @@
+REUSE common.save | 保存
+REUSE user.saveSuccess | 保存成功
+REUSE product.editSuccess | 编辑成功
+REUSE content.title | 标题
+REUSE common.operate | 操作
+REUSE product.operateSuccess | 操作成功
+REUSE common.query | 查询
+REUSE dashboard.awaitShipping | 待发货
+REUSE order.waitingReceipt | 待收货
+REUSE maintain.singleSelect | 单选
+REUSE merchant.storeType | 店铺类型
+REUSE community.category | 分类
+REUSE common.no | 否
+REUSE application.copySuccess | 复制成功
+REUSE maintain.personalCenter | 个人中心
+REUSE user.more | 更多
+REUSE maintain.updateTime | 更新时间
+REUSE common.close | 关闭
+REUSE user.integral | 积分
+REUSE product.basicSetting | 基础设置
+REUSE maintain.intro | 简介
+REUSE common.open | 开启
+REUSE distribution.list | 列表
+REUSE order.spike | 秒杀
+REUSE category.name | 名称
+REUSE onePass.templateName | 模板名称
+REUSE order.groupBuy | 拼团
+REUSE el.select.placeholder | 请选择
+REUSE application.pleaseSelectLink | 请选择链接
+REUSE el.messagebox.cancel | 取消
+REUSE el.messagebox.confirm | 确定
+REUSE common.delete | 删除
+REUSE product.deleteSuccess | 删除成功
+REUSE product.merchantName | 商户名称
+REUSE product.productName | 商品名称
+REUSE finance.uploadSuccess | 上传成功
+REUSE finance.uploading | 上传中，请稍候...
+REUSE community.video | 视频
+REUSE common.yes | 是
+REUSE product.isShow | 是否显示
+REUSE common.refresh | 刷新
+REUSE common.search | 搜索
+REUSE finance.submitting | 提交中 ...
+REUSE el.messagebox.title | 提示
+REUSE common.add | 添加
+REUSE merchant.addTime | 添加时间
+REUSE maintain.addData | 添加数据
+REUSE content.image | 图片
+REUSE common.publicAccount | 微信公众号
+REUSE content.articleTitle | 文章标题
+REUSE category.typeArticle | 文章分类
+REUSE common.show | 显示
+REUSE product.sales | 销量
+REUSE product.addSuccess | 新增成功
+REUSE common.cancelled | 已取消
+REUSE menu.hide | 隐藏
+REUSE order.userInfo | 用户信息
+REUSE order.balance | 余额
+REUSE user.preview | 预览
+REUSE dashboard.yuan | 元
+REUSE maintain.normal | 正常
+REUSE product.liveStreaming | 直播中
+REUSE common.specifiedBrand | 指定品牌
+REUSE common.specifiedMerchant | 指定商户
+REUSE common.specifiedProducts | 指定商品
+REUSE el.table.resetFilter | 重置
+REUSE common.status | 状态
+REUSE product.selfOperated | 自营
+NEW  | -副本
+NEW  | ，开发版为
+NEW  | ，体验版为
+NEW  | ，要打开的小程序版本。正式版为
+NEW  | （单位：秒）
+NEW  | （单位：小时）
+NEW  | // +---------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +---------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +---------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +---------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | // +----------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +----------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | `请选择${configData.title}`
+NEW  | > 更多<i class=
+NEW  | >单买价</span><span class=
+NEW  | >拼团价</span><span class=
+NEW  | 134人拼团成功
+NEW  | 2人团
+NEW  | 2行
+NEW  | 375*188像素或同比例
+NEW  | 375*375像素或同比例
+NEW  | 3个
+NEW  | 3行
+NEW  | 4个
+NEW  | 4行
+NEW  | 5个
+NEW  | 5人团
+NEW  | 按钮文字
+NEW  | 按钮文字颜色
+NEW  | 按钮颜色
+NEW  | 把该模板设为首页
+NEW  | 白色
+NEW  | 版块设置
+NEW  | 保存关闭
+NEW  | 背景边距
+NEW  | 背景色
+NEW  | 背景设置
+NEW  | 背景图
+NEW  | 背景图片
+NEW  | 背景颜色
+NEW  | 背景圆角
+NEW  | 必填不超过15个字
+NEW  | 边距设置
+NEW  | 标签背景颜色
+NEW  | 标签设置
+NEW  | 标签文字颜色
+NEW  | 标签颜色
+NEW  | 标题类型
+NEW  | 标题名称
+NEW  | 标题内容
+NEW  | 标题设置
+NEW  | 标题图片
+NEW  | 标题文字
+NEW  | 标题颜色
+NEW  | 不超过4个字
+NEW  | 布局
+NEW  | 布局设置
+NEW  | 布局样式
+NEW  | 参数：
+NEW  | 查看全部
+NEW  | 超值拼团
+NEW  | 尺寸不限
+NEW  | 促销单品
+NEW  | 大图
+NEW  | 大王商城
+NEW  | 待付款
+NEW  | 待评价
+NEW  | 单列
+NEW  | 单买价
+NEW  | 单行
+NEW  | 单行模式
+NEW  | 单行展示
+NEW  | 导航
+NEW  | 导航组
+NEW  | 底部菜单
+NEW  | 底部导航
+NEW  | 点击可另存模板
+NEW  | 点击可重置模板
+NEW  | 点状线
+NEW  | 店铺街
+NEW  | 店铺名称
+NEW  | 店铺名称颜色
+NEW  | 店铺数据
+NEW  | 店铺logo
+NEW  | 顶部颜色
+NEW  | 订单中心
+NEW  | 多行
+NEW  | 多行展示
+NEW  | 分割线颜色
+NEW  | 辅助空白
+NEW  | 辅助线
+NEW  | 复制
+NEW  | 副标题
+NEW  | 副标题文字
+NEW  | 副标题颜色
+NEW  | 富文本
+NEW  | 富文本内容
+NEW  | 该组件不能和组合组件同时存在
+NEW  | 该组件禁止拖拽
+NEW  | 该组件禁止移动
+NEW  | 该组件只能添加一次
+NEW  | 高度不限
+NEW  | 高度设置
+NEW  | 跟随主题风格
+NEW  | 更多按钮颜色
+NEW  | 更多链接
+NEW  | 更换图片
+NEW  | 工具组件
+NEW  | 公告设置
+NEW  | 购物车
+NEW  | 广告时间:
+NEW  | 广告N秒之后进行自动关闭（按照广告时间进行倒计时展示）。
+NEW  | 逛逛
+NEW  | 滚动方向
+NEW  | 国宝小熊猫
+NEW  | 海鲜蓝
+NEW  | 黑色
+NEW  | 回放
+NEW  | 活动标签
+NEW  | 积分兑好礼
+NEW  | 积分商城
+NEW  | 基础组件
+NEW  | 即
+NEW  | 加粗
+NEW  | 家居橙
+NEW  | 价格
+NEW  | 价格颜色
+NEW  | 建议：124px*32px
+NEW  | 建议：154px*32px
+NEW  | 建议：710px*96px
+NEW  | 建议：910px*86px
+NEW  | 建议：宽度750px
+NEW  | 建议：图片尺寸750*332px；鼠标拖拽版块可调整图片顺序
+NEW  | 建议尺寸：750 * 1334px，拖拽图片可调整图片顺序哦，最多添加五张
+NEW  | 建议上传大小：宽138px，高48px
+NEW  | 建议上传大小：宽152px，高60px
+NEW  | 今日推荐
+NEW  | 仅保存
+NEW  | 精彩抢先看
+NEW  | 精选
+NEW  | 靓丽美妆
+NEW  | 居右
+NEW  | 居中
+NEW  | 居左
+NEW  | 卡片
+NEW  | 开关
+NEW  | 开屏广告:
+NEW  | 开屏广告设置
+NEW  | 可按回车键添加多个选项
+NEW  | 空白高度
+NEW  | 宽188像素高度不限
+NEW  | 宽250像素
+NEW  | 宽375像素
+NEW  | 框体颜色
+NEW  | 拉伸
+NEW  | 兰蔻小黑瓶
+NEW  | 立
+NEW  | 链接
+NEW  | 两列
+NEW  | 领
+NEW  | 领取
+NEW  | 领取按钮颜色
+NEW  | 另存模板
+NEW  | 轮播图
+NEW  | 满5000可用
+NEW  | 满500可用
+NEW  | 满500元可用
+NEW  | 秒
+NEW  | 模板
+NEW  | 模板1
+NEW  | 模板2
+NEW  | 模板3
+NEW  | 模板名称：
+NEW  | 模板名称不能为空
+NEW  | 模块配置
+NEW  | 默认规则
+NEW  | 默认模板
+NEW  | 默认logo
+NEW  | 默认logo图
+NEW  | 内容
+NEW  | 内容背景
+NEW  | 内容间距
+NEW  | 内容设置
+NEW  | 内容数量
+NEW  | 内容圆角
+NEW  | 女神粉
+NEW  | 批量添加选项
+NEW  | 拼团按钮
+NEW  | 拼团价
+NEW  | 拼团价格颜色
+NEW  | 苹果新款平板
+NEW  | 旗舰店
+NEW  | 切换时间
+NEW  | 倾斜
+NEW  | 请输入标签名称，5个字以内
+NEW  | 请输入标题
+NEW  | 请输入标题，限制8个字以内
+NEW  | 请输入副标题，限制12个字以内
+NEW  | 请输入广告间隔时间
+NEW  | 请输入开屏广告时间
+NEW  | 请输入连接
+NEW  | 请输入链接地址
+NEW  | 请输入模板名称
+NEW  | 请输入数量
+NEW  | 请输入选项名称（最多10个字）
+NEW  | 请输入右侧文字，限制4个字以内
+NEW  | 请填写
+NEW  | 请填写简介
+NEW  | 请填写链接
+NEW  | 请填写模板名称
+NEW  | 请先选择图片
+NEW  | 请选择左侧可操作可编辑区域
+NEW  | 取
+NEW  | 去领取
+NEW  | 去拼团
+NEW  | 确认关闭？
+NEW  | 热门榜单
+NEW  | 热情红
+NEW  | 热区
+NEW  | 热区设置
+NEW  | 三列
+NEW  | 扫描右侧二维码查看
+NEW  | 色调
+NEW  | 删除模板吗
+NEW  | 商城首页
+NEW  | 商品标题颜色
+NEW  | 商品分类
+NEW  | 商品价格
+NEW  | 商品间距
+NEW  | 商品列表
+NEW  | 商品名称颜色
+NEW  | 商品排序
+NEW  | 商品品牌
+NEW  | 商品设置
+NEW  | 商品数量
+NEW  | 商品原价
+NEW  | 商品原价颜色
+NEW  | 上边距
+NEW  | 上传背景图
+NEW  | 上传视频
+NEW  | 上传图标
+NEW  | 上传图片
+NEW  | 上下
+NEW  | 上圆角
+NEW  | 设计
+NEW  | 设为首页
+NEW  | 设置内容
+NEW  | 设置热区
+NEW  | 设置数据不能超过10条
+NEW  | 设置数据不能超过4条
+NEW  | 设置数据不能小于1条
+NEW  | 设置数据不能小于2条
+NEW  | 设置数据不能小于4条
+NEW  | 设置数据不能小于5条
+NEW  | 设置搜索热词显示时间
+NEW  | 设置logo
+NEW  | 生活好物分享
+NEW  | 生鲜绿
+NEW  | 时间颜色
+NEW  | 实线
+NEW  | 视频封面
+NEW  | 视频类型
+NEW  | 视频链接
+NEW  | 视频内容设置
+NEW  | 是否确定删除该菜单?
+NEW  | 是否重置当前页面数据？
+NEW  | 是否自定义
+NEW  | 释放鼠标将组建添加到此处
+NEW  | 收藏
+NEW  | 手动上传
+NEW  | 首发新品
+NEW  | 首页
+NEW  | 首页装修
+NEW  | 售后/退款
+NEW  | 输入文字颜色
+NEW  | 鼠标拖拽左侧圆点可调整选项卡顺序
+NEW  | 数据类型
+NEW  | 双排
+NEW  | 双排模式
+NEW  | 搜索框
+NEW  | 搜索框或分类必须为顶部
+NEW  | 搜索热词
+NEW  | 搜索商品名称
+NEW  | 缩放
+NEW  | 提示文字
+NEW  | 提示文字设置
+NEW  | 提示文字颜色
+NEW  | 添加版块
+NEW  | 添加单个选项
+NEW  | 添加模块
+NEW  | 添加热词
+NEW  | 添加图文菜单
+NEW  | 添加选项卡
+NEW  | 填充
+NEW  | 填充方式
+NEW  | 通栏
+NEW  | 头部按钮颜色
+NEW  | 头部设置
+NEW  | 头部组件
+NEW  | 图标设置
+NEW  | 图片间距
+NEW  | 图片建议宽度81*81px；鼠标拖拽左侧圆点可调整菜单顺序
+NEW  | 图片魔方
+NEW  | 图片设置
+NEW  | 图片圆角
+NEW  | 推荐组
+NEW  | 微信小程序
+NEW  | 微页面
+NEW  | 未选中
+NEW  | 文本标题
+NEW  | 文本位置
+NEW  | 文本样式
+NEW  | 文章标题颜色
+NEW  | 文章标题展示，最多展示2行，仍过长展示不下时展示为…
+NEW  | 文章间距
+NEW  | 文章列表
+NEW  | 文章设置
+NEW  | 文章数量
+NEW  | 文字
+NEW  | 文字设置
+NEW  | 文字颜色
+NEW  | 我的
+NEW  | 我的服务
+NEW  | 无线蓝牙耳机
+NEW  | 无指示器
+NEW  | 吸顶logo
+NEW  | 吸顶logo图
+NEW  | 西安首家线下体验店
+NEW  | 下边距
+NEW  | 下圆角
+NEW  | 显示个数
+NEW  | 显示内容
+NEW  | 显示文字
+NEW  | 显示行数
+NEW  | 线条高度
+NEW  | 线条颜色
+NEW  | 线条样式
+NEW  | 小程序直播
+NEW  | 斜体
+NEW  | 新闻播报
+NEW  | 虚线
+NEW  | 选定布局区域，在下方添加图片，建议添加比例一致的图片
+NEW  | 选填，不超过10个字
+NEW  | 选填，不超过30个字
+NEW  | 选填，不超过4个字
+NEW  | 选填，不超过8个字
+NEW  | 选填，不超过十个字
+NEW  | 选填不超过15个字
+NEW  | 选填不超过30个字
+NEW  | 选项卡
+NEW  | 选项卡内容
+NEW  | 选项卡设置
+NEW  | 选项名称
+NEW  | 选择店铺
+NEW  | 选择方式
+NEW  | 选择风格
+NEW  | 选择模板
+NEW  | 选择样式
+NEW  | 选择组件
+NEW  | 选中
+NEW  | 选中文字颜色
+NEW  | 选中颜色
+NEW  | 颜色设置
+NEW  | 样式
+NEW  | 样式1
+NEW  | 样式2
+NEW  | 样式3
+NEW  | 样式4
+NEW  | 样式二
+NEW  | 样式六
+NEW  | 样式三
+NEW  | 样式设置
+NEW  | 样式四
+NEW  | 样式五
+NEW  | 样式一
+NEW  | 邀请你的好友来参与
+NEW  | 页面标题
+NEW  | 页面间距
+NEW  | 页面设置
+NEW  | 一家很有品的店
+NEW  | 已拼3份
+NEW  | 已售 999 件
+NEW  | 已售数量
+NEW  | 已售数量颜色
+NEW  | 樱桃小丸子
+NEW  | 营销组件
+NEW  | 优惠金额颜色
+NEW  | 优惠券
+NEW  | 优惠券背景
+NEW  | 右侧按钮
+NEW  | 右侧文字
+NEW  | 预告
+NEW  | 圆角设置
+NEW  | 圆形
+NEW  | 在此处设置底部菜单，只在微页面中展示，首页设置自定义导航需要在页面设计中设置。
+NEW  | 在设置的时间内，重复打开商城，只展示一次开屏广告。设置0代表每次进入商城均会出现开屏广告。
+NEW  | 暂不支持此操作
+NEW  | 暂无历史版本！
+NEW  | 暂无商品
+NEW  | 暂无照片，请添加~
+NEW  | 展示间隔:
+NEW  | 展示内容
+NEW  | 展示设置
+NEW  | 展示数量
+NEW  | 展示信息
+NEW  | 展示样式
+NEW  | 展现形式
+NEW  | 展现样式
+NEW  | 这是一个新闻标题
+NEW  | 蒸汽手持熨斗
+NEW  | 正品大牌低价购
+NEW  | 支持上传1张图片，建议宽度130*36px
+NEW  | 直播标题直播标题直播标 题直播标题
+NEW  | 直线
+NEW  | 指定分类
+NEW  | 指示器设置
+NEW  | 指示器位置
+NEW  | 指示器颜色
+NEW  | 指示器样式
+NEW  | 种草社区
+NEW  | 自定义
+NEW  | 自定义页面
+NEW  | 综合
+NEW  | 组合组件
+NEW  | 组合组件不能和搜索框或者商品分类同时存在
+NEW  | 组件库
+NEW  | 最多可设置20个热词，鼠标拖拽左侧圆点可调整热词顺序
+NEW  | 最多可添加10个版块；鼠标拖拽左侧圆点可调整版块顺序
+NEW  | 最多可添加10张图片，建议宽度750*332px；鼠标拖拽左侧圆点可调整图片顺序
+NEW  | 最多可添加1张图片，建议宽度90 * 90px
+NEW  | 左右
+NEW  | 左右边距
+NEW  | 作者昵称
+NEW  | 作者头像
+NEW  | logo区域
+NEW  | THE ROW 休闲针织衫女2024春秋深藏青条纹毛衣女羊绒真丝套头上衣 THE ROW
+                  休闲针织衫女2024春秋深藏青条纹毛衣女羊绒真丝套头上衣
+NEW  | THE ROW 休闲针织衫女2024春秋深藏青条纹毛衣女羊绒真丝套头上衣 THE ROW
+                休闲针织衫女2024春秋深藏青条纹毛衣女羊绒真丝套头上衣
+
+TOTAL unique: 501, NEW: 433

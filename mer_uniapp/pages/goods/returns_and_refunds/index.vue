@@ -11,7 +11,7 @@
 							<view class='name line1 line-heightOne mb20'>{{orderInfo.productName}}</view>
 							<view class='sku text-999 f-s-20 line-heightOne mb20'>{{orderInfo.sku}}</view>
 							<view class='acea-row f-s-26 text-right row-middle'>
-								<view class="mr10 text-2828">￥{{orderInfo.price || orderInfo.refundPrice}} </view>
+								<view class="mr10 text-2828">฿{{orderInfo.price || orderInfo.refundPrice}} </view>
 								<view class='num text-999'> x {{orderInfo.applyRefundNum}}</view>
 							</view>
 						</view>
@@ -19,14 +19,14 @@
 				</view>
 				<view v-if="returnGoodsType===2 && merAddress" class="list borRadius14 py-30">
 					<view class="acea-row row-between">
-						<view class="text-2828 f-s-28 line-heightOne mb30">到店退货地址：</view>
+						<view class="text-2828 f-s-28 line-heightOne mb30">{{$t('到店退货地址：')}}</view>
 						<!-- #ifdef H5 -->
 						<button class="button line-heightOne copy-data"
 							:data-clipboard-text="merAddress.name+','+merAddress.phone+','+merAddress.addressDetail"><text
-								class="copy">复制</text></button>
+								class="copy">{{$t('复制')}}</text></button>
 						<!-- #endif -->
 						<!-- #ifndef H5 -->
-						<button class="button line-heightOne" @tap="copy(merAddress.name+','+merAddress.phone+','+merAddress.addressDetail)"><text class="copy">复制</text></button>
+						<button class="button line-heightOne" @tap="copy(merAddress.name+','+merAddress.phone+','+merAddress.addressDetail)"><text class="copy">{{$t('复制')}}</text></button>
 						<!-- #endif -->
 					</view>
 					<view class="text-2828 f-s-28 mb20"><text
@@ -35,7 +35,7 @@
 				</view>
 				<view class='list borRadius14'>
 					<view v-if="returnGoodsType===1 && expressAll.length" class='item acea-row row-between-wrapper'>
-						<view>物流公司</view>
+						<view>{{$t('物流公司')}}</view>
 						<view class="picker">
 							<picker @change="bindExpressChange" :value="expressIndex" :range="expressAll"
 								range-key="name">
@@ -47,23 +47,23 @@
 						</view>
 					</view>
 					<view v-if="returnGoodsType===1" class='item acea-row row-between-wrapper'>
-						<view>物流单号</view>
+						<view>{{$t('物流单号')}}</view>
 						<view class="text-right">
-							<input type='text' placeholder='请输入物流单号' placeholder-style="color:#ccc;"
+							<input type='text' :placeholder="$t('请输入物流单号')" placeholder-style="color:#ccc;"
 								name='trackingNumber' :value="trackingNumber" placeholder-class='placeholder'
 								maxlength="30"></input>
 						</view>
 					</view>
 					<view class='item acea-row row-between-wrapper no-border'>
-						<view>联系电话</view>
+						<view>{{$t('联系电话')}}</view>
 						<view class="text-right">
-							<input type='text' placeholder='请输入联系电话' placeholder-style="color:#ccc;" name='telephone'
+							<input type='text' :placeholder="$t('请输入联系电话')" placeholder-style="color:#ccc;" name='telephone'
 								:value="telephone" placeholder-class='placeholder' maxlength="11"></input>
 						</view>
 					</view>
 				</view>
 				<view class="returnBntBox">
-					<button class='returnBnt bg_color' form-type="submit">提交信息</button>
+					<button class='returnBnt bg_color' form-type="submit">{{$t('提交信息')}}</button>
 				</view>
 			</view>
 		</form>
@@ -115,7 +115,7 @@
 		onLoad: function(options) {
 			this.$set(this, 'orderInfo', JSON.parse(this.$Cache.get('productInfo')));
 			if (!options.refundOrderNo) return this.$util.Tips({
-				title: '缺少退款单id,无法退回商品'
+				title: this.$t('缺少退款单id,无法退回商品')
 			}, {
 				tab: 3,
 				url: 1
@@ -138,7 +138,7 @@
 				const clipboard = new ClipboardJS(".copy-data");
 				clipboard.on("success", () => {
 					this.$util.Tips({
-						title: '复制成功'
+						title: this.$t('复制成功')
 					});
 				});
 			});
@@ -186,16 +186,16 @@
 					data = {},
 					value = e.detail.value;
 				if (!value.trackingNumber && this.returnGoodsType === 1) return that.$util.Tips({
-					title: '请填写物流单号'
+					title: this.$t('请填写物流单号')
 				});
 				if (!value.telephone) return that.$util.Tips({
-					title: '请填写联系电话'
+					title: this.$t('请填写联系电话')
 				});
 				if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(value.telephone)) return that.$util.Tips({
-					title: '请输入正确的手机号码'
+					title: this.$t('请输入正确的手机号码')
 				});
 				uni.showLoading({
-					title: '保存中',
+					title: this.$t('保存中'),
 					mask: true
 				})
 				if (that.returnGoodsType === 1) {
@@ -214,7 +214,7 @@
 				returningGoodsApi(data).then(res => {
 					uni.hideLoading();
 					return that.$util.Tips({
-						title: '退回商品成功',
+						title: this.$t('退回商品成功'),
 						icon: 'success'
 					}, {
 						tab: 5,

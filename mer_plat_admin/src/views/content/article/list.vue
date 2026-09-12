@@ -9,94 +9,96 @@
     >
       <div class="padding-add">
         <el-form inline size="small" label-position="right" @submit.native.prevent>
-          <el-form-item label="文章分类：">
+          <el-form-item :label="$t('content.articleCategoryLabel')">
             <el-select
               v-model="listPram.cid"
               clearable
               class="selWidth"
-              placeholder="请选择文章分类"
+              :placeholder="$t('content.pleaseSelectArticleCategory')"
               @change="handerSearch"
             >
-              <el-option v-for="item in categoryTreeData" :key="item.id" :label="item.name" :value="item.id">
+              <el-option v-for="item in categoryTreeData" :key="item.id" :label="localizedCategoryName(item)" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="文章标题：">
+          <el-form-item :label="$t('content.articleTitleLabel')">
             <el-input
               v-model.trim="title"
               @keyup.enter.native="handerSearch"
-              placeholder="请输入文章标题"
+              :placeholder="$t('content.pleaseEnterArticleTitle')"
               class="selWidth"
               size="small"
               clearable
             ></el-input>
           </el-form-item>
-          <el-form-item label="文章作者：">
+          <el-form-item :label="$t('content.articleAuthorLabel')">
             <el-input
               v-model.trim="author"
               @keyup.enter.native="handerSearch"
-              placeholder="请输入文章作者"
+              :placeholder="$t('content.pleaseEnterArticleAuthor')"
               class="selWidth"
               size="small"
               clearable
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="handerSearch()">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button type="primary" size="small" @click="handerSearch()">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '20px' }" shadow="never" :bordered="false">
       <router-link :to="{ path: '/marketing/content/articleCreat' }">
-        <el-button size="small" type="primary" class="mr10" v-hasPermi="['platform:article:save']">添加文章</el-button>
+        <el-button size="small" type="primary" class="mr10" v-hasPermi="['platform:article:save']">{{ $t('content.addArticle') }}</el-button>
       </router-link>
       <el-table v-loading="listLoading" :data="listData.list" size="small" highlight-current-row class="mt20">
         <el-table-column prop="id" label="ID" min-width="50" />
-        <el-table-column label="图片" min-width="80">
+        <el-table-column :label="$t('content.image')" min-width="80">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.cover" :preview-src-list="[scope.row.cover]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="title" label="文章标题" min-width="220" :show-overflow-tooltip="true" />
-        <el-table-column prop="visit" label="文章分类" min-width="150">
+        <el-table-column :label="$t('content.articleTitle')" min-width="220" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ localizedArticleTitle(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column prop="visit" :label="$t('category.typeArticle')" min-width="150">
           <template slot-scope="scope">
             <span>{{ scope.row.cid | articleTypeFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="visit" label="浏览量" min-width="150">
+        <el-table-column prop="visit" :label="$t('content.views')" min-width="150">
           <template slot-scope="scope">
             <span>{{ scope.row.visit }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="author" label="文章作者" min-width="180" />
-        <el-table-column prop="sort" label="排序" show-overflow-tooltip min-width="80" />
-        <el-table-column prop="createTime" label="创建时间" min-width="150" />
-        <el-table-column label="状态" fixed="right">
+        <el-table-column prop="author" :label="$t('content.articleAuthor')" min-width="180" />
+        <el-table-column prop="sort" :label="$t('product.sort')" show-overflow-tooltip min-width="80" />
+        <el-table-column prop="createTime" :label="$t('product.createTime')" min-width="150" />
+        <el-table-column :label="$t('common.status')" fixed="right">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:article:switch'])"
               v-model="scope.row.status"
               :active-value="true"
               :inactive-value="false"
-              active-text="启用"
-              inactive-text="禁用"
+              :active-text="$t('common.enable')"
+              :inactive-text="$t('common.disable')"
               @change="handleStatusChange(scope.row)"
             >
             </el-switch>
-            <div v-else>{{ scope.row.status ? '启用' : '禁用' }}</div>
+            <div v-else>{{ scope.row.status ? $t('common.enable') : $t('common.disable') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="100" fixed="right">
           <template slot-scope="scope">
             <router-link :to="{ path: '/marketing/content/articleCreat/' + scope.row.id }">
-              <a v-hasPermi="['platform:article:update']">编辑</a>
+              <a v-hasPermi="['platform:article:update']">{{ $t('common.edit') }}</a>
             </router-link>
             <el-divider direction="vertical"></el-divider>
-            <a @click="handlerDelete(scope.row)" v-hasPermi="['platform:article:delete']">删除</a>
+            <a @click="handlerDelete(scope.row)" v-hasPermi="['platform:article:delete']">{{ $t('common.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -112,7 +114,7 @@
     </el-card>
     <el-dialog
       :visible.sync="editDialogConfig.visible"
-      :title="editDialogConfig.isEdit === 0 ? '创建文章' : '编辑文章'"
+      :title="editDialogConfig.isEdit === 0 ? $t('content.createArticle') : $t('content.editArticle')"
       top="1vh"
       width="900px"
       destroy-on-close
@@ -142,7 +144,8 @@
 // +---------------------------------------------------------------------
 import * as articleApi from '@/api/article.js';
 import edit from './edit';
-import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { checkPermi } from '@/utils/permission';
+import { getLocalizedName, getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   components: { edit },
   data() {
@@ -185,10 +188,16 @@ export default {
   },
   methods: {
     checkPermi,
+    localizedCategoryName(row) {
+      return getLocalizedName(row, getUiLocale(this));
+    },
+    localizedArticleTitle(row) {
+      return getLocalizedText(row.title, row.titleJson, getUiLocale(this));
+    },
     //修改状态
     handleStatusChange(row) {
       articleApi.articleSwitchApi(row.id).then((res) => {
-        this.$message.success('更新状态成功');
+        this.$message.success(this.$t('user.updateStatusSuccess'));
         this.handlerGetTreeList();
       });
     },
@@ -229,9 +238,9 @@ export default {
       this.editDialogConfig.visible = false;
     },
     handlerDelete(rowData) {
-      this.$modalSure('删除当前文章', '提示').then((result) => {
+      this.$modalSure(this.$t('content.deleteCurrentArticle'), this.$t('el.messagebox.title')).then((result) => {
         articleApi.DelArticle(rowData.id).then((data) => {
-          this.$message.success('删除数据成功');
+          this.$message.success(this.$t('content.deleteDataSuccess'));
           this.handlerGetListData(this.listPram);
         });
       });

@@ -207,7 +207,7 @@
 				let that = this;
 				that.styleConfig = []
 				uni.showLoading({
-					title: '加载中...'
+					title: this.$t('加载中...')
 				});
 				getMerDiyInfoApi(this.merId, this.diyId).then(res => {
 					uni.setNavigationBarTitle({
@@ -430,7 +430,7 @@
 					overflow: hidden;
 				}
 
-				/deep/ .easy-loadimage,
+				::v-deep  .easy-loadimage,
 				uni-image,
 				.easy-loadimage {
 					width: 90rpx;

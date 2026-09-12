@@ -2,8 +2,8 @@
 	<view>
 	  <view class="time1" :class='isShow==true?"on":""'>
 	    <view class="top acea-row row-between-wrapper">
-	    	<text @tap="cancel">取消</text>
-	    	<text @tap="confirm">确定</text>
+	    	<text @tap="cancel">{{$t('取消')}}</text>
+	    	<text @tap="confirm">{{$t('确定')}}</text>
 	    </view>
 	    <picker-view class="picker" :value="value" @change="getime" indicator-style="height:34px;">
 	    	<picker-view-column>
@@ -89,7 +89,7 @@
 				  this.$emit("confrim",{time:time,val:this.value})
 				}else{
 				  return this.$util.Tips({
-				    title: '开始时间必须小于结束时间'
+				    title: this.$t('开始时间必须小于结束时间')
 				  });
 				}
 			},

@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix">
         <el-form inline>
           <el-form-item>
-            <el-input v-model.trim="tableFrom.keywords" placeholder="请输入用户名称" class="selWidth">
+            <el-input v-model.trim="tableFrom.keywords" :placeholder="translateText('请输入用户名称')" class="selWidth">
               <el-button slot="append" icon="el-icon-search" @click="search" />
             </el-input>
           </el-form-item>
@@ -22,20 +22,20 @@
           </template>
         </el-table-column>
         <el-table-column prop="uid" label="ID" min-width="60" />
-        <el-table-column prop="nickname" label="微信用户名称" min-width="130" />
-        <el-table-column label="用户头像" min-width="80">
+        <el-table-column prop="nickname" :label="translateText('微信用户名称')" min-width="130" />
+        <el-table-column :label="translateText('用户头像')" min-width="80">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image class="tabImage" :src="scope.row.avatar" :preview-src-list="[scope.row.avatar]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="性别" min-width="80">
+        <el-table-column :label="translateText('性别')" min-width="80">
           <template slot-scope="scope">
-            <span>{{ scope.row.sex | saxFilter }}</span>
+            <span>{{ translateText(scope.row.sex | saxFilter) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="地区" min-width="130">
+        <el-table-column :label="translateText('地区')" min-width="130">
           <template slot-scope="scope">
             <span>{{ scope.row.addres }}</span>
           </template>

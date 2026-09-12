@@ -19,6 +19,7 @@
 
     <select id="findSearchList" resultType="com.zbkj.common.response.RefundOrderResponse" parameterType="Map">
         SELECT ro.refund_order_no as refundOrderNo, roi.product_name as productName
+        , roi.product_id as productId
         , ro.refund_price as refundPrice, ro.refund_status as refundStatus
         , roi.image as image, roi.sku as sku, roi.apply_refund_num as applyRefundNum
         , ro.after_sales_type as afterSalesType, m.is_self as isSelf, ro.return_goods_type as returnGoodsType
@@ -33,7 +34,8 @@
         </if>
         <if test="keywords != '' and keywords != null ">
             and (ro.refund_order_no = #{keywords} or ro.order_no = #{keywords}
-                     or roi.product_name like CONCAT('%',#{keywords},'%'))
+                     or roi.product_name like CONCAT('%',#{keywords},'%')
+                     or roi.product_id in (select id from eb_product where name_json like CONCAT('%',#{keywords},'%')))
         </if>
         ORDER BY ro.id desc
     </select>

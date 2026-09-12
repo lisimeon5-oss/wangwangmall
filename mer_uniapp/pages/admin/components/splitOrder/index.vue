@@ -4,7 +4,7 @@
 		<view class="all" v-if="select_all">
 			<checkbox-group @change="checkboxAllChange">
 				<checkbox value="all" :checked="isAllSelect" />
-				<text class='checkAll'>全选</text>
+				<text class='checkAll'>{{$t('全选')}}</text>
 			</checkbox-group>
 		</view>
 		<checkbox-group @change="checkboxChange">
@@ -26,11 +26,11 @@
 								<!-- <view>×{{item.cart_num}}</view> -->
 							</view>
 							<view class='infor line1'>
-								{{item.sku || '默认'}}</view>
+								{{item.sku || $t('默认')}}</view>
 							<view class="acea-row row-middle money-section">
-								<text class="infor-num">购买 x{{item.payNum}}</text>
-								<text class="infor-text" v-if="type==1">{{`(${item.refundNum}件已退 ${item.payNum-item.refundNum}件可退）`}}</text>
-								<text class="infor-text" v-if="type==0">{{ `(${item.deliveryNum}件已发 ${item.refundNum}件已退）`}}</text>
+								<text class="infor-num">{{$t('购买')}} x{{item.payNum}}</text>
+								<text class="infor-text" v-if="type==1">{{`(${item.refundNum}${$t('件已退')} ${item.payNum-item.refundNum}${$t('件可退')}）`}}</text>
+								<text class="infor-text" v-if="type==0">{{ `(${item.deliveryNum}${$t('件已发')} ${item.refundNum}${$t('件已退')}）`}}</text>
 							</view>
 						</view>
 						<view class='carnum acea-row row-center-wrapper'>
@@ -130,7 +130,7 @@
 </script>
 
 <style lang="scss">
-	/deep/checkbox .uni-checkbox-input.uni-checkbox-input-checked {
+	::v-deep checkbox .uni-checkbox-input.uni-checkbox-input-checked {
 		border: 1px solid #007aff !important;
 		background-color: #007aff !important;
 		color: #fff !important;

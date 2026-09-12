@@ -56,4 +56,13 @@ public interface MerchantTypeService extends IService<MerchantType> {
      */
     List<MerchantType> allList();
 
+    /**
+     * 按请求语言解析类型名称，缺省回退默认 name
+     */
+    String resolveDisplayName(MerchantType merchantType);
+
+    /**
+     * 按请求语言解析类型要求说明，缺省回退默认 info
+     */
+    String resolveDisplayInfo(MerchantType merchantType);
 }

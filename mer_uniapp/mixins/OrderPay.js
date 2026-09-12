@@ -95,7 +95,7 @@ export default {
 						fail: (e) => {
 							uni.hideLoading();
 							uni.showModal({
-								content: "支付失败",
+								content: this.$t('支付失败'),
 								showCancel: false,
 								success: function(res) {
 									if (res.confirm) {
@@ -140,7 +140,7 @@ export default {
 					fail: function(e) {
 						uni.hideLoading();
 						return this.$util.Tips({
-							title: '取消支付'
+							title: this.$t('取消支付')
 						}, {
 							tab: 5,
 							url: goPages + '&status=2'
@@ -150,7 +150,7 @@ export default {
 						uni.hideLoading();
 						//关闭当前页面跳转至订单状态
 						if (e.errMsg == 'requestPayment:cancel') return this.$util.Tips({
-							title: '取消支付'
+							title: this.$t('取消支付')
 						}, {
 							tab: 5,
 							url: goPages + '&status=2'
@@ -176,7 +176,7 @@ export default {
 					fail: function(e) {
 						uni.hideLoading();
 						return this.$util.Tips({
-							title: '取消支付'
+							title: this.$t('取消支付')
 						}, {
 							tab: 5,
 							url: goPages + '&status=2'
@@ -186,7 +186,7 @@ export default {
 						uni.hideLoading();
 						//关闭当前页面跳转至订单状态
 						if (e.errMsg == 'requestPayment:cancel') return this.$util.Tips({
-							title: '取消支付'
+							title: this.$t('取消支付')
 						}, {
 							tab: 5,
 							url: goPages + '&status=2'
@@ -214,7 +214,7 @@ export default {
 				}).catch(res => {
 					uni.hideLoading();
 					return this.$util.Tips({
-						title: '取消支付'
+						title: this.$t('取消支付')
 					}, {
 						tab: 5,
 						url: goPages + '&status=2'
@@ -256,7 +256,7 @@ export default {
 				fail: function(err) {
 					uni.hideLoading(); 
 					uni.showModal({
-						content: "支付失败",
+						content: this.$t('支付失败'),
 						showCancel: false,
 						success: function(res) {
 							if (res.confirm) {

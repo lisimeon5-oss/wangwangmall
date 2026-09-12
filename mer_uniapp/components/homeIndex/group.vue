@@ -18,10 +18,10 @@
 						</view>
 						<view v-if="groupInfo.orderDoneUserImages" class="num ml-num"
 							:class="groupInfo.orderDoneUserImages.length==1?'num1':groupInfo.orderDoneUserImages.length==2?'num2':groupInfo.orderDoneUserImages.length>=3?'num3':''"
-							:style="[titleColor]">{{groupInfo.totalAllOrderDone}}人拼团成功</view>
+							:style="[titleColor]">{{groupInfo.totalAllOrderDone}}{{$t('人拼团成功')}}</view>
 				</view>
 				<view class="group-top-right" :style="[headerBtnColor]" @click="toMore">
-					更多
+					{{$t('更多')}}
 					<text class="iconfont icon-xiangyou" :style="[headerBtnColor]"></text>
 				</view>
 			</view>
@@ -32,7 +32,7 @@
 						@click="toGroupDetail(item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0].productId,item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0].groupActivityId)">
 						<view class="group-bottom-left">
 							<view class="img acea-row row-center row-middle relative" :style="[contentStyle]">
-								<view v-show="item.stock===0" class="sellOut">已售罄</view>
+								<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 								<easy-loadimage :image-src="item.groupBuyActivityProductResponse.image" width="250rpx"
 									height="250rpx" :radius="dataConfig.contentStyle.val"></easy-loadimage>
 							</view>
@@ -44,9 +44,9 @@
 								</view>
 								<view class="pink acea-row" v-if="typeShow.includes(1)">
 									<view class="people-box acea-row" :style="[groupTitleColor]">
-										<view class="people" :style="[groupTitleColor]">{{item.buyCount}}人团</view>
+										<view class="people" :style="[groupTitleColor]">{{item.buyCount}}{{$t('人团')}}</view>
 										<view class="groupNum" :style="[groupTitleFontColor]">
-											已拼{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses.latestBuyCount||'0'}}份
+											{{$t('已拼')}}{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses.latestBuyCount||'0'}}{{$t('份')}}
 										</view>
 									</view>
 								</view>
@@ -54,16 +54,16 @@
 							<view class="right-bottom acea-row  row-between">
 								<view class="price">
 									<view class="pinkNum" v-if="typeShow.includes(2)" :style="[priceColor]"><text
-											class="pinkNum-title">拼团价</text><text class="pinkNum-icon">￥</text><text
+											class="pinkNum-title">{{$t('拼团价')}}</text><text class="pinkNum-icon">฿</text><text
 											class="pinkNum-num semiBold">{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0].activePrice}}</text>
 									</view>
 									<view class="num" v-if="typeShow.includes(3)" :style="[originalColor]"><text
-											class="num-title">单买价</text><text class="num-icon">￥</text><text
+											class="num-title">{{$t('单买价')}}</text><text class="num-icon">฿</text><text
 											class="icon-num regular">{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0]['attrValue'][0].price}}</text>
 									</view>
 								</view>
 								<view class="btnBox" v-if="groupBtnShow">
-									<view class="btn" :style="[...btnColor]">去拼团</view>
+									<view class="btn" :style="[...btnColor]">{{$t('去拼团')}}</view>
 								</view>
 							</view>
 						</view>
@@ -77,7 +77,7 @@
 					@click="toGroupDetail(item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0].productId,item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0].groupActivityId)">
 					<view class="group-bottom-left">
 						<view class="img acea-row row-center row-middle big-img relative" :style="[contentStyle]">
-							<view v-show="item.stock===0" class="sellOut">已售罄</view>
+							<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 							<easy-loadimage :image-src="item.groupBuyActivityProductResponse.image" width="324rpx"
 								height="324rpx" :radius="dataConfig.contentStyle.val"></easy-loadimage>
 						</view>
@@ -86,7 +86,7 @@
 						<view class="title acea-row">
 							<view :style="[groupTitleColor]" class="numPink-box">
 								<view class="numPink" v-if="typeShow.includes(1)" :style="[groupTitleFontColor]">
-									{{item.buyCount}}人团
+									{{item.buyCount}}{{$t('人团')}}
 								</view>
 							</view>
 							<text :class="typeShow.includes(1) ? 'line1-show' : 'line1-hidden'" class="line1"
@@ -97,15 +97,15 @@
 						<view class="two-item-bottom acea-row row-between">
 							<view class="price">
 								<view class="pinkNum" v-if="typeShow.includes(2)" :style="[priceColor]">
-									<text class="num-icon">￥</text><text
+									<text class="num-icon">฿</text><text
 										class="num semiBold">{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0].activePrice}}</text>
 								</view>
 								<view class="otNum regular" v-if="typeShow.includes(3)" :style="[originalColor]">
-									￥{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0]['attrValue'][0].price}}
+									฿{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0]['attrValue'][0].price}}
 								</view>
 							</view>
 							<view class="btnBox" v-if="groupBtnShow">
-								<view class="btn" :style="[...btnColor]">去拼团</view>
+								<view class="btn" :style="[...btnColor]">{{$t('去拼团')}}</view>
 							</view>
 						</view>
 					</view>
@@ -117,7 +117,7 @@
 					@click="toGroupDetail(item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0].productId,item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0].groupActivityId)">
 					<view class="group-bottom-left">
 						<view class="img acea-row row-center row-middle three-img relative" :style="[contentStyle]">
-							<view v-show="item.stock===0" class="sellOut">已售罄</view>
+							<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 							<easy-loadimage :image-src="item.groupBuyActivityProductResponse.image" width="100%"
 								class="loadimage" height="100%" :radius="dataConfig.contentStyle.val"></easy-loadimage>
 						</view>
@@ -126,7 +126,7 @@
 						<view class="title acea-row">
 							<view :style="[groupTitleColor]" class="numPink-box numPink-box-special">
 								<view class="numPink" v-if="typeShow.includes(1)" :style="[groupTitleFontColor]">
-									{{item.buyCount}}人团
+									{{item.buyCount}}{{$t('人团')}}
 								</view>
 							</view>
 							<text class="line1" v-if="typeShow.includes(0)" :style="[nameColor]">
@@ -136,11 +136,11 @@
 						<view class="two-item-bottom">
 							<view class="price">
 								<view class="pinkNum" v-if="typeShow.includes(2)" :style="[priceColor]">
-									<text class="num-icon">￥</text><text
+									<text class="num-icon">฿</text><text
 										class="num semiBold">{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0].activePrice}}</text>
 								</view>
 								<view class="otNum regular" v-if="typeShow.includes(3)" :style="[originalColor]">
-									￥{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0]['attrValue'][0].price}}
+									฿{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0]['attrValue'][0].price}}
 								</view>
 							</view>
 						</view>
@@ -154,7 +154,7 @@
 						@click="toGroupDetail(item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0].productId,item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0].groupActivityId)">
 						<view class="group-bottom-left">
 							<view class="img acea-row row-center row-middle four-img relative" :style="[contentStyle]">
-								<view v-show="item.stock===0" class="sellOut">已售罄</view>
+								<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 								<easy-loadimage :image-src="item.groupBuyActivityProductResponse.image" width="240rpx"
 									height="240rpx" :radius="dataConfig.contentStyle.val"></easy-loadimage>
 							</view>
@@ -163,7 +163,7 @@
 							<view class="title acea-row" :style="[nameColor]">
 								<view :style="[groupTitleColor]" class="numPink-box numPink-box-special">
 									<view class="numPink" v-if="typeShow.includes(1)" :style="[groupTitleFontColor]">
-										{{item.buyCount}}人团
+										{{item.buyCount}}{{$t('人团')}}
 									</view>
 								</view>
 								<text class="line1" v-if="typeShow.includes(0)">
@@ -173,11 +173,11 @@
 							<view class="two-item-bottom">
 								<view class="price">
 									<view class="pinkNum" v-if="typeShow.includes(2)" :style="[priceColor]">
-										<text class="num-icon">￥</text><text
+										<text class="num-icon">฿</text><text
 											class="num semiBold">{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0].activePrice}}</text>
 									</view>
 									<view class="otNum regular" v-if="typeShow.includes(3)" :style="[originalColor]">
-										￥{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0]['attrValue'][0].price}}
+										฿{{item.groupBuyActivityProductResponse.groupBuyActivitySkuResponses[0]['attrValue'][0].price}}
 									</view>
 								</view>
 							</view>
@@ -185,7 +185,7 @@
 					</view>
 				</scroll-view>
 			</view>
-			<emptyPage :mTop="'0'" v-if="groupProductList.length==0" title="暂无拼团商品，去看看其他商品吧~～"
+			<emptyPage :mTop="'0'" v-if="groupProductList.length==0" :title="$t('暂无拼团商品，去看看其他商品吧~～')"
 				:imgSrc="urlDomain+'crmebimage/presets/noActivity.png'"></emptyPage>
 		</view>
 	</view>
@@ -198,6 +198,7 @@
 	} from '@/api/group.js'
 	import easyLoadimage from '@/components/base/easy-loadimage.vue';
 	import emptyPage from '@/components/emptyPage.vue'
+	import { getLocalizedText } from '@/utils/localizedName';
 	let app = getApp();
 	export default {
 		name: 'homeGroup',
@@ -219,11 +220,9 @@
 			return {
 				urlDomain: this.$Cache.get("imgHost"),
 				listStyle: 0,
-				logoUrl: null,
 				typeShow: [0, 1, 2, 3],
 				groupBtnShow: true,
 				selectStyle: '',
-				titleConfig: '',
 				selectBgImg: '',
 				bgImgUrl: '',
 				headerTitleStyle: 0,
@@ -236,7 +235,14 @@
 			}
 		},
 		computed: {
-			//容器样式
+			logoUrl() {
+				const logo = (this.dataConfig && this.dataConfig.logoConfig) || {};
+				return getLocalizedText(logo.url, logo.urlJson);
+			},
+			titleConfig() {
+				const title = (this.dataConfig && this.dataConfig.titleConfig) || {};
+				return getLocalizedText(title.val, title.valJson);
+			},
 			//最外层盒子的样式
 			boxStyle() {
 				return [{
@@ -303,19 +309,19 @@
 			//拼团价格颜色
 			priceColor() {
 				return {
-					color: this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.priceColor.color[0].item:this.themeColor,
+					color: this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.priceColor.color[0].item:this.themeColor,
 				};
 			},
 			//标签颜色
 			groupTitleColor() {
 				return {
-					background: this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.groupTitleColor.color[0].item:this.themeColor,
+					background: this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.groupTitleColor.color[0].item:this.themeColor,
 				};
 			},
 			//已拼颜色
 			groupTitleFontColor() {
 				return {
-					color: this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.groupTitleColor.color[0].item:this.themeColor,
+					color: this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.groupTitleColor.color[0].item:this.themeColor,
 				}
 			},
 			//分割线颜色
@@ -327,7 +333,7 @@
 			//按钮颜色
 			btnColor() {
 				return [{
-						background: `linear-gradient(to right,${this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.btnColor.color[0].item:'#FF7931'}, ${this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.btnColor.color[1].item:this.themeColor})`,
+						background: `linear-gradient(to right,${this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.btnColor.color[0].item:'#FF7931'}, ${this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.btnColor.color[1].item:this.themeColor})`,
 					},
 					{
 						color: this.dataConfig.btnFontColor.color[0].item,
@@ -398,11 +404,9 @@
 			},
 			setConfig() {
 				this.listStyle = this.dataConfig.tabConfig.tabVal;
-				this.logoUrl = this.dataConfig.logoConfig.url;
 				this.typeShow = this.dataConfig.typeConfig.activeValue;
 				this.groupBtnShow = this.dataConfig.groupBtnConfig.tabVal == 0 ? true : false;
 				this.selectStyle = this.dataConfig.selectStyle.tabVal;
-				this.titleConfig = this.dataConfig.titleConfig.val;
 				this.selectBgImg = this.dataConfig.selectBgImg.tabVal;
 				this.bgImgUrl = this.dataConfig.bgImg.url;
 				this.headerTitleStyle = this.dataConfig.headerTitleStyle.tabVal;

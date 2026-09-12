@@ -121,7 +121,7 @@ public class UserCenterServiceImpl extends ServiceImpl<UserDao, User> implements
             if (ObjectUtil.isNotNull(systemUserLevel)) {
                 response.setIsVip(true);
                 response.setVipIcon(systemUserLevel.getIcon());
-                response.setVipName(systemUserLevel.getName());
+                response.setVipName(systemUserLevelService.resolveDisplayName(systemUserLevel));
             }
         }
         // 判断是否展示我的推广，1.分销模式是否开启
@@ -350,7 +350,7 @@ public class UserCenterServiceImpl extends ServiceImpl<UserDao, User> implements
         response.setNickname(user.getNickname());
         response.setExperience(user.getExperience());
         response.setLevel(user.getLevel());
-        response.setUserLevelName(userLevel.getName());
+        response.setUserLevelName(systemUserLevelService.resolveDisplayName(userLevel));
         response.setGrade(userLevel.getGrade());
         response.setIcon(userLevel.getIcon());
         response.setBackImage(userLevel.getBackImage());
@@ -358,7 +358,7 @@ public class UserCenterServiceImpl extends ServiceImpl<UserDao, User> implements
         SystemUserLevel nextLevel = systemUserLevelService.getNextLevel(userLevel.getGrade());
         if (ObjectUtil.isNotNull(nextLevel)) {
             response.setUpExperience(nextLevel.getExperience());
-            response.setNextLevelName(nextLevel.getName());
+            response.setNextLevelName(systemUserLevelService.resolveDisplayName(nextLevel));
         }
 
         UserSignRecord lastSignRecord = userSignRecordService.getLastByUid(user.getId());

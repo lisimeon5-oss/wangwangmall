@@ -1,6 +1,7 @@
 package com.zbkj.common.request.merchant;
 
 import com.zbkj.common.constants.RegularConstants;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -34,10 +35,13 @@ public class MerchantAddRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "商户名称", required = true)
-    @NotEmpty(message = "商户名称不能为空")
-    @Length(max = 16, message = "商户名称不能超过16个字符")
+    @ApiModelProperty(value = "商户名称")
+    @Length(max = 50, message = "商户名称不能超过50个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言商户名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言商户名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "商户分类ID", required = true)
     @NotNull(message = "商户分类不能为空")

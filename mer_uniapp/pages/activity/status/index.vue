@@ -7,7 +7,7 @@
 						<swiper-item>
 							<view class='line1'>
 								<image class="swiper-img" :src="item.groupAvatar" mode=""></image>
-								<text class="swiper-text">{{item.groupNickname}} 拼团成功</text>
+								<text class="swiper-text">{{item.groupNickname}} {{$t('拼团成功')}}</text>
 							</view>
 						</swiper-item>
 					</block>
@@ -23,20 +23,20 @@
 							</view>
 							<view class="flex fs-20 mt-14">
 								<view class="tuan-num text--w111-fff flex-center">
-									{{allData.recordForShare.buyingCountNum}}人团
+									{{allData.recordForShare.buyingCountNum}}{{$t('人团')}}
 								</view>
-								<view class="complete font-red flex-center">已拼{{allData.recordForShare.latestBuyCount}}份
+								<view class="complete font-red flex-center">{{$t('已拼')}}{{allData.recordForShare.latestBuyCount}}{{$t('份')}}
 								</view>
 							</view>
 						</view>
 						<view class="w-full flex-between-center">
 							<view>
 								<view class="flex items-baseline">
-									<text class="fs-22 lh-30rpx font-red fw-500">拼团价:</text>
+									<text class="fs-22 lh-30rpx font-red fw-500">{{$t('拼团价:')}}</text>
 									<priceStyle :price="allData.recordForShare.activePrice"></priceStyle>
 								</view>
 								<view class="text-line text--w111-999 fs-22 lh-30rpx mt-12">
-									¥{{allData.productDetailResponse.productInfo.price}}</view>
+									฿{{allData.productDetailResponse.productInfo.price}}</view>
 							</view>
 						</view>
 					</view>
@@ -51,19 +51,19 @@
 		</view>
 		<view class="px-20">
 			<view class="wrapper">
-				<view class="tips sucess-tips" v-if="pinkBool === 10">恭喜您拼团成功</view>
-				<view class="tips font-num-err" v-else-if="pinkBool === -1">还差<span
-						class="font-num  pl-10 pr-10">{{ allData.recordForShare.buyingCountNum-allData.recordForShare.yetBuyingNum  }}人</span>，拼团失败
+				<view class="tips sucess-tips" v-if="pinkBool === 10">{{$t('恭喜您拼团成功')}}</view>
+				<view class="tips font-num-err" v-else-if="pinkBool === -1">{{$t('还差')}}<span
+						class="font-num  pl-10 pr-10">{{ allData.recordForShare.buyingCountNum-allData.recordForShare.yetBuyingNum  }}{{$t('人')}}</span>{{$t('，拼团失败')}}
 				</view>
-				<view class="tips" v-else-if="pinkBool === 0">拼团中，还差<span
-						class="font-num font-num-sucess pl-10 pr-10">{{ allData.recordForShare.buyingCountNum-allData.recordForShare.yetBuyingNum }}人</span>拼团成功
+				<view class="tips" v-else-if="pinkBool === 0">{{$t('拼团中，还差')}}<span
+						class="font-num font-num-sucess pl-10 pr-10">{{ allData.recordForShare.buyingCountNum-allData.recordForShare.yetBuyingNum }}{{$t('人')}}</span>{{$t('拼团成功')}}
 				</view>
 				<view class="title acea-row row-center-wrapper" v-if="pinkBool === 0">
 					<view class="name acea-row row-center-wrapper">
-						剩余
+						{{$t('剩余')}}
 						<CountDown :is-day="true" :tip-text="' '" :day-text="' : '" :hour-text="' : '"
 							:minute-text="' : '" :second-text="' '" :isCol="false" :datatime="dataTimeLimit"
-							:bgColor="bgColor"></CountDown>结束
+							:bgColor="bgColor"></CountDown>{{$t('结束')}}
 					</view>
 				</view>
 				<view class="list acea-row row-middle result" :class="[ iShidden ? 'on' : '']">
@@ -73,7 +73,7 @@
 							<image class="groupAvater" :src="item.groupAvatar" />
 						</view>
 						<image v-else src="../static/images/pinkNo.png" mode=""></image>
-						<view v-if="item.isLeader" class="group-leader">团长</view>
+						<view v-if="item.isLeader" class="group-leader">{{$t('团长')}}</view>
 					</view>
 					<view class="pictrue" v-if="fictiStatus===1&&pinkBool===10"
 						v-for="(item, index) in allData.groupBuyUserList" :key="index">
@@ -83,26 +83,26 @@
 						<view class="image-box" v-else>
 							<image src="../static/images/normal.png" mode=""></image>
 						</view>
-						<view v-if="item.isLeader" class="group-leader">团长</view>
+						<view v-if="item.isLeader" class="group-leader">{{$t('团长')}}</view>
 					</view>
 				</view>
 				<view v-if=" allData.groupBuyUserList.length > 10" class="lookAll acea-row row-center-wrapper"
 					@click="lookAll">
-					{{ iShidden ? '收起' : '查看全部' }}
+					{{ iShidden ? $t('收起') : $t('查看全部') }}
 					<span class="iconfont" :class="iShidden ? 'icon-xiangshang' : 'icon-xiangxia'"></span>
 				</view>
 				<view v-if="userBool === 1 && isOk == 0 && pinkBool === 0">
-					<view class="teamBnt" @click="listenerActionSheet">邀请好友参团</view>
+					<view class="teamBnt" @click="listenerActionSheet">{{$t('邀请好友参团')}}</view>
 				</view>
 				<view class="teamBnt" v-else-if="userBool === 0 && pinkBool === 0">
-					<view @click="toAddGroup">我要参团</view>
+					<view @click="toAddGroup">{{$t('我要参团')}}</view>
 				</view>
 				<view class="teamBnt" v-if="pinkBool === 10 || pinkBool === -1"
 					@click="goDetail(allData.recordForShare.productId,allData.recordForShare.groupActivityId)">
-					{{`${pinkBool === 10?'再次':'重新'}开团`}}
+					{{`${pinkBool === 10? $t('再次') : $t('重新')}开团`}}
 				</view>
 				<view class="lookOrder" v-if="pinkBool === 10" @click="goOrder">
-					查看订单信息
+					{{$t('查看订单信息')}}
 					<span class="iconfont icon-xiangyou"></span>
 				</view>
 			</view>
@@ -110,7 +110,7 @@
 			<view class="play-wrapper">
 				<view class="w-full flex-center">
 					<image class="zs" src="../static/images/pinkLeft.png"></image>
-					<text class="fs-28 fw-500 text--w111-333 lh-44rpx px-6">拼团玩法</text>
+					<text class="fs-28 fw-500 text--w111-333 lh-44rpx px-6">{{$t('拼团玩法')}}</text>
 					<image class="zs" src="../static/images/pinkRight.png"></image>
 				</view>
 				<view class="wrapper-main acea-row row-center-wrapper">
@@ -123,15 +123,15 @@
 						<view class="steps acea-row">
 							<view class="item">
 								<view class="head bg-red">1</view>
-								<view class="main">开团/参团享团购价</view>
+								<view class="main">{{$t('开团/参团享团购价')}}</view>
 							</view>
 							<view class="item">
 								<view class="head bg-red" :class="nowShow&&pinkBool !== 10?'bg-red':''">2</view>
-								<view class="main">邀请好友参团优惠多</view>
+								<view class="main">{{$t('邀请好友参团优惠多')}}</view>
 							</view>
 							<view class="item">
 								<view class="head" :class="pinkBool === 10 ? 'bg-red' : ''">3</view>
-								<view class="main">人满发货不满退款</view>
+								<view class="main">{{$t('人满发货不满退款')}}</view>
 							</view>
 						</view>
 					</view>
@@ -140,13 +140,13 @@
 			<view class="mt-40 all-pink">
 				<view class="w-full flex-center">
 					<image class="zs" src="../static/images/pinkLeft.png"></image>
-					<text class="fs-28 fw-500 text--w111-333 lh-44rpx px-6">大家都在拼</text>
+					<text class="fs-28 fw-500 text--w111-333 lh-44rpx px-6">{{$t('大家都在拼')}}</text>
 					<image class="zs" src="../static/images/pinkRight.png"></image>
 				</view>
 				<view class="card w-full bg--w111-fff rd-24rpx p-20 flex mt-24" v-for="(item,index) in groupGood"
 					:key="index" @tap="goDetail(item.productId,item.groupActivityId)">
 					<view class="relative">
-						<view v-show="item.quota===0" class="sellOut">已售罄</view>
+						<view v-show="item.quota===0" class="sellOut">{{$t('已售罄')}}</view>
 						<easy-loadimage mode="widthFix" :image-src="item.imageUrl" width="240rpx" height="240rpx"
 							:radius="10"></easy-loadimage>
 					</view>
@@ -154,19 +154,19 @@
 						<view class="w-full">
 							<view class="w-full fs-28 lh-40rpx line2">{{item.productName}}</view>
 							<view class="flex fs-20 mt-14">
-								<view class="tuan-num text--w111-fff flex-center">{{item.buyCount}}人团</view>
-								<view class="complete font-red flex-center">已拼{{item.latestBuyCount}}份</view>
+								<view class="tuan-num text--w111-fff flex-center">{{item.buyCount}}{{$t('人团')}}</view>
+								<view class="complete font-red flex-center">{{$t('已拼')}}{{item.latestBuyCount}}{{$t('份')}}</view>
 							</view>
 						</view>
 						<view class="w-full flex-between-center flex-special">
 							<view>
 								<view class="flex items-baseline">
-									<text class="fs-22 lh-30rpx font-red fw-500">拼团价:</text>
+									<text class="fs-22 lh-30rpx font-red fw-500">{{$t('拼团价:')}}</text>
 									<priceStyle :price="item.activePrice"></priceStyle>
 								</view>
-								<view class="text-line text--w111-999 fs-22 lh-30rpx mt-12">¥{{item.price}}</view>
+								<view class="text-line text--w111-999 fs-22 lh-30rpx mt-12">฿{{item.price}}</view>
 							</view>
-							<view class="groupBtn">参与拼团</view>
+							<view class="groupBtn">{{$t('参与拼团')}}</view>
 						</view>
 					</view>
 				</view>
@@ -180,17 +180,17 @@
 					<view class="pictrue">
 						<image src="../static/images/weixin.png"></image>
 					</view>
-					<view class="">分享给好友</view>
+					<view class="">{{$t('分享给好友')}}</view>
 				</button>
 				<!-- #endif -->
 				<!-- #ifdef APP-PLUS -->
 				<view class="item" @click="appShare('WXSceneSession')">
 					<view class="iconfont icon-weixin3"></view>
-					<view class="">微信好友</view>
+					<view class="">{{$t('微信好友')}}</view>
 				</view>
 				<view class="item" @click="appShare('WXSenceTimeline')">
 					<view class="iconfont icon-pengyouquan"></view>
-					<view class="">微信朋友圈</view>
+					<view class="">{{$t('微信朋友圈')}}</view>
 				</view>
 				<!-- #endif -->
 				<!-- #ifdef H5 || MP -->
@@ -198,7 +198,7 @@
 					<view class="pictrue">
 						<image src="../static/images/changan.png"></image>
 					</view>
-					<view class="">预览发图</view>
+					<view class="">{{$t('预览发图')}}</view>
 				</view>
 				<!-- #endif -->
 				<!-- #ifdef MP  -->
@@ -206,11 +206,11 @@
 					<view class="pictrue">
 						<image src="../static/images/haibao.png"></image>
 					</view>
-					<view class="">保存海报</view>
+					<view class="">{{$t('保存海报')}}</view>
 				</button>
 				<!-- #endif -->
 			</view>
-			<view class="generateClose acea-row row-center-wrapper" @click="posterImageClose">取消</view>
+			<view class="generateClose acea-row row-center-wrapper" @click="posterImageClose">{{$t('取消')}}</view>
 		</view>
 		<view class="mask" v-if="canvasStatus"></view>
 		<!-- 海报展示 -->
@@ -525,7 +525,7 @@
 					},
 					fail: function(err) {
 						uni.showToast({
-							title: "分享失败",
+							title: this.$t('分享失败'),
 							icon: "none",
 							duration: 2000,
 						});
@@ -585,7 +585,7 @@
 					complete: () => {},
 					fail: res => {
 						this.$util.Tips({
-							title: '海报二维码生成失败！'
+							title: this.$t('海报二维码生成失败！')
 						});
 					}
 				})
@@ -609,7 +609,7 @@
 			goPoster: function() {
 				let that = this;
 				uni.showLoading({
-					title: '海报生成中',
+					title: this.$t('海报生成中'),
 					mask: true
 				});
 				that.posters = false;
@@ -626,7 +626,7 @@
 					if (!that.imgTop || !that.groupLeaderAvatar) {
 						uni.hideLoading();
 						that.$util.Tips({
-							title: '无法生成商品海报！'
+							title: this.$t('无法生成商品海报！')
 						});
 						return
 					}
@@ -666,7 +666,7 @@
 					});
 				} else {
 					this.$util.Tips({
-						title: '您的海报尚未生成'
+						title: this.$t('您的海报尚未生成')
 					});
 				}
 			},
@@ -687,13 +687,13 @@
 										success: function(res) {
 											that.posterImageClose();
 											that.$util.Tips({
-												title: '保存成功',
+												title: this.$t('保存成功'),
 												icon: 'success'
 											});
 										},
 										fail: function(res) {
 											that.$util.Tips({
-												title: '保存失败'
+												title: this.$t('保存失败')
 											});
 										}
 									})
@@ -705,13 +705,13 @@
 								success: function(res) {
 									that.posterImageClose();
 									that.$util.Tips({
-										title: '保存成功',
+										title: this.$t('保存成功'),
 										icon: 'success'
 									});
 								},
 								fail: function(res) {
 									that.$util.Tips({
-										title: '保存失败'
+										title: this.$t('保存失败')
 									});
 								},
 							})
@@ -896,7 +896,7 @@
 		color: #fc4141;
 	}
 
-	.group-con .wrapper .title .name /deep/.time .styleAll {
+	.group-con .wrapper .title .name ::v-deep .time .styleAll {
 		text-align: center;
 		border-radius: 8rpx;
 		font-size: 24rpx;
@@ -1231,7 +1231,7 @@
 				border-radius: 50%;
 				margin: 0 auto 6rpx auto;
 
-				/deep/image,
+				::v-deep image,
 				.easy-loadimage,
 				image,
 				uni-image {

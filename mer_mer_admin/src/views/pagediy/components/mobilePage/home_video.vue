@@ -17,9 +17,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState } from 'vuex';
+import { diyCname, mergeDiyUiLabels } from '@/utils/diyCname';
+import { getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'home_video',
-  cname: '视频',
+  ...diyCname('pagediy.video'),
   icon: 't-icon-zujian-shipin',
   configName: 'c_home_video',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -78,50 +80,52 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '视频',
+          cname: this.$t('pagediy.video'),
         },
         tabConfig: {
-          title: '视频类型',
+          title: this.$t('pagediy.videoType'),
           name: 'tabConfig',
-          tabTitle: '视频内容设置',
+          tabTitle: this.$t('pagediy.videoContentSettings'),
           list: [
             {
-              val: '手动上传',
+              val: this.$t('pagediy.manualUpload'),
               icon: 'icon-shoudongshangchuan',
             },
             {
-              val: '视频链接',
+              val: this.$t('pagediy.videoLink'),
               icon: 'icon-shipinlianjie',
             },
           ],
           tabVal: 0,
         },
         uploadVideo: {
-          title: '上传视频',
+          title: this.$t('upload.uploadVideo'),
           name: 'uploadVideo',
           isShow: 1,
-          tips: '建议上传大小：宽152px，高60px',
-          header: '设置logo',
+          tips: this.$t('pagediy.suggestSize152x60'),
+          header: this.$t('pagediy.setLogo'),
           url: '',
+          urlJson: '',
         },
         cover: {
           name: 'cover',
           isShow: 1,
-          tips: '建议上传大小：宽152px，高60px',
-          header: '设置logo',
+          tips: this.$t('pagediy.suggestSize152x60'),
+          header: this.$t('pagediy.setLogo'),
           url: '',
-          title: '视频封面',
+          title: this.$t('pagediy.videoCover'),
           val: '',
+          urlJson: '',
         },
         link: {
-          title: '视频链接',
+          title: this.$t('pagediy.videoLink'),
           value: '',
-          place: '请输入链接地址',
+          place: this.$t('pagediy.pleaseEnterLink'),
           isShow: 0,
         },
         bgColor: {
-          title: '背景颜色',
-          tabTitle: '颜色设置',
+          title: this.$t('pagediy.backgroundColor'),
+          tabTitle: this.$t('pagediy.colorSettings'),
           default: [
             {
               item: '#FFFFFF',
@@ -140,16 +144,16 @@ export default {
           ],
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         contantStyle: {
-          tabTitle: '圆角设置',
-          title: '内容圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.contentRadius'),
           name: 'contantStyle',
           val: 0,
           min: 0,
@@ -157,26 +161,26 @@ export default {
         },
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          title: '下边距',
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 40,
@@ -198,11 +202,16 @@ export default {
     setConfig(data) {
       if (!data) return;
       if (data) {
-        this.configObj = data;
+        this.configObj = mergeDiyUiLabels(data, this.defaultConfig);
+        const locale = getUiLocale(this);
         if (this.configObj.tabConfig.tabVal === 0) {
-          this.videoUrl = this.configObj.uploadVideo.url;
+          this.videoUrl = getLocalizedText(this.configObj.uploadVideo.url, this.configObj.uploadVideo.urlJson, locale);
         } else {
-          this.videoUrl = this.configObj.link.value;
+          this.videoUrl = getLocalizedText(
+            this.configObj.link.value || this.configObj.link.val,
+            this.configObj.link.valueJson || this.configObj.link.valJson,
+            locale,
+          );
         }
       }
     },

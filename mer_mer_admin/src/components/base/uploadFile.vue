@@ -14,7 +14,7 @@
           <span class="file-type">{{ fileType }}</span>
         </div>
       </div>
-      <el-button v-else size="mini" type="primary" v-hasPermi="['merchant:upload:file']">点击上传</el-button>
+      <el-button v-else size="mini" type="primary" v-hasPermi="['merchant:upload:file']">{{ $t('upload.clickToUpload') }}</el-button>
     </el-upload>
   </div>
 </template>
@@ -50,7 +50,7 @@ export default {
       formData.append('multipart', param.file);
       const loading = this.$loading({
         lock: true,
-        text: '上传中，请稍候...',
+        text: this.$t('upload.uploading'),
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)',
       });
@@ -61,7 +61,7 @@ export default {
           this.getFileType(res.url);
 
           this.$emit('input', this.url);
-          this.$message.success('上传成功');
+          this.$message.success(this.$t('upload.uploadSuccess'));
         })
         .catch((res) => {
           loading.close();

@@ -48,10 +48,16 @@ public class PaidMemberBenefitsVo implements Serializable {
     @Length(max = 6, message = "展示名称不能超过6个字符")
     private String value;
 
+    @ApiModelProperty(value = "多语言展示名称(JSON)")
+    private String valueJson;
+
     @ApiModelProperty(value = "权益简介", required = true)
     @NotBlank(message = "权益简介不能为空")
     @Length(max = 12, message = "展示名称不能超过12个字符")
     private String message;
+
+    @ApiModelProperty(value = "多语言权益简介(JSON)")
+    private String messageJson;
 
     @ApiModelProperty(value = "状态:是否显示", required = true)
     @NotNull(message = "状态不能为空")
@@ -64,6 +70,9 @@ public class PaidMemberBenefitsVo implements Serializable {
 
     @ApiModelProperty(value = "权益说明")
     private String expand;
+
+    @ApiModelProperty(value = "多语言权益说明(JSON)")
+    private String expandJson;
 
     @ApiModelProperty(value = "倍数")
     private Integer multiple;

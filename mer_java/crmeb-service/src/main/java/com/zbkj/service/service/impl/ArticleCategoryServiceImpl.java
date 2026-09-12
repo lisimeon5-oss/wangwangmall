@@ -17,6 +17,7 @@ import com.zbkj.service.dao.ArticleCategoryDao;
 import com.zbkj.service.service.ArticleCategoryService;
 import com.zbkj.service.service.ArticleService;
 import com.zbkj.service.service.SystemAttachmentService;
+import com.zbkj.common.utils.I18nJsonUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,6 +81,8 @@ public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryDao, 
         ArticleCategory articleCategory = new ArticleCategory();
         BeanUtils.copyProperties(request, articleCategory);
         articleCategory.setId(null);
+        articleCategory.setName(I18nJsonUtil.emptyToBlank(request.getName()));
+        articleCategory.setNameJson(StrUtil.isNotBlank(request.getNameJson()) ? request.getNameJson() : "");
         if (StrUtil.isNotBlank(request.getIcon())) {
             articleCategory.setIcon(systemAttachmentService.clearPrefix(articleCategory.getIcon()));
         }
@@ -127,6 +130,10 @@ public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryDao, 
         getByIdException(request.getId());
         ArticleCategory articleCategory = new ArticleCategory();
         BeanUtils.copyProperties(request, articleCategory);
+        articleCategory.setName(I18nJsonUtil.emptyToBlank(request.getName()));
+        if (ObjectUtil.isNotNull(request.getNameJson())) {
+            articleCategory.setNameJson(request.getNameJson());
+        }
         if (StrUtil.isNotBlank(request.getIcon())) {
             articleCategory.setIcon(systemAttachmentService.clearPrefix(articleCategory.getIcon()));
         }
@@ -164,6 +171,7 @@ public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryDao, 
         for (ArticleCategory category : categoryList) {
             ArticleCategoryResponse response = new ArticleCategoryResponse();
             BeanUtils.copyProperties(category, response);
+            response.setName(I18nJsonUtil.resolveByRequest(category.getName(), category.getNameJson()));
             responseList.add(response);
         }
         return responseList;

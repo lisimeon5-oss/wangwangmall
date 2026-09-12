@@ -1,8 +1,8 @@
 <template>
   <!--标题-->
   <div class="acea-row title-box mb20">
-    <div class="title-bar mr20">{{ configData.tabTitle }}</div>
-    <div v-if="configData.info" class="title-tips">{{ configData.info }}</div>
+    <div class="title-bar mr20">{{ diyUiText(configData.tabTitle) }}</div>
+    <div v-if="configData.info" class="title-tips">{{ diyUiText(configData.info) }}</div>
   </div>
 </template>
 
@@ -16,6 +16,7 @@
 // +----------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
+import { diyUiText } from '@/utils/diyCname';
 export default {
   name: 'c_title',
   props: {
@@ -49,6 +50,7 @@ export default {
     },
   },
   methods: {
+    diyUiText,
     sliderChange(e) {},
   },
 };

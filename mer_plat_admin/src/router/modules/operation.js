@@ -220,6 +220,15 @@ const operationRouter = {
           },
         },
         {
+          path: 'index',
+          name: 'onePassIndex',
+          component: () => import('@/views/onePass/smsConfig'),
+          meta: {
+            title: '一号通',
+            icon: 'clipboard',
+          },
+        },
+        {
           path: 'onePassConfig',
           component: () => import('@/views/onePass/onePassConfig'),
           name: 'OnePassConfig',

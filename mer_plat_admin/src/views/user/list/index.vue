@@ -18,13 +18,13 @@
         >
           <div class="acea-row search-form" v-if="!collapse">
             <div class="search-form-box">
-              <el-form-item label="用户搜索：" label-for="nickname">
+              <el-form-item :label="$t('order.userSearch')" label-for="nickname">
                 <UserSearchInput v-model="userFrom" />
               </el-form-item>
-              <el-form-item label="用户标签：">
+              <el-form-item :label="$t('user.userTagLabel')">
                 <el-select
                   v-model.trim="labelData"
-                  placeholder="请选择"
+                  :placeholder="$t('common.pleaseSelect')"
                   class="selWidth"
                   clearable
                   filterable
@@ -35,29 +35,29 @@
                     :value="item.id"
                     v-for="(item, index) in labelLists"
                     :key="index"
-                    :label="item.name"
+                    :label="getLocalizedTagName(item)"
                   ></el-option>
                 </el-select>
               </el-form-item>
             </div>
             <el-form-item class="search-form-sub">
-              <el-button type="primary" size="small" @click="userSearchs">搜索</el-button>
-              <el-button size="small" @click="reset" class="ResetSearch">重置</el-button>
+              <el-button type="primary" size="small" @click="userSearchs">{{ $t('common.search') }}</el-button>
+              <el-button size="small" @click="reset" class="ResetSearch">{{ $t('common.reset') }}</el-button>
               <a class="ivu-ml-8 font12 ml10" @click="collapse = !collapse">
-                <template v-if="!collapse"> 展开 <i class="el-icon-arrow-down" /> </template>
-                <template v-else> 收起 <i class="el-icon-arrow-up" /> </template>
+                <template v-if="!collapse"> {{ $t('user.expand') }} <i class="el-icon-arrow-down" /> </template>
+                <template v-else> {{ $t('user.collapse') }} <i class="el-icon-arrow-up" /> </template>
               </a>
             </el-form-item>
           </div>
           <div v-if="collapse" class="acea-row search-form">
             <div class="search-form-box">
-              <el-form-item label="用户搜索：" label-for="nickname">
+              <el-form-item :label="$t('order.userSearch')" label-for="nickname">
                 <UserSearchInput v-model="userFrom" />
               </el-form-item>
-              <el-form-item label="用户标签：">
+              <el-form-item :label="$t('user.userTagLabel')">
                 <el-select
                   v-model.trim="labelData"
-                  placeholder="请选择"
+                  :placeholder="$t('common.pleaseSelect')"
                   class="selWidth"
                   clearable
                   filterable
@@ -68,12 +68,12 @@
                     :value="item.id"
                     v-for="(item, index) in labelLists"
                     :key="index"
-                    :label="item.name"
+                    :label="getLocalizedTagName(item)"
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="消费情况：">
-                <el-select v-model="userFrom.payCount" placeholder="请选择" size="small" class="selWidth" clearable>
+              <el-form-item :label="$t('user.consumption')">
+                <el-select v-model="userFrom.payCount" :placeholder="$t('common.pleaseSelect')" size="small" class="selWidth" clearable>
                   <el-option value="0" label="0"></el-option>
                   <el-option value="1" label="1+"></el-option>
                   <el-option value="2" label="2+"></el-option>
@@ -82,23 +82,23 @@
                   <el-option value="5" label="5+"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="用户性别：">
-                <el-select v-model="userFrom.sex" placeholder="请选择" size="small" class="selWidth" clearable>
-                  <el-option value="" label="全部"></el-option>
-                  <el-option value="0" label="未知"></el-option>
-                  <el-option value="1" label="男"></el-option>
-                  <el-option value="2" label="女"></el-option>
-                  <el-option value="3" label="保密"></el-option>
+              <el-form-item :label="$t('user.gender')">
+                <el-select v-model="userFrom.sex" :placeholder="$t('common.pleaseSelect')" size="small" class="selWidth" clearable>
+                  <el-option value="" :label="$t('common.all')"></el-option>
+                  <el-option value="0" :label="$t('user.unknown')"></el-option>
+                  <el-option value="1" :label="$t('user.male')"></el-option>
+                  <el-option value="2" :label="$t('user.female')"></el-option>
+                  <el-option value="3" :label="$t('user.secret')"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="用户身份：">
-                <el-select v-model="userFrom.identity" placeholder="请选择" size="small" class="selWidth" clearable>
-                  <el-option value="" label="全部"></el-option>
-                  <el-option value="1" label="推广员"></el-option>
-                  <el-option value="3" label="付费会员"></el-option>
+              <el-form-item :label="$t('user.identity')">
+                <el-select v-model="userFrom.identity" :placeholder="$t('common.pleaseSelect')" size="small" class="selWidth" clearable>
+                  <el-option value="" :label="$t('common.all')"></el-option>
+                  <el-option value="1" :label="$t('user.promoter')"></el-option>
+                  <el-option value="3" :label="$t('user.paidMember')"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="时间选择：">
+              <el-form-item :label="$t('order.timeSelect')">
                 <el-date-picker
                   v-model="timeVal"
                   align="right"
@@ -108,25 +108,25 @@
                   size="small"
                   type="daterange"
                   placement="bottom-end"
-                  placeholder="自定义时间"
+                  :placeholder="$t('order.customTime')"
                   :picker-options="pickerOptions"
                   @change="onchangeTime"
                   class="selWidth"
                 />
               </el-form-item>
-              <el-form-item label="注册类型：">
-                <el-select v-model="userFrom.registerType" placeholder="请选择" size="small" class="selWidth" clearable>
+              <el-form-item :label="$t('user.registerTypeLabel')">
+                <el-select v-model="userFrom.registerType" :placeholder="$t('common.pleaseSelect')" size="small" class="selWidth" clearable>
                   <el-option v-for="item in registerTypeList" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
             </div>
             <el-form-item class="search-form-sub">
-              <el-button type="primary" size="small" @click="userSearchs">搜索</el-button>
-              <el-button class="ResetSearch" size="small" @click="reset">重置</el-button>
+              <el-button type="primary" size="small" @click="userSearchs">{{ $t('common.search') }}</el-button>
+              <el-button class="ResetSearch" size="small" @click="reset">{{ $t('common.reset') }}</el-button>
               <a class="ivu-ml-8 font12 ml10" @click="collapse = !collapse">
-                <template v-if="!collapse"> 展开 <i class="el-icon-arrow-down" /> </template>
-                <template v-else> 收起 <i class="el-icon-arrow-up" /> </template>
+                <template v-if="!collapse"> {{ $t('user.expand') }} <i class="el-icon-arrow-down" /> </template>
+                <template v-else> {{ $t('user.collapse') }} <i class="el-icon-arrow-up" /> </template>
               </a>
             </el-form-item>
           </div>
@@ -137,26 +137,26 @@
       <div class="acea-row row-middle">
         <el-dropdown size="small">
           <el-button :disabled="!multipleSelectionAll.length">
-            批量设置<i class="el-icon-arrow-down el-icon--right"></i>
+            {{ $t('user.batchSet') }}<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
             <template v-if="multipleSelectionAll.length">
               <el-dropdown-item v-hasPermi="['platform:user:tag']" @click.native="setBatch('label', '', 1)"
-                >批量添加标签</el-dropdown-item
+                >{{ $t('user.batchAddLabel') }}</el-dropdown-item
               >
               <el-dropdown-item
                 v-hasPermi="['platform:coupon:can:send:list', 'platform:coupon:batch:send']"
                 @click.native="sendCoupon"
-                >发送优惠券</el-dropdown-item
+                >{{ $t('user.sendCoupon') }}</el-dropdown-item
               >
               <el-dropdown-item v-hasPermi="['platform:user:gift:paid:member']" @click.native="handleGiftMembers('')"
-                >赠送会员</el-dropdown-item
+                >{{ $t('user.giftMember') }}</el-dropdown-item
               >
             </template>
           </el-dropdown-menu>
         </el-dropdown>
         <div v-show="multipleSelectionAll.length" class="ml12 font12">
-          已选 <span class="font-color font12"> {{ multipleSelectionAll.length }} </span>项
+          {{ $t('user.selected') }} <span class="font-color font12"> {{ multipleSelectionAll.length }} </span>{{ $t('user.itemUnit') }}
         </div>
       </div>
       <el-table
@@ -171,65 +171,65 @@
         <el-table-column type="expand" width="40">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="首次访问：">
+              <el-form-item :label="$t('user.firstVisit')">
                 <span>{{ props.row.createTime | filterEmpty }}</span>
               </el-form-item>
-              <el-form-item label="近次访问：">
+              <el-form-item :label="$t('user.lastVisit')">
                 <span>{{ props.row.lastLoginTime | filterEmpty }}</span>
               </el-form-item>
-              <el-form-item label="标签：">
+              <el-form-item :label="$t('user.tagLabel')">
                 <span>{{ props.row.tagId | tagFilter }}</span>
               </el-form-item>
-              <el-form-item label="地址：">
+              <el-form-item :label="$t('user.addressLabel')">
                 <span>{{ (props.row.province + props.row.city) | filterEmpty }}</span>
               </el-form-item>
-              <el-form-item label="备注：" style="width: 100%; display: flex; margin-right: 10px">
+              <el-form-item :label="$t('user.remarkLabel')" style="width: 100%; display: flex; margin-right: 10px">
                 <span>{{ props.row.mark | filterEmpty }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column type="selection" width="45"></el-table-column>
-        <el-table-column prop="id" label="ID" width="70" align="right" v-if="checkedCities.includes('ID')" />
-        <el-table-column label="头像" width="50" v-if="checkedCities.includes('头像')">
+        <el-table-column prop="id" label="ID" width="70" align="right" v-if="isColumnChecked('id')" />
+        <el-table-column :label="$t('user.avatar')" width="50" v-if="isColumnChecked('avatar')">
           <template slot-scope="scope">
             <div class="demo-image__preview line-heightOne">
               <el-image :src="scope.row.avatar" :preview-src-list="[scope.row.avatar]" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="昵称" min-width="180" v-if="checkedCities.includes('姓名')">
+        <el-table-column :label="$t('user.nickname')" min-width="180" v-if="isColumnChecked('name')">
           <template slot-scope="scope">
             <div class="acea-row row-middle">
               <span :class="scope.row.isLogoff ? 'red' : ''">{{ scope.row.nickname | filterEmpty }} | </span>
               <img :src="getSexImage(scope.row.sex)" :title="sexFilter(scope.row.sex)" />
               <span :class="scope.row.isLogoff ? 'red' : ''" v-if="scope.row.isLogoff == true" class="ml2">|</span>
-              <span v-if="scope.row.isLogoff" class="red ml2">(已注销)</span>
+              <span v-if="scope.row.isLogoff" class="red ml2">{{ $t('order.loggedOff') }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="推荐人" min-width="130" v-if="checkedCities.includes('推荐人')">
+        <el-table-column :label="$t('user.referrer')" min-width="130" v-if="isColumnChecked('referrer')">
           <template slot-scope="scope">
             <span>{{ scope.row.spreadName | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="联系电话" min-width="100" v-if="checkedCities.includes('联系电话')">
+        <el-table-column :label="$t('user.phone')" min-width="100" v-if="isColumnChecked('phone')">
           <template slot-scope="scope">
             <span>{{ scope.row.phone | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="nowMoney" label="余额" min-width="100" v-if="checkedCities.includes('余额')" />
-        <el-table-column prop="integral" label="积分" min-width="100" v-if="checkedCities.includes('积分')" />
-        <el-table-column prop="registerType" label="注册类型" min-width="100" v-if="checkedCities.includes('注册类型')">
+        <el-table-column prop="nowMoney" :label="$t('order.balance')" min-width="100" v-if="isColumnChecked('balance')" />
+        <el-table-column prop="integral" :label="$t('user.integral')" min-width="100" v-if="isColumnChecked('integral')" />
+        <el-table-column prop="registerType" :label="$t('user.registerType')" min-width="100" v-if="isColumnChecked('registerType')">
           <template slot-scope="scope">
             <span>{{ scope.row.registerType | registerTypeFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="150" fixed="right">
           <template slot-scope="scope">
-            <a @click="onDetails(scope.row.id)" v-if="checkPermi(['platform:user:detail'])">详情</a>
+            <a @click="onDetails(scope.row.id)" v-if="checkPermi(['platform:user:detail'])">{{ $t('common.detail') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a @click="editUser(scope.row)" v-hasPermi="['platform:user:update', 'platform:user:detail']">编辑</a>
+            <a @click="editUser(scope.row)" v-hasPermi="['platform:user:update', 'platform:user:detail']">{{ $t('common.edit') }}</a>
             <el-divider direction="vertical"></el-divider>
             <el-dropdown
               trigger="click"
@@ -242,27 +242,27 @@
                 'platform:user:gift:paid:member',
               ]"
             >
-              <span class="el-dropdown-link"> 更多<i class="el-icon-arrow-down el-icon--right" /> </span>
+              <span class="el-dropdown-link"> {{ $t('user.more') }}<i class="el-icon-arrow-down el-icon--right" /> </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
                   @click.native="editPoint(scope.row, 'integral')"
                   v-if="checkPermi(['platform:user:operate:integer'])"
-                  >修改积分</el-dropdown-item
+                  >{{ $t('user.modifyIntegral') }}</el-dropdown-item
                 >
                 <el-dropdown-item
                   @click.native="editPoint(scope.row, 'balance')"
                   v-if="checkPermi(['platform:user:operate:balance'])"
-                  >修改余额</el-dropdown-item
+                  >{{ $t('user.modifyBalance') }}</el-dropdown-item
                 >
                 <el-dropdown-item
                   @click.native="setBatch('label', scope.row, 2)"
                   v-if="checkPermi(['platform:user:tag'])"
-                  >设置标签</el-dropdown-item
+                  >{{ $t('user.setLabel') }}</el-dropdown-item
                 >
                 <el-dropdown-item
                   @click.native="setExtension(scope.row)"
                   v-if="checkPermi(['platform:retail:store:update:user:spread'])"
-                  >修改上级推广人</el-dropdown-item
+                  >{{ $t('user.modifyReferrer') }}</el-dropdown-item
                 >
                 <el-dropdown-item
                   @click.native="clearSpread(scope.row)"
@@ -271,12 +271,12 @@
                     scope.row.spreadUid > 0 &&
                     checkPermi(['platform:retail:store:clean:user:spread'])
                   "
-                  >清除上级推广人</el-dropdown-item
+                  >{{ $t('user.clearReferrer') }}</el-dropdown-item
                 >
                 <el-dropdown-item
                   @click.native="handleGiftMembers(scope.row)"
                   v-if="checkPermi(['platform:user:gift:paid:member'])"
-                  >赠送会员</el-dropdown-item
+                  >{{ $t('user.giftMember') }}</el-dropdown-item
                 >
               </el-dropdown-menu>
             </el-dropdown>
@@ -300,17 +300,19 @@
       <template>
         <div class="cell_ht">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-            >全选</el-checkbox
+            >{{ $t('common.selectAll') }}</el-checkbox
           >
-          <el-button type="text" @click="checkSave()">保存</el-button>
+          <el-button type="text" @click="checkSave()">{{ $t('common.save') }}</el-button>
         </div>
         <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-          <el-checkbox v-for="item in columnData" :label="item" :key="item" class="check_cell">{{ item }}</el-checkbox>
+          <el-checkbox v-for="item in columnOptions" :label="item.key" :key="item.key" class="check_cell">{{
+            item.label
+          }}</el-checkbox>
         </el-checkbox-group>
       </template>
     </div>
     <!--修改推广人-->
-    <el-dialog title="修改推广人" :visible.sync="extensionVisible" width="540px" :before-close="handleCloseExtension">
+    <el-dialog :title="$t('user.modifyPromoter')" :visible.sync="extensionVisible" width="540px" :before-close="handleCloseExtension">
       <el-form
         class="formExtension mt20"
         ref="formExtension"
@@ -320,7 +322,7 @@
         @submit.native.prevent
         v-loading="loading"
       >
-        <el-form-item label="选择用户:" prop="image">
+        <el-form-item :label="$t('user.selectUser')" prop="image">
           <div class="upLoadPicBox" @click="modalPicTap">
             <div v-if="selectedUser.image" class="acea-row">
               <img class="pictrue" :src="selectedUser.image" />
@@ -333,21 +335,21 @@
         </el-form-item>
       </el-form>
       <span slot="footer">
-        <el-button @click="extensionVisible = false">取消</el-button>
-        <el-button type="primary" @click="onSubExtension('formExtension')">确定</el-button>
+        <el-button @click="extensionVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="onSubExtension('formExtension')">{{ $t('common.confirmPrefix') }}</el-button>
       </span>
     </el-dialog>
     <!--用户列表-->
-    <el-dialog class="big-dialog" title="推广员列表" :visible.sync="userVisible" width="900px">
+    <el-dialog class="big-dialog" :title="$t('user.promoterList')" :visible.sync="userVisible" width="900px">
       <user-list v-if="userVisible" @getTemplateRow="getTemplateRow"></user-list>
       <!-- <span slot="footer">
-        <el-button @click="userVisible = false">取 消</el-button>
-        <el-button type="primary" @click="userVisible = false">确 定</el-button>
+        <el-button @click="userVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="userVisible = false">{{ $t('common.confirmPrefix') }}</el-button>
       </span> -->
     </el-dialog>
     <!--批量设置-->
     <el-dialog
-      :title="isBatch ? '批量添加标签' : '设置标签'"
+      :title="isBatch ? $t('user.batchAddLabel') : $t('user.setLabel')"
       :visible.sync="dialogVisible"
       width="540px"
       :before-close="handleClose"
@@ -361,16 +363,16 @@
       >
         <el-form-item
           prop="groupId"
-          label="用户标签："
-          :rules="[{ required: true, message: '请选择用户标签', trigger: 'change' }]"
+          :label="$t('user.userTagLabel')"
+          :rules="[{ required: true, message: $t('user.pleaseSelectUserTag'), trigger: 'change' }]"
         >
-          <el-select v-model="dynamicValidateForm.groupId" placeholder="请选择标签" filterable multiple>
-            <el-option :value="item.id" v-for="(item, index) in labelLists" :key="index" :label="item.name"></el-option>
+          <el-select v-model="dynamicValidateForm.groupId" :placeholder="$t('user.pleaseSelectLabel')" filterable multiple>
+            <el-option :value="item.id" v-for="(item, index) in labelLists" :key="index" :label="getLocalizedTagName(item)"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer">
-        <el-button @click="handleClose">取 消</el-button>
+        <el-button @click="handleClose">{{ $t('common.cancel') }}</el-button>
         <el-button
           type="primary"
           v-debounceClick="
@@ -378,17 +380,17 @@
               submitForm('dynamicValidateForm');
             }
           "
-          >确 定</el-button
+          >{{ $t('common.confirmPrefix') }}</el-button
         >
       </span>
     </el-dialog>
     <!--编辑-->
-    <el-dialog title="编辑" :visible.sync="visible" width="900px">
+    <el-dialog :title="$t('common.edit')" :visible.sync="visible" width="900px">
       <edit-from v-if="visible" :userInfo="userInfo" @resetForm="resetForm" class="dialog-bottom"></edit-from>
     </el-dialog>
     <!--积分余额-->
     <el-dialog
-      :title="type === 'integral' ? '积分' : '余额'"
+      :title="type === 'integral' ? $t('user.integral') : $t('order.balance')"
       :visible.sync="VisiblePoint"
       width="540px"
       :close-on-click-modal="false"
@@ -401,17 +403,17 @@
         class="demo-dynamic"
         v-loading="loadingPoint"
       >
-        <el-form-item :label="type === 'integral' ? '积分：' : '余额：'" required>
+        <el-form-item :label="type === 'integral' ? $t('user.integralLabel') : $t('user.balanceLabel')" required>
           <span>{{ type === 'integral' ? userInfo.integral : userInfo.nowMoney }}</span>
         </el-form-item>
         <template v-if="type === 'integral'">
-          <el-form-item label="修改积分：" required>
+          <el-form-item :label="$t('user.modifyIntegralLabel')" required>
             <el-radio-group v-model="PointValidateForm.operateType">
-              <el-radio label="add">增加</el-radio>
-              <el-radio label="sub">减少</el-radio>
+              <el-radio label="add">{{ $t('user.add') }}</el-radio>
+              <el-radio label="sub">{{ $t('user.subtract') }}</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="积分：" required>
+          <el-form-item :label="$t('user.integralLabel')" required>
             <el-input-number
               type="text"
               step-strictly
@@ -422,13 +424,13 @@
           </el-form-item>
         </template>
         <template v-else>
-          <el-form-item label="修改余额：" required>
+          <el-form-item :label="$t('user.modifyBalanceLabel')" required>
             <el-radio-group v-model="PointValidateForm.operateType">
-              <el-radio label="add">增加</el-radio>
-              <el-radio label="sub">减少</el-radio>
+              <el-radio label="add">{{ $t('user.add') }}</el-radio>
+              <el-radio label="sub">{{ $t('user.subtract') }}</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="余额：" required>
+          <el-form-item :label="$t('user.balanceLabel')" required>
             <el-input-number
               type="text"
               v-model.trim="PointValidateForm.money"
@@ -441,14 +443,14 @@
         </template>
       </el-form>
       <span slot="footer">
-        <el-button @click="handlePointClose">取 消</el-button>
-        <el-button type="primary" :loading="loadingBtn" @click="submitPointForm('PointValidateForm')">确 定</el-button>
+        <el-button @click="handlePointClose">{{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" :loading="loadingBtn" @click="submitPointForm('PointValidateForm')">{{ $t('common.confirmPrefix') }}</el-button>
       </span>
     </el-dialog>
     <!--用户详情-->
     <detail-user ref="userDetailFrom"></detail-user>
     <!-- 选择优惠券 -->
-    <el-dialog v-if="visibleCoupon" title="优惠券列表" :visible.sync="visibleCoupon" width="1000px">
+    <el-dialog v-if="visibleCoupon" :title="$t('user.couponListTitle')" :visible.sync="visibleCoupon" width="1000px">
       <coupon-List v-if="visibleCoupon" ref="couponList" :checkedIds="checkedIds" @sendSuccess="sendSuccess" />
     </el-dialog>
     <!-- 赠送会员卡 -->
@@ -493,37 +495,12 @@ import giftToMembers from '../components/giftToMembers';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
 import { Debounce } from '@/utils/validate';
 import { handleDeleteTable } from '@/libs/public';
+import { getLocalizedName } from '@/utils/localizedName';
 export default {
   name: 'UserIndex',
   components: { editFrom, userList, levelEdit, detailUser, couponList, giftToMembers },
   data() {
     return {
-      registerTypeList: [
-        {
-          value: 'wechat',
-          label: '公众号',
-        },
-        {
-          value: 'routine',
-          label: '小程序',
-        },
-        {
-          value: 'h5',
-          label: 'H5',
-        },
-        {
-          value: 'iosWx',
-          label: '微信ios',
-        },
-        {
-          value: 'androidWx',
-          label: '微信安卓',
-        },
-        {
-          value: 'ios',
-          label: 'ios',
-        },
-      ],
       formExtension: {
         spreadUid: '',
         userId: '',
@@ -536,7 +513,6 @@ export default {
       extensionVisible: false,
       userVisible: false,
       levelInfo: '',
-      pickerOptions: this.$timeOptions,
       loadingBtn: false,
       PointValidateForm: {
         integral: null,
@@ -594,8 +570,8 @@ export default {
       idKey: 'id',
       card_select_show: false,
       checkAll: false,
-      checkedCities: ['ID', '头像', '姓名', '注册类型', '推荐人', '联系电话', '余额', '积分'],
-      columnData: ['ID', '头像', '姓名', '注册类型', '推荐人', '联系电话', '余额', '积分'],
+      columnKeys: ['id', 'avatar', 'name', 'registerType', 'referrer', 'phone', 'balance', 'integral'],
+      checkedCities: ['id', 'avatar', 'name', 'registerType', 'referrer', 'phone', 'balance', 'integral'],
       isIndeterminate: true,
       type: 'integral',
       userInfo: {},
@@ -608,22 +584,97 @@ export default {
       checkeduIds: '',
     };
   },
+  computed: {
+    registerTypeList() {
+      return [
+        { value: 'wechat', label: this.$t('user.registerWechat') },
+        { value: 'routine', label: this.$t('user.registerRoutine') },
+        { value: 'h5', label: 'H5' },
+        { value: 'iosWx', label: this.$t('user.registerIosWx') },
+        { value: 'androidWx', label: this.$t('user.registerAndroidWx') },
+        { value: 'ios', label: 'ios' },
+      ];
+    },
+    pickerOptions() {
+      this.$i18n.locale;
+      return this.$createTimeOptions();
+    },
+    columnOptions() {
+      return [
+        { key: 'id', label: 'ID' },
+        { key: 'avatar', label: this.$t('user.avatar') },
+        { key: 'name', label: this.$t('user.nickname') },
+        { key: 'registerType', label: this.$t('user.registerType') },
+        { key: 'referrer', label: this.$t('user.referrer') },
+        { key: 'phone', label: this.$t('user.phone') },
+        { key: 'balance', label: this.$t('order.balance') },
+        { key: 'integral', label: this.$t('user.integral') },
+      ];
+    },
+    currentLocale() {
+      return (
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn'
+      );
+    },
+  },
   activated() {
     this.getList(1);
   },
   mounted() {
+    this.checkedCities = this.normalizeCheckedColumns(
+      this.$cache.local.has('user_stroge') ? this.$cache.local.getJSON('user_stroge') : this.checkedCities,
+    );
     if (checkPermi(['platform:user:page:list'])) this.getList(1);
     if (checkPermi(['platform:user:tag:all:list'])) this.getTagList();
     if (checkPermi(['platform:paid:member:card:list'])) this.getMemberList();
   },
   methods: {
     checkPermi,
+    getLocalizedTagName(row) {
+      return getLocalizedName(row, this.currentLocale);
+    },
+    isColumnChecked(key) {
+      return this.checkedCities.includes(key);
+    },
+    normalizeCheckedColumns(saved) {
+      const keys = this.columnKeys;
+      if (!Array.isArray(saved) || !saved.length) return keys.slice();
+      const aliasMap = {
+        ID: 'id',
+        头像: 'avatar',
+        姓名: 'name',
+        昵称: 'name',
+        注册类型: 'registerType',
+        推荐人: 'referrer',
+        联系电话: 'phone',
+        余额: 'balance',
+        积分: 'integral',
+      };
+      const mapped = [];
+      let hasUnknown = false;
+      saved.forEach((item) => {
+        if (keys.includes(item)) {
+          mapped.push(item);
+        } else if (aliasMap[item]) {
+          mapped.push(aliasMap[item]);
+        } else {
+          hasUnknown = true;
+        }
+      });
+      if (hasUnknown) return keys.slice();
+      const unique = Array.from(new Set(mapped));
+      return unique.length ? unique : keys.slice();
+    },
     sexFilter(status) {
       const statusMap = {
-        0: '未知',
-        1: '男',
-        2: '女',
-        3: '保密',
+        0: this.$t('user.unknown'),
+        1: this.$t('user.male'),
+        2: this.$t('user.female'),
+        3: this.$t('user.secret'),
       };
       return statusMap[status];
     },
@@ -640,7 +691,7 @@ export default {
     },
     //赠送会员
     handleGiftMembers(row) {
-      if (!this.multipleSelection.length && !row) return this.$message.warning('请选择用户');
+      if (!this.multipleSelection.length && !row) return this.$message.warning(this.$t('user.pleaseSelectUser'));
       if (row) {
         this.checkeduIds = row.id;
       } else {
@@ -672,9 +723,9 @@ export default {
     },
     // 清除
     clearSpread(row) {
-      this.$modalSure('解除【' + row.nickname + '】的上级推广人吗').then(() => {
+      this.$modalSure(this.$t('user.clearReferrerConfirm'), { name: row.nickname }).then(() => {
         spreadClearApi(row.id).then((res) => {
-          this.$message.success('清除成功');
+          this.$message.success(this.$t('user.clearSuccess'));
           this.getList();
         });
       });
@@ -683,7 +734,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           updateSpreadApi(this.formExtension).then((res) => {
-            this.$message.success('设置成功');
+            this.$message.success(this.$t('user.setSuccess'));
             this.extensionVisible = false;
             this.getList();
           });
@@ -762,7 +813,7 @@ export default {
           if (this.type === 'integral') {
             foundsApi(this.PointValidateForm)
               .then((res) => {
-                this.$message.success('设置成功');
+                this.$message.success(this.$t('user.setSuccess'));
                 this.loadingBtn = false;
                 this.handlePointClose();
                 this.getList();
@@ -773,7 +824,7 @@ export default {
           } else {
             balanceApi(this.PointValidateForm)
               .then((res) => {
-                this.$message.success('设置成功');
+                this.$message.success(this.$t('user.setSuccess'));
                 this.loadingBtn = false;
                 this.handlePointClose();
                 this.getList();
@@ -808,7 +859,7 @@ export default {
           this.loading = true;
           tagPiApi({ tagIds: this.dynamicValidateForm.groupId.join(','), ids: this.checkedIds.join(',') })
             .then((res) => {
-              this.$message.success('设置成功');
+              this.$message.success(this.$t('user.setSuccess'));
               this.loading = false;
               this.handleClose();
               this.getList();
@@ -830,7 +881,7 @@ export default {
       } else {
         this.dynamicValidateForm.groupId = '';
       }
-      if (this.multipleSelection.length === 0 && !row) return this.$message.warning('请选择要设置的用户');
+      if (this.multipleSelection.length === 0 && !row) return this.$message.warning(this.$t('user.pleaseSelectUserToSet'));
       this.dialogVisible = true;
     },
     //清除选中
@@ -877,9 +928,9 @@ export default {
         .catch(() => {
           this.listLoading = false;
         });
-      this.checkedCities = this.$cache.local.has('user_stroge')
-        ? this.$cache.local.getJSON('user_stroge')
-        : this.checkedCities;
+      this.checkedCities = this.normalizeCheckedColumns(
+        this.$cache.local.has('user_stroge') ? this.$cache.local.getJSON('user_stroge') : this.checkedCities,
+      );
       this.$set(this, 'card_select_show', false);
     },
     // 设置选中的方法
@@ -943,7 +994,7 @@ export default {
     handleDelete(id, idx) {
       this.$modalSure().then(() => {
         productDeleteApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('user.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.userFrom);
           this.getList();
         });
@@ -953,7 +1004,7 @@ export default {
       row.isShow
         ? putOnShellApi(row.id)
             .then(() => {
-              this.$message.success('上架成功');
+              this.$message.success(this.$t('user.shelfSuccess'));
               this.getList();
             })
             .catch(() => {
@@ -961,7 +1012,7 @@ export default {
             })
         : offShellApi(row.id)
             .then(() => {
-              this.$message.success('下架成功');
+              this.$message.success(this.$t('user.offShelfSuccess'));
               this.getList();
             })
             .catch(() => {
@@ -976,17 +1027,17 @@ export default {
       }
     },
     handleCheckAllChange(val) {
-      this.checkedCities = val ? this.columnData : [];
+      this.checkedCities = val ? this.columnKeys.slice() : [];
       this.isIndeterminate = false;
     },
     handleCheckedCitiesChange(value) {
       let checkedCount = value.length;
-      this.checkAll = checkedCount === this.columnData.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.columnData.length;
+      this.checkAll = checkedCount === this.columnKeys.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.columnKeys.length;
     },
     checkSave() {
       this.card_select_show = false;
-      this.$modal.loading('正在保存到本地，请稍候...');
+      this.$modal.loading(this.$t('order.savingToLocal'));
       this.$cache.local.setJSON('user_stroge', this.checkedCities);
       setTimeout(this.$modal.closeLoading(), 1000);
     },
@@ -1004,7 +1055,7 @@ export default {
         this.getUserIds();
         this.visibleCoupon = true;
       } else {
-        this.$message.warning('请选择用户');
+        this.$message.warning(this.$t('user.pleaseSelectUser'));
       }
     },
     sendSuccess() {

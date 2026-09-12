@@ -48,4 +48,7 @@ public class SignConfigRequest implements Serializable {
 
     @ApiModelProperty(value = "签到规则说明，基础签到配置专用")
     private String signRuleDescription;
+
+    @ApiModelProperty(value = "多语言签到规则说明(JSON)")
+    private String signRuleDescriptionJson;
 }

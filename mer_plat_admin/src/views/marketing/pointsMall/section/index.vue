@@ -9,23 +9,23 @@
     >
       <div class="padding-add">
         <el-form inline size="small" label-position="right" @submit.native.prevent>
-          <el-form-item label="区间名称：">
+          <el-form-item :label="$t('marketing.intervalNameLabel')">
             <el-input
               v-model.trim="name"
-              placeholder="请输入区间名称"
+              :placeholder="$t('marketing.pleaseEnterIntervalName')"
               class="form_content_width"
               size="small"
               @keyup.enter.native="getList(1)"
               clearable
             ></el-input>
           </el-form-item>
-          <el-form-item label="区间状态：">
-            <el-select v-model="tableFrom.status" placeholder="请选择" class="selWidth" @change="getList(1)" clearable>
-              <el-option label="显示" :value="true" />
-              <el-option label="隐藏" :value="false" />
+          <el-form-item :label="$t('marketing.intervalStatusLabel')">
+            <el-select v-model="tableFrom.status" :placeholder="$t('el.select.placeholder')" class="selWidth" @change="getList(1)" clearable>
+              <el-option :label="$t('common.show')" :value="true" />
+              <el-option :label="$t('menu.hide')" :value="false" />
             </el-select>
           </el-form-item>
-          <el-form-item label="创建日期：">
+          <el-form-item :label="$t('marketing.createDateLabel')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -33,16 +33,16 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               class="selWidth"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
+              :start-placeholder="$t('product.startDate')"
+              :end-placeholder="$t('product.endDate')"
               @change="onchangeTime"
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
-            <el-button size="small" @click="handleReset">重置</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="handleReset">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -54,7 +54,7 @@
         type="primary"
         v-hasPermi="['platform:integral:interval:save']"
         @click="handleAdd()"
-        >添加积分区间</el-button
+        >{{ $t('marketing.addPointsRange') }}</el-button
       >
       <el-table
         v-loading="listLoading"
@@ -66,30 +66,32 @@
         highlight-current-row
       >
         <el-table-column prop="id" label="ID" min-width="50" />
-        <el-table-column prop="name" label="区间名称" min-width="200" :show-overflow-tooltip="true"> </el-table-column>
-        <el-table-column prop="value" label="积分范围" min-width="200" />
-        <el-table-column prop="sort" label="排序" min-width="90" />
-        <el-table-column prop="createTime" label="创建时间" min-width="150" />
-        <el-table-column label="区间状态" min-width="100" fixed="right">
+        <el-table-column :label="$t('marketing.intervalName')" min-width="200" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ getLocalizedName(scope.row, currentLocale) }}</template>
+        </el-table-column>
+        <el-table-column prop="value" :label="$t('marketing.pointsRange')" min-width="200" />
+        <el-table-column prop="sort" :label="$t('product.sort')" min-width="90" />
+        <el-table-column prop="createTime" :label="$t('product.createTime')" min-width="150" />
+        <el-table-column :label="$t('marketing.intervalStatus')" min-width="100" fixed="right">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:integral:interval:update:status'])"
               v-model="scope.row.status"
               :active-value="true"
               :inactive-value="false"
-              active-text="显示"
-              inactive-text="隐藏"
+              :active-text="$t('common.show')"
+              :inactive-text="$t('menu.hide')"
               @change="onchangeIsShow(scope.row)"
             />
-            <div v-else>{{ scope.row.isShow ? '上架' : '下架' }}</div>
+            <div v-else>{{ scope.row.isShow ? $t('product.onShelf') : $t('product.offShelf') }}</div>
           </template>
         </el-table-column>
-        <el-table-column width="120" fixed="right" label="操作">
+        <el-table-column width="120" fixed="right" :label="$t('common.operate')">
           <template slot-scope="scope">
-            <a v-if="checkPermi(['platform:integral:interval:update'])" @click="handleEdit(scope.row)">编辑</a>
+            <a v-if="checkPermi(['platform:integral:interval:update'])" @click="handleEdit(scope.row)">{{ $t('common.edit') }}</a>
             <template v-if="checkPermi(['platform:integral:interval:delete'])">
               <el-divider direction="vertical"></el-divider>
-              <a @click="handleDelete(scope.row.id, tableFrom.type)">删除</a>
+              <a @click="handleDelete(scope.row.id, tableFrom.type)">{{ $t('common.delete') }}</a>
             </template>
           </template>
         </el-table-column>
@@ -124,10 +126,11 @@ import {
 } from '@/api/pointsMall';
 import { handleDeleteTable } from '@/libs/public';
 import CreatSection from '@/views/marketing/pointsMall/section/creatSection';
-import { seckillIntervalSwitcheApi } from '@/api/marketing';
+import { getLocalizedName, getUiLocale } from '@/utils/localizedName';
 const defaultObj = {
   id: 0,
   name: '',
+  nameJson: '',
   sort: 0,
   status: true,
   value: '',
@@ -154,16 +157,22 @@ export default {
       editData: Object.assign({}, defaultObj),
     };
   },
+  computed: {
+    currentLocale() {
+      return getUiLocale(this);
+    },
+  },
   mounted() {
     if (checkPermi(['platform:integral:interval:page'])) this.getList();
   },
   methods: {
     checkPermi,
+    getLocalizedName,
     // 修改状态
     onchangeIsShow(row) {
       integralSwitcheApi(row.id)
         .then(async () => {
-          this.$message.success('修改成功');
+          this.$message.success(this.$t('category.updateSuccess'));
           this.getList();
         })
         .catch(() => {
@@ -226,9 +235,9 @@ export default {
     },
     // 删除
     handleDelete(id, type) {
-      this.$modalSure(`要删除此积分区间吗？`).then(() => {
+      this.$modalSure(this.$t('marketing.deletePointsRangeConfirm')).then(() => {
         intervalDeleteApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           this.delSuccess();
         });
       });

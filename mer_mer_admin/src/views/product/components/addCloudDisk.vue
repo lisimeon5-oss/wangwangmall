@@ -1,13 +1,13 @@
 <template>
-  <el-dialog :visible.sync="cloudDiskShow" title="设置云盘链接弹窗" width="590px" :append-to-body="true">
+  <el-dialog :visible.sync="cloudDiskShow" :title="$t('product.setCloudDiskLinkDialog')" width="590px" :append-to-body="true">
     <div class="carMywrapper">
       <div class="type-radio">
         <el-form label-width="80px" :model="CloudDiskValidateForm" ref="CloudDiskValidateForm" :inline="true">
           <el-form-item
-            label="云盘链接"
+            :label="$t('product.cloudDiskLink')"
             :rules="{
               required: true,
-              message: '云盘链接不能为空',
+              message: $t('product.cloudDiskLinkRequired'),
               trigger: 'blur',
             }"
           >
@@ -16,15 +16,15 @@
               type="textarea"
               :rows="2"
               style="width: 460px"
-              placeholder="请输入云盘链接及提取码"
+              :placeholder="$t('product.cloudDiskLinkPlaceholder')"
             ></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div class="footer">
-        <el-button class="btns" size="small" @click="cancel">取消</el-button>
+        <el-button class="btns" size="small" @click="cancel">{{ $t('product.cancel') }}</el-button>
         <el-button type="primary" class="btns" size="small" @click="submitForm('CloudDiskValidateForm')"
-          >保存</el-button
+          >{{ $t('product.save') }}</el-button
         >
       </div>
     </div>

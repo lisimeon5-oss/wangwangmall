@@ -2,7 +2,7 @@
   <div class="divBox">
     <el-card class="box-card" shadow="never" :bordered="false">
       <div class="acea-row">
-        <div class="tab_view">
+        <div class="tab_view" :key="'pagediy-tabs-' + ($i18n.locale || '')">
           <div
             class="cell_item"
             :class="{ tab_active: listActive === index }"
@@ -33,8 +33,7 @@
                     size="small"
                     class="mb35"
                     style="font-size: 12px"
-                    >首页装修</el-button
-                  >
+                    >{{ $t('pagediy.homePageDecoration') }}</el-button>
                   <el-card
                     body-style="background-color: #F9F9F9;"
                     class="mb20 Qrcode-card"
@@ -45,8 +44,8 @@
                       <el-col v-bind="grid2">
                         <div class="acea-row row-between-wrapper Qrcode-box">
                           <div>
-                            <div class="title mb20">微信小程序</div>
-                            <div class="tips">扫描右侧二维码查看</div>
+                            <div class="title mb20">{{ $t('pagediy.wechatMiniProgram') }}</div>
+                            <div class="tips">{{ $t('pagediy.scanQrCodeToView') }}</div>
                           </div>
                         </div>
                       </el-col>
@@ -62,8 +61,8 @@
                       <el-col v-bind="grid2">
                         <div class="acea-row row-between-wrapper Qrcode-box">
                           <div>
-                            <div class="title mb20">微信公众号</div>
-                            <div class="tips">扫描右侧二维码查看</div>
+                            <div class="title mb20">{{ $t('common.publicAccount') }}</div>
+                            <div class="tips">{{ $t('pagediy.scanQrCodeToView') }}</div>
                           </div>
                         </div>
                       </el-col>
@@ -83,10 +82,10 @@
           <div slot="header" class="clearfix mb20">
             <div class="container" v-hasPermi="['platform:pagediy:list']">
               <el-form size="small" inline @submit.native.prevent>
-                <el-form-item label="模板名称：">
+                <el-form-item :label="$t('pagediy.templateNameLabel')">
                   <el-input
                     v-model.trim="name"
-                    placeholder="请输入模板名称"
+                    :placeholder="$t('onePass.pleaseEnterTemplateName')"
                     class="selWidth"
                     clearable
                     @keyup.enter.native="getList(1)"
@@ -94,7 +93,7 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
+                  <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
                 </el-form-item>
               </el-form>
             </div>
@@ -104,10 +103,10 @@
               @click="handlerEditDiyPage(0, 'add')"
               size="small"
               style="font-size: 12px"
-              ><i class="el-icon-plus" style="margin-right: 4px" />添加</el-button
+              ><i class="el-icon-plus" style="margin-right: 4px" />{{ $t('common.add') }}</el-button
             >
             <el-button v-hasPermi="['platform:pagediy:list']" @click="getList(1)" size="small" style="font-size: 12px"
-              >刷新</el-button
+              >{{ $t('common.refresh') }}</el-button
             >
           </div>
           <el-table
@@ -120,10 +119,10 @@
             :cell-class-name="tableCellClassName"
           >
             <el-table-column prop="id" label="ID" width="50" />
-            <el-table-column label="模板名称" prop="name" min-width="210" :show-overflow-tooltip="true">
+            <el-table-column :label="$t('onePass.templateName')" prop="name" min-width="210" :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <div class="acea-row row-middle">
-                  <el-tag v-show="scope.row.isDefault === 1" effect="plain" class="mr5">首页</el-tag>
+                  <el-tag v-show="scope.row.isDefault === 1" effect="plain" class="mr5">{{ $t('pagediy.homeTag') }}</el-tag>
                   <!--v-if去判断双击的是不是当前单元格-->
                   <el-input
                     @blur="hideInput(scope.row)"
@@ -137,38 +136,38 @@
                     "
                   >
                   </el-input>
-                  <div v-else style="cursor: pointer" class="line1">{{ scope.row.name }}</div>
+                  <div v-else style="cursor: pointer" class="line1">{{ getLocalizedName(scope.row) }}</div>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="addTime" label="添加时间" min-width="180" />
-            <el-table-column prop="updateTime" label="更新时间" min-width="180" />
-            <el-table-column label="操作" width="190" fixed="right">
+            <el-table-column prop="addTime" :label="$t('marketing.addTime')" min-width="180" />
+            <el-table-column prop="updateTime" :label="$t('maintain.updateTime')" min-width="180" />
+            <el-table-column :label="$t('common.operate')" width="190" fixed="right">
               <template slot-scope="scope">
                 <a
                   v-hasPermi="['platform:pagediy:update', 'platform:pagediy:info']"
                   @click="handlerEditDiyPage(scope.row.id, 'edit')"
-                  >设计</a
+                  >{{ $t('pagediy.design') }}</a
                 >
                 <el-divider direction="vertical"></el-divider>
                 <template v-if="scope.row.isDefault !== 1 && checkPermi(['platform:pagediy:setdefault'])">
-                  <a @click="setHomepage(scope.row.id)">设为首页</a>
+                  <a @click="setHomepage(scope.row.id)">{{ $t('pagediy.setAsHome') }}</a>
                   <el-divider direction="vertical"></el-divider>
                 </template>
                 <el-dropdown trigger="click">
-                  <span class="el-dropdown-link"> 更多<i class="el-icon-arrow-down el-icon--right" /> </span>
+                  <span class="el-dropdown-link"> {{ $t('user.more') }}<i class="el-icon-arrow-down el-icon--right" /> </span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item
                       v-hasPermi="['platform:pagediy:save', 'platform:pagediy:info']"
                       @click.native="handlerEditDiyPage(scope.row.id, 'copy')"
-                      >复制</el-dropdown-item
+                      >{{ $t('marketing.copy') }}</el-dropdown-item
                     >
                     <el-dropdown-item
                       v-if="scope.row.isDefault !== 1 && checkPermi(['platform:pagediy:delete'])"
                       @click.native="handleDelete(scope.row.id, scope.$index)"
-                      >删除</el-dropdown-item
+                      >{{ $t('common.delete') }}</el-dropdown-item
                     >
-                    <el-dropdown-item @click.native="previewProtol(scope.row.id)">预览</el-dropdown-item>
+                    <el-dropdown-item @click.native="previewProtol(scope.row.id)">{{ $t('user.preview') }}</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </template>
@@ -231,6 +230,7 @@ import {
 import QRcode from 'qrcodejs2';
 import { checkPermi } from '@/utils/permission';
 import { handleDeleteTable } from '@/libs/public'; // 权限判断函数
+import { getLocalizedName, hasI18nNameContent, parseLangJsonMap } from '@/utils/localizedName';
 export default {
   name: 'index',
   data() {
@@ -250,7 +250,6 @@ export default {
         xs: 24,
       },
       listActive: 0,
-      tabList: ['商城首页', '自定义页面'],
       tableForm: {
         page: 1,
         limit: 10,
@@ -273,6 +272,11 @@ export default {
       currentCell: null,
     };
   },
+  computed: {
+    tabList() {
+      return [this.$t('pagediy.mallHomePage'), this.$t('pagediy.customPage')];
+    },
+  },
   mounted() {
     this.frontDomain = `${this.$selfUtil.getFrontDomainUrl()}/pages/index/index`;
     if (checkPermi(['platform:pagediy:list'])) this.getList();
@@ -281,38 +285,36 @@ export default {
   },
   methods: {
     checkPermi,
-    // 给单元格绑定横向和竖向的index，这样就能确定是哪一个单元格
+    getLocalizedName,
     tableCellClassName({ row, column, rowIndex, columnIndex }) {
       row.index = rowIndex;
       column.index = columnIndex;
     },
-    // 获得当前双击的单元格的横竖index，然后拼接成一个唯一字符串用于判断，并赋给currentCell
-    // 拼接后类似这样："1,0","1,1",
     handleName(row, column) {
       this.currentCell = row.index + ',' + column.index;
-      // 这里必须要setTimeout，因为在点击的时候，input才刚被v-if显示出来，不然拿不到dom
       setTimeout(() => {
-        // 双击后自动获得焦点
         this.$refs[row.index + ',' + column.index].focus();
       });
     },
-    // 当input失去焦点的时候，隐藏input
     hideInput(item) {
-      if (!item.name) {
-        return this.$message.warning('模板名称不能为空');
+      if (!hasI18nNameContent(item.name, parseLangJsonMap(item.nameJson))) {
+        return this.$message.warning(this.$t('pagediy.templateNameRequired'));
       } else {
         this.currentCell = null;
       }
       pagediyUpdatenameApi({
         id: item.id,
         name: item.name,
+        nameJson: item.nameJson,
       }).then((res) => {
-        this.$message.success('编辑成功');
+        this.$message.success(this.$t('product.editSuccess'));
       });
     },
     //微信二维码
     getQRcode() {
-      document.getElementById('diyQrcode').innerHTML = '';
+      const el = document.getElementById('diyQrcode');
+      if (!el || !this.frontDomain) return;
+      el.innerHTML = '';
       new QRcode('diyQrcode', { width: 120, height: 120, text: this.frontDomain });
     },
     //小程序二维码
@@ -338,9 +340,9 @@ export default {
     },
     // 使用模板
     setHomepage(id) {
-      this.$modalSure('把该模板设为首页').then(() => {
+      this.$modalSure(this.$t('pagediy.setAsHomeTemplate')).then(() => {
         pagediySetdefaultApi(id).then((res) => {
-          this.$message.success('操作成功');
+          this.$message.success(this.$t('product.operateSuccess'));
           this.getList();
         });
       });
@@ -374,9 +376,9 @@ export default {
     },
     // 删除
     handleDelete(id, idx) {
-      this.$modalSure('删除模板吗').then(() => {
+      this.$modalSure(this.$t('pagediy.deleteTemplateConfirm')).then(() => {
         pagediyDeleteApi({ id: id }).then((res) => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableForm);
           this.getList();
         });

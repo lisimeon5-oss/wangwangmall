@@ -37,7 +37,7 @@ export default {
     handlerSubmit(data) {
       passAppSaveApi(data).then((res) => {
         this.getPassAppInfo();
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('product.operateSuccess'));
       });
     },
     //获取配置详情

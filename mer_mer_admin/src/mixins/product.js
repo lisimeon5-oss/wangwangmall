@@ -4,23 +4,201 @@ import { defaultObj } from '@/views/product/creatProduct/default';
 export default {
   data() {
     return {
-      headTab: [
-        { tit: '商品信息', name: '1' },
-        { tit: '规格库存', name: '2' },
-        { tit: '商品详情', name: '3' },
-        { tit: '其他设置', name: '4' },
-      ],
-      formValidate: Object.assign({}, defaultObj),
+      formValidate: Object.assign({}, defaultObj, { nameJson: {}, unitNameJson: {}, introJson: {}, imageJson: {}, sliderImagesJson: {}, contentJson: {} }),
       attrInfo: {},
     };
   },
+  computed: {
+    isProductDefaultLang() {
+      return (this.activeLang || 'zh-cn') === (this.defaultLangCode || 'zh-cn');
+    },
+    currentCover() {
+      if (this.isProductDefaultLang) return this.formValidate.image;
+      const map = this.formValidate.imageJson || {};
+      return map[this.activeLang] || '';
+    },
+    currentProductContent: {
+      get() {
+        if (this.isProductDefaultLang) return this.formValidate.content || '';
+        const map = this.formValidate.contentJson || {};
+        return map[this.activeLang] || '';
+      },
+      set(val) {
+        if (this.isProductDefaultLang) {
+          this.formValidate.content = val;
+          return;
+        }
+        if (!this.formValidate.contentJson || typeof this.formValidate.contentJson !== 'object') {
+          this.$set(this.formValidate, 'contentJson', {});
+        }
+        this.$set(this.formValidate.contentJson, this.activeLang, val);
+      },
+    },
+    currentSliderList() {
+      if (this.isProductDefaultLang) return this.formValidate.sliderImages || [];
+      if (!this.formValidate.sliderImagesJson || typeof this.formValidate.sliderImagesJson !== 'object') {
+        return [];
+      }
+      const list = this.formValidate.sliderImagesJson[this.activeLang];
+      return Array.isArray(list) ? list : [];
+    },
+    displayProductContent() {
+      const map = this.formValidate.contentJson || {};
+      if (this.isProductDefaultLang) {
+        if (!this.isProductHtmlBlank(this.formValidate.content)) return this.formValidate.content;
+      } else if (!this.isProductHtmlBlank(map[this.activeLang])) {
+        return map[this.activeLang];
+      }
+      if (!this.isProductHtmlBlank(this.formValidate.content)) return this.formValidate.content;
+      const hit = Object.keys(map)
+        .map((k) => map[k])
+        .find((v) => !this.isProductHtmlBlank(v));
+      return hit || '';
+    },
+    headTab() {
+      return [
+        { tit: this.$t('product.productInfoTab'), name: '1' },
+        { tit: this.$t('product.specStockTab'), name: '2' },
+        { tit: this.$t('product.productDetailTab'), name: '3' },
+        { tit: this.$t('product.otherSettingsTab'), name: '4' },
+      ];
+    },
+  },
   methods: {
+    // 解析多语言字段 JSON 字符串（商品名称、单位等）
+    parseLangJson(json) {
+      if (!json) return {};
+      if (typeof json === 'object') return json;
+      try {
+        const parsed = JSON.parse(json);
+        return parsed && typeof parsed === 'object' ? parsed : {};
+      } catch (e) {
+        return {};
+      }
+    },
+    parseImageJson(json) {
+      const obj = this.parseLangJson(json);
+      const out = {};
+      Object.keys(obj).forEach((k) => {
+        const val = obj[k];
+        out[k] = val ? this.$selfUtil.setDomain(val) : '';
+      });
+      return out;
+    },
+    parseSliderImagesJson(json) {
+      const obj = this.parseLangJson(json);
+      const out = {};
+      Object.keys(obj).forEach((k) => {
+        let v = obj[k];
+        if (typeof v === 'string') {
+          try {
+            v = JSON.parse(v);
+          } catch (e) {
+            v = v ? [v] : [];
+          }
+        }
+        if (!Array.isArray(v)) v = [];
+        out[k] = v.map((u) => this.$selfUtil.setDomain(u));
+      });
+      return out;
+    },
+    localizeContentJson(map) {
+      const out = {};
+      Object.keys(map || {}).forEach((k) => {
+        out[k] = map[k] ? this.$selfUtil.replaceImgSrcHttps(map[k]) : '';
+      });
+      return out;
+    },
+    ensureSliderLang() {
+      if (!this.formValidate.sliderImagesJson || typeof this.formValidate.sliderImagesJson !== 'object') {
+        this.$set(this.formValidate, 'sliderImagesJson', {});
+      }
+      if (!this.isProductDefaultLang && !Array.isArray(this.formValidate.sliderImagesJson[this.activeLang])) {
+        this.$set(this.formValidate.sliderImagesJson, this.activeLang, []);
+      }
+    },
+    hasAnyProductCover() {
+      if (String((this.formValidate && this.formValidate.image) || '').trim()) return true;
+      const map = (this.formValidate && this.formValidate.imageJson) || {};
+      return Object.keys(map).some((k) => String(map[k] || '').trim());
+    },
+    hasAnyProductSlider() {
+      const def = this.formValidate && this.formValidate.sliderImages;
+      if (Array.isArray(def) && def.length) return true;
+      const map = (this.formValidate && this.formValidate.sliderImagesJson) || {};
+      return Object.keys(map).some((k) => Array.isArray(map[k]) && map[k].length);
+    },
+    isProductHtmlBlank(html) {
+      if (html == null || String(html).trim() === '') return true;
+      const raw = String(html);
+      if (/<(img|video|iframe|embed|source)\b/i.test(raw)) return false;
+      const text = raw
+        .replace(/<[^>]+>/gi, ' ')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/\u00a0/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      return !text;
+    },
+    hasAnyProductContent() {
+      if (!this.isProductHtmlBlank(this.formValidate && this.formValidate.content)) return true;
+      const map = (this.formValidate && this.formValidate.contentJson) || {};
+      return Object.keys(map).some((k) => !this.isProductHtmlBlank(map[k]));
+    },
+    fillDefaultMediaFromAnyLang() {
+      if (!String(this.formValidate.image || '').trim()) {
+        const map = this.formValidate.imageJson || {};
+        const hit = Object.keys(map)
+          .map((k) => map[k])
+          .find((v) => String(v || '').trim());
+        if (hit) {
+          this.formValidate.image = hit;
+          if (this.OneattrValue && this.OneattrValue[0] && !this.OneattrValue[0].image) {
+            this.OneattrValue[0].image = hit;
+          }
+        }
+      }
+      if (!Array.isArray(this.formValidate.sliderImages) || !this.formValidate.sliderImages.length) {
+        const map = this.formValidate.sliderImagesJson || {};
+        const hit = Object.keys(map)
+          .map((k) => map[k])
+          .find((v) => Array.isArray(v) && v.length);
+        if (hit) this.formValidate.sliderImages = [...hit];
+      }
+      if (this.isProductHtmlBlank(this.formValidate.content)) {
+        const map = this.formValidate.contentJson || {};
+        const hit = Object.keys(map)
+          .map((k) => map[k])
+          .find((v) => !this.isProductHtmlBlank(v));
+        if (hit) this.formValidate.content = hit;
+      }
+    },
+    setCurrentCover(url) {
+      if (this.isProductDefaultLang) {
+        this.formValidate.image = url;
+        if (this.OneattrValue && this.OneattrValue[0]) this.OneattrValue[0].image = url;
+      } else {
+        if (!this.formValidate.imageJson || typeof this.formValidate.imageJson !== 'object') {
+          this.$set(this.formValidate, 'imageJson', {});
+        }
+        this.$set(this.formValidate.imageJson, this.activeLang, url);
+      }
+      this.$nextTick(() => {
+        if (this.$refs.formValidate) this.$refs.formValidate.validateField('image');
+      });
+    },
     getData(res, type) {
       let info = res;
       this.formValidate.content = '';
       this.formValidate = {
         ...info,
         image: this.$selfUtil.setDomain(info.image),
+        nameJson: this.parseLangJson(info.nameJson),
+        unitNameJson: this.parseLangJson(info.unitNameJson),
+        introJson: this.parseLangJson(info.introJson),
+        imageJson: this.parseImageJson(info.imageJson),
+        sliderImagesJson: this.parseSliderImagesJson(info.sliderImageJson),
+        contentJson: this.localizeContentJson(this.parseLangJson(info.contentJson)),
         sliderImages: JSON.parse(info.sliderImage),
         cateIds: info.cateId ? info.cateId.split(',') : [], // 商品分类id
         sort: info.sort ? info.sort : 0,
@@ -95,6 +273,9 @@ export default {
       } else {
         this.OneattrValue = info.attrValueList;
       }
+      if (typeof this.applyLangList === 'function' && this.langList && this.langList.length) {
+        this.applyLangList(this.langList);
+      }
     },
     // 点击商品图
     modalPicTap(tit, num, i, status) {
@@ -104,15 +285,18 @@ export default {
         function (img) {
           if (!img) return;
           if (tit === '1' && !num) {
-            _this.formValidate.image = img[0].sattDir;
-            _this.OneattrValue[0].image = img[0].sattDir;
+            _this.setCurrentCover(img[0].sattDir);
           }
           if (tit === '2' && !num) {
-            if (img.length > 10) return this.$message.warning('最多选择10张图片！');
-            if (img.length + _this.formValidate.sliderImages.length > 10)
-              return this.$message.warning('最多选择10张图片！');
+            _this.ensureSliderLang();
+            const list = _this.isProductDefaultLang ? _this.formValidate.sliderImages : _this.formValidate.sliderImagesJson[_this.activeLang];
+            if (img.length > 10) return this.$message.warning(this.$t('upload.maxSelectImages'));
+            if (img.length + list.length > 10) return this.$message.warning(this.$t('upload.maxSelectImages'));
             img.map((item) => {
-              _this.formValidate.sliderImages.push(item.sattDir);
+              list.push(item.sattDir);
+            });
+            _this.$nextTick(() => {
+              if (_this.$refs.formValidate) _this.$refs.formValidate.validateField('sliderImages');
             });
           }
           if (tit === '1' && num === 'dan') {
@@ -147,11 +331,18 @@ export default {
           return;
         }
         let newItems = [];
-        newItems = [...this.formValidate.sliderImages];
+        this.ensureSliderLang();
+        newItems = this.isProductDefaultLang
+          ? [...this.formValidate.sliderImages]
+          : [...(this.formValidate.sliderImagesJson[this.activeLang] || [])];
         const src = newItems.indexOf(this.dragging);
         const dst = newItems.indexOf(item);
         newItems.splice(dst, 0, ...newItems.splice(src, 1));
-        this.formValidate.sliderImages = newItems;
+        if (this.isProductDefaultLang) {
+          this.formValidate.sliderImages = newItems;
+        } else {
+          this.$set(this.formValidate.sliderImagesJson, this.activeLang, newItems);
+        }
       }
     },
   },

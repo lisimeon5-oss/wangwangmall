@@ -4,7 +4,7 @@ crmeb:
   domain: #配合swagger使用 # 待部署域名
   wechat-api-url:  #请求微信接口中专服务器
   asyncConfig: false #是否同步config表数据到redis
-  imagePath: /JAVA_PROJECT/MER/dev/admin/ # 服务器图片路径配置 斜杠结尾
+  imagePath: D:\workspacenew\morelanguage\code\mer_java\img\ # 服务器图片路径配置 斜杠结尾
   retailStoreBrokerageRatio: 30 #佣金返佣比例和上限
   activityStyleCachedTime: 10 #活动边框缓存周期 秒为单位，生产环境适当5-10分钟即可
   selectProductLimit: 100 # 商品选择 指定商品上线
@@ -56,13 +56,13 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/test_java_mer?characterEncoding=utf-8&useSSL=false&serverTimeZone=GMT+8
-    username: test_java_mer
-    password: 111111
+    url: "jdbc:mysql://127.0.0.1:3306/mer_mall_lang?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimeZone=GMT+8&sessionVariables=sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'"
+    username: root
+    password: 123456
   redis:
     host: 127.0.0.1 #地址
     port: 6379 #端口
-    password: 111111
+    password:
     timeout: 30000 # 连接超时时间（毫秒）
     database: 9  #默认数据库
     jedis:
@@ -104,7 +104,7 @@ mybatis-plus:
 aj:
   captcha:
     type: default       # 验证码类型
-    water-mark: CRMEB Java   # 水印
+    water-mark: ""   # 水印
     slip-offset: 5      # 校验滑动拼图允许误差偏移量(默认5像素)
     aes-status: true    # aes加密坐标开启或者禁用(true|false)
     interference-options: 2 # 滑动干扰项(0/1/2)

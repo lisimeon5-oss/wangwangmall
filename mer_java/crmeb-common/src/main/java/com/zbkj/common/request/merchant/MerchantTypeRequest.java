@@ -1,5 +1,6 @@
 package com.zbkj.common.request.merchant;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -34,13 +35,19 @@ public class MerchantTypeRequest implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "类型名称")
-    @NotEmpty(message = "类型名称不能为空")
     @Length(max = 50, message = "类型名称长度不能超过50个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言类型名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言类型名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "类型要求说明")
     @NotEmpty(message = "类型要求说明不能为空")
     @Length(max = 500, message = "类型要求说明长度不能超过500个字符")
     private String info;
+
+    @ApiModelProperty(value = "多语言类型要求说明(JSON)")
+    private String infoJson;
 
 }

@@ -1,8 +1,8 @@
 <template>
-	<view :class="mode=='pop'?'masks':''" v-show="showBox" @touchmove.stop.prevent="moveHandle">
+	<view :class="mode=='pop'?'masks':''" v-show="showBox" @touchmove.stop="moveHandle">
 		<view :class="mode=='pop'?'verifybox':''" style="max-width:90%">
 			<view class="verifybox-top" v-if="mode=='pop'">
-				请完成安全验证
+				{{$t('请完成安全验证')}}
 				<text class="verifybox-close" @click="clickShow = false">
 					<text class="iconfont icon-close"></text>
 				</text>
@@ -12,7 +12,7 @@
 				<!-- 滑动 -->
 				<view v-if="componentType=='VerifySlide'">
 					<VerifySlide @success="success" :captchaType="captchaType" :type="verifyType" :figure="figure"
-						:arith="arith" :mode="mode" :vSpace="vSpace" :explain="explain" :imgSize="imgSize"
+						:arith="arith" :mode="mode" :vSpace="vSpace" :explain="$t('向右滑动完成验证')" :imgSize="imgSize"
 						:blockSize="blockSize" :barSize="barSize" :defaultImg="defaultImg" ref="instance"></VerifySlide>
 				</view>
 				<!-- 点选 -->
@@ -93,34 +93,6 @@
 		},
 		mounted() {
 			this.uuid()
-			// #ifdef H5
-			document.addEventListener("touchmove", (e) => {
-				e.stopPropagation = true
-				//e.preventDefalut()
-			}, {
-				passive: false
-			});
-
-
-			var startX, startY;
-			document.addEventListener("touchstart", (e) => {
-
-				startX = e.targetTouches[0].pageX;
-				startY = e.targetTouches[0].pageY;
-			});
-
-			document.addEventListener("touchmove", (e) => {
-
-				var moveX = e.targetTouches[0].pageX;
-				var moveY = e.targetTouches[0].pageY;
-
-				if (Math.abs(moveX - startX) > Math.abs(moveY - startY)) {
-					e.preventDefault();
-				}
-			}, {
-				passive: false,
-			});
-			// #endif
 		},
 		methods: {
 			moveHandle() {},

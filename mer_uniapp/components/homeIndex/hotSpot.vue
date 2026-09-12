@@ -5,7 +5,7 @@
 			<!-- 单图/热区布局 -->
 			<template v-if="style === 0">
 				<view class="advertItem01 acea-row hotspot" v-for="(item, index) in picList" :key="index">
-					<image :src="item.image" mode="widthFix" v-if="item.image" :style="[contentStyle]"
+					<image :src="hotspotImg(item)" mode="widthFix" v-if="hotspotImg(item)" :style="[contentStyle]"
 						@click="dataConfig.checkoutConfig.hotspot.length?'':goDetail(item)"></image>
 					<view v-for="(item, index) in dataConfig.checkoutConfig.hotspot" :key="index" :style="{
 						top: `${Number(spotIndex*item.starY)}rpx`,
@@ -29,6 +29,7 @@
 	// +----------------------------------------------------------------------
 	// | Author: CRMEB Team <admin@crmeb.com>
 	// +----------------------------------------------------------------------
+	import { getLocalizedText } from '@/utils/localizedName';
 	export default {
 		name: 'hotSpot',
 		props: {
@@ -101,6 +102,10 @@
 			}
 		},
 		methods: {
+			hotspotImg(item) {
+				if (!item) return '';
+				return getLocalizedText(item.image, item.imageJson);
+			},
 			//替换安全域名
 			setDomain: function(url) {
 				url = url ? url.toString() : '';

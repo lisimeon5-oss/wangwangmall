@@ -8,7 +8,7 @@
 						<view class="acea-row row-middle mb20">
 							<view class='state line-heightOne'>{{refundInfo.refundStatus | refundStatusFilter}}</view>
 							<view v-show="refundInfo.refundStatus===3"><text
-									class="font-color refundPrice">{{refundInfo.refundPrice}}元</text></view>
+									class="font-color refundPrice">{{refundInfo.refundPrice}}{{$t('元')}}</text></view>
 						</view>
 						<view class="mb30 line2" v-if="refundInfo.refundStatus===1">{{refundInfo.refundReason}}</view>
 						<view v-else class="mb30">{{refundInfo.refundStatus | orderRefundTipsStatusFilter}}</view>
@@ -23,21 +23,21 @@
 					<view class="borderPad">
 						<view class="return_info">
 							<view class='item acea-row row-between line-heightOne'>
-								<view>退款件数：</view>
+								<view>{{$t('退款件数：')}}</view>
 								<view class='conter'>{{refundInfo.applyRefundNum}}</view>
 							</view>
 							<view class='item acea-row row-between line-heightOne'>
-								<view>退款金额：</view>
-								<view class='conter'>￥{{refundInfo.refundPrice}}</view>
+								<view>{{$t('退款金额：')}}</view>
+								<view class='conter'>฿{{refundInfo.refundPrice}}</view>
 							</view>
 							<view class='item acea-row row-between line-heightOne'>
-								<view>退款方式：</view>
-								<view class='conter'>原路返回</view>
+								<view>{{$t('退款方式：')}}</view>
+								<view class='conter'>{{$t('原路返回')}}</view>
 							</view>
 							<view class='item acea-row row-between line-heightOne'>
-								<view>退款原因：</view>
+								<view>{{$t('退款原因：')}}</view>
 								<view v-if="refundInfo.promoterType==='user'" class='conter'>{{refundInfo.refundReasonWap}}</view>
-								<view v-else class='conter'>商家直接退款</view>
+								<view v-else class='conter'>{{$t('商家直接退款')}}</view>
 							</view>
 						</view>
 					</view>
@@ -47,14 +47,14 @@
 			<view v-if="refundInfo.returnGoodsType ===2 && merAddress && refundInfo.refundStatus>0" class="borderPad">
 				<view class="borRadius14 wrapper return_info_pad">
 					<view class='item acea-row row-between mb30'>
-						<view>商家退回地址：</view>
+						<view>{{$t('商家退回地址：')}}</view>
 						<view class='conter acea-row row-middle row-right'>
 							<!-- #ifndef H5 -->
-							<text class='copy line-heightOne' @tap="copy(merAddress.name+','+merAddress.phone+','+merAddress.addressDetail)">复制</text>
+							<text class='copy line-heightOne' @tap="copy(merAddress.name+','+merAddress.phone+','+merAddress.addressDetail)">{{$t('复制')}}</text>
 							<!-- #endif -->
 							<!-- #ifdef H5 -->
 							<text class='copy copy-data line-heightOne'
-								:data-clipboard-text="merAddress.name+','+merAddress.phone+','+merAddress.addressDetail">复制</text>
+								:data-clipboard-text="merAddress.name+','+merAddress.phone+','+merAddress.addressDetail">{{$t('复制')}}</text>
 							<!-- #endif -->
 						</view>
 					</view>
@@ -69,14 +69,14 @@
 			<view v-if="refundInfo.returnGoodsType ===1 && refundInfo.refundStatus>0 &&refundInfo.receiver&&refundInfo.receiverPhone&&refundInfo.receiverAddressDetail" class="borderPad">
 				<view class="borRadius14 wrapper return_info_pad">
 					<view class='item acea-row row-between mb30'>
-						<view>商家退回地址：</view>
+						<view>{{$t('商家退回地址：')}}</view>
 						<view class='conter acea-row row-middle row-right'>
 							<!-- #ifndef H5 -->
-							<text class='copy line-heightOne' @tap="copy(refundInfo.receiver+','+refundInfo.receiverPhone+','+refundInfo.receiverAddressDetail)">复制</text>
+							<text class='copy line-heightOne' @tap="copy(refundInfo.receiver+','+refundInfo.receiverPhone+','+refundInfo.receiverAddressDetail)">{{$t('复制')}}</text>
 							<!-- #endif -->
 							<!-- #ifdef H5 -->
 							<text class='copy copy-data line-heightOne'
-								:data-clipboard-text="refundInfo.receiver+','+refundInfo.receiverPhone+','+refundInfo.receiverAddressDetail">复制</text>
+								:data-clipboard-text="refundInfo.receiver+','+refundInfo.receiverPhone+','+refundInfo.receiverAddressDetail">{{$t('复制')}}</text>
 							<!-- #endif -->
 						</view>
 					</view>
@@ -91,50 +91,50 @@
 			<view class="borderPad">
 				<view class='wrapper borRadius14 return_info_pad'>
 					<view class='item acea-row row-between '>
-						<view>订单单号：</view>
+						<view>{{$t('订单单号：')}}</view>
 						<view class='conter acea-row row-middle row-right'><text
 								class="text-overflow">{{refundInfo.orderNo}}</text>
 							<!-- #ifndef H5 -->
-							<text class='copy line-heightOne' @tap='copy(refundInfo.orderNo)'>复制</text>
+							<text class='copy line-heightOne' @tap='copy(refundInfo.orderNo)'>{{$t('复制')}}</text>
 							<!-- #endif -->
 							<!-- #ifdef H5 -->
 							<text class='copy copy-data line-heightOne'
-								:data-clipboard-text="refundInfo.orderNo">复制</text>
+								:data-clipboard-text="refundInfo.orderNo">{{$t('复制')}}</text>
 							<!-- #endif -->
 						</view>
 					</view>
 					<view class='item acea-row row-between'>
-						<view>售后单号：</view>
+						<view>{{$t('售后单号：')}}</view>
 						<view class='conter acea-row row-middle row-right'><text
 								class="text-overflow">{{refundInfo.refundOrderNo}}</text>
 							<!-- #ifndef H5 -->
-							<text class='copy line-heightOne' @tap='copy(refundInfo.refundOrderNo)'>复制</text>
+							<text class='copy line-heightOne' @tap='copy(refundInfo.refundOrderNo)'>{{$t('复制')}}</text>
 							<!-- #endif -->
 							<!-- #ifdef H5 -->
 							<text class='copy copy-data line-heightOne'
-								:data-clipboard-text="refundInfo.refundOrderNo">复制</text>
+								:data-clipboard-text="refundInfo.refundOrderNo">{{$t('复制')}}</text>
 							<!-- #endif -->
 						</view>
 					</view>
 					<view class='item acea-row row-between'>
-						<view>申请时间：</view>
+						<view>{{$t('申请时间：')}}</view>
 						<view class='conter'>{{(refundInfo.createTime || 0)}}</view>
 					</view>
 					<view class='item acea-row row-between'>
-						<view>售后类型：</view>
-						<view class='conter'>{{refundInfo.afterSalesType===1?'仅退款':'退货退款'}}</view>
+						<view>{{$t('售后类型：')}}</view>
+						<view class='conter'>{{refundInfo.afterSalesType===1? $t('仅退款') : $t('退货退款')}}</view>
 					</view>
 					<view class='item acea-row row-between'>
-						<view>退回方式：</view>
+						<view>{{$t('退回方式：')}}</view>
 						<view class='conter'>
-							{{refundInfo.returnGoodsType===1?'快递退回':refundInfo.returnGoodsType===2?'到店退货':'不退货'}}</view>
+							{{refundInfo.returnGoodsType===1?$t('快递退回'):refundInfo.returnGoodsType===2? $t('到店退货') : $t('不退货')}}</view>
 					</view>
 					<view class='item acea-row row-between' v-if="refundInfo.refundReasonWapExplain">
-						<view>备注说明：</view>
+						<view>{{$t('备注说明：')}}</view>
 						<view class='conter-refund text-left'>{{refundInfo.refundReasonWapExplain}}</view>
 					</view>
 					<view class='item acea-row row-between' v-if="refundInfo.refundReasonWapImg">
-						<view>售后凭证：</view>
+						<view>{{$t('售后凭证：')}}</view>
 						<view class='conter-refund text-left'>
 							<image class="wapImg" :src="item" v-for="item in refundInfo.refundReasonWapImg.split(',')"
 								:key='item.id'></image>
@@ -147,7 +147,7 @@
             <view v-if="refundInfo.returnGoodsType ===2 && refundInfo.refundStatus>0 && refundInfo.telephone" class="borderPad">
             	<view class="borRadius14 wrapper return_info_pad">
             		<view class='item acea-row row-between'>
-            			<view>联系电话：</view>
+            			<view>{{$t('联系电话：')}}</view>
             			<view class='conter'>{{refundInfo.telephone}}</view>
             		</view>
             	</view>
@@ -156,24 +156,24 @@
 			<view v-if="refundInfo.returnGoodsType ===1 && refundInfo.refundStatus>0 && refundInfo.expressName && refundInfo.trackingNumber" class="borderPad">
 				<view class="borRadius14 wrapper return_info_pad">
 					<view class='item acea-row row-between mb30'>
-						<view>物流公司：</view>
+						<view>{{$t('物流公司：')}}</view>
 						<view class='conter'>{{refundInfo.expressName}}</view>
 					</view>
 					<view class='item acea-row row-between mb30'>
-						<view>物流单号：</view>
+						<view>{{$t('物流单号：')}}</view>
 						<view class='conter acea-row row-middle row-right'>
 							<text class="text-overflow">{{refundInfo.trackingNumber}}</text>
 							<!-- #ifndef H5 -->
-							<text class='copy line-heightOne' @tap='copy(refundInfo.trackingNumber)'>复制</text>
+							<text class='copy line-heightOne' @tap='copy(refundInfo.trackingNumber)'>{{$t('复制')}}</text>
 							<!-- #endif -->
 							<!-- #ifdef H5 -->
 							<text class='copy copy-data line-heightOne'
-								:data-clipboard-text="refundInfo.trackingNumber">复制</text>
+								:data-clipboard-text="refundInfo.trackingNumber">{{$t('复制')}}</text>
 							<!-- #endif -->
 						</view>
 					</view>
 					<view class='item acea-row row-between'>
-						<view>联系电话：</view>
+						<view>{{$t('联系电话：')}}</view>
 						<view class='conter'>{{refundInfo.telephone}}</view>
 					</view>
 				</view>
@@ -184,9 +184,9 @@
 					<view></view>
 					<view
 						v-if="refundInfo.refundStatus === 0 || refundInfo.refundStatus === 4 || refundInfo.refundStatus === 5"
-						class="btn btn-999" @click="handleRevokeRefund(refundInfo.refundOrderNo)">撤销售后</view>
+						class="btn btn-999" @click="handleRevokeRefund(refundInfo.refundOrderNo)">{{$t('撤销售后')}}</view>
 					<view v-if="refundInfo.refundStatus === 4 && refundInfo.afterSalesType === 2" style="color: #fff;"
-						class="btn bg-color" @click="handleReturningRefund(refundInfo)">退回商品</view>
+						class="btn bg-color" @click="handleReturningRefund(refundInfo)">{{$t('退回商品')}}</view>
 				</view>
 			</view>
 		</view>
@@ -240,7 +240,7 @@
 		onLoad: function(options) {
 			options.type == undefined || options.type == null ? this.type = 'normal' : this.type = options.type;
 			if (!options.refundOrderNo) return this.$util.Tips({
-				title: '缺少参数'
+				title: this.$t('缺少参数')
 			}, {
 				tab: 3,
 				url: 1
@@ -270,7 +270,7 @@
 				const clipboard = new ClipboardJS(".copy-data");
 				clipboard.on("success", () => {
 					this.$util.Tips({
-						title: '复制成功'
+						title: this.$t('复制成功')
 					});
 				});
 			});
@@ -332,7 +332,7 @@
 			orderRefundInfo() {
 				let that = this;
 				uni.showLoading({
-					title: "正在加载中"
+					title: this.$t('正在加载中')
 				});
         orderRefundInfoApi(that.refundOrderNo).then(res => {
 					uni.hideLoading();

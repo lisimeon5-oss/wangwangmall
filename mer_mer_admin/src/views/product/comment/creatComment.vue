@@ -8,7 +8,7 @@
       class="demo-formValidate"
       v-loading="loading"
     >
-      <el-form-item label="商品：" prop="productId">
+      <el-form-item :label="$t('product.productLabel')" prop="productId">
         <div class="upLoadPicBox" @click="changeGood" v-hasPermi="['merchant:product:page:list']">
           <div v-if="formValidate.productId" class="pictrue"><img :src="image" /></div>
           <div v-else class="upLoad">
@@ -16,9 +16,9 @@
           </div>
         </div>
       </el-form-item>
-      <el-form-item label="商品属性：" class="labeltop" required>
+      <el-form-item :label="$t('product.productAttrLabel')" class="labeltop" required>
         <el-table ref="multipleTable" :data="ManyAttrValue" tooltip-effect="dark" style="width: 100%" size="mini">
-          <el-table-column label="选择" width="50">
+          <el-table-column :label="$t('product.select')" width="50">
             <template slot-scope="scope">
               <el-radio v-model="formValidate.attrValueId" :label="scope.row.id" @change.native="changeType(scope.row)"
                 >&nbsp;</el-radio
@@ -37,7 +37,7 @@
               </template>
             </el-table-column>
           </template>
-          <el-table-column label="图片" min-width="80">
+          <el-table-column :label="$t('product.image')" min-width="80">
             <template slot-scope="scope">
               <div class="upLoadPicBox">
                 <el-image class="tabPic" :src="scope.row.image" :preview-src-list="[scope.row.image]" />
@@ -51,16 +51,16 @@
           </el-table-column>
         </el-table>
       </el-form-item>
-      <el-form-item label="用户昵称：" prop="nickname">
+      <el-form-item :label="$t('product.userNicknameLabel')" prop="nickname">
         <el-input type="text" v-model.trim="formValidate.nickname"></el-input>
       </el-form-item>
-      <el-form-item label="评价文字：" prop="comment">
+      <el-form-item :label="$t('product.commentText')" prop="comment">
         <el-input type="textarea" v-model.trim="formValidate.comment"></el-input>
       </el-form-item>
-      <el-form-item label="评价星级：" prop="star" class="productScore">
+      <el-form-item :label="$t('product.ratingStarLabel')" prop="star" class="productScore">
         <el-rate v-model="formValidate.star" @change="handleChange"></el-rate>
       </el-form-item>
-      <el-form-item label="用户头像：" prop="avatar">
+      <el-form-item :label="$t('product.userAvatar')" prop="avatar">
         <div
           class="upLoadPicBox"
           @click="modalPicTap('1')"
@@ -72,7 +72,7 @@
           </div>
         </div>
       </el-form-item>
-      <el-form-item label="评价图片：">
+      <el-form-item :label="$t('product.commentImage')">
         <div class="acea-row">
           <div
             v-for="(item, index) in formValidate.pics"
@@ -102,14 +102,14 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer-inner">
-      <el-button size="mini" @click="resetForm('formValidate')">重置</el-button>
+      <el-button size="mini" @click="resetForm('formValidate')">{{ $t('product.reset') }}</el-button>
       <el-button
         v-hasPermi="['merchant:product:update']"
         size="mini"
         type="primary"
         @click="submitForm('formValidate')"
         :loading="loadingbtn"
-        >提交</el-button
+        >{{ $t('product.submit') }}</el-button
       >
     </div>
   </div>
@@ -128,6 +128,7 @@
 
 import { replyCreatApi, replyEditApi, replyInfoApi, productDetailApi } from '@/api/product';
 import { Debounce } from '@/utils/validate';
+import i18n from '@/i18n';
 const defaultObj = {
   avatar: '',
   comment: '',
@@ -146,20 +147,20 @@ let attrValue = [
     stock: 0,
   },
 ];
-const objTitle = {
+const objTitle = () => ({
   price: {
-    title: '售价（元）',
+    title: i18n.t('product.salePrice'),
   },
   cost: {
-    title: '成本价（元）',
+    title: i18n.t('product.costPrice'),
   },
   otPrice: {
-    title: '划线价（元）',
+    title: i18n.t('product.strikePrice'),
   },
   stock: {
-    title: '库存',
+    title: i18n.t('product.stock'),
   },
-};
+});
 export default {
   name: 'creatComment',
   props: {
@@ -171,7 +172,7 @@ export default {
   data() {
     var checkProductScore = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error('评价星级不能为空'));
+        return callback(new Error(this.$t('product.ratingStarRequired')));
       } else {
         callback();
       }
@@ -192,14 +193,14 @@ export default {
       },
 
       rules: {
-        avatar: [{ required: true, message: '请选择用户头像', trigger: 'change' }],
-        productId: [{ required: true, message: '请选择商品', trigger: 'change' }],
-        comment: [{ required: true, message: '请填写评价内容', trigger: 'blur' }],
-        nickname: [{ required: true, message: '请填写用户昵称', trigger: 'blur' }],
-        pics: [{ required: true, message: '请选择评价图片', trigger: 'change' }],
+        avatar: [{ required: true, message: this.$t('product.selectUserAvatar'), trigger: 'change' }],
+        productId: [{ required: true, message: this.$t('product.selectProduct'), trigger: 'change' }],
+        comment: [{ required: true, message: this.$t('product.commentContentRequired'), trigger: 'blur' }],
+        nickname: [{ required: true, message: this.$t('product.userNicknameRequired'), trigger: 'blur' }],
+        pics: [{ required: true, message: this.$t('product.selectCommentImage'), trigger: 'change' }],
         star: [{ required: true, validator: checkProductScore, trigger: 'change' }],
       },
-      formThead: Object.assign({}, objTitle),
+      formThead: Object.assign({}, objTitle()),
       manyTabTit: {},
       manyTabDate: {},
     };
@@ -287,11 +288,11 @@ export default {
     submitForm: Debounce(function (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.formValidate.attrValueId === 0) return this.$message.warning('请选择商品属性');
+          if (this.formValidate.attrValueId === 0) return this.$message.warning(this.$t('product.selectProductAttr'));
           this.loadingbtn = true;
           replyCreatApi(this.formValidate)
             .then(() => {
-              this.$message.success('新增成功');
+              this.$message.success(this.$t('product.addSuccess'));
               this.$emit('getList');
               this.loadingbtn = false;
             })

@@ -1,17 +1,17 @@
 <template>
   <div>
     <el-form ref="pram" :model="pram" :rules="rules" label-width="90px" @submit.native.prevent>
-      <el-form-item required label="管理员密码：" prop="password">
-        <el-input v-model.trim="pram.password" placeholder="管理员密码" clearable type="password" />
+      <el-form-item required :label="$t('systemSetting.adminPasswordLabel')" prop="password">
+        <el-input v-model.trim="pram.password" :placeholder="$t('systemSetting.adminPassword')" clearable type="password" />
       </el-form-item>
-      <el-form-item v-if="pram.password" required label="确认密码：" prop="confirmPassword">
-        <el-input v-model.trim="pram.confirmPassword" type="password" placeholder="确认密码" clearable />
+      <el-form-item v-if="pram.password" required :label="$t('systemSetting.confirmPasswordLabel')" prop="confirmPassword">
+        <el-input v-model.trim="pram.confirmPassword" type="password" :placeholder="$t('systemSetting.confirmPassword')" clearable />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer-inner">
-      <el-button @click="close">取消</el-button>
+      <el-button @click="close">{{ $t('el.messagebox.cancel') }}</el-button>
       <el-button type="primary" @click="handlerSubmit('pram')" v-hasPermi="['platform:admin:update:password']"
-        >确定</el-button
+        >{{ $t('el.messagebox.confirm') }}</el-button
       >
     </div>
   </div>
@@ -43,16 +43,16 @@ export default {
   data() {
     const confirmvalidatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'));
+        callback(new Error(this.$t('maintain.pleaseReenterPassword')));
       } else if (value !== this.pram.password) {
-        callback(new Error('两次输入密码不一致!'));
+        callback(new Error(this.$t('maintain.passwordMismatch')));
       } else {
         callback();
       }
     };
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入管理员密码'));
+        callback(new Error(this.$t('systemSetting.pleaseEnterAdminPassword')));
       } else {
         if (this.pram.confirmPassword !== '') {
           this.$refs.pram.validateField('confirmPassword');
@@ -71,10 +71,10 @@ export default {
       rules: {
         password: [
           { required: true, validator: validatePass, trigger: 'blur' },
-          { required: true, min: 6, max: 20, message: '长度6-20个字符' },
+          { required: true, min: 6, max: 20, message: this.$t('maintain.passwordLength6to20') },
         ],
         confirmPassword: [
-          { required: true, message: '确认密码密码', validator: confirmvalidatePass, trigger: ['blur', 'change'] },
+          { required: true, message: this.$t('systemSetting.confirmPasswordPassword'), validator: confirmvalidatePass, trigger: ['blur', 'change'] },
         ],
       },
     };
@@ -92,7 +92,7 @@ export default {
     handlerSave() {
       this.pram.id = this.adminId;
       systemAdminApi.editPassWordApi(this.pram).then((data) => {
-        this.$message.success('修改密码成功');
+        this.$message.success(this.$t('systemSetting.modifyPasswordSuccess'));
         this.$emit('hideEditPassWordDialog');
       });
     },

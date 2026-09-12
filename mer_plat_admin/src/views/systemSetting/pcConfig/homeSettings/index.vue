@@ -11,14 +11,14 @@
           v-hasPermi="['platform:pc:shopping:home:advertisement:edit']"
           type="primary"
           @click="handleAdvertisementSave"
-          >{{ loadingBtn ? '提交中 ...' : '保存' }}</el-button
+          >{{ loadingBtn ? $t('finance.submitting') : $t('common.save') }}</el-button
         >
       </template>
       <!-- 首页banner-->
       <template v-if="currentTab === '1'">
         <FromList :configObj="bannerListConfig"></FromList>
         <el-button v-hasPermi="['platform:pc:shopping:home:banner:save']" type="primary" @click="handleBannerSave">{{
-          loadingBtn ? '提交中 ...' : '保存'
+          loadingBtn ? $t('finance.submitting') : $t('common.save')
         }}</el-button>
       </template>
       <!-- 首页推荐-->
@@ -30,7 +30,7 @@
           size="small"
           class="mb20"
           @click="handleAdd"
-          >添加板块</el-button
+          >{{ $t('systemSetting.addSection') }}</el-button
         >
         <el-table
           v-loading="listLoading"
@@ -42,30 +42,32 @@
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
           <el-table-column prop="id" label="ID" min-width="60" />
-          <el-table-column label="板块名称" prop="name" min-width="150" />
-          <el-table-column prop="sort" label="排序" min-width="50" />
-          <el-table-column prop="status" label="是否显示" min-width="100" fixed="right">
+          <el-table-column :label="$t('systemSetting.sectionName')" min-width="150">
+            <template slot-scope="scope">{{ localizedSectionName(scope.row) }}</template>
+          </el-table-column>
+          <el-table-column prop="sort" :label="$t('product.sort')" min-width="50" />
+          <el-table-column prop="status" :label="$t('product.isShow')" min-width="100" fixed="right">
             <template slot-scope="scope">
               <el-switch
                 v-if="checkPermi(['platform:pc:shopping:home:recommended:switch'])"
                 v-model="scope.row.status"
                 :active-value="true"
                 :inactive-value="false"
-                active-text="显示"
-                inactive-text="隐藏"
+                :active-text="$t('common.show')"
+                :inactive-text="$t('menu.hide')"
                 @change="onchangeIsShow(scope.row)"
               />
-              <div v-else>{{ scope.row.status ? '显示' : '隐藏' }}</div>
+              <div v-else>{{ scope.row.status ? $t('common.show') : $t('menu.hide') }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="120" fixed="right">
+          <el-table-column :label="$t('common.operate')" width="120" fixed="right">
             <template slot-scope="scope">
-              <a v-hasPermi="['platform:pc:shopping:home:recommended:edit']" @click="handleEdit(scope.row)">编辑</a>
+              <a v-hasPermi="['platform:pc:shopping:home:recommended:edit']" @click="handleEdit(scope.row)">{{ $t('common.edit') }}</a>
               <el-divider direction="vertical"></el-divider>
               <a
                 v-hasPermi="['platform:pc:shopping:home:recommended:delete']"
                 @click="handleDelete(scope.row.id, scope.$index)"
-                >删除</a
+                >{{ $t('common.delete') }}</a
               >
             </template>
           </el-table-column>
@@ -75,14 +77,14 @@
       <template v-if="currentTab === '3'">
         <FromList :configObj="menuListConfig"></FromList>
         <el-button v-hasPermi="['platform:pc:shopping:home:navigation:save']" type="primary" @click="handleMenuSave">{{
-          loadingBtn ? '提交中 ...' : '保存'
+          loadingBtn ? $t('finance.submitting') : $t('common.save')
         }}</el-button>
       </template>
     </el-card>
 
     <!--添加首页推荐模板-->
     <el-drawer size="1000px" :visible.sync="drawer" direction="rtl" class="showHeader" :before-close="handleClose">
-      <div slot="title" class="demo-drawer_title">{{ dataForm.id ? '编辑推荐板块' : '添加推荐板块' }}</div>
+      <div slot="title" class="demo-drawer_title">{{ dataForm.id ? $t('systemSetting.editRecommendSection') : $t('systemSetting.addRecommendSection') }}</div>
       <div v-if="drawer" class="demo-drawer__content detailSection">
         <el-form
           ref="dataForm"
@@ -93,19 +95,33 @@
           label-width="120px"
           @submit.native.prevent
         >
-          <el-form-item label="板块名称：" prop="name">
-            <el-input
-              v-model="dataForm.name"
-              maxlength="6"
-              size="small"
-              class="from-ipt-width"
-              placeholder="请输入板块名称"
-            />
+          <el-form-item :label="$t('systemSetting.sectionNameLabel')" prop="name">
+            <div class="lang-name-switch from-ipt-width">
+              <el-radio-group v-model="activeLang" size="small">
+                <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                  {{ lang.label }}
+                </el-radio-button>
+              </el-radio-group>
+              <el-input
+                v-if="activeLang === defaultLangCode"
+                v-model.trim="dataForm.name"
+                maxlength="6"
+                size="small"
+                :placeholder="$t('systemSetting.pleaseEnterSectionName')"
+              />
+              <el-input
+                v-else
+                v-model.trim="nameJsonForm[activeLang]"
+                maxlength="6"
+                size="small"
+                :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+              />
+            </div>
           </el-form-item>
-          <el-form-item label="广告图链接：">
-            <el-input v-model="dataForm.linkUrl" size="small" class="from-ipt-width" placeholder="请输入广告图链接" />
+          <el-form-item :label="$t('systemSetting.adImageLinkLabel')">
+            <el-input v-model="dataForm.linkUrl" size="small" class="from-ipt-width" :placeholder="$t('systemSetting.pleaseEnterAdImageLink')" />
           </el-form-item>
-          <el-form-item label="广告图(471*350)：" prop="imageUrl">
+          <el-form-item :label="$t('systemSetting.adImageLabel')" prop="imageUrl">
             <div class="upLoadPicBox" @click="modalPicTap(false, 'dan')">
               <div v-if="dataForm.imageUrl" class="pictrue"><img :src="dataForm.imageUrl" /></div>
               <div v-else class="upLoad">
@@ -113,32 +129,32 @@
               </div>
             </div>
           </el-form-item>
-          <el-form-item label="排序：">
+          <el-form-item :label="$t('product.sortLabel')">
             <el-input-number
               v-model.trim="dataForm.sort"
               :min="0"
               :max="99"
               :step="1"
               step-strictly
-              label="排序"
+              :label="$t('product.sort')"
             ></el-input-number>
           </el-form-item>
-          <el-form-item label="是否开启：">
+          <el-form-item :label="$t('merchant.enableLabel')">
             <el-switch
               :width="56"
               v-model="dataForm.status"
               :active-value="true"
               :inactive-value="false"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
             />
           </el-form-item>
-          <el-form-item label="选择商品：" prop="playType">
+          <el-form-item :label="$t('systemSetting.selectProductLabel')" prop="playType">
             <el-radio-group v-model="dataForm.playType" @input="handlePlayTypeChange">
-              <el-radio label="product">指定商品参与</el-radio>
-              <el-radio label="brand">指定品牌参与</el-radio>
-              <el-radio label="category">指定分类参与</el-radio>
-              <el-radio label="merchant">指定商户参与</el-radio>
+              <el-radio label="product">{{ $t('product.specifiedProductParticipation') }}</el-radio>
+              <el-radio label="brand">{{ $t('product.specifiedBrandParticipation') }}</el-radio>
+              <el-radio label="category">{{ $t('product.specifiedCategoryParticipation') }}</el-radio>
+              <el-radio label="merchant">{{ $t('product.specifiedMerchantParticipation') }}</el-radio>
             </el-radio-group>
             <product-association-form
               :productAssociationType="dataForm.playType"
@@ -161,7 +177,7 @@
                       handleRecommendedSave('dataForm');
                     }
                   "
-                  >{{ loadingBtn ? '提交中 ...' : '保存' }}</el-button
+                  >{{ loadingBtn ? $t('finance.submitting') : $t('common.save') }}</el-button
                 >
               </div>
             </div>
@@ -190,9 +206,20 @@ import {
 import { mapGetters } from 'vuex';
 import { checkPermi } from '@/utils/permission';
 import { advertisementDefault, bannerDefault, menuDefault } from '@/views/systemSetting/pcConfig/defaultPcConfig';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import {
+  buildI18nNameJson,
+  getLocalizedName,
+  getUiLocale,
+  hasI18nNameContent,
+  pickFormName,
+  resolveFormActiveLang,
+} from '@/utils/localizedName';
 const fromData = {
   imageUrl: '',
   name: '',
+  nameJson: '',
   playType: 'product',
   sort: 0,
   status: false,
@@ -210,7 +237,7 @@ export default {
     // 自定义组件校验规则
     let validatePlayTypeAndPlayProducts = (rule, value, callback) => {
       if (value === '' || this.dataForm.playProducts.length === 0) {
-        callback(new Error('请选择参与类型和对应规则'));
+        callback(new Error(this.$t('product.pleaseSelectParticipationType')));
       } else {
         callback();
       }
@@ -218,20 +245,27 @@ export default {
     return {
       currentTab: '0',
       tabList: [
-        { value: '0', title: '首页广告' },
-        { value: '1', title: '首页banner' },
-        { value: '2', title: '首页推荐' },
-        { value: '3', title: '顶部菜单' },
+        { value: '0', title: this.$t('systemSetting.homeAd') },
+        { value: '1', title: this.$t('systemSetting.homeBanner') },
+        { value: '2', title: this.$t('systemSetting.homeRecommend') },
+        { value: '3', title: this.$t('systemSetting.topMenu') },
       ],
       drawer: false,
       fullscreenLoading: false,
       ruleValidate: {
-        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-        imageUrl: [{ required: true, message: '请选择图片', trigger: 'blur' }],
+        name: [{
+          required: true,
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(this.dataForm.name, this.nameJsonForm)) callback();
+            else callback(new Error(this.$t('systemSetting.pleaseEnterSectionName')));
+          },
+          trigger: 'blur',
+        }],
+        imageUrl: [{ required: true, message: this.$t('systemSetting.pleaseSelectImage'), trigger: 'blur' }],
         playType: [
           {
             required: true,
-            message: '请选择商品关联类型',
+            message: this.$t('systemSetting.pleaseSelectProductAssociationType'),
             trigger: 'blur',
             validator: validatePlayTypeAndPlayProducts,
           },
@@ -252,9 +286,14 @@ export default {
       //顶部菜单
       menuListConfig: Object.assign({}, menuDefault()),
       multipleMer: true,
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: {},
     };
   },
   mounted() {
+    this.getLanguageList();
     // if (this.id > 0) {
     //   this.getRecommendedInfo(this.id);
     // }
@@ -268,9 +307,62 @@ export default {
     isEdit() {
       return this.dataForm.id > 0 ? true : false;
     },
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
+    },
   },
   methods: {
     checkPermi,
+    localizedSectionName(row) {
+      return getLocalizedName(row, getUiLocale(this));
+    },
+    emptyNameJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    parseNameJson(nameJson) {
+      const form = this.emptyNameJsonForm();
+      if (!nameJson) return form;
+      try {
+        const obj = typeof nameJson === 'string' ? JSON.parse(nameJson) : nameJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // 解析失败时保持为空
+      }
+      return form;
+    },
+    buildNameJson() {
+      return buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, pickFormName(this));
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseNameJson(this.dataForm && this.dataForm.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseNameJson(this.dataForm && this.dataForm.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     //顶部菜单保存
     handleMenuSave() {
       this.menuListConfig.list.map((item, index) => {
@@ -279,7 +371,7 @@ export default {
       this.loadingBtn = true;
       pcHomeNavigationSaveApi(this.menuListConfig.list)
         .then((res) => {
-          this.$message.success('保存成功');
+          this.$message.success(this.$t('user.saveSuccess'));
           this.loadingBtn = false;
           this.getPcHomeNavigation();
         })
@@ -313,13 +405,15 @@ export default {
     //新增模板
     handleAdd() {
       this.dataForm = Object.assign({}, fromData);
+      this.nameJsonForm = this.emptyNameJsonForm();
+      this.activeLang = resolveFormActiveLang(this);
       this.drawer = true;
       this.loadingBtn = false;
     },
     //模板状态
     onchangeIsShow(row) {
       pcRecommendedSwitchApi(row.id).then((res) => {
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('product.operateSuccess'));
         this.getList();
       });
     },
@@ -327,6 +421,8 @@ export default {
     handleEdit(row) {
       this.dataForm.id = row.id;
       Object.assign(this.dataForm, row);
+      this.nameJsonForm = this.parseNameJson(this.dataForm.nameJson);
+      this.activeLang = resolveFormActiveLang(this);
 
       this.getRecommendedInfo(this.dataForm);
       this.drawer = true;
@@ -356,9 +452,9 @@ export default {
     },
     // 删除首页推荐
     handleDelete(id, idx) {
-      this.$modalSure('删除该模块吗？').then(() => {
+      this.$modalSure(this.$t('systemSetting.deleteModuleConfirm')).then(() => {
         pcRecommendedDeleteApi(id).then((res) => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           this.getList();
         });
       });
@@ -397,7 +493,8 @@ export default {
         }
         this.dataForm.productAssociationType = this.dataForm.playType;
       }
-      if (this.dataForm.style == '') return this.$message.error('请上传氛围图');
+      if (this.dataForm.style == '') return this.$message.error(this.$t('systemSetting.pleaseUploadAtmosphereImage'));
+      this.dataForm.nameJson = this.buildNameJson();
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -405,7 +502,7 @@ export default {
           this.isEdit
             ? pcRecommendedEditApi(this.dataForm)
                 .then((res) => {
-                  this.$message.success('编辑成功');
+                  this.$message.success(this.$t('product.editSuccess'));
                   this.handleClose();
                   this.getList();
                 })
@@ -414,7 +511,7 @@ export default {
                 })
             : pcRecommendedAddApi(this.dataForm)
                 .then((res) => {
-                  this.$message.success('新增成功');
+                  this.$message.success(this.$t('product.addSuccess'));
                   this.handleClose();
                   this.getList();
                 })
@@ -445,7 +542,7 @@ export default {
         status: this.advertisementlistConfig.list[0].status,
       })
         .then((res) => {
-          this.$message.success('保存成功');
+          this.$message.success(this.$t('user.saveSuccess'));
           this.loadingBtn = false;
           this.getAdvertisement();
         })
@@ -461,7 +558,7 @@ export default {
       this.loadingBtn = true;
       pcHomeBannerSaveApi({ bannerList: this.bannerListConfig.list })
         .then((res) => {
-          this.$message.success('保存成功');
+          this.$message.success(this.$t('user.saveSuccess'));
           this.loadingBtn = false;
           this.getPcHomeBanner();
         })
@@ -492,5 +589,12 @@ export default {
 }
 .selWidth {
   width: 500px;
+}
+.lang-name-switch {
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
 }
 </style>

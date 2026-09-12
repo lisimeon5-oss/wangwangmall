@@ -3,14 +3,14 @@
   <div class="txt_tab borderPadding" v-if="configData && configData.isShow === 1">
     <div class="radio_row-item">
       <el-row class="c_label">
-        <span class="labelwidth">{{ configData.title }}</span>
+        <span class="labelwidth">{{ diyUiText(configData.title) }}</span>
         <!-- <span class="labelml">{{ configData.list[configData.tabVal].val }}</span> -->
       </el-row>
       <el-row class="ml22">
         <el-radio-group v-model="configData.tabVal" type="button">
           <el-radio :label="key" v-for="(radio, key) in configData.list" :key="key">
             <span class="iconfont-diy iconfont" :class="radio.icon" v-if="radio.icon"></span>
-            <span v-else>{{ radio.val }}</span>
+            <span v-else>{{ diyUiText(radio.val) }}</span>
           </el-radio>
         </el-radio-group>
       </el-row>
@@ -28,6 +28,7 @@
 // +----------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
+import { diyUiText } from '@/utils/diyCname';
 export default {
   name: 'c_radio',
   props: {
@@ -58,7 +59,9 @@ export default {
       deep: true,
     },
   },
-  methods: {},
+  methods: {
+    diyUiText,
+  },
 };
 </script>
 

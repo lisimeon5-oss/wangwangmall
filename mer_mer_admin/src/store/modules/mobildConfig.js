@@ -7,15 +7,16 @@
 // +----------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
-/**
- * diy自定义组件
- * */
+import { getDiyDefaultConfig } from '@/utils/diyCname';
+
 export default {
   namespaced: true,
   state: {
     configName: '',
     pageTitle: '',
-    pageName: '' || '模板',
+    pageName: '',
+    pageNameJson: '',
+    pageTitleJson: '',
     pageShow: 1,
     pageColor: 0,
     pagePic: 0,
@@ -100,7 +101,7 @@ export default {
       if (data.oldIndex != undefined) {
         sortArr = JSON.parse(JSON.stringify(swapArray(newArr, data.newIndex, data.oldIndex)));
       } else {
-        newArr.splice(data.newIndex, 0, data.element.data().defaultConfig);
+        newArr.splice(data.newIndex, 0, getDiyDefaultConfig(data.element));
         sortArr = JSON.parse(JSON.stringify(swapArray(newArr, 0, 0)));
       }
       for (let i = 0; i < sortArr.length; i++) {
@@ -211,6 +212,12 @@ export default {
      */
     nameUpdata(state, data) {
       state.pageName = data;
+    },
+    nameJsonUpdata(state, data) {
+      state.pageNameJson = data || '';
+    },
+    titleJsonUpdata(state, data) {
+      state.pageTitleJson = data || '';
     },
     //
     showUpdata(state, data) {

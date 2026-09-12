@@ -11,7 +11,7 @@
 		</view>
 		<!-- #endif -->
 		<!-- #ifdef MP -->
-		<NavBar titleText="发货记录" :iconColor="iconColor" :textColor="iconColor" :isScrolling="isScrolling" showBack></NavBar>
+		<NavBar :titleText="$t('发货记录')" :iconColor="iconColor" :textColor="iconColor" :isScrolling="isScrolling" showBack></NavBar>
 		<!-- #endif -->
 		<view class="product-box">
 			<view class="acea-row productInfo-box">
@@ -30,26 +30,26 @@
 			</view>
 			<view class="info-box pos-rel">
 				<view class="item acea-row row-between">
-					<view>发货方式</view>
-					<view v-if="!secodeType">{{deliveryInfo.deliveryType=='merchant'?'商家送货':'无需发货'}}</view>
-					<view v-if="secodeType">虚拟发货</view>
+					<view>{{$t('发货方式')}}</view>
+					<view v-if="!secodeType">{{deliveryInfo.deliveryType=='merchant'? $t('商家送货') : $t('无需发货')}}</view>
+					<view v-if="secodeType">{{$t('虚拟发货')}}</view>
 				</view>
 				<view class="item acea-row row-between" v-if="deliveryInfo.deliveryType=='noNeed'">
-					<view>发货备注</view>
+					<view>{{$t('发货备注')}}</view>
 					<view class="text-width">{{deliveryInfo.deliveryMark}}</view>
 				</view>
 				<view class="item acea-row row-between" v-if="deliveryInfo.deliveryType=='merchant'">
-					<view>配送人员</view>
+					<view>{{$t('配送人员')}}</view>
 					<view>{{deliveryInfo.deliveryCarrier}}</view>
 				</view>
 				<view class="item acea-row row-between" v-if="deliveryInfo.deliveryType=='merchant'">
-					<view>手机号码</view>
+					<view>{{$t('手机号码')}}</view>
 					<view>{{deliveryInfo.carrierPhone}}</view>
 				</view>
 			</view>
 		</view>
 		<view class="footer">
-			<view class="update" @click="toUpdate">编辑</view>
+			<view class="update" @click="toUpdate">{{$t('编辑')}}</view>
 		</view>
 	</view>
 </template>
@@ -206,9 +206,9 @@
 			justify-content: flex-end;
 			padding: 0 24rpx;
 			background: #fff;
-			height: calc(100rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+			height: calc(100rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 			height: calc(100rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
-			padding-bottom: calc(0rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+			padding-bottom: calc(0rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 			padding-bottom: calc(0rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 			.update{
 				background: #2A7EFB;

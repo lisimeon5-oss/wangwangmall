@@ -8,7 +8,7 @@
 					<view v-else class="titleFont" :style="[...headerTitleConfig]">{{ titleConfig }}</view>
 				</view>
 				<view class="group-top-right" :style="[headerBtnColor]" @click="toIntergralList">
-					更多
+					{{$t('更多')}}
 					<text class="iconfont icon-xiangyou" :style="[headerBtnColor]"></text>
 				</view>
 			</view>
@@ -18,7 +18,7 @@
 				<view v-for="(item, index) in goodList" :key="index" @click="goGoodsDetail(item)">
 					<view class="group-bottom-left">
 						<view class="img acea-row row-center row-middle big-img relative" :style="[contentStyle]">
-							<view v-show="item.stock===0" class="sellOut">已售罄</view>
+							<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 							<easy-loadimage :image-src="item.image" width="322rpx" height="322rpx"
 								:radius="10"></easy-loadimage>
 						</view>
@@ -37,7 +37,7 @@
 				<view v-for="(item, index) in goodList" :key="index" class="three-box" @click="goGoodsDetail(item)">
 					<view class="group-bottom-left mb-20">
 						<view class="img acea-row row-center row-middle three-img relative" :style="[contentStyle]">
-							<view v-show="item.stock===0" class="sellOut">已售罄</view>
+							<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 							<easy-loadimage :image-src="item.image" width="208rpx" height="208rpx"
 								:radius="10"></easy-loadimage>
 						</view>
@@ -58,7 +58,7 @@
 						@click="goGoodsDetail(item)">
 						<view class="group-bottom-left mb-20">
 							<view class="img acea-row row-center row-middle four-img relative" :style="[contentStyle]">
-								<view v-show="item.stock===0" class="sellOut">已售罄</view>
+								<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 								<easy-loadimage :image-src="item.image" width="224rpx" height="224rpx"
 									:radius="10"></easy-loadimage>
 							</view>
@@ -87,6 +87,7 @@
 	import {
 		goProductDetail
 	} from "@/libs/order";
+	import { getLocalizedText } from '@/utils/localizedName';
 	
 	export default {
 		name: 'homeIntergral',
@@ -101,6 +102,14 @@
 			},
 		},
 		computed: {
+			logoUrl() {
+				const logo = (this.dataConfig && this.dataConfig.logoConfig) || {};
+				return getLocalizedText(logo.url, logo.urlJson);
+			},
+			titleConfig() {
+				const title = (this.dataConfig && this.dataConfig.titleConfig) || {};
+				return getLocalizedText(title.val, title.valJson);
+			},
 			//容器样式
 			//最外层盒子的样式
 			boxStyle() {
@@ -157,7 +166,7 @@
 			//拼团价格颜色
 			priceColor() {
 				return {
-					color: this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.priceColor.color[0].item:this.themeColor,
+					color: this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.priceColor.color[0].item:this.themeColor,
 				};
 			},
 			//图片圆角
@@ -197,10 +206,8 @@
 			return {
 				isShowSamll: true,
 				listStyle: 0,
-				logoUrl: null,
 				groupBtnShow: true,
 				selectStyle: '',
-				titleConfig: '',
 				selectBgImg: '',
 				bgImgUrl: '',
 				headerTitleStyle: 0,
@@ -263,17 +270,15 @@
 			},
 			setConfig() {
 				this.listStyle = this.dataConfig.itemStyle.tabVal;
-				this.logoUrl = this.dataConfig.logoConfig.url;
 				this.selectStyle = this.dataConfig.selectStyle.tabVal;
-				this.titleConfig = this.dataConfig.titleConfig.val;
 				this.selectBgImg = this.dataConfig.selectBgImg.tabVal;
 				this.bgImgUrl = this.dataConfig.bgImg.url;
 				this.headerTitleStyle = this.dataConfig.headerTitleStyle.tabVal;
 				this.hotPointsStyle.priceColor = {
-					color:  this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.priceColor.color[0].item:this.themeColor,
+					color:  this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.priceColor.color[0].item:this.themeColor,
 				}
 				this.hotPointsStyle1.priceColor = {
-					color:  this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.priceColor.color[0].item:this.themeColor,
+					color:  this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.priceColor.color[0].item:this.themeColor,
 				}
 			},
 		},

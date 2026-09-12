@@ -10,17 +10,17 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title mb15">一号通账户注册</h3>
+        <h3 class="title mb15">{{ $t('onePass.onePassAccountRegister') }}</h3>
       </div>
       <el-form-item prop="phone">
-        <el-input v-model="formInline.phone" placeholder="请输入您的手机号" prefix-icon="el-icon-phone-outline" />
+        <el-input v-model="formInline.phone" :placeholder="$t('onePass.pleaseEnterYourPhone')" prefix-icon="el-icon-phone-outline" />
       </el-form-item>
       <el-form-item prop="password">
         <el-input
           :key="passwordType"
           v-model="formInline.password"
           :type="passwordType"
-          placeholder="密码"
+          :placeholder="$t('login.password')"
           tabindex="2"
           auto-complete="off"
           prefix-icon="el-icon-lock"
@@ -30,13 +30,13 @@
         </span>
       </el-form-item>
       <el-form-item prop="domain">
-        <el-input v-model="formInline.domain" placeholder="请输入网址域名" prefix-icon="el-icon-position" />
+        <el-input v-model="formInline.domain" :placeholder="$t('onePass.pleaseEnterDomain')" prefix-icon="el-icon-position" />
       </el-form-item>
       <el-form-item prop="code" class="captcha">
         <div class="acea-row" style="flex-wrap: nowrap">
           <el-input
             v-model="formInline.code"
-            placeholder="验证码"
+            :placeholder="$t('onePass.verificationCode')"
             type="text"
             tabindex="1"
             autocomplete="off"
@@ -58,14 +58,14 @@
         style="width: 100%; margin-bottom: 20px"
         @click="handleSubmit('formInline')"
         v-hasPermi="['platform:one:pass:register']"
-        >注册</el-button
+        >{{ $t('onePass.register') }}</el-button
       >
       <el-button
         type="primary"
         style="width: 100%; margin-bottom: 20px"
         @click="changelogo"
         v-hasPermi="['platform:one:pass:login']"
-        >立即登录</el-button
+        >{{ $t('onePass.loginNow') }}</el-button
       >
     </el-form>
   </div>
@@ -90,7 +90,7 @@ export default {
       loading: false,
       passwordType: 'password',
       captchatImg: '',
-      cutNUm: '获取验证码',
+      cutNUm: this.$t('onePass.getVerificationCode'),
       canClick: true,
       formInline: {
         account: '',
@@ -100,10 +100,10 @@ export default {
         password: '',
       },
       ruleInline: {
-        password: [{ required: true, message: '请输入短信平台密码/token', trigger: 'blur' }],
-        domain: [{ required: true, message: '请输入网址域名', trigger: 'blur' }],
+        password: [{ required: true, message: this.$t('onePass.pleaseEnterSmsPasswordToken'), trigger: 'blur' }],
+        domain: [{ required: true, message: this.$t('onePass.pleaseEnterDomain'), trigger: 'blur' }],
         phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+        code: [{ required: true, message: this.$t('onePass.pleaseEnterVerificationCode'), trigger: 'blur' }],
       },
     };
   },
@@ -128,18 +128,18 @@ export default {
           phone: this.formInline.phone,
           types: 0,
         }).then(async (res) => {
-          this.$message.success('发送成功');
+          this.$message.success(this.$t('user.sendSuccess'));
         });
         const time = setInterval(() => {
           this.cutNUm--;
           if (this.cutNUm === 0) {
-            this.cutNUm = '获取验证码';
+            this.cutNUm = this.$t('onePass.getVerificationCode');
             this.canClick = true;
             clearInterval(time);
           }
         }, 1000);
       } else {
-        this.$message.warning('请填写手机号!');
+        this.$message.warning(this.$t('onePass.pleaseEnterPhoneExcl'));
       }
     },
     // 注册
@@ -150,7 +150,7 @@ export default {
           this.loading = true;
           registerApi(this.formInline)
             .then(async (res) => {
-              this.$message.success('注册成功');
+              this.$message.success(this.$t('onePass.registerSuccess'));
               setTimeout(() => {
                 this.changelogo();
               }, 1000);

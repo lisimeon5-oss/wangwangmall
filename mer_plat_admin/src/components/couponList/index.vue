@@ -3,18 +3,18 @@
     <div class="header clearfix">
       <div class="container">
         <el-form inline size="small" @submit.native.prevent>
-          <el-form-item label="优惠劵名称：">
+          <el-form-item :label="$t('marketing.couponNameLabel')">
             <el-input
               v-model="tableFrom.keywords"
               @keyup.enter.native="getList(1)"
               clearable
-              placeholder="请输入优惠券名称"
+              :placeholder="$t('marketing.pleaseEnterCouponName')"
               class="selWidth"
               size="small"
             />
           </el-form-item>
           <el-form-item label-width="0">
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -33,31 +33,33 @@
     >
       <el-table-column v-if="handle === 'wu'" type="selection" width="45" />
       <el-table-column prop="id" label="ID" min-width="50" />
-      <el-table-column prop="name" label="优惠券名称" min-width="120" :show-overflow-tooltip="true" />
-      <el-table-column prop="name" label="使用范围" min-width="90">
+      <el-table-column prop="name" :label="$t('user.couponNameCol')" min-width="120" :show-overflow-tooltip="true" />
+      <el-table-column prop="name" :label="$t('user.useScope')" min-width="90">
         <template slot-scope="scope">
           <span>{{ scope.row.category | couponCategory }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="money" label="面值（元）" min-width="90" />
-      <el-table-column prop="minPrice" label="使用门槛（元）" min-width="100">
+      <el-table-column prop="money" :label="$t('user.faceValue')" min-width="90" />
+      <el-table-column prop="minPrice" :label="$t('user.threshold')" min-width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.minPrice === 0 ? '不限制' : scope.row.minPrice }}</span>
+          <span>{{ scope.row.minPrice === 0 ? $t('marketing.noRestriction') : scope.row.minPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="有效期限" min-width="220" :show-overflow-tooltip="true">
+      <el-table-column :label="$t('marketing.couponValidPeriod')" min-width="220" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>{{
-            scope.row.isFixedTime ? scope.row.useStartTime + ' 一 ' + scope.row.useEndTime : scope.row.day + '天'
+            scope.row.isFixedTime
+              ? scope.row.useStartTime + ' - ' + scope.row.useEndTime
+              : scope.row.day + $t('marketing.daysUnit')
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="剩余数量" min-width="90">
+      <el-table-column :label="$t('user.remaining')" min-width="90">
         <template slot-scope="scope">
-          <span>{{ !scope.row.isLimited ? '不限量' : scope.row.lastTotal }}</span>
+          <span>{{ !scope.row.isLimited ? $t('user.unlimited') : scope.row.lastTotal }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="handle === 'send'" label="操作" width="120" fixed="right" align="center">
+      <el-table-column v-if="handle === 'send'" :label="$t('common.operate')" width="120" fixed="right" align="center">
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -65,7 +67,7 @@
             class="mr10"
             @click="sendGrant(scope.row.id)"
             v-hasPermi="['admin:coupon:user:receive']"
-            >发送</el-button
+            >{{ $t('user.send') }}</el-button
           >
         </template>
       </el-table-column>
@@ -82,7 +84,7 @@
       />
     </div>
     <div v-if="handle === 'wu'" slot="footer" class="dialog-footer">
-      <el-button size="small" type="primary" class="fr mb20" @click="ok">确定</el-button>
+      <el-button size="small" type="primary" class="fr mb20" @click="ok">{{ $t('common.confirm') }}</el-button>
     </div>
   </div>
 </template>

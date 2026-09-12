@@ -1,19 +1,19 @@
 <template>
 	<view :data-theme="theme">
 		<view class="header borderPad header-box">
-			<text class="title">话题</text>
+			<text class="title">{{$t('话题')}}</text>
 			<text class="iconfont icon-guanbi5" @click="close"></text>
 		</view>
 		<view class='search acea-row row-between-wrapper'>
 			<view class='input acea-row row-middle'>
 				<text class='iconfont icon-sousuo2'></text>
-				<input class="placeholder" type='text' :value='searchValue' :focus="focus" placeholder='点击搜索话题'
+				<input class="placeholder" type='text' :value='searchValue' :focus="focus" :placeholder="$t('点击搜索话题')"
 					placeholder-class='placeholder'  @input="setValue" @confirm="searchBut" maxlength="20"></input>
 			</view>
-			<view class='bnt' @tap='searchBut'>搜索</view>
+			<view class='bnt' @tap='searchBut'>{{$t('搜索')}}</view>
 		</view>
 		<view class="topic-recommend">
-			<view class="topic-title acea-row row-middle"><text class="dian mr10"></text>推荐话题</view>
+			<view class="topic-title acea-row row-middle"><text class="dian mr10"></text>{{$t('推荐话题')}}</view>
 			<view class="list acea-row">
 				<view v-for="item in topicRecommendList" :key="item.id" :class="item.isChoose ? 'active' : ''"
 					@click="onCheck(item)" class="item borderPad mr20 mb30"><text
@@ -22,7 +22,7 @@
 			</view>
 		</view>
 		<view class="topic-recommend">
-			<view class="topic-title mt10 acea-row row-middle"><text class="dian mr10"></text>全部话题</view>
+			<view class="topic-title mt10 acea-row row-middle"><text class="dian mr10"></text>{{$t('全部话题')}}</view>
 			<view class="list acea-row" style="border: none;">
 				<view v-for="item in topicList" :key="item.id" @click="onCheck(item)"
 					:class="item.isChoose ? 'active' : ''" class="item borderPad mr20 mb30">
@@ -31,7 +31,7 @@
 			</view>
 		</view>
 		<view class="foot_bar">
-			<button class="confirm_btn" @click="submit">确定({{topicSelectedList.length}}/5)</button>
+			<button class="confirm_btn" @click="submit">{{$t('确定')}}({{topicSelectedList.length}}/5)</button>
 		</view>
 	</view>
 </template>

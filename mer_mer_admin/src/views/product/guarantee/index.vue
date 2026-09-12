@@ -6,51 +6,71 @@
         size="small"
         v-hasPermi="['merchant:product:guarantee:group:add']"
         @click="handlerOpenEdit(0)"
-        >添加保障服务</el-button
+        >{{ $t('product.addGuarantee') }}</el-button
       >
       <el-table
         v-loading="listLoading"
         :data="tableData.data"
+        :key="'guarantee-group-' + uiLocale"
         style="width: 100%"
         size="small"
         class="mt20"
         :highlight-current-row="true"
       >
         <el-table-column prop="id" label="ID" min-width="50" />
-        <el-table-column prop="name" label="组合名称" />
-        <el-table-column label="创建时间">
+        <el-table-column :label="$t('product.groupName')">
+          <template slot-scope="scope">
+            {{ displayGroupName(scope.row) }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('product.createTime')">
           <template slot-scope="scope">
             <span>{{ scope.row.createTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right" width="150">
+        <el-table-column :label="$t('product.operate')" fixed="right" width="150">
           <template slot-scope="scope">
             <a
               @click="handlerOpenEdit(1, scope.row)"
               v-hasPermi="['merchant:product:guarantee:group:edit', 'merchant:product:guarantee:group:edit']"
-              >编辑</a
+              >{{ $t('product.edit') }}</a
             >
             <el-divider direction="vertical"></el-divider>
             <a @click="handlerOpenEdit(1, scope.row, 'info')" v-hasPermi="['merchant:product:guarantee:group:edit']"
-              >详情</a
+              >{{ $t('product.detail') }}</a
             >
             <el-divider direction="vertical"></el-divider>
-            <a @click="handlerOpenDel(scope.row)" v-hasPermi="['merchant:product:guarantee:group:delete']">删除</a>
+            <a @click="handlerOpenDel(scope.row)" v-hasPermi="['merchant:product:guarantee:group:delete']">{{ $t('product.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
     <el-dialog
-      :title="guaranteeForm.id === 0 ? '添加保障服务' : isDisabled ? '保障服务详情' : '编辑保障服务'"
+      :title="guaranteeForm.id === 0 ? $t('product.addGuarantee') : isDisabled ? $t('product.guaranteeDetail') : $t('product.editGuarantee')"
       :visible.sync="dialogVisible"
       width="1000px"
       :before-close="handleClose"
     >
-      <el-form :model="guaranteeForm" :rules="rules" ref="guaranteeForm" @submit.native.prevent class="demo-ruleForm">
-        <el-form-item label="组合名称" prop="name">
-          <el-input v-model.trim="guaranteeForm.name" :disabled="isDisabled"></el-input>
+      <el-form :model="guaranteeForm" :rules="nameRules" ref="guaranteeForm" @submit.native.prevent class="demo-ruleForm">
+        <el-form-item :label="$t('common.language')">
+          <el-radio-group v-model="activeLang" size="small" :disabled="isDisabled">
+            <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+              {{ lang.label }}
+            </el-radio-button>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="服务列表" prop="guaranteeList">
+        <el-form-item :label="$t('product.groupName')" prop="name">
+          <el-input
+            v-model="groupNameInput"
+            :disabled="isDisabled"
+            :placeholder="
+              isDefaultLang
+                ? $t('product.groupNameRequired')
+                : $t('product.inputNameInLang', { lang: activeLangLabel })
+            "
+          />
+        </el-form-item>
+        <el-form-item :label="$t('product.serviceList')" prop="guaranteeList">
           <el-table
             border
             ref="multipleTable"
@@ -62,25 +82,25 @@
           >
             <el-table-column type="selection" :selectable="selectable" width="55"></el-table-column>
             <el-table-column prop="id" label="ID" min-width="50" />
-            <el-table-column label="服务条款" min-width="150">
+            <el-table-column :label="$t('product.serviceTerms')" min-width="150">
               <template slot-scope="scope">
-                <div>{{ scope.row.name }}</div>
-                <div v-show="!scope.row.isShow" class="color-red">该数据已无效</div>
+                <div>{{ getLocalizedName(scope.row, uiLocale) || scope.row.name }}</div>
+                <div v-show="!scope.row.isShow" class="color-red">{{ $t('product.dataInvalid') }}</div>
               </template>
             </el-table-column>
-            <el-table-column prop="content" label="服务内容描述" min-width="200" />
+            <el-table-column prop="content" :label="$t('product.serviceContentDesc')" min-width="200" />
           </el-table>
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button @click="dialogVisible = false">{{ $t('product.cancel') }}</el-button>
         <el-button
           type="primary"
-          v-hasPermi="['merchant:product:guarantee:group:edit']"
+          v-hasPermi="['merchant:product:guarantee:group:edit', 'merchant:product:guarantee:group:add']"
           @click="submitForm('guaranteeForm')"
           :disabled="isDisabled"
         >
-          确定</el-button
+          {{ $t('product.confirm') }}</el-button
         >
       </div>
     </el-dialog>
@@ -99,11 +119,21 @@
 
 import * as store from '@/api/product';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import {
+  resolveFormActiveLang,
+  hasI18nNameContent,
+  buildI18nNameJson,
+  parseLangJsonMap,
+  getLocalizedName,
+  getUiLocale,
+} from '@/utils/localizedName';
 export default {
   data() {
     var validateGuarantee = (rule, value, callback) => {
       if (this.guaranteeChanged.length === 0) {
-        callback(new Error('请至少选择一个服务选项'));
+        callback(new Error(this.$t('product.selectAtLeastOneService')));
       } else {
         callback();
       }
@@ -117,18 +147,73 @@ export default {
         id: 0,
         gids: '',
       },
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: {},
       guaranteeList: [],
       guaranteeListNew: [],
       tableData: {
         data: [],
       },
-      rules: {
-        name: [{ required: true, message: '请填写组合名称', trigger: 'blur' }],
+      extraRules: {
         guaranteeList: [{ required: true, validator: validateGuarantee, trigger: 'change' }],
       },
       guaranteeChanged: [],
       isDisabled: false,
     };
+  },
+  computed: {
+    uiLocale() {
+      return (this.$i18n && this.$i18n.locale) || getUiLocale(this);
+    },
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    isDefaultLang() {
+      return this.activeLang === this.defaultLangCode;
+    },
+    groupNameInput: {
+      get() {
+        if (this.activeLang === this.defaultLangCode) return this.guaranteeForm.name || '';
+        return this.nameJsonForm[this.activeLang] || '';
+      },
+      set(val) {
+        const text = val == null ? '' : String(val);
+        if (this.activeLang === this.defaultLangCode) {
+          this.$set(this.guaranteeForm, 'name', text);
+        } else {
+          this.$set(this.nameJsonForm, this.activeLang, text);
+        }
+      },
+    },
+    nameRules() {
+      this.$i18n.locale;
+      return {
+        name: [
+          {
+            validator: (rule, value, callback) => {
+              if (hasI18nNameContent(this.guaranteeForm.name, this.nameJsonForm)) {
+                callback();
+              } else {
+                callback(new Error(this.$t('product.groupNameRequired')));
+              }
+            },
+            trigger: ['blur', 'change'],
+          },
+        ],
+        guaranteeList: this.extraRules.guaranteeList,
+      };
+    },
+  },
+  created() {
+    this.getLanguageList();
+  },
+  watch: {
+    '$i18n.locale'() {
+      this.activeLang = resolveFormActiveLang(this);
+    },
   },
   mounted() {
     if (checkPermi(['merchant:product:guarantee:group:list'])) this.getList();
@@ -136,6 +221,49 @@ export default {
   },
   methods: {
     checkPermi,
+    getLocalizedName,
+    displayGroupName(row) {
+      this.$i18n.locale;
+      return getLocalizedName(row, getUiLocale(this)) || '-';
+    },
+    emptyLangForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    parseLangForm(json) {
+      const form = this.emptyLangForm();
+      const obj = parseLangJsonMap(json);
+      Object.keys(form).forEach((key) => {
+        form[key] = obj[key] || '';
+      });
+      return form;
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseLangForm(this.guaranteeForm && this.guaranteeForm.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.emptyLangForm();
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     selectable(row, index) {
       if (this.isDisabled) return false;
       if (row.isShow) {
@@ -160,6 +288,8 @@ export default {
         id: 0,
         gids: '',
       };
+      this.nameJsonForm = this.emptyLangForm();
+      this.activeLang = resolveFormActiveLang(this);
       this.guaranteeChanged = [];
       this.$refs.multipleTable.clearSelection();
       this.$refs['guaranteeForm'].resetFields();
@@ -190,7 +320,8 @@ export default {
       this.guaranteeListNew = [...this.guaranteeList];
       this.isDisabled = !!info;
       if (isCreate === 1) {
-        this.guaranteeForm = Object.assign({}, editDate);
+        this.guaranteeForm = Object.assign({ name: '', id: 0, gids: '' }, editDate);
+        this.nameJsonForm = this.parseLangForm(editDate.nameJson);
         this.guaranteeListNew.map((item) => {
           editDate.guaranteeList.map((obj) => {
             if (obj.gid === item.id && obj.isShow) list.push(item);
@@ -205,9 +336,12 @@ export default {
         }
       } else {
         this.guaranteeForm.id = 0;
+        this.guaranteeForm.name = '';
+        this.nameJsonForm = this.emptyLangForm();
         list = this.guaranteeListNew.filter((item) => item.isShow);
         this.guaranteeListNew = list;
       }
+      this.activeLang = resolveFormActiveLang(this);
       this.dialogVisible = true;
     },
     close() {
@@ -222,23 +356,32 @@ export default {
           this.guaranteeChanged.map((item) => {
             ids.push(item.id);
           });
-          this.$delete(this.guaranteeForm, 'guaranteeList');
-          this.$delete(this.guaranteeForm, 'createTime');
-          this.guaranteeForm.gids = ids.toString();
-          this.guaranteeForm.id === 0
+          const nameJsonStr = buildI18nNameJson(
+            this.langOptions,
+            this.nameJsonForm,
+            this.defaultLangCode,
+            this.guaranteeForm.name,
+          );
+          const payload = {
+            id: this.guaranteeForm.id || 0,
+            name: this.guaranteeForm.name || '',
+            nameJson: nameJsonStr ? JSON.parse(nameJsonStr) : {},
+            gids: ids.toString(),
+          };
+          payload.id === 0
             ? store
-                .guaranteeAddApi(this.guaranteeForm)
+                .guaranteeAddApi(payload)
                 .then((res) => {
-                  this.$message.success('操作成功');
+                  this.$message.success(this.$t('product.operateSuccess'));
                   this.close();
                 })
                 .catch(() => {
                   this.loading = false;
                 })
             : store
-                .guaranteeUpdateApi(this.guaranteeForm)
+                .guaranteeUpdateApi(payload)
                 .then((res) => {
-                  this.$message.success('操作成功');
+                  this.$message.success(this.$t('product.operateSuccess'));
                   this.close();
                 })
                 .catch(() => {
@@ -251,9 +394,9 @@ export default {
       });
     },
     handlerOpenDel(rowData) {
-      this.$modalSure('删除当前保障服务吗').then(() => {
+      this.$modalSure(this.$t('product.deleteGuaranteeConfirm')).then(() => {
         store.guaranteeDeleteApi(rowData.id).then((data) => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           this.getList();
         });
       });

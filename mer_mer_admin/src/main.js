@@ -9,6 +9,7 @@
 // +----------------------------------------------------------------------
 
 import Vue from 'vue';
+import { translateText } from '@/utils/i18nText';
 import '@babel/polyfill';
 import '@/theme/index.scss';
 import '@/styles/index.scss'; // global css
@@ -20,8 +21,14 @@ import '@/theme/element-variables.scss';
 import 'vue-ydui/dist/ydui.base.css';
 import Cookies from 'js-cookie';
 import Debounce from './libs/debounce.js'; //防抖自定义指令
+import i18n from './i18n'; // 多语言
+Vue.prototype.translateText = translateText;
 Vue.use(Element, {
   size: Cookies.get('size') || 'small', // set element-ui default size
+  i18n: (key, value) => {
+    const translated = i18n.t(key, value);
+    return translated !== key ? translated : null;
+  },
 });
 import VueAwesomeSwiper from 'vue-awesome-swiper';
 import 'swiper/dist/css/swiper.css';
@@ -189,5 +196,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: (h) => h(App),
 });

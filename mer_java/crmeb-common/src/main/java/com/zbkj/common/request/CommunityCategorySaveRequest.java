@@ -5,11 +5,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -32,10 +32,13 @@ public class CommunityCategorySaveRequest implements Serializable {
     @ApiModelProperty("分类ID，编辑时必填")
     private Integer id;
 
-    @ApiModelProperty(value = "分类名称", required = true)
-    @NotBlank(message = "分类名称不能为空")
+    @ApiModelProperty(value = "分类名称")
     @Length(max = 8, message = "分类名称最多为8个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言分类名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言分类名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "是否显示：1-显示，0-不显示", required = true)
     @NotNull(message = "显示状态不能为空")

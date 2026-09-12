@@ -17,16 +17,16 @@
           </div>
           <div class="bnt acea-row row-center-wrapper" @click="visible = true">
             <span class="iconfont iconjia"></span>
-            批量添加选项
+            {{ $t('pagediy.batchAddOptions') }}
           </div>
           <div class="batchCount" v-if="visible">
             <div class="batchItem on">
-              <div class="title">批量添加选项</div>
-              <div class="tips">可按回车键添加多个选项</div>
+              <div class="title">{{ $t('pagediy.batchAddOptions') }}</div>
+              <div class="tips">{{ $t('pagediy.enterToAddOptions') }}</div>
               <el-input v-model="batchWord" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }" />
               <div class="batchBnt acea-row row-right">
-                <el-button @click.stop="cancel(1)" size="small">取消</el-button>
-                <el-button type="primary" size="small" class="ml10" @click.stop="cancel(2)">确定</el-button>
+                <el-button @click.stop="cancel(1)" size="small">{{ $t('el.messagebox.cancel') }}</el-button>
+                <el-button type="primary" size="small" class="ml10" @click.stop="cancel(2)">{{ $t('el.messagebox.confirm') }}</el-button>
               </div>
             </div>
           </div>

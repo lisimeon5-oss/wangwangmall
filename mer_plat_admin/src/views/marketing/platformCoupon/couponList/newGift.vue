@@ -15,58 +15,58 @@
               @submit.native.prevent
             >
               <div v-if="currentTab == 1 && checkPermi(['platform:marketing:activity:new:people:present:config'])">
-                <h2 class="form_label">规则设置</h2>
-                <el-form-item label="活动状态:">
+                <h2 class="form_label">{{ $t('marketing.ruleSettings') }}</h2>
+                <el-form-item :label="$t('marketing.activityStatusColon')">
                   <el-switch
                     :width="56"
                     v-model="formValidate.newPeopleSwitch"
-                    active-text="开启"
-                    inactive-text="关闭"
+                    :active-text="$t('common.open')"
+                    :inactive-text="$t('common.close')"
                   />
                   <p class="desc mt10">
-                    活动开启商城新注册用户可获得下方设置的优惠券福利，活动关闭之后新注册的用户不会赠送新人福利
+                    {{ $t('marketing.newUserActivityTip') }}
                   </p>
                 </el-form-item>
-                <el-form-item label="活动对象:">
-                  <span>开启活动期间所有注册商城的用户</span>
+                <el-form-item :label="$t('marketing.activityTargetColon')">
+                  <span>{{ $t('marketing.newUserActivityTarget') }}</span>
                 </el-form-item>
-                <el-form-item label="优惠券:">
+                <el-form-item :label="$t('marketing.couponColon')">
                   <div class="grid_box mb10" v-if="couponList.length">
                     <el-table :data="couponList" style="width: 310px" size="small">
-                      <el-table-column prop="id" label="优惠券ID" min-width="80" />
-                      <el-table-column prop="name" label="优惠券名称" min-width="200" :show-overflow-tooltip="true" />
-                      <el-table-column prop="money" label="优惠券面值 ( ¥ )" min-width="90" />
-                      <el-table-column prop="minPrice" label="优惠券门槛" min-width="120">
+                      <el-table-column prop="id" :label="$t('marketing.couponId')" min-width="80" />
+                      <el-table-column prop="name" :label="$t('user.couponNameCol')" min-width="200" :show-overflow-tooltip="true" />
+                      <el-table-column prop="money" :label="$t('marketing.couponValueYuan')" min-width="90" />
+                      <el-table-column prop="minPrice" :label="$t('marketing.couponThreshold')" min-width="120">
                         <template slot-scope="scope">
-                          <span class="_type">满{{ scope.row.minPrice }}元可用</span>
+                          <span class="_type">{{ $t('marketing.minSpendAvailable', { price: scope.row.minPrice, yuan: $t('dashboard.yuan') }) }}</span>
                         </template>
                       </el-table-column>
-                      <el-table-column prop="startTime" label="使用期限" min-width="150">
+                      <el-table-column prop="startTime" :label="$t('marketing.usePeriod')" min-width="150">
                         <template slot-scope="scope">
-                          <div v-if="scope.row.isDel">优惠券已删除</div>
+                          <div v-if="scope.row.isDel">{{ $t('marketing.couponDeleted') }}</div>
                           <div v-else>
                             <div v-if="scope.row.isFixedTime">
-                              {{ getTime(scope.row.useStartTime) + ' ~ ' + getTime(scope.row.useEndTime) + '可用' }}
+                              {{ getTime(scope.row.useStartTime) + ' ~ ' + getTime(scope.row.useEndTime) + $t('onePass.available') }}
                             </div>
-                            <div v-else>{{ '领取后' + scope.row.day + '天内可用' }}</div>
+                            <div v-else>{{ $t('marketing.afterReceiveValid', { day: scope.row.day }) }}</div>
                           </div>
                         </template>
                       </el-table-column>
-                      <el-table-column prop="stock" label="剩余张数" min-width="90">
+                      <el-table-column prop="stock" :label="$t('marketing.remainingCount')" min-width="90">
                         <template slot-scope="scope">
                           <span class="_sales">{{
-                            !scope.row.isLimited ? '不限量' : '剩余' + scope.row.lastTotal + '张'
+                            !scope.row.isLimited ? $t('user.unlimited') : $t('marketing.remaining') + scope.row.lastTotal + $t('marketing.pcs')
                           }}</span>
                         </template>
                       </el-table-column>
-                      <el-table-column label="操作" width="100" fixed="right">
+                      <el-table-column :label="$t('common.operate')" width="100" fixed="right">
                         <template slot-scope="scope">
-                          <a @click="delItem(scope.row.id, scope.$index)">删除</a>
+                          <a @click="delItem(scope.row.id, scope.$index)">{{ $t('common.delete') }}</a>
                         </template>
                       </el-table-column>
                     </el-table>
                   </div>
-                  <a @click="addCoupon">+ 添加优惠券</a>
+                  <a @click="addCoupon">{{ $t('marketing.addCoupon') }}</a>
                 </el-form-item>
                 <el-form-item>
                   <el-button
@@ -75,61 +75,61 @@
                     class="mr10"
                     v-hasPermi="['platform:marketing:activity:new:people:present:edit']"
                     v-debounceClick="confirmEdit"
-                    >保存
+                    >{{ $t('common.save') }}
                   </el-button>
                 </el-form-item>
               </div>
               <div v-if="currentTab == 2 && checkPermi(['platform:marketing:activity:birthday:present:config'])">
-                <h2 class="form_label">规则设置</h2>
-                <el-form-item label="活动状态:">
+                <h2 class="form_label">{{ $t('marketing.ruleSettings') }}</h2>
+                <el-form-item :label="$t('marketing.activityStatusColon')">
                   <el-switch
                     :width="56"
                     v-model="formValidate.birthdaySwitch"
-                    active-text="开启"
-                    inactive-text="关闭"
+                    :active-text="$t('common.open')"
+                    :inactive-text="$t('common.close')"
                   />
-                  <p class="desc mt10">活动开启商城用户可获得下方设置的生日福利，活动关闭之后用户生日不会赠送福利。</p>
+                  <p class="desc mt10">{{ $t('marketing.birthdayActivityTip') }}</p>
                 </el-form-item>
-                <el-form-item label="活动对象:">
-                  <span>商城已经设置生日的用户</span>
+                <el-form-item :label="$t('marketing.activityTargetColon')">
+                  <span>{{ $t('marketing.birthdayActivityTarget') }}</span>
                 </el-form-item>
-                <el-form-item label="优惠券:">
+                <el-form-item :label="$t('marketing.couponColon')">
                   <div class="grid_box mb10" v-if="couponList.length">
                     <el-table :data="couponList" style="width: 310px" size="small">
-                      <el-table-column prop="id" label="优惠券ID" min-width="80" />
-                      <el-table-column prop="name" label="优惠券名称" min-width="200" :show-overflow-tooltip="true" />
-                      <el-table-column prop="money" label="优惠券面值 ( ¥ )" min-width="90" />
-                      <el-table-column prop="minPrice" label="优惠券门槛" min-width="120">
+                      <el-table-column prop="id" :label="$t('marketing.couponId')" min-width="80" />
+                      <el-table-column prop="name" :label="$t('user.couponNameCol')" min-width="200" :show-overflow-tooltip="true" />
+                      <el-table-column prop="money" :label="$t('marketing.couponValueYuan')" min-width="90" />
+                      <el-table-column prop="minPrice" :label="$t('marketing.couponThreshold')" min-width="120">
                         <template slot-scope="scope">
-                          <span class="_type">满{{ scope.row.minPrice }}元可用</span>
+                          <span class="_type">{{ $t('marketing.minSpendAvailable', { price: scope.row.minPrice, yuan: $t('dashboard.yuan') }) }}</span>
                         </template>
                       </el-table-column>
-                      <el-table-column prop="startTime" label="使用期限" min-width="150">
+                      <el-table-column prop="startTime" :label="$t('marketing.usePeriod')" min-width="150">
                         <template slot-scope="scope">
-                          <div v-if="scope.row.isDel">优惠券已删除</div>
+                          <div v-if="scope.row.isDel">{{ $t('marketing.couponDeleted') }}</div>
                           <div v-else>
                             <div v-if="scope.row.isFixedTime">
-                              {{ getTime(scope.row.useStartTime) + ' ~ ' + getTime(scope.row.useEndTime) + '可用' }}
+                              {{ getTime(scope.row.useStartTime) + ' ~ ' + getTime(scope.row.useEndTime) + $t('onePass.available') }}
                             </div>
-                            <div v-else>{{ '领取后' + scope.row.day + '天内可用' }}</div>
+                            <div v-else>{{ $t('marketing.afterReceiveValid', { day: scope.row.day }) }}</div>
                           </div>
                         </template>
                       </el-table-column>
-                      <el-table-column prop="stock" label="剩余张数" min-width="90">
+                      <el-table-column prop="stock" :label="$t('marketing.remainingCount')" min-width="90">
                         <template slot-scope="scope">
                           <span class="_sales">{{
-                            !scope.row.isLimited ? '不限量' : '剩余' + scope.row.lastTotal + '张'
+                            !scope.row.isLimited ? $t('user.unlimited') : $t('marketing.remaining') + scope.row.lastTotal + $t('marketing.pcs')
                           }}</span>
                         </template>
                       </el-table-column>
-                      <el-table-column label="操作" width="100" fixed="right">
+                      <el-table-column :label="$t('common.operate')" width="100" fixed="right">
                         <template slot-scope="scope">
-                          <a @click="delItem(scope.row.id, scope.$index)">删除</a>
+                          <a @click="delItem(scope.row.id, scope.$index)">{{ $t('common.delete') }}</a>
                         </template>
                       </el-table-column>
                     </el-table>
                   </div>
-                  <a @click="addCoupon">+ 添加优惠券</a>
+                  <a @click="addCoupon">{{ $t('marketing.addCoupon') }}</a>
                 </el-form-item>
                 <el-form-item>
                   <el-button
@@ -138,7 +138,7 @@
                     class="mr10"
                     v-hasPermi="['platform:marketing:activity:birthday:present:edit']"
                     v-debounceClick="confirmEdit"
-                    >保存
+                    >{{ $t('common.save') }}
                   </el-button>
                 </el-form-item>
               </div>
@@ -166,10 +166,6 @@ export default {
   data() {
     return {
       currentTab: '1',
-      tabList: [
-        { value: '1', title: '新人礼' },
-        { value: '2', title: '生日有礼' },
-      ],
       formValidate: {
         newPeopleSwitch: false,
         birthdaySwitch: false,
@@ -192,14 +188,12 @@ export default {
       proviewImg: require('@/assets/imgs/new_gift_modal.png'),
     };
   },
-  filters: {
-    receiveType(val) {
-      const typeObj = {
-        1: '用户领取',
-        2: '商品赠送券',
-        3: '平台活动使用',
-      };
-      return typeObj[val];
+  computed: {
+    tabList() {
+      return [
+        { value: '1', title: this.$t('marketing.newcomerGift') },
+        { value: '2', title: this.$t('marketing.birthdayGift') },
+      ];
     },
   },
   watch: {
@@ -297,7 +291,7 @@ export default {
     // 保存
     confirmEdit() {
       if (this.couponList.filter((item) => item.isDel).length > 0) {
-        this.$confirm('当前活动中存在已删除优惠券，提交后会自动删除。', '提示').then((result) => {
+        this.$confirm(this.$t('marketing.deletedCouponTip'), this.$t('el.messagebox.title')).then((result) => {
           this.formValidate.couponIdList = [];
           this.couponList.forEach((item) => {
             if (!item.isDel) {
@@ -314,12 +308,12 @@ export default {
     handlerEdit() {
       if (this.currentTab === '1') {
         newPeoplePresentEditApi(this.formValidate).then((res) => {
-          this.$message.success('保存成功');
+          this.$message.success(this.$t('user.saveSuccess'));
           this.getConfig();
         });
       } else {
         birthdayPresentEditApi(this.formValidate).then((res) => {
-          this.$message.success('保存成功');
+          this.$message.success(this.$t('user.saveSuccess'));
           this.getConfig();
         });
       }

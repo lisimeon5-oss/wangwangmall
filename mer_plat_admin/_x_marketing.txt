@@ -1,0 +1,672 @@
+REUSE product.loggedOff | (已注销)
+REUSE common.save | 保存
+REUSE user.saveSuccess | 保存成功
+REUSE common.remark | 备注
+REUSE user.backgroundImage | 背景图：
+REUSE common.edit | 编辑
+REUSE product.editSuccess | 编辑成功
+REUSE product.editProduct | 编辑商品
+REUSE content.title | 标题
+REUSE user.unlimited | 不限量
+REUSE common.operate | 操作
+REUSE product.operateSuccess | 操作成功
+REUSE common.query | 查询
+REUSE product.createTime | 创建时间
+REUSE order.createTimeColon | 创建时间：
+REUSE dashboard.awaitAudit | 待审核
+REUSE product.singleSpec | 单规格
+REUSE videoChannel.unitLabel | 单位：
+REUSE common.electronicWaybill | 电子面单打印
+REUSE order.orderRemark | 订单备注
+REUSE order.orderNo | 订单编号
+REUSE order.orderNoLabel | 订单编号：
+REUSE common.orderNo | 订单号
+REUSE order.orderInfo | 订单信息
+REUSE order.orderStatus | 订单状态
+REUSE product.multiSpec | 多规格
+REUSE community.coverLabel | 封面图：
+REUSE common.no | 否
+REUSE user.more | 更多
+REUSE common.close | 关闭
+REUSE product.basicSetting | 基础设置
+REUSE community.basicInfo | 基础信息
+REUSE product.endDate | 结束日期
+REUSE common.ongoing | 进行中
+REUSE product.banned | 禁播
+REUSE product.rejectReason | 拒绝原因
+REUSE product.cardKeyProduct | 卡密商品
+REUSE common.open | 开启
+REUSE product.startDate | 开始日期
+REUSE onePass.available | 可用
+REUSE product.stock | 库存
+REUSE marketing.crossStore | 跨店
+REUSE user.receiveMethod | 领取方式
+REUSE order.spike | 秒杀
+REUSE user.nickname | 昵称
+REUSE community.browserNotSupportVideo | 您的浏览器不支持 video 标签。
+REUSE product.sort | 排序
+REUSE product.sortLabel | 排序：
+REUSE user.batchSet | 批量设置
+REUSE order.groupBuy | 拼团
+REUSE order.groupBuying | 拼团中
+REUSE marketing.category | 品类
+REUSE product.brand | 品牌
+REUSE order.platformRemark | 平台备注
+REUSE product.platformPendingAudit | 平台待审核
+REUSE product.platformAuditFailed | 平台审核失败
+REUSE community.comment | 评论
+REUSE order.normal | 普通
+REUSE product.normalProduct | 普通商品
+REUSE systemSetting.pleaseUploadAtmosphereImage | 请上传氛围图
+REUSE videoChannel.pleaseEnterUnit | 请输入单位
+REUSE finance.pleaseEnterOrderNo | 请输入订单号
+REUSE systemSetting.pleaseEnterName | 请输入名称
+REUSE user.pleaseEnterSort | 请输入排序
+REUSE merchant.pleaseEnterMerchantName | 请输入商户名称
+REUSE user.pleaseEnterProductIntro | 请输入商品简介
+REUSE product.pleaseEnterProductName | 请输入商品名称
+REUSE user.pleaseEnterCouponName | 请输入优惠券名称
+REUSE product.pleaseEnterRejectReason | 请填写拒绝原因
+REUSE el.select.placeholder | 请选择
+REUSE videoChannel.pleaseSelectBrand | 请选择品牌
+REUSE merchant.pleaseSelectMerchantCategory | 请选择商户分类
+REUSE product.pleaseSelectCategory | 请选择商品分类
+REUSE product.pleaseSelectAuditStatus | 请选择审核状态
+REUSE systemSetting.pleaseSelectImage | 请选择图片
+REUSE videoChannel.cancelSpaced | 取 消
+REUSE el.messagebox.cancel | 取消
+REUSE el.table.clearFilter | 全部
+REUSE finance.confirmSpaced | 确 定
+REUSE el.messagebox.confirm | 确定
+REUSE common.delete | 删除
+REUSE product.deleteSuccess | 删除成功
+REUSE category.deleteCurrentDataConfirm | 删除当前数据?
+REUSE merchant.merchantCategory | 商户分类
+REUSE merchant.merchantCategoryLabel | 商户分类：
+REUSE product.merchantType | 商户类别
+REUSE product.merchantName | 商户名称
+REUSE product.merchantNameLabel | 商户名称：
+REUSE merchant.merchantSearchLabel | 商户搜索：
+REUSE order.merchantDelivery | 商家配送
+REUSE marketing.product | 商品
+REUSE product.productCategoryLabel | 商品分类：
+REUSE videoChannel.productKeywordLabel | 商品关键字：
+REUSE videoChannel.productSpecLabel | 商品规格：
+REUSE videoChannel.productIntroLabel | 商品简介：
+REUSE videoChannel.productCarouselLabel | 商品轮播图：
+REUSE product.productName | 商品名称
+REUSE videoChannel.productNameLabel | 商品名称：
+REUSE product.productPrice | 商品售价
+REUSE product.productSearchLabel | 商品搜索：
+REUSE product.productImage | 商品图
+REUSE videoChannel.productDetail | 商品详情
+REUSE videoChannel.productDetailLabel | 商品详情：
+REUSE product.productInfo | 商品信息
+REUSE user.productGiftCoupon | 商品赠送券
+REUSE finance.uploading | 上传中，请稍候...
+REUSE product.onShelf | 上架
+REUSE product.previousStep | 上一步
+REUSE finance.audit | 审核
+REUSE common.auditSuccess | 审核成功
+REUSE order.auditResult | 审核结果：
+REUSE product.auditRejected | 审核拒绝
+REUSE common.auditFailed | 审核失败
+REUSE community.auditFailReasonLabel | 审核失败原因：
+REUSE finance.auditPassed | 审核通过
+REUSE product.auditStatus | 审核状态
+REUSE finance.auditStatusLabel | 审核状态：
+REUSE product.timeSelectLabel | 时间选择：
+REUSE order.payAmount | 实付金额
+REUSE order.payPrice | 实际支付
+REUSE product.usageScope | 使用范围
+REUSE common.yes | 是
+REUSE community.isEnabled | 是否开启
+REUSE merchant.enableLabel | 是否开启：
+REUSE order.receiverAddress | 收货地址：
+REUSE order.receiverPhone | 收货电话：
+REUSE order.receiver | 收货人：
+REUSE user.phoneCol | 手机号
+REUSE user.salePricePlaceholder | 售价
+REUSE common.submit | 提交
+REUSE finance.submitting | 提交中 ...
+REUSE el.messagebox.title | 提示
+REUSE user.day | 天
+REUSE common.add | 添加
+REUSE user.addSuccess | 添加成功
+REUSE marketing.general | 通用
+REUSE user.avatar | 头像
+REUSE content.image | 图片
+REUSE product.wechatAuditSuccess | 微信审核成功
+REUSE product.wechatAuditFailed | 微信审核失败
+REUSE common.notStarted | 未开始
+REUSE finance.none | 无
+REUSE order.orderTime | 下单时间
+REUSE product.offShelf | 下架
+REUSE user.offShelfSuccess | 下架成功
+REUSE product.nextStep | 下一步
+REUSE common.show | 显示
+REUSE menu.showStatus | 显示状态：
+REUSE common.detail | 详情
+REUSE product.addSuccess | 新增成功
+REUSE category.updateSuccess | 修改成功
+REUSE user.chooseDate | 选择日期
+REUSE order.revoked | 已撤销
+REUSE common.succeeded | 已成功
+REUSE product.expiredOver | 已过期
+REUSE common.ended | 已结束
+REUSE common.rejected | 已拒绝
+REUSE common.cancelled | 已取消
+REUSE common.approved | 已通过
+REUSE product.abnormal | 异常
+REUSE menu.hide | 隐藏
+REUSE order.userPhone | 用户电话：
+REUSE product.userNickname | 用户昵称
+REUSE product.userSearchLabel | 用户搜索：
+REUSE order.userInfo | 用户信息
+REUSE order.userDeleted | 用户已删除
+REUSE user.couponNameCol | 优惠券名称
+REUSE dashboard.yuan | 元
+REUSE product.cloudProduct | 云盘商品
+REUSE product.paused | 暂停
+REUSE order.payType | 支付方式
+REUSE user.payTimeCol | 支付时间
+REUSE product.liveStreaming | 直播中
+REUSE product.specifiedCategoryParticipation | 指定分类参与
+REUSE product.specifiedBrandParticipation | 指定品牌参与
+REUSE product.specifiedMerchantParticipation | 指定商户参与
+REUSE product.specifiedProductParticipation | 指定商品参与
+REUSE el.table.resetFilter | 重置
+REUSE common.status | 状态
+REUSE product.customTime | 自定义时间
+NEW  | 	添加时间
+NEW  |  有效
+NEW  | , JSON.stringify({ 规格: 
+NEW  | 【快递配送】
+NEW  | 【商家送货】
+NEW  | 【无需配送】
+NEW  | // +---------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +---------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +---------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +---------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | // +----------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +----------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | `待发货(${orderChartType.notShipped || 0})`
+NEW  | `待审核(${hedaList[1].count})`
+NEW  | `待收货(${orderChartType.spike || 0})`
+NEW  | `待支付(${orderChartType.unPaid || 0})`
+NEW  | `交易完成(${orderChartType.complete || 0})`
+NEW  | `拼团中(${hedaList.ingNum || 0})`
+NEW  | `请选择${item.title}`
+NEW  | `全部(${orderChartType.all || 0})`
+NEW  | `已成功(${hedaList.successNum || 0})`
+NEW  | `已拒绝(${hedaList[0].count})`
+NEW  | `已取消(${orderChartType.cancel || 0})`
+NEW  | `已删除(${orderChartType.deleted || 0})`
+NEW  | `已失败(${hedaList.failNum || 0})`
+NEW  | `已收货(${orderChartType.receiving || 0})`
+NEW  | `已通过(${hedaList[2].count})`
+NEW  | + 添加优惠券
+NEW  | > 更多<i class=
+NEW  | >{{ `设置活动${activityTpye === 1 ? 
+NEW  | >直播间官方收录：</label>{{ roomInfo.isFeedsPublic === 1 ? 
+NEW  | >直播间类型：</label>{{ roomInfo.type === 1 ? 
+NEW  | 1. 用户手动领取指用户需要在移动端的领券中心领取优惠券；
+NEW  | 1.每天签到可以获得每天签到奖励
+NEW  | 1星
+NEW  | 2. 平台活动使用指其他营销活动可选择此类型优惠券，用户满足活动条件后直接提示发放 ；
+NEW  | 2星
+NEW  | 3星
+NEW  | 4星
+NEW  | 5星
+NEW  | 保存活动价
+NEW  | 必填项，请维护
+NEW  | 边框
+NEW  | 编辑氛围图
+NEW  | 编辑活动边框
+NEW  | 编辑秒杀活动
+NEW  | 编辑秒杀时段
+NEW  | 编辑时，填写优惠券增加的数量；例如：新增时填写2张优惠券，编辑时填写1，则编辑后总共发布3张优惠券
+NEW  | 编辑优惠券
+NEW  | 不可重复
+NEW  | 不可重复领取
+NEW  | 不可重复领取，若多个营销活动赠送同一优惠券，一个用户只能领取1张
+NEW  | 不可重复领取，若用户领取该优惠券无论是否使用，都不可再次领取
+NEW  | 不同充值码发货
+NEW  | 不限
+NEW  | 不限时
+NEW  | 采集商品
+NEW  | 参团订单数
+NEW  | 参团订单数：此拼团活动用户开团的所有订单数统计（不包含未支付的订单数据）
+NEW  | 参与门槛:
+NEW  | 参与商品数
+NEW  | 查看物流
+NEW  | 成团订单数
+NEW  | 成团订单数：此拼团活动用户已经拼团成功的所有成功订单数统计（不包含未支付的订单数据）
+NEW  | 成团人数
+NEW  | 成团人数：
+NEW  | 成团数
+NEW  | 成团数：此拼团活动用户已经拼团成功的团次数统计
+NEW  | 成团有效期：
+NEW  | 初始化
+NEW  | 创建日期：
+NEW  | 创建商户
+NEW  | 创建商户：
+NEW  | 创建者微信号：
+NEW  | 凑团：
+NEW  | 单次限购
+NEW  | 单次限购:
+NEW  | 单次限购：
+NEW  | 当前活动中存在已删除优惠券，提交后会自动删除。
+NEW  | 当前页
+NEW  | 当前用户已注销，有责发货！
+NEW  | 兑换积分
+NEW  | 兑换金额（元）
+NEW  | 兑换数量
+NEW  | 兑换数量限制：
+NEW  | 二星以上
+NEW  | 发布数量
+NEW  | 发布数量：
+NEW  | 发布数量(张)：
+NEW  | 发货
+NEW  | 发货备注：
+NEW  | 发货成功
+NEW  | 发货记录
+NEW  | 发货类型：
+NEW  | 分享图：
+NEW  | 氛围图
+NEW  | 复制
+NEW  | 复制优惠券
+NEW  | 该商品已下架，无法进行拼团购买！
+NEW  | 该直播间正在进行直播，删除后不可恢复，您确认删除吗？
+NEW  | 高级设置
+NEW  | 给长期订阅用户推送消息？
+NEW  | 购买数量
+NEW  | 关闭成功!
+NEW  | 关闭之后，此区间在用户端不展示
+NEW  | 关联号
+NEW  | 关联类型
+NEW  | 官方收录
+NEW  | 规格
+NEW  | 规格库存
+NEW  | 规格类型：
+NEW  | 规格名称
+NEW  | 规格值
+NEW  | 规格值已存在
+NEW  | 规则设置
+NEW  | 回放
+NEW  | 活动边框：
+NEW  | 活动标签：
+NEW  | 活动对象:
+NEW  | 活动方式：
+NEW  | 活动氛围图：
+NEW  | 活动价
+NEW  | 活动价格
+NEW  | 活动进程
+NEW  | 活动进程：
+NEW  | 活动开关
+NEW  | 活动开启商城新注册用户可获得下方设置的优惠券福利，活动关闭之后新注册的用户不会赠送新人福利
+NEW  | 活动开启商城用户可获得下方设置的生日福利，活动关闭之后用户生日不会赠送福利。
+NEW  | 活动名称
+NEW  | 活动名称：
+NEW  | 活动日期
+NEW  | 活动日期：
+NEW  | 活动时间
+NEW  | 活动时间：
+NEW  | 活动限购
+NEW  | 活动限购:
+NEW  | 活动限购：
+NEW  | 活动信息
+NEW  | 活动有效期内每个用户可购买该商品总数限制。例如设置为4，表示本次活动有效期内，每个用户最多可购买总数4个，0为不限购
+NEW  | 活动折扣(%)
+NEW  | 活动状态
+NEW  | 活动状态:
+NEW  | 活动状态：
+NEW  | 积分范围
+NEW  | 积分配置
+NEW  | 积分商品订单
+NEW  | 积分值
+NEW  | 价格
+NEW  | 价格类型
+NEW  | 价格区间：
+NEW  | 价格设置范围 0.01~999999.99
+NEW  | 建议尺寸：800*800px，上传小于500kb的图片
+NEW  | 建议尺寸：800*800px，上传小于500kb的图片；最多可上传10张图片，拖动可调整顺序
+NEW  | 结束时间
+NEW  | 经验值
+NEW  | 开启活动期间所有注册商城的用户
+NEW  | 开启状态：
+NEW  | 开团日期：
+NEW  | 开团时间
+NEW  | 开团数
+NEW  | 开团数：此拼团活动用户开团的次数统计
+NEW  | 可以同步修改下方该规格图片，确定要替换吗？
+NEW  | 可重复
+NEW  | 可重复领取
+NEW  | 可重复领取，若多个营销活动赠送同一优惠券，一个用户可领取多张；
+NEW  | 可重复领取，若用户领取该优惠券且使用过后，可以再次领取；
+NEW  | 快递单号：
+NEW  | 快递公司：
+NEW  | 快递配送
+NEW  | 快速添加
+NEW  | 连续奖励
+NEW  | 连续签到奖励断签后会重新计算连续签到天数，达到连续天数后即可获得连续奖励
+NEW  | 连续签到天数
+NEW  | 连续签获积分
+NEW  | 连续签获经验
+NEW  | 连续天数
+NEW  | 领取方式：
+NEW  | 领取后
+NEW  | 领取日期
+NEW  | 领取时间
+NEW  | 领取时间：
+NEW  | 领取之后多少天之后失效，失效的优惠券将不能使用
+NEW  | 买家留言
+NEW  | 每日签到奖励：
+NEW  | 面值
+NEW  | 秒杀场次:
+NEW  | 秒杀商品编辑
+NEW  | 秒杀商品详情
+NEW  | 秒杀时段
+NEW  | 秒杀样式：
+NEW  | 明细数字
+NEW  | 默认
+NEW  | 默认规格不可隐藏
+NEW  | 配送人员：
+NEW  | 批量删除
+NEW  | 批量删除该商品吗？
+NEW  | 批量删除秒杀商品吗？
+NEW  | 批量删除商品吗？
+NEW  | 批量下架
+NEW  | 批量下架秒杀商品吗？
+NEW  | 批量修改
+NEW  | 拼团价（元）
+NEW  | 拼团时间
+NEW  | 拼团限量
+NEW  | 拼团状态
+NEW  | 平台活动使用
+NEW  | 平台强制关闭
+NEW  | 平台审核通过
+NEW  | 签到规则说明：
+NEW  | 签到积分
+NEW  | 签到经验
+NEW  | 签到日期
+NEW  | 强制关闭
+NEW  | 清空
+NEW  | 请上传商品轮播图
+NEW  | 请上传商品图
+NEW  | 请上传小于20M的视频
+NEW  | 请输入
+NEW  | 请输入0～999999的数字，数字越大越靠前
+NEW  | 请输入0~99的数字，数字越大越靠前
+NEW  | 请输入备注信息，最多可输入250字
+NEW  | 请输入兑换数量限制
+NEW  | 请输入发布数量
+NEW  | 请输入规格值
+NEW  | 请输入活动名称
+NEW  | 请输入积分值
+NEW  | 请输入经验值
+NEW  | 请输入快递单号
+NEW  | 请输入内容
+NEW  | 请输入配送人员
+NEW  | 请输入配送人员手机号码
+NEW  | 请输入区间名称
+NEW  | 请输入商品简介，最多可输入250字（商品简介用于通过公众号分享商品详情，会展示此简介信息）
+NEW  | 请输入商品名称关键字
+NEW  | 请输入使用门槛
+NEW  | 请输入天数
+NEW  | 请输入序号
+NEW  | 请输入优惠券面值
+NEW  | 请输入优惠券使用门槛
+NEW  | 请输入优惠券数量
+NEW  | 请输入直播间名称/ID/主播昵称/主播微信号/主播副号微信号
+NEW  | 请输入直播商品名称/ID,商户名称,微信直播间id,微信审核单id
+NEW  | 请输入MP4格式的视频链接
+NEW  | 请填写多规格属性！
+NEW  | 请填写完整商品信息！
+NEW  | 请填写信息
+NEW  | 请填写正确的时间范围
+NEW  | 请完善基础设置信息
+NEW  | 请选择活动进程
+NEW  | 请选择活动日期
+NEW  | 请选择活动状态
+NEW  | 请选择结束日期
+NEW  | 请选择开启状态
+NEW  | 请选择开始日期
+NEW  | 请选择领取方式
+NEW  | 请选择领取时间类型
+NEW  | 请选择秒杀场次
+NEW  | 请选择日期区间
+NEW  | 请选择商户星级
+NEW  | 请选择商品规格
+NEW  | 请选择时间
+NEW  | 请选择使用范围
+NEW  | 请选择使用有效期
+NEW  | 请选择使用状态
+NEW  | 请选择是否可重复领取
+NEW  | 请选择优惠比例
+NEW  | 请选择优惠方式
+NEW  | 请选择运费模板
+NEW  | 请选择至少一个商品
+NEW  | 请至少选择一个分类
+NEW  | 请至少选择一个品牌
+NEW  | 请至少选择一个商户
+NEW  | 区间范围：
+NEW  | 区间名称
+NEW  | 区间名称：
+NEW  | 区间名称用于用户端的积分筛选标签展示
+NEW  | 区间状态
+NEW  | 区间状态：
+NEW  | 全部商品参与
+NEW  | 确认添加
+NEW  | 热门推荐：
+NEW  | 三星以上
+NEW  | 删除该秒杀商品吗？
+NEW  | 删除该商品吗？
+NEW  | 商城已经设置生日的用户
+NEW  | 商户创建
+NEW  | 商户列表
+NEW  | 商户头像
+NEW  | 商户信息
+NEW  | 商户星级
+NEW  | 商户星级：
+NEW  | 商家星级
+NEW  | 商品编码
+NEW  | 商品范围:
+NEW  | 商品分类
+NEW  | 商品封面图：
+NEW  | 商品规格
+NEW  | 商品列表
+NEW  | 商品秒杀价格不能为空
+NEW  | 商品属性：
+NEW  | 商品数量
+NEW  | 商品限量不能为空
+NEW  | 商品限量总和不能小于0
+NEW  | 商品状态
+NEW  | 商品状态：
+NEW  | 上传视频
+NEW  | 上传视频不能超过 20MB!
+NEW  | 上传视频只能是 mp4 格式!
+NEW  | 上架状态：
+NEW  | 设置活动价
+NEW  | 设置活动开始日期与结束日期，用户可以在有效时间内参与秒杀
+NEW  | 设置秒杀活动可以参与的商户星级。
+NEW  | 设置秒杀活动可以参与的商品分类，可多选，不选为全品类商品。
+NEW  | 设置限量
+NEW  | 设置限量：
+NEW  | 审核成功!
+NEW  | 审核秒杀商品
+NEW  | 审核通过该秒杀商品吗？
+NEW  | 审核通过该直播间吗？
+NEW  | 审核通过该直播商品吗？
+NEW  | 生日有礼
+NEW  | 剩余
+NEW  | 剩余库存
+NEW  | 剩余张数
+NEW  | 失败原因
+NEW  | 时段名称
+NEW  | 时间段
+NEW  | 实际金额
+NEW  | 实体货物
+NEW  | 使用/发放数量
+NEW  | 使用范围：
+NEW  | 使用积分
+NEW  | 使用门槛
+NEW  | 使用门槛：
+NEW  | 使用门槛(元)：
+NEW  | 使用默认说明
+NEW  | 使用期限
+NEW  | 使用时间
+NEW  | 使用有效期
+NEW  | 使用有效期：
+NEW  | 使用状态
+NEW  | 使用状态：
+NEW  | 是否开启:
+NEW  | 是否显示：
+NEW  | 收货信息
+NEW  | 手动填写
+NEW  | 手机号码：
+NEW  | 手机直播
+NEW  | 售价（元）
+NEW  | 输入值必须大于0
+NEW  | 输入值必须为正整数
+NEW  | 输入值必须小于999999
+NEW  | 输入值不得大于最大值
+NEW  | 输入值不得小于最小值
+NEW  | 四星以上
+NEW  | 所有页
+NEW  | 替换
+NEW  | 天内可用
+NEW  | 天内有效
+NEW  | 天数
+NEW  | 添加氛围图
+NEW  | 添加规格图
+NEW  | 添加规格图片, 仅支持打开一个(建议尺寸:800*800)
+NEW  | 添加规格值
+NEW  | 添加活动边框
+NEW  | 添加积分区间
+NEW  | 添加秒杀活动
+NEW  | 添加秒杀配置
+NEW  | 添加秒杀时段
+NEW  | 添加商品
+NEW  | 添加新规格
+NEW  | 添加优惠券
+NEW  | 填写优惠券的发放数量
+NEW  | 填写优惠券的最低消费金额，使用门槛为0时指无门槛
+NEW  | 通过公众号分享商品详情，会展示此简介信息
+NEW  | 同步删除已领取的优惠券，已领取的优惠券展示为已失效
+NEW  | 同一链接发货
+NEW  | 团长
+NEW  | 团长搜索：
+NEW  | 团长信息
+NEW  | 推荐级别：
+NEW  | 未上架
+NEW  | 未使用
+NEW  | 无需发货
+NEW  | 五星以上
+NEW  | 下架该秒杀商品吗？
+NEW  | 下架该商品吗？出售商品需下架之后可编辑。
+NEW  | 显示在商城
+NEW  | 限量
+NEW  | 限量剩余
+NEW  | 销售数量
+NEW  | 新人礼
+NEW  | 新增连续签到奖励
+NEW  | 修改发货单配送信息成功
+NEW  | 修改配送信息
+NEW  | 虚拟成团：
+NEW  | 选择分类:
+NEW  | 选择分类：
+NEW  | 选择品牌:
+NEW  | 选择品牌：
+NEW  | 选择商户:
+NEW  | 选择商户：
+NEW  | 选择商品开始时间段，该时间段内用户可参与购买；其它时间段会显示活动未开始或已结束，可多选
+NEW  | 样式1
+NEW  | 样式2
+NEW  | 样式展示：
+NEW  | 要将此活动强制关闭吗？
+NEW  | 要将此活动审核通过吗？
+NEW  | 一
+NEW  | 一口价：
+NEW  | 一星以上
+NEW  | 已参团人数
+NEW  | 已兑换数
+NEW  | 已发放数量：
+NEW  | 已领取的优惠券仍可正常使用
+NEW  | 已上架
+NEW  | 已失败
+NEW  | 已失效
+NEW  | 已使用
+NEW  | 已使用数量：
+NEW  | 已退款数量
+NEW  | 用户参与秒杀时，一次购买最大数量限制。例如设置为2，表示参与秒杀时，用户一次购买数量最大可选择2个，0为不限购
+NEW  | 用户端点击对应的区间名称会根据此积分范围筛选展示
+NEW  | 用户可以兑换总数量限制，支持输入0～9999整数，填0代表不限制
+NEW  | 用户可以根据关键字进行商品搜索
+NEW  | 用户领取
+NEW  | 用户名称：
+NEW  | 用户头像
+NEW  | 优惠券:
+NEW  | 优惠券编辑后，之前已经领取的优惠券使用有效期不会改变
+NEW  | 优惠券可以在此时间范围之内领取
+NEW  | 优惠券门槛
+NEW  | 优惠券面值 ( ¥ )
+NEW  | 优惠券面值(元)：
+NEW  | 优惠券名：
+NEW  | 优惠券名称：
+NEW  | 优惠券情况
+NEW  | 优惠券详情
+NEW  | 优惠券信息
+NEW  | 优惠券已删除
+NEW  | 优惠券ID
+NEW  | 暂不
+NEW  | 增加发布数量(张)：
+NEW  | 赠送积分值
+NEW  | 赠送经验值
+NEW  | 张
+NEW  | 直播计划结束时间
+NEW  | 直播间点赞：
+NEW  | 直播间分享：
+NEW  | 直播间官方收录：
+NEW  | 直播间回放：
+NEW  | 直播间货架：
+NEW  | 直播间客服：
+NEW  | 直播间类型：
+NEW  | 直播间名称
+NEW  | 直播间名称：
+NEW  | 直播间评论：
+NEW  | 直播间信息
+NEW  | 直播间状态：
+NEW  | 直播间ID：
+NEW  | 直播开始时间
+NEW  | 直播开始时间：
+NEW  | 直播商品ID
+NEW  | 直播搜索：
+NEW  | 直播详情
+NEW  | 直播小程序码：
+NEW  | 直播预计结束时间：
+NEW  | 直播状态
+NEW  | 直播状态：
+NEW  | 至
+NEW  | 重复领取：
+NEW  | 主播副号微信号：
+NEW  | 主播昵称
+NEW  | 主播昵称：
+NEW  | 主播手机号：
+NEW  | 主播微信号
+NEW  | 主播微信号：
+NEW  | 主图视频：
+NEW  | 最低消费额
+NEW  | dataForm.id ? `编辑积分区间` : `添加积分区间`
+
+TOTAL unique: 656, NEW: 476

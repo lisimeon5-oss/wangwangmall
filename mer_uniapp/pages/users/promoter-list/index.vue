@@ -4,53 +4,53 @@
 			<view class='promoterHeader'>
 				<view class='headerCon acea-row row-between'>
 					<view>
-						<view class='name'>推广人数</view>
-						<view><text class='num'>{{peopleData.count}}</text>人</view>
+						<view class='name'>{{$t('推广人数')}}</view>
+						<view><text class='num'>{{peopleData.count}}</text>{{$t('人')}}</view>
 					</view>
 					<view class='iconfont icon-tuandui'></view>
 				</view>
 			</view>
 			<view class="borderPad">
 				<view class='nav acea-row row-around'>
-					<view :class="grade == 0 ? 'item on' : 'item'" @click='setType(0)'>一级({{peopleData.firstSpreadNum}})</view>
-					<view :class="grade == 1 ? 'item on' : 'item'" @click='setType(1)'>二级({{peopleData.secondSpreadNum}})
+					<view :class="grade == 0 ? 'item on' : 'item'" @click='setType(0)'>{{$t('一级')}}({{peopleData.firstSpreadNum}})</view>
+					<view :class="grade == 1 ? 'item on' : 'item'" @click='setType(1)'>{{$t('二级')}}({{peopleData.secondSpreadNum}})
 					</view>
 				</view>
 				<view class='search acea-row row-between-wrapper'>
 					<view class='input'>
-						<input placeholder='点击搜索会员名称' placeholder-class='placeholder' v-model="keywords"
+						<input :placeholder="$t('点击搜索会员名称')" placeholder-class='placeholder' v-model="keywords"
 							@confirm="submitForm" confirm-type='search' name="search" maxlength="10"></input>
 						</view>
 					<button class='iconfont icon-sousuo2' @click="submitForm"></button>
 				</view>
 				<view class='list'>
 					<view class="sortNav acea-row row-middle">
-						<view class="sortItem" @click='setSort("childCount","ASC")' v-if="sort == 'childCountDESC'">团队排序
+						<view class="sortItem" @click='setSort("childCount","ASC")' v-if="sort == 'childCountDESC'">{{$t('团队排序')}}
 							<image src='../static/images/sort1.png'></image>
 						</view>
-						<view class="sortItem" @click='setSort("childCount")' v-else-if="sort == 'childCountASC'">团队排序
+						<view class="sortItem" @click='setSort("childCount")' v-else-if="sort == 'childCountASC'">{{$t('团队排序')}}
 							<image src='../static/images/sort3.png'></image>
 						</view>
-						<view class="sortItem" @click='setSort("childCount","DESC")' v-else>团队排序
+						<view class="sortItem" @click='setSort("childCount","DESC")' v-else>{{$t('团队排序')}}
 							<image src='../static/images/sort2.png'></image>
 						</view>
 						<view class="sortItem" @click='setSort("numberCount","ASC")' v-if="sort == 'numberCountDESC'">
-							金额排序
+							{{$t('金额排序')}}
 							<image src='../static/images/sort1.png'></image>
 						</view>
-						<view class="sortItem" @click='setSort("numberCount")' v-else-if="sort == 'numberCountASC'">金额排序
+						<view class="sortItem" @click='setSort("numberCount")' v-else-if="sort == 'numberCountASC'">{{$t('金额排序')}}
 							<image src='../static/images/sort3.png'></image>
 						</view>
-						<view class="sortItem" @click='setSort("numberCount","DESC")' v-else>金额排序
+						<view class="sortItem" @click='setSort("numberCount","DESC")' v-else>{{$t('金额排序')}}
 							<image src='../static/images/sort2.png'></image>
 						</view>
-						<view class="sortItem" @click='setSort("orderCount","ASC")' v-if="sort == 'orderCountDESC'">订单排序
+						<view class="sortItem" @click='setSort("orderCount","ASC")' v-if="sort == 'orderCountDESC'">{{$t('订单排序')}}
 							<image src='../static/images/sort1.png'></image>
 						</view>
-						<view class="sortItem" @click='setSort("orderCount")' v-else-if="sort == 'orderCountASC'">订单排序
+						<view class="sortItem" @click='setSort("orderCount")' v-else-if="sort == 'orderCountASC'">{{$t('订单排序')}}
 							<image src='../static/images/sort3.png'></image>
 						</view>
-						<view class="sortItem" @click='setSort("orderCount","DESC")' v-else>订单排序
+						<view class="sortItem" @click='setSort("orderCount","DESC")' v-else>{{$t('订单排序')}}
 							<image src='../static/images/sort2.png'></image>
 						</view>
 					</view>
@@ -62,14 +62,14 @@
 								</view>
 								<view class='text'>
 									<view class='name line1'>{{item.nickname}}</view>
-									<view>加入时间: {{item.time ? item.time.split(' ')[0] : ''}}</view>
+									<view>{{$t('加入时间')}}: {{item.time ? item.time.split(' ')[0] : ''}}</view>
 								</view>
 							</view>
 							<view class="right">
-								<view><text class='num font-color'>{{item.childCount ? item.childCount : 0}}</text>人
+								<view><text class='num font-color'>{{item.childCount ? item.childCount : 0}}</text>{{$t('人')}}
 								</view>
-								<view><text class="num">{{item.orderCount ? item.orderCount : 0}}</text>单</view>
-								<view><text class="num">{{item.amountCount ? item.amountCount : 0}}</text>元</view>
+								<view><text class="num">{{item.orderCount ? item.orderCount : 0}}</text>{{$t('单')}}</view>
+								<view><text class="num">{{item.amountCount ? item.amountCount : 0}}</text>{{$t('元')}}</view>
 							</view>
 						</view>
 					</block>
@@ -77,7 +77,7 @@
 						<text class='loading iconfont icon-jiazai' :hidden='loadingList==false'></text>
 					</view>
 					<block v-if="recordList.length == 0 && isShow && !loadingList">
-						<emptyPage title="暂无推广人数～" mTop="19%" :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
+						<emptyPage :title="$t('暂无推广人数～')" mTop="19%" :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
 					</block>
 				</view>
 			</view>

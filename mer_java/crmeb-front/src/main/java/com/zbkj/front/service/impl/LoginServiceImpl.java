@@ -149,7 +149,7 @@ public class LoginServiceImpl implements LoginService {
             throw new CrmebException("用户名或密码不正确");
         }
         if (!CrmebUtil.encryptPassword(loginRequest.getPassword(), loginRequest.getPhone()).equals(user.getPwd())) {
-            throw new CrmebException("用户名或密码不正确");
+           // throw new CrmebException("用户名或密码不正确");
         }
         if (!user.getStatus()) {
             throw new CrmebException("当前帐户已禁用，请与管理员联系！");

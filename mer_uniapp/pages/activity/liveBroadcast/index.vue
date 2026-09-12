@@ -13,19 +13,19 @@
 									:style="'background:' + (item.liveStatus == 101 ? playBg : (item.liveStatus != 101 && item.liveStatus != 102) ? endBg : notBg) + ';'">
 									<block v-if="item.liveReplay">
 										<text class="iconfont icon-zhibo-huifang"></text>
-										<text>回放</text>
+										<text>{{$t('回放')}}</text>
 									</block>
 									<block v-else-if="item.liveStatus == 101">
 										<text class="iconfont icon-zhibo-zhibozhong"></text>
-										<text>直播中</text>
+										<text>{{$t('直播中')}}</text>
 									</block>
 									<block v-else-if="item.liveStatus == 103">
 										<text class="iconfont icon-zhibo-yugao"></text>
-										<text>已结束</text>
+										<text>{{$t('已结束')}}</text>
 									</block>
 									<block v-else-if="item.liveStatus == 102">
 										<text class="iconfont icon-zhibo-yugao"></text>
-										<text>预告</text>
+										<text>{{$t('预告')}}</text>
 									</block>
 								</view>
 								<view v-if="item.liveStatus == 101 || item.liveStatus == 102" class="broadcast-time">
@@ -45,7 +45,7 @@
 										v-for="(itm, idx) in JSON.parse(item.goodsJson)" :key="idx">
 										<view class="pro-img" v-if="idx < 3">
 											<image :src="itm.coverImg"></image>
-											<view class="price" v-if="idx < 2">¥{{itm.price}}</view>
+											<view class="price" v-if="idx < 2">฿{{itm.price}}</view>
 											<view v-else class="more">+{{ JSON.parse(item.goodsJson).length - 2 }}
 											</view>
 										</view>
@@ -56,7 +56,7 @@
 					</navigator>
 				</view>
 				<view class='loadingicon acea-row row-center-wrapper'>
-					<text class='loading iconfont icon-jiazai' :hidden='pageloading==false'></text>{{loadTitle}}
+					<text class='loading iconfont icon-jiazai' :hidden='pageloading==false'></text>{{$t(loadTitle)}}
 				</view>
 			</view>
 		</view>
@@ -103,7 +103,7 @@
 		methods: {
 			getPartTime(val) {
 				var timearr = val.replace(" ", ":").replace(/:/g, "-").split("-");
-				var timestr = Number(timearr[1]) + "月" + timearr[2] + "日" + Number(timearr[3]) + ":" + timearr[4];
+				var timestr = Number(timearr[1]) + this.$t('月') + timearr[2] + this.$t('日') + Number(timearr[3]) + ":" + timearr[4];
 				return timestr;
 			},
 			getBroadcastList() {

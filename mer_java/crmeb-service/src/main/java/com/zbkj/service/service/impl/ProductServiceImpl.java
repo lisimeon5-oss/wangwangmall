@@ -37,6 +37,8 @@ import com.zbkj.common.response.productTag.ProductTagsForSearchResponse;
 import com.zbkj.common.result.*;
 import com.zbkj.common.utils.CrmebDateUtil;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.common.vo.DateLimitUtilVo;
 import com.zbkj.common.vo.MyRecord;
@@ -159,6 +161,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         if (StrUtil.isNotBlank(request.getKeywords())) {
             String keywords = URLUtil.decode(request.getKeywords());
             lqw.and(i -> i.like(Product::getName, keywords)
+                    .or().like(Product::getNameJson, keywords)
                     .or().apply(" find_in_set({0}, keyword)", keywords));
         }
         lqw.apply(StrUtil.isNotBlank(request.getCateId()), "FIND_IN_SET({0}, cate_id)", request.getCateId());
@@ -251,6 +254,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
 
         Product product = new Product();
         BeanUtils.copyProperties(request, product);
+        product.setName(I18nJsonUtil.emptyToBlank(product.getName()));
+        product.setUnitName(I18nJsonUtil.emptyToBlank(product.getUnitName()));
+        product.setIntro(I18nJsonUtil.emptyToBlank(product.getIntro()));
         product.setId(null);
         product.setMerId(admin.getMerId());
         product.setMarketingType(ProductConstants.PRODUCT_MARKETING_TYPE_BASE);
@@ -271,6 +277,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         product.setImage(systemAttachmentService.clearPrefix(product.getImage(), cdnUrl));
         //轮播图
         product.setSliderImage(systemAttachmentService.clearPrefix(product.getSliderImage(), cdnUrl));
+        clearProductI18nMedia(product, cdnUrl);
         // 展示图
         if (StrUtil.isNotBlank(product.getFlatPattern())) {
             product.setFlatPattern(systemAttachmentService.clearPrefix(product.getFlatPattern(), cdnUrl));
@@ -295,13 +302,15 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
 
         addRequestList.forEach(attrRequest -> {
             ProductAttribute attr = new ProductAttribute();
-            attr.setAttributeName(attrRequest.getAttributeName());
+            attr.setAttributeName(I18nJsonUtil.firstNonBlank(attrRequest.getAttributeName(), attrRequest.getAttributeNameJson()));
+            attr.setAttributeNameJson(attrRequest.getAttributeNameJson());
             attr.setIsShowImage(attrRequest.getIsShowImage());
             attr.setSort(ObjectUtil.isNotNull(attrRequest.getSort()) ? attrRequest.getSort() : 0);
             List<ProductAttrOptionAddRequest> optionRequestList = attrRequest.getOptionList();
             List<ProductAttributeOption> attrOptionList = optionRequestList.stream().map(optionRequest -> {
                 ProductAttributeOption option = new ProductAttributeOption();
-                option.setOptionName(optionRequest.getOptionName());
+                option.setOptionName(I18nJsonUtil.firstNonBlank(optionRequest.getOptionName(), optionRequest.getOptionNameJson()));
+                option.setOptionNameJson(optionRequest.getOptionNameJson());
                 option.setSort(ObjectUtil.isNotNull(optionRequest.getSort()) ? optionRequest.getSort() : 0);
                 option.setImage(StrUtil.isNotBlank(optionRequest.getImage()) ? systemAttachmentService.clearPrefix(optionRequest.getImage(), cdnUrl) : "");
                 return option;
@@ -333,6 +342,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         // 处理富文本
         ProductDescription spd = new ProductDescription();
         spd.setDescription(StrUtil.isNotBlank(request.getContent()) ? systemAttachmentService.clearPrefix(request.getContent(), cdnUrl) : "");
+        fillDescriptionJson(spd, request.getContentJson(), cdnUrl);
         spd.setType(product.getType());
         spd.setMarketingType(product.getMarketingType());
 
@@ -576,6 +586,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
 
         Product product = new Product();
         BeanUtils.copyProperties(productRequest, product);
+        product.setName(I18nJsonUtil.emptyToBlank(product.getName()));
+        product.setUnitName(I18nJsonUtil.emptyToBlank(product.getUnitName()));
+        product.setIntro(I18nJsonUtil.emptyToBlank(product.getIntro()));
         product.setAuditStatus(tempProduct.getAuditStatus());
         product.setType(tempProduct.getType());
         product.setMarketingType(tempProduct.getMarketingType());
@@ -586,6 +599,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         product.setImage(systemAttachmentService.clearPrefix(product.getImage(), cdnUrl));
         //轮播图
         product.setSliderImage(systemAttachmentService.clearPrefix(product.getSliderImage(), cdnUrl));
+        clearProductI18nMedia(product, cdnUrl);
 
         List<ProductAttrValueAddRequest> attrValueAddRequestList = productRequest.getAttrValueList();
         //计算价格
@@ -605,14 +619,16 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         addRequestList.forEach(attrRequest -> {
             ProductAttribute attr = new ProductAttribute();
             attr.setProductId(product.getId());
-            attr.setAttributeName(attrRequest.getAttributeName());
+            attr.setAttributeName(I18nJsonUtil.firstNonBlank(attrRequest.getAttributeName(), attrRequest.getAttributeNameJson()));
+            attr.setAttributeNameJson(attrRequest.getAttributeNameJson());
             attr.setIsShowImage(attrRequest.getIsShowImage());
             attr.setSort(ObjectUtil.isNotNull(attrRequest.getSort()) ? attrRequest.getSort() : 0);
             List<ProductAttrOptionAddRequest> optionRequestList = attrRequest.getOptionList();
             List<ProductAttributeOption> attrOptionList = optionRequestList.stream().map(optionRequest -> {
                 ProductAttributeOption option = new ProductAttributeOption();
                 option.setProductId(product.getId());
-                option.setOptionName(optionRequest.getOptionName());
+                option.setOptionName(I18nJsonUtil.firstNonBlank(optionRequest.getOptionName(), optionRequest.getOptionNameJson()));
+                option.setOptionNameJson(optionRequest.getOptionNameJson());
                 option.setSort(ObjectUtil.isNotNull(optionRequest.getSort()) ? optionRequest.getSort() : 0);
                 option.setImage(StrUtil.isNotBlank(optionRequest.getImage()) ? systemAttachmentService.clearPrefix(optionRequest.getImage(), cdnUrl) : "");
                 return option;
@@ -669,6 +685,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         // 处理富文本
         ProductDescription spd = new ProductDescription();
         spd.setDescription(StrUtil.isNotBlank(productRequest.getContent()) ? systemAttachmentService.clearPrefix(productRequest.getContent(), cdnUrl) : "");
+        fillDescriptionJson(spd, productRequest.getContentJson(), cdnUrl);
         spd.setType(product.getType());
         spd.setMarketingType(product.getMarketingType());
         spd.setProductId(product.getId());
@@ -843,13 +860,17 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
             if (e.getType().equals(ProductConstants.PRODUCT_TYPE_CDKEY)) {
                 CdkeyLibrary cdkeyLibrary = cdkeyLibraryService.getByIdException(e.getCdkeyId());
                 valueResponse.setCdkeyLibraryName(cdkeyLibrary.getName());
+                valueResponse.setCdkeyLibraryNameJson(cdkeyLibrary.getNameJson());
             }
             return valueResponse;
         }).collect(Collectors.toList());
         productInfoResponse.setAttrValueList(valueResponseList);
 
         ProductDescription sd = productDescriptionService.getByProductIdAndType(product.getId(), product.getType(), product.getMarketingType());
-        productInfoResponse.setContent(sd.getDescription());
+        if (ObjectUtil.isNotNull(sd)) {
+            productInfoResponse.setContent(sd.getDescription());
+            productInfoResponse.setContentJson(sd.getDescriptionJson());
+        }
 
         // 获取已关联的优惠券
         List<ProductCoupon> productCouponList = productCouponService.getListByProductId(product.getId());
@@ -913,6 +934,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
             if (StrUtil.isNotBlank(request.getKeywords())) {
                 String keywords = URLUtil.decode(request.getKeywords());
                 lqw.and(i -> i.like(Product::getName, keywords)
+                        .or().like(Product::getNameJson, keywords)
                         .or().apply(" find_in_set({0}, keyword)", keywords));
             }
             if (StrUtil.isNotBlank(request.getCateId())) {
@@ -1214,7 +1236,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
     @Override
     public PageInfo<Product> getIndexProduct(Integer cid, PageParamRequest pageParamRequest) {
         LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
-        lqw.select(Product::getId, Product::getMerId, Product::getImage, Product::getName, Product::getUnitName,
+        lqw.select(Product::getId, Product::getMerId, Product::getImage, Product::getImageJson, Product::getName, Product::getNameJson,
+                Product::getUnitName, Product::getUnitNameJson,
                 Product::getPrice, Product::getOtPrice, Product::getSales, Product::getFicti, Product::getCategoryId,
                 Product::getBrandId, Product::getIsPaidMember, Product::getVipPrice, Product::getStock);
         getForSaleWhere(lqw);
@@ -1236,6 +1259,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         List<Product> productList = dao.selectList(lqw);
         // 查询活动边框配置信息, 并赋值给商品response 重复添加的商品数据会根据数据添加持续覆盖后的为准
         productList = activityStyleService.makeActivityBorderStyle(productList);
+        I18nJsonUtil.applyProductDisplayList(productList);
         return CommonPage.copyPageInfo(page, productList);
     }
 
@@ -1312,18 +1336,18 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         // 排序部分
         if (StrUtil.isNotBlank(request.getSalesOrder())) {
             if (request.getSalesOrder().equals(Constants.SORT_DESC)) {
-                map.put("lastStr", " order by (p.sales + p.ficti) desc, p.rank desc, p.sort desc, p.id desc");
+                map.put("lastStr", " order by (p.sales + p.ficti) desc, p.`rank` desc, p.sort desc, p.id desc");
             } else {
-                map.put("lastStr", " order by (p.sales + p.ficti) asc, p.rank desc, p.sort desc, p.id desc");
+                map.put("lastStr", " order by (p.sales + p.ficti) asc, p.`rank` desc, p.sort desc, p.id desc");
             }
         } else if (StrUtil.isNotBlank(request.getPriceOrder())) {
             if (request.getPriceOrder().equals(Constants.SORT_DESC)) {
-                map.put("lastStr", " order by p.price desc, p.rank desc, p.sort desc, p.id desc");
+                map.put("lastStr", " order by p.price desc, p.`rank` desc, p.sort desc, p.id desc");
             } else {
-                map.put("lastStr", " order by p.price asc, p.rank desc, p.sort desc, p.id desc");
+                map.put("lastStr", " order by p.price asc, p.`rank` desc, p.sort desc, p.id desc");
             }
         } else {
-            map.put("lastStr", " order by p.rank desc, p.sort desc, p.id desc");
+            map.put("lastStr", " order by p.`rank` desc, p.sort desc, p.id desc");
         }
         Page<Product> page = PageHelper.startPage(pageRequest.getPage(), pageRequest.getLimit());
         List<ProductFrontResponse> responseList = dao.findH5List(map);
@@ -1331,6 +1355,10 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
             return CommonPage.copyPageInfo(page, responseList);
         }
         responseList.forEach(e -> {
+            e.setName(I18nJsonUtil.resolveByRequest(e.getName(), e.getNameJson()));
+            e.setUnitName(I18nJsonUtil.resolveByRequest(e.getUnitName(), e.getUnitNameJson()));
+            e.setMerName(I18nJsonUtil.resolveByRequest(e.getMerName(), e.getMerNameJson()));
+            e.setImage(I18nJsonUtil.resolveByRequest(e.getImage(), e.getImageJson()));
             // 评论总数
             Integer sumCount = productReplyService.getCountByScore(e.getId(), ProductConstants.PRODUCT_REPLY_TYPE_ALL);
             // 好评总数
@@ -1377,9 +1405,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
     @Override
     public Product getH5Detail(Integer id) {
         LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
-        lqw.select(Product::getId, Product::getMerId, Product::getImage, Product::getName, Product::getSliderImage,
-                Product::getOtPrice, Product::getStock, Product::getSales, Product::getPrice, Product::getIntro, Product::getCost,
-                Product::getFicti, Product::getBrowse, Product::getUnitName, Product::getGuaranteeIds, Product::getBrandId,
+        lqw.select(Product::getId, Product::getMerId, Product::getImage, Product::getImageJson, Product::getName, Product::getNameJson, Product::getSliderImage,
+                Product::getSliderImageJson, Product::getOtPrice, Product::getStock, Product::getSales, Product::getPrice, Product::getIntro, Product::getIntroJson, Product::getCost,
+                Product::getFicti, Product::getBrowse, Product::getUnitName, Product::getUnitNameJson, Product::getGuaranteeIds, Product::getBrandId,
                 Product::getCategoryId, Product::getType, Product::getIsPaidMember, Product::getVipPrice, Product::getMarketingType,
                 Product::getSystemFormId, Product::getDeliveryMethod, Product::getRedeemIntegral, Product::getExchangeNum);
         lqw.eq(Product::getId, id);
@@ -1390,8 +1418,11 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         }
         ProductDescription sd = productDescriptionService.getByProductIdAndType(product.getId(), product.getType(), product.getMarketingType());
         if (ObjectUtil.isNotNull(sd)) {
-            product.setContent(StrUtil.isBlank(sd.getDescription()) ? "" : sd.getDescription());
+            String html = StrUtil.isBlank(sd.getDescription()) ? "" : sd.getDescription();
+            product.setContentJson(sd.getDescriptionJson());
+            product.setContent(I18nJsonUtil.resolveLocalizedHtml(html, sd.getDescriptionJson(), RequestUtil.getLang()));
         }
+        I18nJsonUtil.applyProductDisplay(product);
         return product;
     }
 
@@ -1404,9 +1435,11 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
     @Override
     public Product getCartByProId(Integer productId) {
         LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
-        lqw.select(Product::getId, Product::getImage, Product::getName, Product::getType, Product::getIsPaidMember, Product::getDeliveryMethod);
+        lqw.select(Product::getId, Product::getImage, Product::getImageJson, Product::getName, Product::getNameJson, Product::getType, Product::getIsPaidMember, Product::getDeliveryMethod);
         lqw.eq(Product::getId, productId);
-        return dao.selectOne(lqw);
+        Product product = dao.selectOne(lqw);
+        I18nJsonUtil.applyProductDisplay(product);
+        return product;
     }
 
     /**
@@ -1448,7 +1481,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
     public List<Product> likeProductName(String productName, Integer merId) {
         LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
         lqw.select(Product::getId);
-        lqw.like(Product::getName, productName);
+        lqw.and(i -> i.like(Product::getName, productName).or().like(Product::getNameJson, productName));
         lqw.eq(Product::getIsDel, 0);
         if (!merId.equals(0)) {
             lqw.eq(Product::getMerId, merId);
@@ -1700,7 +1733,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
     @Override
     public List<ProMerchantProductResponse> getRecommendedProductsByMerId(Integer merId, Integer num) {
         LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
-        lqw.select(Product::getId, Product::getMerId, Product::getImage, Product::getName,
+        lqw.select(Product::getId, Product::getMerId, Product::getImage, Product::getImageJson, Product::getName, Product::getNameJson,
                 Product::getPrice, Product::getSales, Product::getFicti, Product::getStock);
         lqw.eq(Product::getMerId, merId);
         getForSaleWhere(lqw);
@@ -1713,6 +1746,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         return productList.stream().map(product -> {
             ProMerchantProductResponse response = new ProMerchantProductResponse();
             BeanUtils.copyProperties(product, response);
+            response.setName(I18nJsonUtil.resolveByRequest(product.getName(), product.getNameJson()));
+            response.setImage(I18nJsonUtil.resolveByRequest(product.getImage(), product.getImageJson()));
             return response;
         }).collect(Collectors.toList());
     }
@@ -1728,8 +1763,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
     public PageInfo<Product> findMerchantProH5List(MerchantProductSearchRequest request, PageParamRequest pageParamRequest) {
         LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
         // id、名称、图片、价格、销量
-        lqw.select(Product::getId, Product::getName, Product::getImage, Product::getPrice, Product::getOtPrice,
-                Product::getSales, Product::getFicti, Product::getUnitName, Product::getStock, Product::getMerId,
+        lqw.select(Product::getId, Product::getName, Product::getNameJson, Product::getImage, Product::getImageJson, Product::getPrice, Product::getOtPrice,
+                Product::getSales, Product::getFicti, Product::getUnitName, Product::getUnitNameJson, Product::getStock, Product::getMerId,
                 Product::getCategoryId, Product::getBrandId, Product::getVipPrice, Product::getIsPaidMember);
 
         getForSaleWhere(lqw);
@@ -1737,6 +1772,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         if (StrUtil.isNotBlank(request.getKeyword())) {
             String keyword = URLUtil.decode(request.getKeyword());
             lqw.and(i -> i.like(Product::getName, keyword)
+                    .or().like(Product::getNameJson, keyword)
                     .or().like(Product::getKeyword, keyword));
         }
         if (StrUtil.isNotBlank(request.getCids())) {
@@ -1772,6 +1808,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         }
         Page<Product> page = PageHelper.startPage(pageParamRequest.getPage(), pageParamRequest.getLimit());
         List<Product> productList = dao.selectList(lqw);
+        if (CollUtil.isNotEmpty(productList)) {
+            productList.forEach(I18nJsonUtil::applyProductDisplay);
+        }
         return CommonPage.copyPageInfo(page, productList);
     }
 
@@ -1899,8 +1938,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         }
         LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
         // id、名称、图片、价格、销量
-        lqw.select(Product::getId, Product::getName, Product::getImage, Product::getPrice, Product::getOtPrice,
-                Product::getSales, Product::getFicti, Product::getUnitName, Product::getStock, Product::getMerId,
+        lqw.select(Product::getId, Product::getName, Product::getNameJson, Product::getImage, Product::getImageJson, Product::getPrice, Product::getOtPrice,
+                Product::getSales, Product::getFicti, Product::getUnitName, Product::getUnitNameJson, Product::getStock, Product::getMerId,
                 Product::getVipPrice, Product::getIsPaidMember);
         getForSaleWhere(lqw);
         lqw.ne(Product::getType, ProductConstants.PRODUCT_TYPE_INTEGRAL);
@@ -1908,6 +1947,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         if (StrUtil.isNotBlank(request.getKeyword())) {
             String decode = URLUtil.decode(request.getKeyword());
             lqw.and(i -> i.like(Product::getName, decode)
+                    .or().like(Product::getNameJson, decode)
                     .or().like(Product::getKeyword, decode));
         }
         if (couponUser.getCategory().equals(CouponConstants.COUPON_CATEGORY_MERCHANT)) {
@@ -1946,6 +1986,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         lqw.orderByDesc(Product::getId);
         Page<Product> page = PageHelper.startPage(request.getPage(), request.getLimit());
         List<Product> productList = dao.selectList(lqw);
+        I18nJsonUtil.applyProductDisplayList(productList);
         return CommonPage.copyPageInfo(page, productList);
     }
 
@@ -2366,7 +2407,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
             return productMap;
         }
         LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
-        lqw.select(Product::getId, Product::getName, Product::getPrice, Product::getImage, Product::getIsShow, Product::getIsRecycle, Product::getIsDel);
+        lqw.select(Product::getId, Product::getName, Product::getNameJson, Product::getPrice, Product::getImage, Product::getImageJson, Product::getStock, Product::getIsShow, Product::getIsRecycle, Product::getIsDel);
         lqw.in(Product::getId, proIdList);
         List<Product> productList = dao.selectList(lqw);
         productList.forEach(e -> {
@@ -2409,18 +2450,18 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         // 排序部分
         if (StrUtil.isNotBlank(request.getSalesOrder())) {
             if (request.getSalesOrder().equals(Constants.SORT_DESC)) {
-                map.put("lastStr", " order by (p.sales + p.ficti) desc, p.rank desc, p.sort desc, p.id desc");
+                map.put("lastStr", " order by (p.sales + p.ficti) desc, p.`rank` desc, p.sort desc, p.id desc");
             } else {
-                map.put("lastStr", " order by (p.sales + p.ficti) asc, p.rank desc, p.sort desc, p.id desc");
+                map.put("lastStr", " order by (p.sales + p.ficti) asc, p.`rank` desc, p.sort desc, p.id desc");
             }
         } else if (StrUtil.isNotBlank(request.getPriceOrder())) {
             if (request.getPriceOrder().equals(Constants.SORT_DESC)) {
-                map.put("lastStr", " order by p.price desc, p.rank desc, p.sort desc, p.id desc");
+                map.put("lastStr", " order by p.price desc, p.`rank` desc, p.sort desc, p.id desc");
             } else {
-                map.put("lastStr", " order by p.price asc, p.rank desc, p.sort desc, p.id desc");
+                map.put("lastStr", " order by p.price asc, p.`rank` desc, p.sort desc, p.id desc");
             }
         } else {
-            map.put("lastStr", " order by p.rank desc, p.sort desc, p.id desc");
+            map.put("lastStr", " order by p.`rank` desc, p.sort desc, p.id desc");
         }
         List<ProductActivityResponse> responseList = dao.getActivitySearchPage(map);
         responseList.forEach(response -> {
@@ -2453,10 +2494,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
             map.put("merIds", request.getMerIds());
         }
         List<ProductMarketingResponse> responseList = dao.getMarketingSearchPage(map);
+        fillMarketingI18nJson(responseList);
         responseList.forEach(response -> {
             List<ProductAttrValue> attrValueList = productAttrValueService.getListByProductIdAndType(response.getId(),
                     response.getType(), ProductConstants.PRODUCT_MARKETING_TYPE_BASE, false);
             response.setAttrValue(attrValueList);
+            response.setAttrList(productAttributeService.findListWithOptionsByProductId(response.getId()));
         });
         return CommonPage.copyPageInfo(page, responseList);
     }
@@ -2522,7 +2565,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
     @Override
     public PageInfo<ProductMarketingResponse> getMarketingSearchPageByMerchant(MerProductMarketingSearchRequest request, SystemAdmin admin) {
         Map<String, Object> map = new HashMap<>();
-        if (request.getMarketingType().equals(ProductConstants.PRODUCT_MARKETING_TYPE_SECKILL)) {
+        if (ProductConstants.PRODUCT_MARKETING_TYPE_SECKILL.equals(request.getMarketingType())) {
             if (ObjectUtil.isNull(request.getActivityId())) {
                 throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "请选择秒杀活动");
             }
@@ -2560,12 +2603,59 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         map.put("merId", admin.getMerId());
         Page<Product> page = PageHelper.startPage(request.getPage(), request.getLimit());
         List<ProductMarketingResponse> responseList = dao.getMarketingSearchPageByMerchant(map);
+        fillMarketingI18nJson(responseList);
         responseList.forEach(response -> {
             List<ProductAttrValue> attrValueList = productAttrValueService.getListByProductIdAndType(response.getId(),
                     response.getType(), ProductConstants.PRODUCT_MARKETING_TYPE_BASE, false);
             response.setAttrValue(attrValueList);
+            response.setAttrList(productAttributeService.findListWithOptionsByProductId(response.getId()));
         });
         return CommonPage.copyPageInfo(page, responseList);
+    }
+
+    /** 营销选品列表补齐 nameJson / categoryNameJson，避免别名映射丢字段导致后台只显示默认中文 */
+    private void fillMarketingI18nJson(List<ProductMarketingResponse> responseList) {
+        if (CollUtil.isEmpty(responseList)) {
+            return;
+        }
+        List<Integer> ids = responseList.stream().map(ProductMarketingResponse::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        Map<Integer, Product> productMap = listByIds(ids).stream().collect(Collectors.toMap(Product::getId, p -> p, (a, b) -> a));
+        List<Integer> cateIds = new ArrayList<>();
+        for (ProductMarketingResponse response : responseList) {
+            Product product = productMap.get(response.getId());
+            if (product != null) {
+                response.setNameJson(product.getNameJson());
+                response.setNameI18n(I18nJsonUtil.toLangMap(product.getNameJson()));
+                if (StrUtil.isBlank(response.getName())) {
+                    response.setName(product.getName());
+                }
+                if (response.getCategoryId() == null) {
+                    response.setCategoryId(product.getCategoryId());
+                }
+            }
+            if (response.getCategoryId() != null) {
+                cateIds.add(response.getCategoryId());
+            }
+        }
+        if (CollUtil.isEmpty(cateIds)) {
+            return;
+        }
+        Map<Integer, ProductCategory> cateMap = productCategoryService.listByIds(cateIds).stream()
+                .collect(Collectors.toMap(ProductCategory::getId, c -> c, (a, b) -> a));
+        for (ProductMarketingResponse response : responseList) {
+            if (response.getCategoryId() == null || cateMap == null) {
+                continue;
+            }
+            ProductCategory category = cateMap.get(response.getCategoryId());
+            if (category == null) {
+                continue;
+            }
+            response.setCategoryNameJson(category.getNameJson());
+            response.setCategoryNameI18n(I18nJsonUtil.toLangMap(category.getNameJson()));
+            if (StrUtil.isBlank(response.getCategoryName())) {
+                response.setCategoryName(category.getName());
+            }
+        }
     }
 
     private Product getByIdException(Integer id) {
@@ -2679,11 +2769,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         lqw.eq(Product::getMarketingType, ProductConstants.PRODUCT_MARKETING_TYPE_BASE);
         if (StrUtil.isNotBlank(pageParamRequest.getKeyword())) {
             String decode = URLUtil.decode(pageParamRequest.getKeyword());
-            lqw.like(Product::getName, decode);
+            lqw.and(i -> i.like(Product::getName, decode).or().like(Product::getNameJson, decode));
         }
         lqw.orderByDesc(Product::getSort, Product::getId);
         Page<Product> page = PageHelper.startPage(pageParamRequest.getPage(), pageParamRequest.getLimit());
         List<Product> productList = dao.selectList(lqw);
+        I18nJsonUtil.applyProductDisplayList(productList);
         return CommonPage.copyPageInfo(page, productList);
     }
 
@@ -2736,7 +2827,11 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
             }
         }
         lqw.last(builder.toString());
-        return dao.selectList(lqw);
+        List<Product> list = dao.selectList(lqw);
+        if ("front".equals(label)) {
+            I18nJsonUtil.applyProductDisplayList(list);
+        }
+        return list;
     }
 
     /**
@@ -2750,7 +2845,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
     @Override
     public List<Product> findHomeRecommended(String message, String value, String expand, boolean isHome) {
         LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
-        lqw.select(Product::getId, Product::getImage, Product::getName, Product::getSales, Product::getPrice,
+        lqw.select(Product::getId, Product::getImage, Product::getImageJson, Product::getName, Product::getNameJson, Product::getSales, Product::getPrice,
                 Product::getFicti, Product::getBrandId, Product::getMerId, Product::getCategoryId, Product::getIsPaidMember,
                 Product::getVipPrice);
         getForSaleWhere(lqw);
@@ -2776,7 +2871,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         } else {
             lqw.last(" order by sales + ficti desc");
         }
-        return dao.selectList(lqw);
+        List<Product> productList = dao.selectList(lqw);
+        I18nJsonUtil.applyProductDisplayList(productList);
+        return productList;
     }
 
     /**
@@ -2787,7 +2884,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
     @Override
     public PageInfo<RecommendProductResponse> findRecommendPage(PageParamRequest pageRequest) {
         LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
-        lqw.select(Product::getId, Product::getMerId, Product::getImage, Product::getName, Product::getUnitName,
+        lqw.select(Product::getId, Product::getMerId, Product::getImage, Product::getImageJson, Product::getName, Product::getNameJson,
+                Product::getUnitName, Product::getUnitNameJson,
                 Product::getPrice, Product::getSales, Product::getFicti, Product::getCategoryId, Product::getBrandId,
                 Product::getIsPaidMember, Product::getVipPrice);
         getForSaleWhere(lqw);
@@ -2798,6 +2896,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
             return CommonPage.copyPageInfo(page, CollUtil.newArrayList());
         }
         productList = activityStyleService.makeActivityBorderStyle(productList);
+        I18nJsonUtil.applyProductDisplayList(productList);
         List<RecommendProductResponse> responseList = productList.stream().map(p -> {
             RecommendProductResponse response = new RecommendProductResponse();
             BeanUtils.copyProperties(p, response);
@@ -2816,7 +2915,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
     @Override
     public PageInfo<RecommendProductResponse> findMemberPage(PageParamRequest pageParamRequest) {
         LambdaQueryWrapper<Product> lqw = Wrappers.lambdaQuery();
-        lqw.select(Product::getId, Product::getMerId, Product::getImage, Product::getName, Product::getUnitName,
+        lqw.select(Product::getId, Product::getMerId, Product::getImage, Product::getImageJson, Product::getName, Product::getNameJson,
+                Product::getUnitName, Product::getUnitNameJson,
                 Product::getPrice, Product::getSales, Product::getFicti, Product::getCategoryId, Product::getBrandId,
                 Product::getIsPaidMember, Product::getVipPrice, Product::getStock);
         getForSaleWhere(lqw);
@@ -2828,6 +2928,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
             return CommonPage.copyPageInfo(page, CollUtil.newArrayList());
         }
         productList = activityStyleService.makeActivityBorderStyle(productList);
+        I18nJsonUtil.applyProductDisplayList(productList);
         List<RecommendProductResponse> responseList = productList.stream().map(p -> {
             RecommendProductResponse response = new RecommendProductResponse();
             BeanUtils.copyProperties(p, response);
@@ -3459,6 +3560,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
 
         Product product = new Product();
         BeanUtils.copyProperties(request, product);
+        product.setName(I18nJsonUtil.emptyToBlank(product.getName()));
+        product.setUnitName(I18nJsonUtil.emptyToBlank(product.getUnitName()));
+        product.setIntro(I18nJsonUtil.emptyToBlank(product.getIntro()));
         product.setId(null);
         product.setMerId(0);
         product.setMarketingType(ProductConstants.PRODUCT_MARKETING_TYPE_BASE);
@@ -3471,6 +3575,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         product.setImage(systemAttachmentService.clearPrefix(product.getImage(), cdnUrl));
         //轮播图
         product.setSliderImage(systemAttachmentService.clearPrefix(product.getSliderImage(), cdnUrl));
+        clearProductI18nMedia(product, cdnUrl);
 
         List<IntegralProductAttrValueAddRequest> attrValueAddRequestList = request.getAttrValueList();
         //计算价格
@@ -3496,13 +3601,15 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
 
         addRequestList.forEach(attrRequest -> {
             ProductAttribute attr = new ProductAttribute();
-            attr.setAttributeName(attrRequest.getAttributeName());
+            attr.setAttributeName(I18nJsonUtil.firstNonBlank(attrRequest.getAttributeName(), attrRequest.getAttributeNameJson()));
+            attr.setAttributeNameJson(attrRequest.getAttributeNameJson());
             attr.setIsShowImage(attrRequest.getIsShowImage());
             attr.setSort(ObjectUtil.isNotNull(attrRequest.getSort()) ? attrRequest.getSort() : 0);
             List<ProductAttrOptionAddRequest> optionRequestList = attrRequest.getOptionList();
             List<ProductAttributeOption> attrOptionList = optionRequestList.stream().map(optionRequest -> {
                 ProductAttributeOption option = new ProductAttributeOption();
-                option.setOptionName(optionRequest.getOptionName());
+                option.setOptionName(I18nJsonUtil.firstNonBlank(optionRequest.getOptionName(), optionRequest.getOptionNameJson()));
+                option.setOptionNameJson(optionRequest.getOptionNameJson());
                 option.setSort(ObjectUtil.isNotNull(optionRequest.getSort()) ? optionRequest.getSort() : 0);
                 option.setImage(StrUtil.isNotBlank(optionRequest.getImage()) ? systemAttachmentService.clearPrefix(optionRequest.getImage(), cdnUrl) : "");
                 return option;
@@ -3530,6 +3637,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         // 处理富文本
         ProductDescription spd = new ProductDescription();
         spd.setDescription(StrUtil.isNotBlank(request.getContent()) ? systemAttachmentService.clearPrefix(request.getContent(), cdnUrl) : "");
+        fillDescriptionJson(spd, null, cdnUrl);
         spd.setType(product.getType());
         spd.setMarketingType(product.getMarketingType());
 
@@ -3591,6 +3699,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
 
         Product product = new Product();
         BeanUtils.copyProperties(request, product);
+        product.setName(I18nJsonUtil.emptyToBlank(product.getName()));
+        product.setUnitName(I18nJsonUtil.emptyToBlank(product.getUnitName()));
+        product.setIntro(I18nJsonUtil.emptyToBlank(product.getIntro()));
         product.setType(tempProduct.getType());
         product.setMarketingType(tempProduct.getMarketingType());
 
@@ -3599,6 +3710,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         product.setImage(systemAttachmentService.clearPrefix(product.getImage(), cdnUrl));
         //轮播图
         product.setSliderImage(systemAttachmentService.clearPrefix(product.getSliderImage(), cdnUrl));
+        clearProductI18nMedia(product, cdnUrl);
 
         List<IntegralProductAttrValueAddRequest> attrValueAddRequestList = request.getAttrValueList();
         //计算价格
@@ -3622,14 +3734,16 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         addRequestList.forEach(attrRequest -> {
             ProductAttribute attr = new ProductAttribute();
             attr.setProductId(product.getId());
-            attr.setAttributeName(attrRequest.getAttributeName());
+            attr.setAttributeName(I18nJsonUtil.firstNonBlank(attrRequest.getAttributeName(), attrRequest.getAttributeNameJson()));
+            attr.setAttributeNameJson(attrRequest.getAttributeNameJson());
             attr.setIsShowImage(attrRequest.getIsShowImage());
             attr.setSort(ObjectUtil.isNotNull(attrRequest.getSort()) ? attrRequest.getSort() : 0);
             List<ProductAttrOptionAddRequest> optionRequestList = attrRequest.getOptionList();
             List<ProductAttributeOption> attrOptionList = optionRequestList.stream().map(optionRequest -> {
                 ProductAttributeOption option = new ProductAttributeOption();
                 option.setProductId(product.getId());
-                option.setOptionName(optionRequest.getOptionName());
+                option.setOptionName(I18nJsonUtil.firstNonBlank(optionRequest.getOptionName(), optionRequest.getOptionNameJson()));
+                option.setOptionNameJson(optionRequest.getOptionNameJson());
                 option.setSort(ObjectUtil.isNotNull(optionRequest.getSort()) ? optionRequest.getSort() : 0);
                 option.setImage(StrUtil.isNotBlank(optionRequest.getImage()) ? systemAttachmentService.clearPrefix(optionRequest.getImage(), cdnUrl) : "");
                 return option;
@@ -3668,6 +3782,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         // 处理富文本
         ProductDescription spd = new ProductDescription();
         spd.setDescription(StrUtil.isNotBlank(request.getContent()) ? systemAttachmentService.clearPrefix(request.getContent(), cdnUrl) : "");
+        fillDescriptionJson(spd, null, cdnUrl);
         spd.setType(product.getType());
         spd.setMarketingType(product.getMarketingType());
         spd.setProductId(product.getId());
@@ -3731,7 +3846,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         response.setAttrValueList(valueResponseList);
 
         ProductDescription sd = productDescriptionService.getByProductIdAndType(product.getId(), product.getType(), product.getMarketingType());
-        response.setContent(sd.getDescription());
+        response.setContent(sd == null ? "" : I18nJsonUtil.resolveLocalizedHtml(
+                sd.getDescription(), sd.getDescriptionJson(), RequestUtil.getLang()));
 
         return response;
     }
@@ -3790,6 +3906,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         if (StrUtil.isNotBlank(request.getKeywords())) {
             String keywords = URLUtil.decode(request.getKeywords());
             lqw.and(i -> i.like(Product::getName, keywords)
+                    .or().like(Product::getNameJson, keywords)
                     .or().apply(" find_in_set({0}, keyword)", keywords));
         }
         if (StrUtil.isNotBlank(request.getDateLimit())) {
@@ -3825,6 +3942,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         lqw.eq(Product::getType, ProductConstants.PRODUCT_TYPE_INTEGRAL);
         if (StrUtil.isNotBlank(keywords)) {
             lqw.and(i -> i.like(Product::getName, keywords)
+                    .or().like(Product::getNameJson, keywords)
                     .or().apply(" find_in_set({0}, keyword)", keywords));
         }
         if (ObjectUtil.isNotNull(dateLimit)) {
@@ -3855,6 +3973,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         List<IntegralProductFrontResponse> responseList = productList.stream().map(product -> {
             IntegralProductFrontResponse response = new IntegralProductFrontResponse();
             BeanUtils.copyProperties(product, response);
+            response.setName(I18nJsonUtil.resolveLocalized(product.getName(), product.getNameJson(), RequestUtil.getLang()));
             return response;
         }).collect(Collectors.toList());
         return CommonPage.copyPageInfo(page, responseList);
@@ -3883,6 +4002,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         List<IntegralProductFrontResponse> responseList = productList.stream().map(product -> {
             IntegralProductFrontResponse response = new IntegralProductFrontResponse();
             BeanUtils.copyProperties(product, response);
+            response.setName(I18nJsonUtil.resolveLocalized(product.getName(), product.getNameJson(), RequestUtil.getLang()));
             return response;
         }).collect(Collectors.toList());
         return CommonPage.copyPageInfo(productPage, responseList);
@@ -3902,5 +4022,36 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product>
         tempProduct.setIsShow(!product.getIsShow());
         return updateById(tempProduct);
     }
+
+    private void clearProductI18nMedia(Product product, String cdnUrl) {
+        product.setImageJson(I18nJsonUtil.transformMediaJson(product.getImageJson(), v ->
+                StrUtil.isNotBlank(v) ? systemAttachmentService.clearPrefix(v, cdnUrl) : v));
+        product.setSliderImageJson(I18nJsonUtil.transformMediaJson(product.getSliderImageJson(), v ->
+                StrUtil.isNotBlank(v) ? systemAttachmentService.clearPrefix(v, cdnUrl) : v));
+        if (StrUtil.isBlank(product.getImage())) {
+            String fallback = I18nJsonUtil.firstNonBlankJsonString(product.getImageJson());
+            if (StrUtil.isNotBlank(fallback)) {
+                product.setImage(systemAttachmentService.clearPrefix(fallback, cdnUrl));
+            }
+        }
+        if (StrUtil.isBlank(product.getSliderImage()) || "[]".equals(product.getSliderImage().trim())) {
+            String fallback = I18nJsonUtil.firstNonEmptySliderJson(product.getSliderImageJson());
+            if (StrUtil.isNotBlank(fallback)) {
+                product.setSliderImage(systemAttachmentService.clearPrefix(fallback, cdnUrl));
+            }
+        }
+    }
+
+    private void fillDescriptionJson(ProductDescription spd, String contentJson, String cdnUrl) {
+        spd.setDescriptionJson(I18nJsonUtil.transformMediaJson(contentJson, v ->
+                StrUtil.isNotBlank(v) ? systemAttachmentService.clearPrefix(v, cdnUrl) : v));
+        if (I18nJsonUtil.isBlankHtml(spd.getDescription())) {
+            String fallback = I18nJsonUtil.firstNonBlankHtml(spd.getDescriptionJson());
+            if (StrUtil.isNotBlank(fallback)) {
+                spd.setDescription(systemAttachmentService.clearPrefix(fallback, cdnUrl));
+            }
+        }
+    }
+
 }
 

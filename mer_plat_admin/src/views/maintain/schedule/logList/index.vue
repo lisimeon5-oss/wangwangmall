@@ -2,14 +2,14 @@
   <div class="divBox">
     <el-card class="box-card" shadow="never" :bordered="false">
       <el-table v-loading="loading" size="small" :data="tableData.list">
-        <el-table-column prop="jobId" label="任务id" min-width="60" />
-        <el-table-column prop="logId" label="任务日志id" min-width="80" />
-        <el-table-column label="定时任务类名" min-width="150" prop="beanName" />
-        <el-table-column min-width="120" label="方法名" prop="methodName" />
-        <el-table-column prop="params" label="参数" min-width="100" />
-        <el-table-column prop="times" label="耗时(单位：毫秒)" min-width="120"> </el-table-column>
-        <el-table-column prop="error" label="失败信息" min-width="200"> </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" min-width="150"> </el-table-column>
+        <el-table-column prop="jobId" :label="$t('maintain.taskId')" min-width="60" />
+        <el-table-column prop="logId" :label="$t('maintain.taskLogId')" min-width="80" />
+        <el-table-column :label="$t('maintain.scheduledTaskClassName')" min-width="150" prop="beanName" />
+        <el-table-column min-width="120" :label="$t('maintain.methodName')" prop="methodName" />
+        <el-table-column prop="params" :label="$t('maintain.parameter')" min-width="100" />
+        <el-table-column prop="times" :label="$t('maintain.timeCost')" min-width="120"> </el-table-column>
+        <el-table-column prop="error" :label="$t('maintain.failureInfo')" min-width="200"> </el-table-column>
+        <el-table-column prop="createTime" :label="$t('product.createTime')" min-width="150"> </el-table-column>
       </el-table>
       <div class="block">
         <el-pagination

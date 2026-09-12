@@ -3,18 +3,18 @@
     <el-card class="box-card" :bordered="false" shadow="never" :body-style="{ padding: 0 }">
       <div class="padding-add">
         <el-form inline size="small" @submit.native.prevent>
-          <el-form-item label="角色昵称：">
+          <el-form-item :label="$t('systemSetting.roleNicknameLabel')">
             <el-input
               v-model.trim="listPram.roleName"
               @keyup.enter.native="handleGetRoleList"
-              placeholder="请输入角色昵称"
+              :placeholder="$t('systemSetting.pleaseEnterRoleNickname')"
               clearable
               class="selWidth"
             />
           </el-form-item>
           <el-form-item>
-            <el-button size="mini" type="primary" @click.native="handleGetRoleList">查询</el-button>
-            <el-button size="mini" @click="resetQuery">重置</el-button>
+            <el-button size="mini" type="primary" @click.native="handleGetRoleList">{{ $t('common.query') }}</el-button>
+            <el-button size="mini" @click="resetQuery">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -23,7 +23,7 @@
       <el-form inline @submit.native.prevent>
         <el-form-item>
           <el-button size="mini" type="primary" @click="handlerOpenEdit(0)" v-hasPermi="['platform:admin:role:save']"
-            >添加角色</el-button
+            >{{ $t('systemSetting.addRole') }}</el-button
           >
         </el-form-item>
       </el-form>
@@ -32,29 +32,31 @@
         size="small"
         :header-cell-style="{ fontWeight: 'bold', background: '#f8f8f9', color: '#515a6e', height: '40px' }"
       >
-        <el-table-column label="角色编号" prop="id" width="120"></el-table-column>
-        <el-table-column label="角色昵称" prop="roleName" min-width="130" />
-        <el-table-column label="创建时间" prop="createTime" min-width="150" />
-        <el-table-column label="更新时间" prop="updateTime" min-width="150" />
-        <el-table-column label="状态" prop="status" fixed="right" min-width="100">
+        <el-table-column :label="$t('systemSetting.roleNo')" prop="id" width="120"></el-table-column>
+        <el-table-column :label="$t('systemSetting.roleNickname')" min-width="130">
+          <template slot-scope="scope">{{ localizedRoleName(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('product.createTime')" prop="createTime" min-width="150" />
+        <el-table-column :label="$t('maintain.updateTime')" prop="updateTime" min-width="150" />
+        <el-table-column :label="$t('common.status')" prop="status" fixed="right" min-width="100">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:admin:role:update:status'])"
               v-model="scope.row.status"
               :active-value="true"
               :inactive-value="false"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
               @change="handleStatusChange(scope.row)"
             ></el-switch>
-            <div v-else>{{ scope.row.status ? '开启' : '关闭' }}</div>
+            <div v-else>{{ scope.row.status ? $t('common.open') : $t('common.close') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="100" fixed="right">
           <template slot-scope="scope">
-            <a @click="handlerOpenEdit(1, scope.row)" v-hasPermi="['platform:admin:role:update']">编辑</a>
+            <a @click="handlerOpenEdit(1, scope.row)" v-hasPermi="['platform:admin:role:update']">{{ $t('common.edit') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a @click="handlerOpenDel(scope.row)" v-hasPermi="['platform:admin:role:delete']">删除</a>
+            <a @click="handlerOpenDel(scope.row)" v-hasPermi="['platform:admin:role:delete']">{{ $t('common.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -70,10 +72,10 @@
     </el-card>
     <el-dialog
       :visible.sync="editDialogConfig.visible"
-      :title="editDialogConfig.isCreate === 0 ? '创建身份' : '编辑身份'"
+      :title="editDialogConfig.isCreate === 0 ? $t('systemSetting.createIdentity') : $t('systemSetting.editIdentity')"
       destroy-on-close
       :close-on-click-modal="false"
-      width="500px"
+      width="560px"
       class="dialog-bottom"
     >
       <edit
@@ -100,6 +102,7 @@
 import * as roleApi from '@/api/role.js';
 import edit from './edit';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   // name: "index"
   components: { edit },
@@ -130,10 +133,13 @@ export default {
   },
   methods: {
     checkPermi,
+    localizedRoleName(row) {
+      return getLocalizedText(row ? row.roleName : '', row ? row.roleNameJson : '', getUiLocale(this));
+    },
     handlerOpenDel(rowData) {
-      this.$modalSure('确认删除当前数据').then(() => {
+      this.$modalSure(this.$t('systemSetting.confirmDeleteCurrentData')).then(() => {
         roleApi.delRole(rowData.id).then((data) => {
-          this.$message.success('删除数据成功');
+          this.$message.success(this.$t('content.deleteDataSuccess'));
           this.handleGetRoleList();
         });
       });
@@ -163,7 +169,7 @@ export default {
     //修改状态
     handleStatusChange(row) {
       roleApi.updateRoleStatus(row).then((res) => {
-        this.$message.success('更新状态成功');
+        this.$message.success(this.$t('user.updateStatusSuccess'));
         this.handleGetRoleList();
       });
     },

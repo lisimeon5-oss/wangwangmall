@@ -34,5 +34,8 @@ public class UserTag implements Serializable {
     @ApiModelProperty(value = "标签名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言标签名称(JSON)")
+    private String nameJson;
+
 
 }

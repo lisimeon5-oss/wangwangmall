@@ -37,6 +37,9 @@ public class ProductGuaranteeGroupListResponse implements Serializable {
     @ApiModelProperty(value = "组合名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言组合名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 

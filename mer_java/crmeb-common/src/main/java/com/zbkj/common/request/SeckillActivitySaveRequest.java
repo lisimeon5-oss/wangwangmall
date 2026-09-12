@@ -1,5 +1,6 @@
 package com.zbkj.common.request;
 
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -32,10 +33,13 @@ public class SeckillActivitySaveRequest implements Serializable {
     @ApiModelProperty(value = "秒杀活动ID，编辑时必填")
     private Integer id;
 
-    @ApiModelProperty(value = "秒杀活动名称", required = true)
-    @NotBlank(message = "秒杀活动名称不能为空")
+    @ApiModelProperty(value = "秒杀活动名称")
     @Length(max = 30, message = "秒杀活动名称最多30个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言秒杀活动名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言秒杀活动名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "秒杀开始日期", required = true)
     @NotBlank(message = "秒杀开始日期不能为空")

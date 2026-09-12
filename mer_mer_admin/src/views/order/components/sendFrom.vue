@@ -1,15 +1,15 @@
 <template>
   <div>
     <div v-if="formItem.deliveryType === 'express'">
-      <el-form-item label="发货类型：">
+      <el-form-item :label="$t('order.shippingTypeLabel')">
         <el-radio-group v-model="formItem.expressRecordType" @change="changeSendTypeRadio(formItem.expressRecordType)">
-          <el-radio label="1">手动填写</el-radio>
+          <el-radio label="1">{{ $t('order.manualEntry') }}</el-radio>
           <el-radio label="2" :disabled="merElectPrint == 0" v-if="checkPermi(['admin:order:sheet:info'])"
-            >电子面单打印</el-radio
+            >{{ $t('common.electronicWaybill') }}</el-radio
           >
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-if="formItem.deliveryType === 'express'" label="快递公司：" prop="expressCode">
+      <el-form-item v-if="formItem.deliveryType === 'express'" :label="$t('order.expressCompanyLabel')" prop="expressCode">
         <el-select
           @change="onChangeExpress"
           v-model="formItem.expressCode"
@@ -18,7 +18,9 @@
         >
           <el-option v-for="item in express" :key="item.id" :label="item.name" :value="item.code"
             >{{ item.name }}
-            <span v-if="item.account" type="info" class="line-heightOne from-tips"> | 月结账号已配</span>
+            <span v-if="item.account" type="info" class="line-heightOne from-tips">
+              | {{ $t('order.monthlyAccountConfigured') }}
+            </span>
           </el-option>
         </el-select>
         <el-button
@@ -28,22 +30,22 @@
           size="small"
           @click="handleCreat"
           v-hasPermi="['merchant:express:relate']"
-          >设置物流公司</el-button
+          >{{ $t('order.setLogisticsCompany') }}</el-button
         >
       </el-form-item>
       <!--手动填写-->
       <template v-if="formItem.expressRecordType === '1'">
-        <el-form-item v-if="formItem.deliveryType === 'express'" label="快递单号：" prop="expressNumber">
-          <el-input v-model.trim="formItem.expressNumber" placeholder="请输入快递单号"></el-input>
+        <el-form-item v-if="formItem.deliveryType === 'express'" :label="$t('order.trackingNoLabel')" prop="expressNumber">
+          <el-input v-model.trim="formItem.expressNumber" :placeholder="$t('order.pleaseEnterExpressNo')"></el-input>
         </el-form-item>
       </template>
       <!--电子面单打印-->
       <template v-if="formItem.expressRecordType === '2'">
-        <el-form-item label="电子面单：" class="express_temp_id" prop="expressTempId" label-width="95px">
+        <el-form-item :label="$t('order.electronicWaybillLabel')" class="express_temp_id" prop="expressTempId" label-width="95px">
           <div class="acea-row">
             <el-select
               v-model="formItem.expressTempId"
-              placeholder="请选择电子面单"
+              :placeholder="$t('order.pleaseSelectElectronicWaybill')"
               :class="[formItem.expressTempId ? 'width9' : 'width8']"
               @change="onChangeImg"
             >
@@ -63,29 +65,29 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="寄件人姓名：" prop="toName">
-          <el-input v-model="formItem.toName" placeholder="请输入寄件人姓名" style="width: 80%"></el-input>
+        <el-form-item :label="$t('order.senderNameLabel')" prop="toName">
+          <el-input v-model="formItem.toName" :placeholder="$t('order.pleaseEnterSenderName')" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="寄件人电话：" prop="toTel">
-          <el-input v-model="formItem.toTel" placeholder="请输入寄件人电话" style="width: 80%"></el-input>
+        <el-form-item :label="$t('order.senderPhoneLabel')" prop="toTel">
+          <el-input v-model="formItem.toTel" :placeholder="$t('order.pleaseEnterSenderPhone')" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="寄件人地址：" prop="toAddr">
-          <el-input v-model="formItem.toAddr" placeholder="请输入寄件人地址" style="width: 80%"></el-input>
+        <el-form-item :label="$t('order.senderAddressLabel')" prop="toAddr">
+          <el-input v-model="formItem.toAddr" :placeholder="$t('order.pleaseEnterSenderAddress')" style="width: 80%"></el-input>
         </el-form-item>
       </template>
     </div>
 
-    <el-form-item v-if="formItem.deliveryType === 'noNeed'" label="发货备注：">
+    <el-form-item v-if="formItem.deliveryType === 'noNeed'" :label="$t('order.shipmentRemarkLabel')">
       <el-input
         v-model.trim="formItem.deliveryMark"
         show-word-limit
         :autosize="{ minRows: 4 }"
         maxlength="250"
         type="textarea"
-        placeholder="请输入备注信息，最多可输入250字"
+        :placeholder="$t('order.remarkMax250')"
       ></el-input>
     </el-form-item>
-    <el-form-item v-if="formItem.deliveryType === 'merchant'" label="配送人员：" prop="deliveryCarrier">
+    <el-form-item v-if="formItem.deliveryType === 'merchant'" :label="$t('order.deliveryPersonnelLabel')" prop="deliveryCarrier">
       <div class="acea-row">
         <el-select
           v-model="selectedValue"
@@ -97,11 +99,11 @@
         >
           <el-option v-for="item in personnelList" :key="item.id" :label="item.personnelName" :value="item" />
         </el-select>
-        <el-button v-show="isShowBtn" class="ml24" @click="handleCreatPersonnel()">添加配送员</el-button>
+        <el-button v-show="isShowBtn" class="ml24" @click="handleCreatPersonnel()">{{ $t('order.addDeliveryPersonnel') }}</el-button>
       </div>
     </el-form-item>
-    <el-form-item v-if="formItem.deliveryType === 'merchant'" label="手机号码：" prop="carrierPhone">
-      <el-input v-model.trim="formItem.carrierPhone" disabled placeholder="请输入配送人员手机号码"></el-input>
+    <el-form-item v-if="formItem.deliveryType === 'merchant'" :label="$t('order.mobileLabel')" prop="carrierPhone">
+      <el-input v-model.trim="formItem.carrierPhone" disabled :placeholder="$t('order.pleaseEnterDeliveryPhone')"></el-input>
     </el-form-item>
     <!--物流公司-->
     <creat-express ref="craetExpressRef" @handlerSuccessSubmit="getList"></creat-express>

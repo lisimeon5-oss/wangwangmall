@@ -9,10 +9,10 @@
     >
       <div class="padding-add">
         <el-form ref="form" inline :model="tableFrom" @submit.native.prevent>
-          <el-form-item label="链接名称：">
+          <el-form-item :label="$t('application.linkNameLabel')">
             <el-input
               v-model.trim="keywords"
-              placeholder="请输入链接名称"
+              :placeholder="$t('application.pleaseEnterLinkName')"
               class="selWidth"
               size="small"
               clearable
@@ -20,7 +20,7 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -32,29 +32,29 @@
         size="small"
         @click="handlerAdd"
         v-hasPermi="['platform:wechat:mini:generate:url:link']"
-        >新增链接</el-button
+        >{{ $t('application.addLink') }}</el-button
       >
       <el-alert
         class="mb20"
-        title="突破低复购率的瓶颈，用户可通过点击短信、邮件、微信外网页等短链接直接跳转进入商城，并最终在商城实现私域用户沉淀和转化。"
+        :title="$t('application.shortLinkIntro')"
         type="warning"
         :closable="false"
         effect="light"
       ></el-alert>
       <el-table v-loading="loading" :data="tableData.data" size="small">
         <el-table-column prop="id" label="ID" min-width="90" />
-        <el-table-column label="链接名称" min-width="150" prop="name" :show-overflow-tooltip="true" />
-        <el-table-column min-width="250" label="跳转页面" prop="originalPath" />
-        <el-table-column min-width="200" label="生成链接" prop="urlLink" />
-        <el-table-column min-width="100" label="有效期(天)" prop="expireInterval" />
-        <el-table-column label="生成时间" min-width="150" prop="createTime" />
-        <el-table-column prop="address" fixed="right" width="190" label="操作">
+        <el-table-column :label="$t('application.linkName')" min-width="150" prop="name" :show-overflow-tooltip="true" />
+        <el-table-column min-width="250" :label="$t('application.jumpPage')" prop="originalPath" />
+        <el-table-column min-width="200" :label="$t('application.generateLink')" prop="urlLink" />
+        <el-table-column min-width="100" :label="$t('application.validityDays')" prop="expireInterval" />
+        <el-table-column :label="$t('application.generateTime')" min-width="150" prop="createTime" />
+        <el-table-column prop="address" fixed="right" width="190" :label="$t('common.operate')">
           <template slot-scope="scope">
-            <a class="copy copy-data" :data-clipboard-text="scope.row.urlLink" @click="handleCopy">复制链接</a>
+            <a class="copy copy-data" :data-clipboard-text="scope.row.urlLink" @click="handleCopy">{{ $t('application.copyLink') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a @click="handleRegenerate(scope.row)" v-hasPermi="['platform:wechat:mini:generate:url:link']">再次生成</a>
+            <a @click="handleRegenerate(scope.row)" v-hasPermi="['platform:wechat:mini:generate:url:link']">{{ $t('application.regenerate') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a @click="handleDelete(scope.row.id)" v-hasPermi="['platform:wechat:mini:delete:url:link']">删除</a>
+            <a @click="handleDelete(scope.row.id)" v-hasPermi="['platform:wechat:mini:delete:url:link']">{{ $t('common.delete') }}</a>
           </template>
         </el-table-column> </el-table
       >`
@@ -72,38 +72,38 @@
       </div>
     </el-card>
     <!--添加表单-->
-    <el-dialog title="新增链接" :visible.sync="dialogVisible" width="700px" :before-close="handleClose">
+    <el-dialog :title="$t('application.addLink')" :visible.sync="dialogVisible" width="700px" :before-close="handleClose">
       <el-form :model="formData" :rules="rules" ref="formData" label-width="90px" class="demo-ruleForm">
-        <el-form-item label="链接名称：" prop="name">
-          <el-input v-model.trim="formData.name" maxlength="50" placeholder="请输入链接名称（最多50字）"></el-input>
+        <el-form-item :label="$t('application.linkNameLabel')" prop="name">
+          <el-input v-model.trim="formData.name" maxlength="50" :placeholder="$t('application.pleaseEnterLinkNameMax50')"></el-input>
         </el-form-item>
-        <el-form-item label="跳转页面：" prop="originalPath">
+        <el-form-item :label="$t('application.jumpPageLabel')" prop="originalPath">
           <el-input
             @click="handleGetLink"
             size="small"
             icon="ios-arrow-forward"
             v-model="formData.originalPath"
             readonly
-            placeholder="请选择链接"
+            :placeholder="$t('application.pleaseSelectLink')"
           >
             <el-button @click="handleGetLink" slot="append" icon="el-icon-arrow-right"></el-button>
           </el-input>
         </el-form-item>
-        <el-form-item label="有效期(天)：" prop="expireInterval">
+        <el-form-item :label="$t('application.validityDaysLabel')" prop="expireInterval">
           <el-input-number
             v-model.trim="formData.expireInterval"
             :min="1"
             :step="1"
             step-strictly
             :max="30"
-            placeholder="范围在1~30，默认30"
+            :placeholder="$t('application.range1to30')"
           ></el-input-number>
-          <div class="from-tips">根据微信接口要求，链接有效期最长为30天</div>
+          <div class="from-tips">{{ $t('application.linkValid30Days') }}</div>
         </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button type="primary" @click="submitForm('formData')" v-hasPermi="['platform:express:update']"
-          >生成链接</el-button
+          >{{ $t('application.generateLink') }}</el-button
         >
       </div>
     </el-dialog>
@@ -150,10 +150,10 @@ export default {
         name: '',
       },
       rules: {
-        name: [{ required: true, message: '请填写链接名称', trigger: 'blur' }],
+        name: [{ required: true, message: this.$t('application.pleaseFillLinkName'), trigger: 'blur' }],
 
-        originalPath: [{ required: true, message: '请选择跳转页面', trigger: 'change' }],
-        expireInterval: [{ required: true, message: '请填写失效间隔天数', trigger: ['blur', 'change'] }],
+        originalPath: [{ required: true, message: this.$t('application.pleaseSelectJumpPage'), trigger: 'change' }],
+        expireInterval: [{ required: true, message: this.$t('application.pleaseFillExpiryDays'), trigger: ['blur', 'change'] }],
       },
     };
   },
@@ -166,7 +166,7 @@ export default {
       this.$nextTick(function () {
         const clipboard = new ClipboardJS('.copy-data');
         clipboard.on('success', () => {
-          this.$message.success('复制成功');
+          this.$message.success(this.$t('application.copySuccess'));
           clipboard.destroy();
         });
       });
@@ -198,9 +198,9 @@ export default {
     },
     // 删除
     handleDelete(id) {
-      this.$modalSure('删除该链接吗？').then(() => {
+      this.$modalSure(this.$t('application.deleteLinkConfirm')).then(() => {
         wechatUrlLinkDeleteApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableFrom);
           this.getList();
         });
@@ -234,7 +234,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           wechatUrlLinkGenerateApi(this.formData).then((res) => {
-            this.$message.success('新增成功');
+            this.$message.success(this.$t('product.addSuccess'));
             this.getList(1);
             this.handleClose();
           });

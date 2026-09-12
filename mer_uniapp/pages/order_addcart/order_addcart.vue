@@ -2,7 +2,7 @@
 	<view :data-theme="theme">
 		<view class="cart_nav" :style='"height:"+navH+"rpx;"'>
 			<!-- #ifndef APP-PLUS -->
-			<nav-bar iconColor='#fff' ref="navBarRef" :isBackgroundColor="false" navTitle="购物车">
+			<nav-bar iconColor='#fff' ref="navBarRef" :isBackgroundColor="false" :navTitle="$t('cart.title')">
 			</nav-bar>
 			<!-- #endif -->
 		</view>
@@ -11,9 +11,9 @@
 				<view
 					v-if="(cartList.valid.length === 0 && cartList.invalid.length === 0) || (cartList.valid.length > 0)"
 					class='acea-row row-between-wrapper'>
-					<view>共 <text class='num'>{{cartCount}}</text>件商品</view>
+					<view>{{$t('cart.totalGoods', { n: cartCount })}}</view>
 					<view v-if="cartList.valid.length > 0 || cartList.invalid.length > 0"
-						class='administrate acea-row row-center-wrapper' @click='manage'>{{ footerswitch ? '管理' : '取消'}}
+						class='administrate acea-row row-center-wrapper' @click='manage'>{{ footerswitch ? $t('cart.manage') : $t('common.cancel')}}
 					</view>
 				</view>
 			</view>
@@ -65,17 +65,17 @@
 											<view class='line1 line-heightOne' :class="item.attrStatus?'':'reColor'">
 												{{item.proName}}
 											</view>
-											<view class='infor line1 line-heightOne' v-if="item.sku">规格：{{item.sku}}
+											<view class='infor line1 line-heightOne' v-if="item.sku">{{$t('common.sku')}}：{{item.sku}}
 											</view>
 											<view class='money mt-20' v-if="item.attrStatus">
 												<svip-price :svipIconStyle="svipIconStyle" :productPrice="item"
 													:svipPriceStyle="svipPriceStyle"></svip-price>
-												<!-- ￥{{item.vipPrice ? item.vipPrice :item.price}} -->
+												<!-- ฿{{item.vipPrice ? item.vipPrice :item.price}} -->
 											</view>
 											<view class="reElection acea-row row-between-wrapper" v-else>
-												<view class="title">请重新选择商品规格</view>
+												<view class="title">{{$t('cart.reselectSku')}}</view>
 												<view class="reBnt cart-color acea-row row-center-wrapper"
-													@click.stop="reElection(item)">重选</view>
+													@click.stop="reElection(item)">{{$t('cart.reselect')}}</view>
 											</view>
 										</view>
 										<view class='carnum acea-row row-center-wrapper' v-if="item.attrStatus">
@@ -95,18 +95,18 @@
 						<view class='goodsNav acea-row row-between-wrapper'>
 							<view v-if="cartList.invalid.length > 1 || cartList.valid.length > 0" @click='goodsOpen'>
 								<text class='iconfont'
-									:class='goodsHidden==true?"icon-xiangxia":"icon-xiangshang"'></text>失效商品
+									:class='goodsHidden==true?"icon-xiangxia":"icon-xiangshang"'></text>{{$t('cart.invalidGoods')}}
 							</view>
 							<view v-else>
-								失效商品
+								{{$t('cart.invalidGoods')}}
 							</view>
-							<view class='del' @click='unsetCart'><text class='iconfont icon-shanchu1'></text>清空</view>
+							<view class='del' @click='unsetCart'><text class='iconfont icon-shanchu1'></text>{{$t('cart.clear')}}</view>
 						</view>
 						<view class='goodsList' :hidden='goodsHidden'>
 							<view v-for="(itemn,indexn) in cartList.invalid" :key='indexn'>
 								<view v-for="(item,index) in itemn.cartInfoList" :key='index'>
 									<view class='item acea-row row-between-wrapper'>
-										<view class='invalid'>失效</view>
+										<view class='invalid'>{{$t('cart.invalid')}}</view>
 										<view class='picTxt acea-row row-between-wrapper'>
 											<view class='pictrue'>
 												<easy-loadimage mode="widthFix" :image-src="item.image">
@@ -115,10 +115,10 @@
 											<view class='text acea-row row-column-between'>
 												<view class='line1 name'>{{item.proName}}</view>
 												<view class='infor line1' v-if="item.sku">
-													属性：{{item.sku}}
+													{{$t('common.attr')}}：{{item.sku}}
 												</view>
 												<view class='acea-row row-between-wrapper'>
-													<view class='end'>该商品已失效</view>
+													<view class='end'>{{$t('cart.goodsInvalid')}}</view>
 												</view>
 											</view>
 										</view>
@@ -138,7 +138,7 @@
 					v-if="(cartList.valid.length == 0 && cartList.invalid.length == 0 && !loading ) || !isLogin">
 					<view class='pictrue'>
 						<image :src="urlDomain+'crmebimage/presets/noShopper.png'"></image>
-						<view class="text-ccc">购物车为空哦~</view>
+						<view class="text-ccc">{{$t('cart.empty')}}</view>
 					</view>
 					<recommend ref="recommendIndex"></recommend>
 				</view>
@@ -151,42 +151,41 @@
 		</view>
 		<view :class="bottomNavigationIsCustom?'footerTop':''" class='footer acea-row row-between-wrapper'
 			v-if="cartList.valid.length > 0">
-			<view>
+			<view class="footer-left">
 				<view class="allcheckbox flex-y-center" @click.stop="checkboxAllChange">
 					<text v-if="!isAllSelect" class="iconfont icon-weixuan"></text>
 					<text v-else class="iconfont icon-xuanzhong11 font-color"></text>
-					全选
+					{{$t('cart.selectAll')}}
 				</view>
 			</view>
 			<view class='money acea-row row-middle' v-if="footerswitch==true">
 				<view class="text-right">
-					<view>
-						<text class="all_text">合计：</text>
+					<view class="total-line">
+						<text class="all_text">{{$t('cart.total')}}</text>
 						<text class='price-color'>
-							<text class="symbol">¥</text>
+							<text class="symbol">฿</text>
 							<text
 								class="all_money">{{calculatePriceData.totalPrice?calculatePriceData.totalPrice:0}}</text>
 						</text>
 					</view>
-					<view class="acea-row row-middle" @click="popupChange()"
+					<view class="discount-line acea-row row-middle" @click="popupChange()"
 						v-show="calculatePriceData.totalCouponPrice>0">
 						<text
-							class="youhui">优惠：¥{{calculatePriceData.totalCouponPrice?calculatePriceData.totalCouponPrice:0}}</text>
-						<text class="mingxi price-color">优惠明细</text>
+							class="youhui">{{$t('cart.discount')}}฿{{calculatePriceData.totalCouponPrice?calculatePriceData.totalCouponPrice:0}}</text>
+						<text class="mingxi price-color">{{$t('cart.discountDetail')}}</text>
 						<text class="iconfont icon-xiala1"></text>
-						<!-- <text class="iconfont icon-xiangshang2"></text> -->
 					</view>
 				</view>
-				<form @submit="subOrder" report-submit='true'>
-					<button class='placeOrder bg_color' formType="submit">去结算 ({{bayCount}})</button>
+				<form class="checkout-form" @submit="subOrder" report-submit='true'>
+					<button class='placeOrder bg_color' formType="submit">{{$t('cart.checkout')}} ({{bayCount}})</button>
 				</form>
 			</view>
 			<view class='button acea-row row-middle' v-else>
 				<form @submit="subCollect" report-submit='true'>
-					<button class='btn_cart_color' formType="submit">移入收藏</button>
+					<button class='btn_cart_color' formType="submit">{{$t('user.collect')}}</button>
 				</form>
 				<form @submit="subDel" report-submit='true'>
-					<button class='bnt' formType="submit">删除</button>
+					<button class='bnt' formType="submit">{{$t('common.delete')}}</button>
 				</form>
 			</view>
 		</view>
@@ -198,10 +197,10 @@
 			<view v-show="popupShow">
 				<scroll-view scroll-y="true" class="popup_content">
 					<view class="_tit text-center">
-						{{calculatePriceData.proTotalPrice>0&& calculatePriceData.totalCouponPrice!=0?'优惠明细':'商品详情'}}
+						{{calculatePriceData.proTotalPrice>0&& calculatePriceData.totalCouponPrice!=0?$t('cart.discountDetail'):$t('cart.goodsDetail')}}
 					</view>
 					<view v-show="calculatePriceData.proTotalPrice>0&& calculatePriceData.totalCouponPrice!=0"
-						class="_desc text-center">实际优惠详情以下单页为准</view>
+						class="_desc text-center">{{$t('实际优惠详情以下单页为准')}}</view>
 					<view class="_pro_content">
 						<view class="_pro_box">
 							<view class="_pic_item" @click.stop="popupCheck(item)"
@@ -215,31 +214,31 @@
 						</view>
 						<view class="acea-row row-center-wrapper _more"
 							v-show="checkProList.length && checkProList.length > 4" @click="showMore = !showMore">
-							<text>已选{{checkProList.length}}件商品</text>
+							<text>{{$t('cart.selectedCount', { n: checkProList.length })}}</text>
 							<text v-if="showMore" class="iconfont icon-xiangshang"></text>
 							<text v-else class="iconfont icon-xiangxia"></text>
 						</view>
 					</view>
 					<block v-if="calculatePriceData.proTotalPrice>0 && calculatePriceData.totalCouponPrice!=0">
 						<view class="_cell acea-row row-between-wrapper">
-							<text class="_label">商品总价：</text>
-							<text class="_count">¥{{calculatePriceData.proTotalPrice}}</text>
+							<text class="_label">{{$t('cart.goodsAmount')}}</text>
+							<text class="_count">฿{{calculatePriceData.proTotalPrice}}</text>
 						</view>
 						<view class="_cell acea-row row-between-wrapper">
-							<text class="_label">会员优惠：</text>
-							<text class="_count">-¥{{calculatePriceData.svipDiscountPrice}}</text>
+							<text class="_label">{{$t('会员优惠：')}}</text>
+							<text class="_count">-฿{{calculatePriceData.svipDiscountPrice}}</text>
 						</view>
 						<view class="_cell acea-row row-between-wrapper">
-							<text class="_label">店铺优惠：</text>
-							<text class="_count">-¥{{calculatePriceData.merCouponPrice}}</text>
+							<text class="_label">{{$t('店铺优惠：')}}</text>
+							<text class="_count">-฿{{calculatePriceData.merCouponPrice}}</text>
 						</view>
 						<view class="_cell acea-row row-between-wrapper">
-							<text class="_label">平台优惠：</text>
-							<text class="_count">-¥{{calculatePriceData.platCouponPrice}}</text>
+							<text class="_label">{{$t('平台优惠：')}}</text>
+							<text class="_count">-฿{{calculatePriceData.platCouponPrice}}</text>
 						</view>
 						<view class="_cell_all acea-row row-between-wrapper">
-							<text class="_label">共优惠：</text>
-							<text class="_count">-¥{{calculatePriceData.totalCouponPrice}}</text>
+							<text class="_label">{{$t('共优惠：')}}</text>
+							<text class="_count">-฿{{calculatePriceData.totalCouponPrice}}</text>
 						</view>
 					</block>
 				</scroll-view>
@@ -492,7 +491,7 @@
 					productSelect === undefined
 				)
 					return that.$util.Tips({
-						title: "产品库存不足，请选择其它"
+						title: this.$t('产品库存不足，请选择其它')
 					});
 
 				let q = {
@@ -503,10 +502,10 @@
 						that.attr.productSelect.unique : that.productInfo.id
 				};
 				getResetCart(q)
-					.then(function(res) {
+					.then((res) => {
 						that.attr.cartAttr = false;
 						that.$util.Tips({
-							title: "添加购物车成功",
+							title: that.$t('添加购物车成功'),
 							success: () => {
 								that.loadend = false;
 								that.page = 1;
@@ -534,7 +533,7 @@
 			 */
 			getGoodsDetails: function(item) {
 				uni.showLoading({
-					title: '加载中',
+					title: this.$t('加载中'),
 					mask: true
 				});
 				let that = this;
@@ -700,7 +699,7 @@
 				})
 				if (selectValue.length > 0) {
 					uni.showLoading({
-						title: '加载中...'
+						title: this.$t('加载中...')
 					});
 
 					cartDel(selectValue).then(res => {
@@ -716,7 +715,7 @@
 					});
 				} else {
 					return this.$util.Tips({
-						title: '请选择产品'
+						title: this.$t('请选择产品')
 					});
 				}
 
@@ -748,7 +747,7 @@
 				if (type_id.length > 0) {
 					cartToCollect(type_id).then(res => {
 						that.$util.Tips({
-							title: '收藏成功',
+							title: this.$t('收藏成功'),
 							icon: 'success'
 						});
 						this.cartList.valid = [];
@@ -763,7 +762,7 @@
 					});
 				} else {
 					return that.$util.Tips({
-						title: '请选择产品'
+						title: this.$t('请选择产品')
 					});
 				}
 			},
@@ -771,7 +770,7 @@
 			subOrder: Debounce(function(event) {
 				this.$store.commit("PRODUCT_TYPE", 'normal');
 				uni.showLoading({
-					title: '加载中...'
+					title: this.$t('加载中...')
 				});
 				this.selectValue = [];
 				this.cartList.valid.forEach(el => {
@@ -786,7 +785,7 @@
 				} else {
 					uni.hideLoading();
 					return this.$util.Tips({
-						title: '请选择产品'
+						title: this.$t('请选择产品')
 					});
 				}
 			}),
@@ -1231,7 +1230,7 @@
 				})
 				cartDel(ids).then(res => {
 					that.$util.Tips({
-						title: '清除成功'
+						title: this.$t('清除成功')
 					});
 					that.$set(that.cartList, 'invalid', []);
 				}).catch(res => {
@@ -1365,7 +1364,7 @@
 
 	.footerTop {
 		bottom: 98rpx !important;
-		bottom: calc(98rpx+ constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
+		bottom: calc(98rpx + constant(safe-area-inset-bottom)) !important; ///兼容 IOS<11.2/
 		bottom: calc(98rpx + env(safe-area-inset-bottom)) !important; ///兼容 IOS>11.2/
 	}
 
@@ -1787,14 +1786,27 @@
 	.footer {
 		z-index: 999;
 		width: 100%;
-		height: 100rpx;
+		min-height: 100rpx;
+		height: auto;
 		background-color: #fff;
 		position: fixed;
-		padding: 0 24rpx;
+		padding: 16rpx 20rpx;
 		box-sizing: border-box;
 		border-top: 1rpx solid #eee;
 		bottom: var(--window-bottom);
+		align-items: center;
+		flex-wrap: nowrap;
+	}
 
+	.footer-left {
+		flex-shrink: 0;
+		margin-right: 12rpx;
+	}
+
+	.allcheckbox {
+		font-size: 24rpx;
+		white-space: nowrap;
+		color: #282828;
 	}
 
 	.footer .checkAll {
@@ -1804,8 +1816,31 @@
 	}
 
 	.footer .money {
+		flex: 1;
+		min-width: 0;
+		justify-content: flex-end;
+		align-items: center;
+		overflow: hidden;
+
 		.font-color {
 			font-weight: 600;
+		}
+
+		.text-right {
+			flex: 1;
+			min-width: 0;
+			margin-right: 12rpx;
+		}
+
+		.total-line {
+			line-height: 1.2;
+			white-space: nowrap;
+		}
+
+		.discount-line {
+			flex-wrap: wrap;
+			line-height: 1.2;
+			margin-top: 4rpx;
 		}
 
 		.all_text {
@@ -1815,11 +1850,12 @@
 		}
 
 		.symbol {
-			font-size: 26rpx;
+			font-size: 24rpx;
 		}
 
 		.all_money {
-			font-size: 38rpx;
+			font-size: 32rpx;
+			font-weight: 600;
 		}
 
 		.youhui {
@@ -1829,22 +1865,34 @@
 		}
 
 		.mingxi {
-			font-size: 22rpx;
+			font-size: 20rpx;
 			color: #999;
 			font-weight: 400;
-			padding-left: 14rpx;
+			padding-left: 8rpx;
+			flex-shrink: 0;
 		}
+	}
+
+	.checkout-form {
+		flex-shrink: 0;
 	}
 
 	.footer .placeOrder {
 		color: #fff;
-		font-size: 30rpx;
-		padding: 0 20rpx;
-		height: 70rpx;
+		font-size: 26rpx;
+		padding: 0 22rpx;
+		height: 64rpx;
+		min-width: 0 !important;
+		width: auto;
 		border-radius: 50rpx;
 		text-align: center;
-		line-height: 70rpx;
-		margin-left: 22rpx;
+		line-height: 64rpx;
+		margin-left: 0;
+		white-space: nowrap;
+	}
+
+	.footer .placeOrder::after {
+		border: none;
 	}
 
 	.footer .button .bnt {
@@ -1874,16 +1922,20 @@
 	}
 
 	.uni-p-b-96 {
-		height: 96rpx;
+		height: 140rpx;
 	}
 
-	/deep/ checkbox .uni-checkbox-input.uni-checkbox-input-checked {
+	.uni-p-b-98 {
+		height: 140rpx;
+	}
+
+	::v-deep  checkbox .uni-checkbox-input.uni-checkbox-input-checked {
 		@include main_bg_color(theme);
 		border: none !important;
 		color: #fff !important
 	}
 
-	/deep/ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+	::v-deep  checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 		@include main_bg_color(theme);
 		border: none !important;
 		color: #fff !important;
@@ -1896,7 +1948,7 @@
 
 	.window {
 		position: fixed;
-		bottom: calc(var(--window-bottom) + 100rpx);
+		bottom: calc(var(--window-bottom) + 140rpx);
 		width: 100%;
 		left: 0;
 		background-color: #fff;

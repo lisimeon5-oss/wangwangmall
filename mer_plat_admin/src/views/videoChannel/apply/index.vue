@@ -1,146 +1,145 @@
 <template>
   <div class="divBox">
     <el-card class="box-card" :bordered="false" shadow="never">
-      <div slot="header" class="clearfix">接入微信视频号步骤</div>
+      <div slot="header" class="clearfix">{{ $t('videoChannel.accessVideoChannelSteps') }}</div>
       <div class="mb20">
-        <h1 v-if="toRegister.errcode === 1040002">已经接入自定义交易组件</h1>
-        <h1 v-else>接入中{{ toRegister }}</h1>
+        <h1 v-if="toRegister.errcode === 1040002">{{ $t('videoChannel.alreadyAccessCustomTrading') }}</h1>
+        <h1 v-else>{{ $t('videoChannel.accessing') }}{{ toRegister }}</h1>
       </div>
       <el-timeline>
-        <el-timeline-item timestamp="创建视频号" placement="top">
+        <el-timeline-item :timestamp="$t('videoChannel.createVideoChannel')" placement="top">
           <el-card shadow="never" :bordered="false">
             <el-form inline>
               <el-form-item>
-                <p>在微信平台中设置, 申请自定义交易组件，如果平台已有自定义交易组件跳过此步</p>
+                <p>{{ $t('videoChannel.wechatSetupTip') }}</p>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click.native="">去申请(跳转文档链接)</el-button>
+                <el-button type="primary" @click.native="">{{ $t('videoChannel.goApply') }}</el-button>
               </el-form-item>
             </el-form>
           </el-card>
         </el-timeline-item>
-        <el-timeline-item timestamp="申请开通自定义交易组件" placement="top">
+        <el-timeline-item :timestamp="$t('videoChannel.applyCustomTradingComponent')" placement="top">
           <el-card :bordered="false" shadow="never">
             <el-form inline>
               <el-form-item>
                 <p>
-                  完成自定义版交易组件接入后，小程序即可在视频号中实现商品展示和带货等功能，进一步提升经营能力。若您已开通标准化交易组件，则暂不支持切换
+                  {{ $t('videoChannel.customTradingComponentTip') }}
                 </p>
               </el-form-item>
               <el-form-item v-hasPermi="['platform:pay:component:shop:register:finish']">
-                <el-button type="primary" @click.native="handleRegisterCheck()">完成</el-button>
+                <el-button type="primary" @click.native="handleRegisterCheck()">{{ $t('common.finish') }}</el-button>
               </el-form-item>
             </el-form>
           </el-card>
         </el-timeline-item>
-        <el-timeline-item timestamp="自定义版交易组件申请通过，接口调用场景检测" placement="top">
+        <el-timeline-item :timestamp="$t('videoChannel.customTradingApprovedSceneTest')" placement="top">
           <el-card :bordered="false" shadow="never">
             <el-form>
               <el-form-item>
                 <p>
-                  自定义交易组件开通后，小程序版本必须大于等于4.1.5，如果不是 需要更新小程序
-                  发布新的小程序(跳转小程序下载页面)
+                  {{ $t('videoChannel.customTradingVersionTip') }}
                 </p>
                 <router-link to="/marketing/videoChannel/draftList">
-                  <el-tag type="warning">初次需要去审核商家提审的视频号商品</el-tag>
+                  <el-tag type="warning">{{ $t('videoChannel.auditVideoChannelProductsTip') }}</el-tag>
                 </router-link>
               </el-form-item>
               <el-form-item>
                 <el-form>
                   <el-form-item>
                     <span
-                      >接入场景
-                      {{ registerCheckData.data.scene_group_list[0].group_id === 1 ? '视频号' : '公众号场景' }}</span
+                      >{{ $t('videoChannel.accessScene') }}
+                      {{ registerCheckData.data.scene_group_list[0].group_id === 1 ? $t('product.videoProduct') : $t('videoChannel.officialAccountScene') }}</span
                     >
                   </el-form-item>
                   <el-form-item>
-                    <span>场景名称 {{ registerCheckData.data.scene_group_list[0].name }}</span>
+                    <span>{{ $t('videoChannel.sceneNameLabel') }} {{ registerCheckData.data.scene_group_list[0].name }}</span>
                   </el-form-item>
                   <el-form-item>
                     <span
-                      >审核状态
-                      <span v-if="registerCheckData.data.scene_group_list[0].status === 0">审核中</span>
-                      <span v-if="registerCheckData.data.scene_group_list[0].status === 1">审核完成</span>
-                      <span v-if="registerCheckData.data.scene_group_list[0].status === 2">审核失败</span>
+                      >{{ $t('product.auditStatus') }}
+                      <span v-if="registerCheckData.data.scene_group_list[0].status === 0">{{ $t('common.auditing') }}</span>
+                      <span v-if="registerCheckData.data.scene_group_list[0].status === 1">{{ $t('videoChannel.auditCompleted') }}</span>
+                      <span v-if="registerCheckData.data.scene_group_list[0].status === 2">{{ $t('common.auditFailed') }}</span>
                     </span>
                   </el-form-item>
                   <el-form-item>
                     <span
-                      >场景审核结果
+                      >{{ $t('videoChannel.sceneAuditResult') }}
                       <span
                         v-for="(item, key) in registerCheckData.data.scene_group_list[0].scene_group_ext_list"
                         :key="key"
                       >
-                        <span v-if="item.ext_id === 1">客服售后 -》</span>
-                        <span v-if="item.ext_id === 2">电商平台 -》</span>
+                        <span v-if="item.ext_id === 1">{{ $t('videoChannel.customerServiceAfterSales') }} -》</span>
+                        <span v-if="item.ext_id === 2">{{ $t('videoChannel.ecommercePlatform') }} -》</span>
                         <el-tag>
-                          <span v-if="item.status === 0">审核中</span>
-                          <span v-if="item.status === 1">审核成功</span>
-                          <span v-if="item.status === 2">审核失败</span>
-                          <span v-if="item.status === 3">未审核</span>
+                          <span v-if="item.status === 0">{{ $t('common.auditing') }}</span>
+                          <span v-if="item.status === 1">{{ $t('common.auditSuccess') }}</span>
+                          <span v-if="item.status === 2">{{ $t('common.auditFailed') }}</span>
+                          <span v-if="item.status === 3">{{ $t('product.notAudited') }}</span>
                         </el-tag>
                       </span>
                     </span>
                   </el-form-item>
                   <el-form-item>
-                    <span>审核理由 {{ registerCheckData.data.scene_group_list[0].reason }}</span>
+                    <span>{{ $t('videoChannel.auditReasonLabel') }} {{ registerCheckData.data.scene_group_list[0].reason }}</span>
                   </el-form-item>
                   <el-form-item>
-                    <span>上传商品并审核成功 </span>
+                    <span>{{ $t('videoChannel.uploadProductAuditSuccess') }} </span>
                     <el-tag>{{
-                      registerCheckData.data.access_info.spu_audit_success === 0 ? '未成功' : '成功'
+                      registerCheckData.data.access_info.spu_audit_success === 0 ? $t('videoChannel.notSuccess') : $t('onePass.success')
                     }}</el-tag>
                   </el-form-item>
                   <el-form-item>
-                    <span>商品接口调试完成</span>
+                    <span>{{ $t('videoChannel.productApiDebugDone') }}</span>
                     <el-tag>{{
-                      registerCheckData.data.access_info.spu_audit_finished === 0 ? '未成功' : '成功'
+                      registerCheckData.data.access_info.spu_audit_finished === 0 ? $t('videoChannel.notSuccess') : $t('onePass.success')
                     }}</el-tag>
                   </el-form-item>
                   <el-form-item>
-                    <span>发起一笔订单并支付成功</span>
-                    <el-tag>{{ registerCheckData.data.access_info.ec_order_success === 0 ? '未成功' : '成功' }}</el-tag>
+                    <span>{{ $t('videoChannel.initiateOrderPaySuccess') }}</span>
+                    <el-tag>{{ registerCheckData.data.access_info.ec_order_success === 0 ? $t('videoChannel.notSuccess') : $t('onePass.success') }}</el-tag>
                   </el-form-item>
                   <el-form-item>
-                    <span>订单接口调试完成</span>
+                    <span>{{ $t('videoChannel.orderApiDebugDone') }}</span>
                     <el-tag>{{
-                      registerCheckData.data.access_info.ec_order_finished === 0 ? '未成功' : '成功'
+                      registerCheckData.data.access_info.ec_order_finished === 0 ? $t('videoChannel.notSuccess') : $t('onePass.success')
                     }}</el-tag>
                   </el-form-item>
                   <el-form-item>
-                    <span>物流接口调用成功</span>
+                    <span>{{ $t('videoChannel.logisticsApiCallSuccess') }}</span>
                     <el-tag>{{
-                      registerCheckData.data.access_info.send_delivery_success === 0 ? '未成功' : '成功'
+                      registerCheckData.data.access_info.send_delivery_success === 0 ? $t('videoChannel.notSuccess') : $t('onePass.success')
                     }}</el-tag>
                   </el-form-item>
                   <el-form-item>
-                    <span>物流接口调试完成</span>
+                    <span>{{ $t('videoChannel.logisticsApiDebugDone') }}</span>
                     <el-tag>{{
-                      registerCheckData.data.access_info.send_delivery_finished === 0 ? '未成功' : '成功'
+                      registerCheckData.data.access_info.send_delivery_finished === 0 ? $t('videoChannel.notSuccess') : $t('onePass.success')
                     }}</el-tag>
                   </el-form-item>
                   <el-form-item>
-                    <span>售后接口调用成功</span>
+                    <span>{{ $t('videoChannel.afterSalesApiCallSuccess') }}</span>
                     <el-tag>{{
-                      registerCheckData.data.access_info.ec_after_sale_success === 0 ? '未成功' : '成功'
+                      registerCheckData.data.access_info.ec_after_sale_success === 0 ? $t('videoChannel.notSuccess') : $t('onePass.success')
                     }}</el-tag>
                   </el-form-item>
                   <el-form-item>
-                    <span>售后接口调试完成</span>
+                    <span>{{ $t('videoChannel.afterSalesApiDebugDone') }}</span>
                     <el-tag>{{
-                      registerCheckData.data.access_info.ec_after_sale_finished === 0 ? '未成功' : '成功'
+                      registerCheckData.data.access_info.ec_after_sale_finished === 0 ? $t('videoChannel.notSuccess') : $t('onePass.success')
                     }}</el-tag>
                   </el-form-item>
                   <el-form-item>
-                    <span>测试完成</span>
+                    <span>{{ $t('videoChannel.testCompleted') }}</span>
                     <el-tag>{{
-                      registerCheckData.data.access_info.test_api_finished === 0 ? '未成功' : '成功'
+                      registerCheckData.data.access_info.test_api_finished === 0 ? $t('videoChannel.notSuccess') : $t('onePass.success')
                     }}</el-tag>
                   </el-form-item>
                   <el-form-item>
-                    <span>发版完成</span>
+                    <span>{{ $t('videoChannel.releaseDone') }}</span>
                     <el-tag>{{
-                      registerCheckData.data.access_info.deploy_wxa_finished === 0 ? '未成功' : '成功'
+                      registerCheckData.data.access_info.deploy_wxa_finished === 0 ? $t('videoChannel.notSuccess') : $t('onePass.success')
                     }}</el-tag>
                   </el-form-item>
                 </el-form>
@@ -148,7 +147,7 @@
             </el-form>
           </el-card>
         </el-timeline-item>
-        <el-timeline-item timestamp="自定义版交易组件开通成功" placement="top"> </el-timeline-item>
+        <el-timeline-item :timestamp="$t('videoChannel.customTradingActivated')" placement="top"> </el-timeline-item>
       </el-timeline>
     </el-card>
   </div>
@@ -235,7 +234,7 @@ export default {
           this.registerCheckData = res;
         })
         .finally(() => {
-          this.$message.success('检查接入状态已更新');
+          this.$message.success(this.$t('videoChannel.checkAccessStatusUpdated'));
         });
     },
   },

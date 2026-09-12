@@ -7,73 +7,105 @@
     :before-close="handleClose"
     class="showHeader"
   >
-    <div slot="title" class="demo-drawer_title">会员权益设置</div>
+    <div slot="title" class="demo-drawer_title">{{ $t('user.memberBenefitSetting') }}</div>
     <div class="detailSection">
       <el-form :model="pram" ref="pram" label-width="75px" class="demo-ruleForm px35" :rules="rules">
-        <el-form-item label="权益名称：">
+        <el-form-item :label="$t('user.benefitNameLabel')">
           <div class="from-ipt-width el-input el-input--small" disabled>
             <span class="el-input__inner">
               {{ pram.name | filterMemberBenefits }}
             </span>
           </div>
         </el-form-item>
-        <el-form-item label="展示名称：" prop="value">
-          <el-input v-model="pram.value" maxlength="6" class="from-ipt-width"></el-input>
-          <div class="from-tips">用于用户端-付费会员页面「权益名称」展示，最多支持6个字。</div>
+        <el-form-item :label="$t('user.displayNameLabel')" prop="value">
+          <div class="lang-name-switch from-ipt-width">
+            <el-radio-group v-model="activeLang" size="small">
+              <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                {{ lang.label }}
+              </el-radio-button>
+            </el-radio-group>
+            <el-input
+              v-if="activeLang === defaultLangCode"
+              v-model="pram.value"
+              maxlength="6"
+              class="lang-name-input"
+            />
+            <el-input
+              v-else
+              v-model="valueJsonForm[activeLang]"
+              maxlength="20"
+              :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+              class="lang-name-input"
+            />
+          </div>
+          <div class="from-tips">{{ $t('user.displayNameTip') }}</div>
         </el-form-item>
-        <el-form-item label="权益图标：" prop="imageUrl">
+        <el-form-item :label="$t('user.benefitIconLabel')" prop="imageUrl">
           <div class="upLoadPicBox acea-row" @click="modalPicTap(false)">
             <div v-if="pram.imageUrl" class="pictrue"><img :src="pram.imageUrl" /></div>
             <div v-else class="upLoad">
               <i class="el-icon-camera cameraIconfont" />
             </div>
           </div>
-          <div class="from-tips">用于用户端-付费会员页面「权益图标」展示，建议80*80PX，小于5KB。</div>
+          <div class="from-tips">{{ $t('user.benefitIconTip') }}</div>
         </el-form-item>
-        <el-form-item label="权益简介：" prop="message">
-          <el-input class="from-ipt-width" v-model.trim="pram.message" maxlength="8" placeholder="请输入商品简介" />
-          <div class="from-tips">用于用户端-付费会员页面「权益简介」展示，最多支持8个字。</div>
+        <el-form-item :label="$t('user.benefitIntroLabel')" prop="message">
+          <el-input
+            v-if="activeLang === defaultLangCode"
+            class="from-ipt-width"
+            v-model.trim="pram.message"
+            maxlength="8"
+            :placeholder="$t('user.pleaseEnterProductIntro')"
+          />
+          <el-input
+            v-else
+            class="from-ipt-width"
+            v-model.trim="messageJsonForm[activeLang]"
+            maxlength="40"
+            :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+          />
+          <div class="from-tips">{{ $t('user.benefitIntroTip') }}</div>
         </el-form-item>
         <template v-if="pram.name === 'integralDoubling' || pram.name === 'experienceDoubling'">
-          <el-form-item label="倍数：" required>
-            <el-input-number v-model.trim="pram.multiple" :min="1" :max="9" :step="1" placeholder="请输入排序" />
-            <div class="from-tips">付费会员相对普通用户获得积分倍数，支持输入1～9正整数。</div>
+          <el-form-item :label="$t('user.multiple')" required>
+            <el-input-number v-model.trim="pram.multiple" :min="1" :max="9" :step="1" :placeholder="$t('user.pleaseEnterSort')" />
+            <div class="from-tips">{{ $t('user.multipleTip') }}</div>
           </el-form-item>
-          <el-form-item label="翻倍渠道：" required>
+          <el-form-item :label="$t('user.doublingChannel')" required>
             <el-checkbox-group v-model="pram.channelStrList" @change="checkedBoxChange">
               <template v-if="pram.name === 'integralDoubling'">
-                <el-checkbox label="1">签到</el-checkbox>
-                <el-checkbox label="2">购买商品</el-checkbox>
+                <el-checkbox label="1">{{ $t('user.signIn') }}</el-checkbox>
+                <el-checkbox label="2">{{ $t('user.buyProduct') }}</el-checkbox>
               </template>
               <template v-if="pram.name === 'experienceDoubling'">
-                <el-checkbox label="1">签到</el-checkbox>
-                <el-checkbox label="2">发布种草</el-checkbox>
+                <el-checkbox label="1">{{ $t('user.signIn') }}</el-checkbox>
+                <el-checkbox label="2">{{ $t('user.publishGrass') }}</el-checkbox>
               </template>
             </el-checkbox-group>
-            <div class="from-tips">至少需要选中一项，未选中渠道付费会员进行此操作经验值不翻倍。</div>
+            <div class="from-tips">{{ $t('user.channelTip') }}</div>
           </el-form-item>
         </template>
-        <el-form-item label="排序：" required>
-          <el-input-number v-model.trim="pram.sort" :min="0" :max="10" :step="1" placeholder="请输入排序" />
-          <div class="from-tips">数字越大，用户端及管理端列表，此权益的排序越靠前，支持输入0～10整数。</div>
+        <el-form-item :label="$t('user.sortLabel')" required>
+          <el-input-number v-model.trim="pram.sort" :min="0" :max="10" :step="1" :placeholder="$t('user.pleaseEnterSort')" />
+          <div class="from-tips">{{ $t('user.sortTip') }}</div>
         </el-form-item>
-        <el-form-item label="状态：" required>
+        <el-form-item :label="$t('user.statusColon')" required>
           <el-switch
             v-model="pram.status"
-            active-text="开启"
-            inactive-text="关闭"
+            :active-text="$t('user.on')"
+            :inactive-text="$t('user.off')"
             :active-value="true"
             :inactive-value="false"
           />
-          <div class="from-tips">会员权益关闭之后，不会在用户端展示，付费会员也不能够享受此权益。</div>
+          <div class="from-tips">{{ $t('user.benefitStatusTip') }}</div>
         </el-form-item>
       </el-form>
     </div>
     <div class="demo-drawer__footer from-foot-btn btn-shadow drawer_fix">
       <div class="acea-row row-center">
-        <el-button @click="handleClose">取 消</el-button>
+        <el-button @click="handleClose">{{ $t('common.cancel') }}</el-button>
         <el-button v-if="checkPermi(['platform:paid:member:benefits:edit'])" type="primary" v-debounceClick="submitForm"
-          >确定</el-button
+          >{{ $t('common.confirmPrefix') }}</el-button
         >
       </div>
     </div>
@@ -81,9 +113,12 @@
 </template>
 <script>
 import { checkPermi } from '@/utils/permission';
-import { menuMerAdd, menuMerUpdate } from '@/api/merchant';
 import { memberBenefitsEditApi } from '@/api/user';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
 
+
+import { resolveFormActiveLang } from '@/utils/localizedName';
 export default {
   name: 'benefitsEdit',
   props: {
@@ -106,29 +141,105 @@ export default {
         id: 0,
         imageUrl: '',
         message: '',
+        messageJson: '',
         multiple: 1,
         name: '',
         sort: 0,
         status: true,
         value: '',
+        valueJson: '',
       },
-      rules: {
-        value: [
-          { required: true, message: '请输入展示名称', trigger: 'blur' },
-          { min: 1, max: 6, message: '长度在 1 到 6 个字符', trigger: 'blur' },
-        ],
-        imageUrl: [{ required: true, message: '请上传权益图标', trigger: 'change' }],
-        message: [{ required: true, message: '请输入权益简介', trigger: 'blur' }],
-        channelStrList: [{ type: 'array', required: true, message: '请至少选择一个渠道', trigger: 'change' }],
-      },
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      valueJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
+      messageJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
     };
+  },
+  computed: {
+    rules() {
+      return {
+        value: [
+          { required: true, message: this.$t('user.pleaseEnterDisplayName'), trigger: 'blur' },
+          { min: 1, max: 6, message: this.$t('user.length1to6'), trigger: 'blur' },
+        ],
+        imageUrl: [{ required: true, message: this.$t('user.pleaseUploadBenefitIcon'), trigger: 'change' }],
+        message: [{ required: true, message: this.$t('user.pleaseEnterBenefitIntro'), trigger: 'blur' }],
+        channelStrList: [{ type: 'array', required: true, message: this.$t('user.pleaseSelectChannel'), trigger: 'change' }],
+      };
+    },
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
   },
   mounted() {
     this.pram = Object.assign({}, this.pramInfo);
     this.pram.channelStrList = this.pram.channelStr ? [...this.pram.channelStr.split(',')] : [];
+    this.getLanguageList();
   },
   methods: {
     checkPermi,
+    emptyLangForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    parseJson(json) {
+      const form = this.emptyLangForm();
+      if (!json) return form;
+      try {
+        const obj = typeof json === 'string' ? JSON.parse(json) : json;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // 解析失败时保持为空
+      }
+      return form;
+    },
+    buildJson(form) {
+      const obj = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code === this.defaultLangCode) return;
+        const value = (form[lang.code] || '').trim();
+        if (value) obj[lang.code] = value;
+      });
+      return Object.keys(obj).length ? JSON.stringify(obj) : '';
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.valueJsonForm = this.parseJson(this.pram && this.pram.valueJson);
+          this.messageJsonForm = this.parseJson(this.pram && this.pram.messageJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.valueJsonForm = this.parseJson(this.pram && this.pram.valueJson);
+          this.messageJsonForm = this.parseJson(this.pram && this.pram.messageJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     checkedBoxChange() {
       this.$forceUpdate(); //强制渲染多选框样式，否则值变了样式没有选中
     },
@@ -153,10 +264,12 @@ export default {
             !this.pram.channelStrList.length &&
             (this.pram.name === 'integralDoubling' || this.pram.name === 'experienceDoubling')
           )
-            return this.$modal.msgWarning('翻倍渠道至少需要选中一项');
+            return this.$modal.msgWarning(this.$t('user.channelRequired'));
           this.pram.channelStr = this.pram.channelStrList.join(',');
+          this.pram.valueJson = this.buildJson(this.valueJsonForm);
+          this.pram.messageJson = this.buildJson(this.messageJsonForm);
           memberBenefitsEditApi(this.pram).then((response) => {
-            this.$modal.msgSuccess('保存成功');
+            this.$modal.msgSuccess(this.$t('user.saveSuccess'));
             this.$forceUpdate();
             this.$emit('subSuccess');
           });
@@ -169,5 +282,15 @@ export default {
 <style scoped lang="scss">
 .detailSection form {
   padding-bottom: 80px;
+}
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.lang-name-input {
+  margin-top: 10px;
 }
 </style>

@@ -3,18 +3,18 @@
     <div class="header clearfix">
       <div class="container">
         <el-form inline size="small" @submit.native.prevent>
-          <el-form-item label="优惠劵名称：">
+          <el-form-item :label="$t('user.couponName')">
             <el-input
               v-model="tableFrom.keywords"
               @keyup.enter.native="getList(1)"
               clearable
-              placeholder="请输入优惠券名称"
+              :placeholder="$t('user.pleaseEnterCouponName')"
               class="selWidth"
               size="small"
             />
           </el-form-item>
           <el-form-item label-width="0">
-            <el-button type="primary" size="small" @click="getList(1)">查询</el-button>
+            <el-button type="primary" size="small" @click="getList(1)">{{ $t('common.query') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -37,25 +37,25 @@
         </template>
       </el-table-column>
       <el-table-column prop="id" label="ID" min-width="50" />
-      <el-table-column prop="name" :show-overflow-tooltip="true" label="优惠券名称" min-width="150" />
-      <el-table-column prop="category" label="使用范围" min-width="90">
+      <el-table-column prop="name" :show-overflow-tooltip="true" :label="$t('user.couponNameCol')" min-width="150" />
+      <el-table-column prop="category" :label="$t('user.useScope')" min-width="90">
         <template slot-scope="scope">
           <span>{{ scope.row.category | couponCategory }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="money" label="面值（元）" min-width="90" />
-      <el-table-column prop="minPrice" label="使用门槛（元）" min-width="90" />
-      <el-table-column prop="receiveType" label="领取方式" min-width="100">
+      <el-table-column prop="money" :label="$t('user.faceValue')" min-width="90" />
+      <el-table-column prop="minPrice" :label="$t('user.threshold')" min-width="90" />
+      <el-table-column prop="receiveType" :label="$t('user.receiveMethod')" min-width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.receiveType | receiveType }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="isLimited" label="剩余数量" min-width="90">
+      <el-table-column prop="isLimited" :label="$t('user.remaining')" min-width="90">
         <template slot-scope="scope">
-          <span>{{ !scope.row.isLimited ? '不限量' : scope.row.lastTotal }}</span>
+          <span>{{ !scope.row.isLimited ? $t('user.unlimited') : scope.row.lastTotal }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="60" fixed="right">
+      <el-table-column :label="$t('common.operate')" width="60" fixed="right">
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -63,7 +63,7 @@
             class="mr10"
             :disabled="multipleSelection.coupon_id != scope.row.id"
             @click="send(scope.row.id)"
-            >发送</el-button
+            >{{ $t('user.send') }}</el-button
           >
         </template>
       </el-table-column>
@@ -94,6 +94,7 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { couponSendApi, canSendListApi } from '@/api/marketing';
+import i18n from '@/i18n';
 export default {
   name: 'CouponList',
   props: {
@@ -127,9 +128,9 @@ export default {
   filters: {
     receiveType(val) {
       const typeObj = {
-        1: '手动领取',
-        2: '商品赠送券',
-        3: '平台自动发放',
+        1: i18n.t('user.manualReceive'),
+        2: i18n.t('user.productGiftCoupon'),
+        3: i18n.t('user.platformAutoIssue'),
       };
       return typeObj[val];
     },
@@ -152,9 +153,9 @@ export default {
     send(id) {
       let that = this;
       that
-        .$confirm('确定要发送优惠券吗？发送优惠券后将无法恢复，请谨慎操作！', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        .$confirm(that.$t('user.sendCouponConfirm'), that.$t('common.tip'), {
+          confirmButtonText: that.$t('common.confirmPrefix'),
+          cancelButtonText: that.$t('common.cancel'),
           type: 'warning',
         })
         .then(() => {
@@ -165,14 +166,14 @@ export default {
           };
           couponSendApi(params)
             .then((res) => {
-              that.$message.success('发送成功');
+              that.$message.success(that.$t('user.sendSuccess'));
               that.$emit('sendSuccess');
             })
         })
         .catch((action) => {
           that.$message({
             type: 'info',
-            message: '已取消',
+            message: that.$t('user.cancelled'),
           });
         });
     },

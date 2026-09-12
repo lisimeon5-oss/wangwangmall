@@ -9,15 +9,15 @@
     >
       <div class="padding-add">
         <el-form inline size="small" @submit.native.prevent>
-          <el-form-item label="管理员身份：">
-            <el-select v-model="listPram.roles" placeholder="请选择管理员身份" clearable class="selWidth">
-              <el-option v-for="item in roleList.list" :key="item.id" :label="item.roleName" :value="item.id" />
+          <el-form-item :label="$t('systemSetting.adminIdentityLabel')">
+            <el-select v-model="listPram.roles" :placeholder="$t('systemSetting.pleaseSelectAdminIdentity')" clearable class="selWidth">
+              <el-option v-for="item in roleList.list" :key="item.id" :label="localizedRoleName(item)" :value="item.id" />
             </el-select>
           </el-form-item>
-          <el-form-item label="管理员状态：">
-            <el-select v-model="listPram.status" placeholder="管理员状态" clearable class="selWidth">
+          <el-form-item :label="$t('systemSetting.adminStatusLabel')">
+            <el-select v-model="listPram.status" :placeholder="$t('systemSetting.adminStatus')" clearable class="selWidth">
               <el-option
-                placeholder="请选择管理员状态"
+                :placeholder="$t('systemSetting.pleaseSelectAdminStatus')"
                 v-for="item in constants.roleListStatus"
                 :key="item.value"
                 :label="item.label"
@@ -25,85 +25,85 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="管理员搜索：">
+          <el-form-item :label="$t('systemSetting.adminSearchLabel')">
             <el-input
               v-model.trim="realName"
               @keyup.enter.native="handleSearch"
-              placeholder="请输入姓名或者账号"
+              :placeholder="$t('systemSetting.pleaseEnterNameOrAccount')"
               clearable
               class="selWidth"
             />
           </el-form-item>
           <el-form-item>
-            <el-button size="mini" type="primary" @click="handleSearch">查询</el-button>
-            <el-button size="small" @click="reset()">重置</el-button>
+            <el-button size="mini" type="primary" @click="handleSearch">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset()">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '20px' }" shadow="never" :bordered="false">
-      <el-button size="mini" type="primary" @click="handlerOpenEdit(0)">添加管理员</el-button>
+      <el-button size="mini" type="primary" @click="handlerOpenEdit(0)">{{ $t('systemSetting.addAdmin') }}</el-button>
       <el-table v-loading="listLoading" class="operation mt20" :data="listData.list" size="small">
         <el-table-column prop="id" label="ID" width="50" />
-        <el-table-column label="姓名" prop="realName" min-width="120" />
-        <el-table-column label="账号" prop="account" min-width="120" />
-        <el-table-column label="手机号" prop="lastTime" min-width="120">
+        <el-table-column :label="$t('user.name')" prop="realName" min-width="120" />
+        <el-table-column :label="$t('systemSetting.account')" prop="account" min-width="120" />
+        <el-table-column :label="$t('user.phoneCol')" prop="lastTime" min-width="120">
           <template slot-scope="scope">
             <span>{{ scope.row.phone | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="身份" prop="realName" min-width="230">
-          <template slot-scope="scope" v-if="scope.row.roleNames">
+        <el-table-column :label="$t('systemSetting.identity')" min-width="230">
+          <template slot-scope="scope">
             <el-tag
+              v-for="(item, index) in localizedAdminRoles(scope.row)"
+              :key="index"
               size="small"
               type="info"
-              v-for="(item, index) in scope.row.roleNames.split(',')"
-              :key="index"
               class="mr5"
               >{{ item }}</el-tag
             >
           </template>
         </el-table-column>
-        <el-table-column label="最后登录时间" prop="lastTime" min-width="180">
+        <el-table-column :label="$t('systemSetting.lastLoginTime')" prop="lastTime" min-width="180">
           <template slot-scope="scope">
             <span>{{ scope.row.lastTime | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="最后登录IP" prop="lastIp" min-width="150">
+        <el-table-column :label="$t('systemSetting.lastLoginIp')" prop="lastIp" min-width="150">
           <template slot-scope="scope">
             <span>{{ scope.row.lastIp | filterEmpty }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" min-width="100">
+        <el-table-column :label="$t('common.status')" min-width="100">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['platform:admin:update:status'])"
               v-model="scope.row.status"
               :active-value="true"
               :inactive-value="false"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
               :disabled="scope.row.roles === '1'"
               @change="onchangeIsShow(scope.row)"
             />
-            <div v-else>{{ scope.row.status ? '开启' : '关闭' }}</div>
+            <div v-else>{{ scope.row.status ? $t('common.open') : $t('common.close') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="接收短信" min-width="100" fixed="right">
+        <el-table-column :label="$t('systemSetting.receiveSms')" min-width="100" fixed="right">
           <template slot-scope="scope">
             <el-switch
                 v-if="checkPermi(['platform:admin:update:receive:sms'])"
                 v-model="scope.row.isSms"
                 :active-value="true"
                 :inactive-value="false"
-                active-text="开启"
-                inactive-text="关闭"
+                :active-text="$t('common.open')"
+                :inactive-text="$t('common.close')"
                 @change="onchangeReceiveSmsIsShow(scope.row)"
             />
-            <div v-else>{{ scope.row.isSms ? '开启' : '关闭' }}</div>
+            <div v-else>{{ scope.row.isSms ? $t('common.open') : $t('common.close') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column :label="$t('common.operate')" width="180" fixed="right">
           <template slot-scope="scope">
             <template v-if="scope.row.isDel">
               <span>-</span>
@@ -115,7 +115,7 @@
                 size="mini"
                 @click="handlerOpenEditPassWord(scope.row)"
                 v-hasPermi="['platform:admin:update:password']"
-                >修改密码</el-button
+                >{{ $t('maintain.modifyPassword') }}</el-button
               >
               <el-divider direction="vertical"></el-divider>
               <el-button
@@ -124,7 +124,7 @@
                 size="mini"
                 @click="handlerOpenEdit(1, scope.row)"
                 v-hasPermi="['platform:admin:update', 'platform:admin:info']"
-                >编辑</el-button
+                >{{ $t('common.edit') }}</el-button
               >
               <el-divider direction="vertical"></el-divider>
               <el-button
@@ -133,7 +133,7 @@
                 :disabled="scope.row.roles === '1'"
                 @click="handlerOpenDel(scope.row)"
                 v-hasPermi="['platform:admin:delete']"
-                >删除</el-button
+                >{{ $t('common.delete') }}</el-button
               >
             </template>
           </template>
@@ -152,7 +152,7 @@
     <!--编辑-->
     <el-dialog
       :visible.sync="editDialogConfig.visible"
-      :title="editDialogConfig.isCreate === 0 ? '创建管理员' : '编辑管理员'"
+      :title="editDialogConfig.isCreate === 0 ? $t('systemSetting.createAdmin') : $t('systemSetting.editAdmin')"
       destroy-on-close
       :close-on-click-modal="false"
       width="700px"
@@ -168,7 +168,7 @@
     <!--修改密码-->
     <el-dialog
       :visible.sync="editPassWordDialogConfig.visible"
-      title="修改密码"
+      :title="$t('maintain.modifyPassword')"
       destroy-on-close
       :close-on-click-modal="false"
       width="540px"
@@ -198,6 +198,7 @@ import * as roleApi from '@/api/role.js';
 import edit from './edit';
 import editPassWord from './editPassWord.vue';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import { getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   // name: "index"
   components: { edit, editPassWord },
@@ -241,12 +242,36 @@ export default {
   },
   methods: {
     checkPermi,
+    localizedRoleName(row) {
+      return getLocalizedText(row ? row.roleName : '', row ? row.roleNameJson : '', getUiLocale(this));
+    },
+    localizedAdminRoles(row) {
+      if (!row) return [];
+      const ids = String(row.roles || '')
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const fallback = String(row.roleNames || '')
+        .split(',')
+        .map((s) => s.trim());
+      const list = (this.roleList && this.roleList.list) || [];
+      return ids
+        .map((id, index) => {
+          const nid = Number(id);
+          if (nid === 1) return this.$t('systemSetting.superAdminRole');
+          if (nid === 2) return this.$t('systemSetting.merchantSuperAdminRole');
+          const found = list.find((r) => Number(r.id) === nid);
+          if (found) return this.localizedRoleName(found);
+          return fallback[index] || '';
+        })
+        .filter(Boolean);
+    },
     //接收短信状态修改
     onchangeReceiveSmsIsShow(row) {
       systemAdminApi
           .updateReceiveSmsApi(row.id)
           .then(async () => {
-            this.$message.success('修改成功');
+            this.$message.success(this.$t('category.updateSuccess'));
             this.handleGetAdminList();
           })
           .catch(() => {
@@ -266,7 +291,7 @@ export default {
       systemAdminApi
         .updateStatusApi({ id: row.id, status: row.status })
         .then(async () => {
-          this.$message.success('修改成功');
+          this.$message.success(this.$t('category.updateSuccess'));
           this.handleGetAdminList();
         })
         .catch(() => {
@@ -297,10 +322,10 @@ export default {
       });
     },
     handlerOpenDel(rowData) {
-      this.$confirm('确认删除当前数据').then(() => {
+      this.$confirm(this.$t('systemSetting.confirmDeleteCurrentData')).then(() => {
         const _pram = { id: rowData.id };
         systemAdminApi.adminDel(_pram).then((data) => {
-          this.$message.success('删除数据成功');
+          this.$message.success(this.$t('content.deleteDataSuccess'));
           this.listPram.page = 1;
           this.handleGetAdminList();
         });

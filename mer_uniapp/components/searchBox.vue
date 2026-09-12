@@ -3,7 +3,7 @@
 		<text class='iconfont icon-fanhui2' @click="toBack" v-if="toBackShow"></text>
 		<view class='search-box acea-row row-between-wrapper' :style="[searchBoxStyle]">
 			<text class='iconfont icon-sousuo2'></text>
-			<input  :value="searchVal" @confirm="inputSearch" type='text' confirm-type='search' name="search" placeholder='点击搜索商品' placeholder-class='placeholder' maxlength="20"></input>
+			<input  :value="searchVal" @confirm="inputSearch" type='text' confirm-type='search' name="search" :placeholder="$t('点击搜索商品')" placeholder-class='placeholder' maxlength="20"></input>
 		</view>
 	</view>
 </template>

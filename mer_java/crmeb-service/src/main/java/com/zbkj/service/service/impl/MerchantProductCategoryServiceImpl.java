@@ -83,7 +83,7 @@ public class MerchantProductCategoryServiceImpl extends ServiceImpl<MerchantProd
     @Override
     public Boolean add(MerchantProductCategoryRequest request) {
         SystemAdmin admin = SecurityUtil.getLoginUserVo().getUser();
-        if (checkName(request.getName(), admin.getMerId())) {
+        if (StrUtil.isNotBlank(request.getName()) && checkName(request.getName(), admin.getMerId())) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "分类名称已存在");
         }
         if (!request.getPid().equals(0)) {
@@ -151,7 +151,7 @@ public class MerchantProductCategoryServiceImpl extends ServiceImpl<MerchantProd
         if (!admin.getMerId().equals(oldCategory.getMerId())) {
             throw new CrmebException(ProductResultCode.PRODUCT_MER_CATEGORY_NOT_EXIST);
         }
-        if (!oldCategory.getName().equals(request.getName())) {
+        if (StrUtil.isNotBlank(request.getName()) && !StrUtil.equals(oldCategory.getName(), request.getName())) {
             if (checkName(request.getName(), admin.getMerId())) {
                 throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "分类名称已存在");
             }
@@ -233,20 +233,15 @@ public class MerchantProductCategoryServiceImpl extends ServiceImpl<MerchantProd
     }
 
     private List<ProCategoryCacheVo> getCacheTreeByMerId(Integer merId) {
-        List<MerchantProductCategory> categoryList;
-        if (redisUtil.exists(StrUtil.format(RedisConstants.STORE_PRODUCT_CATEGORY_CACHE_LIST_KEY, merId))) {
-            categoryList = redisUtil.get(StrUtil.format(RedisConstants.STORE_PRODUCT_CATEGORY_CACHE_LIST_KEY, merId));
-        } else {
-            LambdaQueryWrapper<MerchantProductCategory> lqw = Wrappers.lambdaQuery();
-            lqw.eq(MerchantProductCategory::getIsDel, false);
-            lqw.eq(MerchantProductCategory::getIsShow, true);
-            lqw.eq(MerchantProductCategory::getMerId, merId);
-            categoryList = dao.selectList(lqw);
-            if (CollUtil.isEmpty(categoryList)) {
-                return CollUtil.newArrayList();
-            }
-            redisUtil.set(StrUtil.format(RedisConstants.STORE_PRODUCT_CATEGORY_CACHE_LIST_KEY, merId), categoryList);
+        LambdaQueryWrapper<MerchantProductCategory> lqw = Wrappers.lambdaQuery();
+        lqw.eq(MerchantProductCategory::getIsDel, false);
+        lqw.eq(MerchantProductCategory::getIsShow, true);
+        lqw.eq(MerchantProductCategory::getMerId, merId);
+        List<MerchantProductCategory> categoryList = dao.selectList(lqw);
+        if (CollUtil.isEmpty(categoryList)) {
+            return CollUtil.newArrayList();
         }
+        redisUtil.set(StrUtil.format(RedisConstants.STORE_PRODUCT_CATEGORY_CACHE_LIST_KEY, merId), categoryList);
         List<ProCategoryCacheVo> voList = categoryList.stream().map(e -> {
             ProCategoryCacheVo cacheVo = new ProCategoryCacheVo();
             BeanUtils.copyProperties(e, cacheVo);

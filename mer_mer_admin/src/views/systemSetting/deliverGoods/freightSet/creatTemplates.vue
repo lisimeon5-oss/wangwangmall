@@ -1,7 +1,7 @@
 <template>
   <el-drawer
     v-if="dialogVisible"
-    title="运费模板"
+    :title="$t('systemSetting.freightTemplate')"
     :visible.sync="dialogVisible"
     size="1100px"
     direction="rtl"
@@ -12,25 +12,45 @@
   >
     <div class="demo-drawer__content detailSection">
       <el-form ref="ruleForm" :model="ruleForm" label-width="100px" size="small" v-if="dialogVisible" :rules="rules">
-        <el-form-item label="模板名称：" prop="name">
-          <el-input v-model.trim="ruleForm.name" class="withs" placeholder="请输入模板名称" />
+        <el-form-item :label="$t('systemSetting.templateNameLabel')" prop="name">
+          <div class="lang-name-switch withs">
+            <el-radio-group v-model="activeLang" size="small">
+              <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                {{ lang.label }}
+              </el-radio-button>
+            </el-radio-group>
+            <el-input
+              v-if="activeLang === defaultLangCode"
+              v-model.trim="ruleForm.name"
+              class="lang-name-input"
+              maxlength="200"
+              :placeholder="$t('systemSetting.pleaseEnterTemplateName')"
+            />
+            <el-input
+              v-else
+              v-model.trim="nameJsonForm[activeLang]"
+              class="lang-name-input"
+              maxlength="200"
+              :placeholder="$t('marketing.inputNameInLang', { lang: activeLangLabel })"
+            />
+          </div>
         </el-form-item>
-        <el-form-item label="包邮方式：" prop="appoint">
+        <el-form-item :label="$t('systemSetting.freeShippingMethod')" prop="appoint">
           <el-radio-group v-model="ruleForm.appoint" @change="changeAppoint">
-            <el-radio :label="0">全国包邮</el-radio>
-            <el-radio :label="1">部分包邮</el-radio>
-            <el-radio :label="2">自定义</el-radio>
+            <el-radio :label="0">{{ $t('systemSetting.nationwideFreeShipping') }}</el-radio>
+            <el-radio :label="1">{{ $t('systemSetting.partialFreeShipping') }}</el-radio>
+            <el-radio :label="2">{{ $t('systemSetting.custom') }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <template v-if="Number(ruleForm.appoint) > 0">
-          <el-form-item label="计费方式：" prop="type">
+          <el-form-item :label="$t('systemSetting.billingMethod')" prop="type">
             <el-radio-group v-model="ruleForm.type" @change="changeRadio(ruleForm.type)">
-              <el-radio :label="1">按件数</el-radio>
-              <el-radio :label="2">按重量</el-radio>
-              <el-radio :label="3">按体积</el-radio>
+              <el-radio :label="1">{{ $t('systemSetting.byItemCount') }}</el-radio>
+              <el-radio :label="2">{{ $t('systemSetting.byWeight') }}</el-radio>
+              <el-radio :label="3">{{ $t('systemSetting.byVolume') }}</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="运费：" prop="region">
+          <el-form-item :label="$t('systemSetting.freightLabel')" prop="region">
             <el-table
               v-loading="listLoading"
               :data="ruleForm.region"
@@ -41,9 +61,9 @@
               size="small"
               class="tempBox"
             >
-              <el-table-column label="送达到" min-width="260" prop="city_ids">
+              <el-table-column :label="$t('systemSetting.deliverTo')" min-width="260" prop="city_ids">
                 <template slot-scope="scope">
-                  <span v-if="scope.$index === 0 && ruleForm.appoint === 2">默认运费</span>
+                  <span v-if="scope.$index === 0 && ruleForm.appoint === 2">{{ $t('systemSetting.defaultFreight') }}</span>
                   <el-cascader
                     ref="cascader"
                     v-else
@@ -69,7 +89,7 @@
                   </el-form-item>
                 </template>
               </el-table-column>
-              <el-table-column min-width="120px" label="运费（元）" prop="firstPrice">
+              <el-table-column min-width="120px" :label="$t('systemSetting.freightYuan')" prop="firstPrice">
                 <template slot-scope="scope">
                   <el-form-item :rules="rules.firstPrice" :prop="'region.' + scope.$index + '.firstPrice'">
                     <el-input-number v-model.trim="scope.row.firstPrice" controls-position="right" :min="0" />
@@ -88,20 +108,20 @@
                   </el-form-item>
                 </template>
               </el-table-column>
-              <el-table-column class-name="status-col" label="续费（元）" min-width="120" prop="renewalPrice">
+              <el-table-column class-name="status-col" :label="$t('systemSetting.renewalFeeYuan')" min-width="120" prop="renewalPrice">
                 <template slot-scope="scope">
                   <el-form-item :rules="rules.renewalPrice" :prop="'region.' + scope.$index + '.renewalPrice'">
                     <el-input-number v-model.trim="scope.row.renewalPrice" controls-position="right" :min="0" />
                   </el-form-item>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="70">
+              <el-table-column :label="$t('common.operate')" width="70">
                 <template slot-scope="scope">
                   <a
                     v-if="ruleForm.appoint === 1 || (ruleForm.appoint !== 1 && scope.$index > 0)"
                     @click="confirmEdit(ruleForm.region, scope.$index)"
                   >
-                    删除
+                    {{ $t('common.delete') }}
                   </a>
                 </template>
               </el-table-column>
@@ -109,10 +129,10 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" size="mini" icon="el-icon-edit" @click="addRegion(ruleForm.region)">
-              添加区域
+              {{ $t('systemSetting.addRegion') }}
             </el-button>
           </el-form-item>
-          <el-form-item v-if="ruleForm.appoint === 2" label="包邮区域">
+          <el-form-item v-if="ruleForm.appoint === 2" :label="$t('systemSetting.freeShippingRegion')">
             <el-table
               v-loading="listLoading"
               :data="ruleForm.free"
@@ -122,7 +142,7 @@
               style="width: 100%"
               size="mini"
             >
-              <el-table-column label="选择区域" min-width="220">
+              <el-table-column :label="$t('systemSetting.selectRegion')" min-width="220">
                 <template slot-scope="{ row }">
                   <el-cascader
                     v-model="row.city_ids"
@@ -145,38 +165,38 @@
                   />
                 </template>
               </el-table-column>
-              <el-table-column min-width="120px" label="包邮金额（元）">
+              <el-table-column min-width="120px" :label="$t('systemSetting.freeShippingAmountYuan')">
                 <template slot-scope="{ row }">
                   <el-input-number v-model.trim="row.price" controls-position="right" />
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="70">
+              <el-table-column :label="$t('common.operate')" width="70">
                 <template slot-scope="scope">
-                  <a @click="confirmEdit(ruleForm.free, scope.$index)"> 删除 </a>
+                  <a @click="confirmEdit(ruleForm.free, scope.$index)">{{ $t('common.delete') }}</a>
                 </template>
               </el-table-column>
             </el-table>
           </el-form-item>
           <el-form-item v-if="ruleForm.appoint === 2">
             <el-button type="primary" size="mini" icon="el-icon-edit" @click="addFree(ruleForm.free)">
-              添加指定包邮区域
+              {{ $t('systemSetting.addSpecifiedFreeShippingRegion') }}
             </el-button>
           </el-form-item>
         </template>
-        <el-form-item label="排序：">
-          <el-input v-model.trim="ruleForm.sort" class="withs" placeholder="请输入排序" />
+        <el-form-item :label="$t('user.sortLabel')">
+          <el-input v-model.trim="ruleForm.sort" class="withs" :placeholder="$t('user.pleaseEnterSort')" />
         </el-form-item>
       </el-form>
     </div>
     <div class="demo-drawer__footer from-foot-btn btn-shadow drawer_fix">
       <div class="acea-row row-center">
-        <el-button @click="handleClose('ruleForm')">取 消</el-button>
+        <el-button @click="handleClose('ruleForm')">{{ $t('common.cancel') }}</el-button>
         <el-button
           type="primary"
           :loading="loading"
           @click="onsubmit('ruleForm')"
           v-hasPermi="['merchant:shipping:templates:update']"
-          >确 定</el-button
+          >{{ $t('common.confirm') }}</el-button
         >
       </div>
     </div>
@@ -195,9 +215,17 @@
 // +----------------------------------------------------------------------
 
 import * as logistics from '@/api/logistics';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
 import { Loading } from 'element-ui';
 import { Debounce } from '@/utils/validate';
 import * as selfUtil from '@/utils/ZBKJIutil.js';
+import {
+  resolveFormActiveLang,
+  hasI18nNameContent,
+  buildI18nNameJson,
+  pickFormName,
+} from '@/utils/localizedName';
 const defaultRole = {
   name: '',
   type: 1,
@@ -217,44 +245,19 @@ const defaultRole = {
   free: [],
   undelives: {},
 };
-const kg = '重量（kg）';
-const m = '体积（m³）';
-const statusMap = [
-  {
-    title: '首件',
-    title2: '续件',
-    title3: '包邮件数',
-  },
-  {
-    title: `首件${kg}`,
-    title2: `续件${kg}`,
-    title3: `包邮${kg}`,
-  },
-  {
-    title: `首件${m}`,
-    title2: `续件${m}`,
-    title3: `包邮${m}`,
-  },
-];
 export default {
   name: 'CreatTemplates',
   components: {},
   data() {
     return {
       loading: false,
-      rules: {
-        name: [{ required: true, message: '请输入模板名称', trigger: 'blur' }],
-        free: [{ type: 'array', required: true, message: '请至少添加一个区域', trigger: 'change' }],
-        appoint: [{ required: true, message: '请选择包邮方式', trigger: 'change' }],
-        undelivery: [{ required: true, message: '请选择是否指定区域不配送', trigger: 'change' }],
-        type: [{ required: true, message: '请选择计费方式', trigger: 'change' }],
-        region: [{ required: true, message: '请选择区域运费', trigger: 'change' }],
-        city_ids: [{ type: 'array', required: true, message: '请至少选择一个区域', trigger: 'change' }],
-        first: [{ required: true, message: '请输入', trigger: 'blur' }],
-        renewal: [{ required: true, message: '请输入', trigger: 'blur' }],
-        firstPrice: [{ required: true, message: '请输入运费', trigger: 'blur' }],
-        renewalPrice: [{ required: true, message: '请输入续费', trigger: 'blur' }],
-      },
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
       nodeKey: 'city_ids',
       props: {
         children: 'child',
@@ -267,9 +270,9 @@ export default {
       listLoading: false,
       cityList: [],
       columns: {
-        title: '首件',
-        title2: '续件',
-        title3: '包邮件数',
+        title: this.$t('systemSetting.firstItem'),
+        title2: this.$t('systemSetting.additionalItem'),
+        title3: this.$t('systemSetting.freeShippingItemCount'),
       },
       tempId: 0,
       regionNew: [
@@ -285,12 +288,65 @@ export default {
       type: 0, // 0添加 1编辑
     };
   },
+  computed: {
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    rules() {
+      return {
+        name: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(pickFormName(this), this.nameJsonForm)) callback();
+            else callback(new Error(this.$t('systemSetting.pleaseEnterTemplateName')));
+          },
+          trigger: 'blur',
+        }],
+        free: [{ type: 'array', required: true, message: this.$t('systemSetting.addAtLeastOneRegion'), trigger: 'change' }],
+        appoint: [{ required: true, message: this.$t('systemSetting.pleaseSelectFreeShippingMethod'), trigger: 'change' }],
+        undelivery: [{ required: true, message: this.$t('systemSetting.pleaseSelectUndeliverableRegion'), trigger: 'change' }],
+        type: [{ required: true, message: this.$t('systemSetting.pleaseSelectBillingMethod'), trigger: 'change' }],
+        region: [{ required: true, message: this.$t('systemSetting.pleaseSelectRegionalFreight'), trigger: 'change' }],
+        city_ids: [{ type: 'array', required: true, message: this.$t('systemSetting.selectAtLeastOneRegion'), trigger: 'change' }],
+        first: [{ required: true, message: this.$t('systemSetting.pleaseEnter'), trigger: 'blur' }],
+        renewal: [{ required: true, message: this.$t('systemSetting.pleaseEnter'), trigger: 'blur' }],
+        firstPrice: [{ required: true, message: this.$t('systemSetting.pleaseEnterFreight'), trigger: 'blur' }],
+        renewalPrice: [{ required: true, message: this.$t('systemSetting.pleaseEnterRenewalFee'), trigger: 'blur' }],
+      };
+    },
+  },
+  watch: {
+    dialogVisible(val) {
+      if (val) this.getLanguageList();
+    },
+  },
   mounted() {
     let cityList = localStorage.getItem('cityList') ? JSON.parse(localStorage.getItem('cityList')) : [];
     // this.cityList = this.changeNodes(cityList);
     this.cityList = this.changeNodes(cityList);
   },
   methods: {
+    getColumnLabels(type) {
+      if (type === 2) {
+        return {
+          title: this.$t('systemSetting.firstWeight'),
+          title2: this.$t('systemSetting.additionalWeight'),
+          title3: this.$t('systemSetting.freeShippingWeight'),
+        };
+      }
+      if (type === 3) {
+        return {
+          title: this.$t('systemSetting.firstVolume'),
+          title2: this.$t('systemSetting.additionalVolume'),
+          title3: this.$t('systemSetting.freeShippingVolume'),
+        };
+      }
+      return {
+        title: this.$t('systemSetting.firstItem'),
+        title2: this.$t('systemSetting.additionalItem'),
+        title3: this.$t('systemSetting.freeShippingItemCount'),
+      };
+    },
     changeAppoint() {
       let region = [...this.ruleForm.region];
     },
@@ -301,11 +357,59 @@ export default {
       row.splice(index, 1);
     },
     popoverHide() {},
+    emptyNameJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    parseNameJson(nameJson) {
+      const form = this.emptyNameJsonForm();
+      if (!nameJson) return form;
+      try {
+        const obj = typeof nameJson === 'string' ? JSON.parse(nameJson) : nameJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // ignore
+      }
+      return form;
+    },
+    buildNameJson() {
+      return buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, pickFormName(this));
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseNameJson(this.ruleForm && this.ruleForm.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseNameJson(this.ruleForm && this.ruleForm.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     handleClose() {
       this.dialogVisible = false;
+      this.nameJsonForm = this.emptyNameJsonForm();
       setTimeout(() => {
         this.ruleForm = {
           name: '',
+          nameJson: '',
           type: 1,
           appoint: 0,
           sort: 0,
@@ -324,7 +428,7 @@ export default {
           undelives: {},
         };
       }, 1000);
-      this.columns = Object.assign({}, statusMap[0]);
+      this.columns = this.getColumnLabels(1);
     },
     changeNodes(data) {
       if (data.length > 0) {
@@ -367,7 +471,7 @@ export default {
     },
 
     changeRadio(num) {
-      this.columns = Object.assign({}, statusMap[num - 1]);
+      this.columns = this.getColumnLabels(num);
     },
     // 添加配送区域
     addRegion(region) {
@@ -428,14 +532,17 @@ export default {
           }
           this.ruleForm = Object.assign(this.ruleForm, {
             name: info.name,
+            nameJson: info.nameJson || '',
             type: info.type,
             appoint: info.appoint,
             sort: info.sort,
             region: info.regionList || [], // 运费区域
             free: info.freeList || [], // 包邮区域
           });
+          this.nameJsonForm = this.parseNameJson(info.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
           this.regionNew = [...this.ruleForm.region];
-          this.columns = Object.assign({}, statusMap[this.ruleForm.type - 1]);
+          this.columns = this.getColumnLabels(this.ruleForm.type);
           this.$nextTick(() => {
             loadingInstance.close();
           });
@@ -488,6 +595,7 @@ export default {
           const param = {
             appoint: this.ruleForm.appoint,
             name: this.ruleForm.name,
+            nameJson: this.buildNameJson(),
             sort: this.ruleForm.sort,
             type: this.ruleForm.type,
             // 配送区域及运费
@@ -541,7 +649,7 @@ export default {
             logistics
               .shippingSave(param)
               .then((res) => {
-                this.$message.success('操作成功');
+                this.$message.success(this.$t('user.operationSuccess'));
                 this.$emit('getList');
                 this.loading = false;
                 this.$store.commit('product/SET_ShippingTemplates', []);
@@ -554,7 +662,7 @@ export default {
             logistics
               .shippingUpdate(param)
               .then((res) => {
-                this.$message.success('操作成功');
+                this.$message.success(this.$t('user.operationSuccess'));
                 this.$store.commit('product/SET_ShippingTemplates', []);
                 this.$emit('getList');
                 this.handleClose();
@@ -571,6 +679,8 @@ export default {
     }),
     clear() {
       this.ruleForm.name = '';
+      this.ruleForm.nameJson = '';
+      this.nameJsonForm = this.emptyNameJsonForm();
       this.ruleForm.sort = 0;
     },
   },
@@ -592,6 +702,16 @@ export default {
 }
 .withs {
   width: 50%;
+}
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.lang-name-input {
+  margin-top: 10px;
 }
 .tempBox {
   ::v-deep .el-input-number--mini {

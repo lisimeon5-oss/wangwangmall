@@ -12,11 +12,11 @@
           <div
             class="cell_item"
             :class="{ tab_active: listActive == index }"
-            v-for="(item, index) in tabList"
-            :key="index"
+            v-for="(item, index) in tabItems"
+            :key="item.key"
             @click="ProductNavTab(index)"
           >
-            {{ item }}
+            {{ $t(item.key) }}
           </div>
         </div>
         <!--中间-->
@@ -63,8 +63,8 @@
               <div class="page-fooot" :class="{ select_ctive: shows == 8 }">
                 <div class="foot-item" v-for="(item, index) in navigationListTab" :key="index">
                   <el-image :src="item.checked" alt="" class="el-image" />
-                  <p v-if="index == 0" class="textE93323">{{ item.name }}</p>
-                  <p v-else>{{ item.name }}</p>
+                  <p v-if="index == 0" class="textE93323">{{ navPreviewName(item) }}</p>
+                  <p v-else>{{ navPreviewName(item) }}</p>
                 </div>
               </div>
             </div>
@@ -79,18 +79,18 @@
                   <div class="user_info">
                     <img :src="menuInfo.userDefaultAvatar" alt="" />
                     <div class="info">
-                      <p class="nick_name">用户信息</p>
+                      <p class="nick_name">{{ $t('order.userInfo') }}</p>
                       <p class="phone">123456</p>
                     </div>
                   </div>
                   <div class="num_wrapper">
                     <div class="num_wrap_item">
                       <p class="num_item_bold">0</p>
-                      <p class="num_title">余额</p>
+                      <p class="num_title">{{ $t('order.balance') }}</p>
                     </div>
                     <div class="num_wrap_item">
                       <p class="num_item_bold">0</p>
-                      <p class="num_title">积分</p>
+                      <p class="num_title">{{ $t('user.integral') }}</p>
                     </div>
                     <div class="num_wrap_item">
                       <p class="num_item_bold">0</p>
@@ -104,9 +104,9 @@
                 </div>
                 <div class="order_wrap">
                   <div class="order_wrap_tit">
-                    <span class="weight_600">订单中心</span>
+                    <span class="weight_600">{{ $t('pagediy.orderCenter') }}</span>
                     <div>
-                      <span class="font_sm">查看全部</span>
+                      <span class="font_sm">{{ $t('pagediy.viewAll') }}</span>
                       <i class="el-icon-arrow-right"></i>
                     </div>
                   </div>
@@ -117,11 +117,11 @@
                     </div>
                     <div class="order_list_item">
                       <img src="@/assets/imgs/fahuo.png" alt="" />
-                      <p>待发货</p>
+                      <p>{{ $t('dashboard.awaitShipping') }}</p>
                     </div>
                     <div class="order_list_item">
                       <img src="@/assets/imgs/shouhuo.png" alt="" />
-                      <p>待收货</p>
+                      <p>{{ $t('order.waitingReceipt') }}</p>
                     </div>
                     <div class="order_list_item">
                       <img src="@/assets/imgs/pingjia.png" alt="" />
@@ -154,7 +154,7 @@
                   <div class="list_box">
                     <div class="list_box_item" v-for="(item, index) in dataList[2]" :key="index">
                       <img :src="item.pic" alt="" />
-                      <p>{{ item.name }}</p>
+                      <p>{{ navPreviewName(item) }}</p>
                     </div>
                   </div>
                 </div>
@@ -165,19 +165,26 @@
         <!--右侧-->
         <div class="flex_between">
           <div class="right-box" v-if="typeName">
-            <div class="title-bar-line">模块配置</div>
+            <div class="title-bar-line">{{ $t('pagediy.moduleConfig') }}</div>
             <div class="mobile-config">
               <!--底部菜单-->
               <template v-if="typeName === 'bottomNavigation' && checkPermi(['platform:system:group:list'])">
-                <span class="mr20">是否自定义</span
+                <span class="mr20">{{ $t('pagediy.whetherCustom') }}</span
                 ><el-switch
                   :active-value="1"
                   :inactive-value="0"
-                  active-text="开启"
-                  inactive-text="关闭"
+                  :active-text="$t('common.open')"
+                  :inactive-text="$t('common.close')"
                   v-model="isCustom"
                 >
                 </el-switch>
+                <div class="lang-name-switch">
+                  <el-radio-group v-model="activeLang" size="mini">
+                    <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                      {{ lang.label }}
+                    </el-radio-button>
+                  </el-radio-group>
+                </div>
                 <div class="box-item" v-for="(item, index) in navigationList" :key="index">
                   <div class="left-tool">
                     <div
@@ -195,49 +202,48 @@
                     <div class="img-wrapper">
                       <div class="img-item" @click="modalPicTap(true, 'checked', index)">
                         <img :src="item.checked" alt="" v-if="item.checked" />
-                        <p class="txt" v-if="item.checked">选中</p>
+                        <p class="txt" v-if="item.checked">{{ $t('pagediy.iconSelected') }}</p>
                         <div class="empty-img" v-else>
                           <span class="iconfont iconjiahao"></span>
-                          <p>选中</p>
+                          <p>{{ $t('pagediy.iconSelected') }}</p>
                         </div>
                       </div>
                       <div class="img-item" @click="modalPicTap(true, 'unchecked', index)">
                         <img :src="item.unchecked" alt="" v-if="item.unchecked" />
-                        <p class="txt" v-if="item.unchecked">未选中</p>
+                        <p class="txt" v-if="item.unchecked">{{ $t('pagediy.iconUnselected') }}</p>
                         <div class="empty-img" v-else>
                           <span class="iconfont iconjiahao"></span>
-                          <p>未选中</p>
+                          <p>{{ $t('pagediy.iconUnselected') }}</p>
                         </div>
                       </div>
                     </div>
                     <div class="info mt20" style="margin-left: 0">
                       <div class="info-item">
-                        <span>标题</span>
+                        <span>{{ $t('content.title') }}</span>
                         <div class="input-box">
                           <el-input
-                            v-if="typeName !== 'indexNews'"
-                            v-model.trim="item.name"
-                            :placeholder="'请填写' + item.name"
-                            maxlength="4"
+                            :value="getNavName(item)"
+                            :placeholder="navNamePlaceholder"
+                            :maxlength="navNameMaxlength"
+                            @input="setNavName(item, $event)"
                           />
-                          <el-input v-else v-model.trim="item.info" :placeholder="'请填写' + item.info" />
                         </div>
                       </div>
                       <div class="info-item">
-                        <span>链接</span>
+                        <span>{{ $t('pagediy.link') }}</span>
                         <div class="input-box" @click="getLink(index)">
-                          <el-input v-model.trim="item.link" placeholder="请填写链接" />
+                          <el-input v-model.trim="item.link" :placeholder="$t('pagediy.pleaseEnterLink')" />
                         </div>
                       </div>
                       <div class="info-item">
-                        <span>状态</span>
+                        <span>{{ $t('common.status') }}</span>
                         <div class="input-box">
                           <el-switch
                             v-model="item.status"
                             :active-value="true"
                             :inactive-value="false"
-                            active-text="显示"
-                            inactive-text="隐藏"
+                            :active-text="$t('common.show')"
+                            :inactive-text="$t('menu.hide')"
                           />
                         </div>
                       </div>
@@ -250,6 +256,13 @@
               </template>
               <!--其他菜单-->
               <template v-if="typeName !== 'bottomNavigation' && checkPermi(['platform:system:group:list'])">
+                <div class="lang-name-switch" v-if="typeName === 'userMenu'">
+                  <el-radio-group v-model="activeLang" size="mini">
+                    <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                      {{ lang.label }}
+                    </el-radio-button>
+                  </el-radio-group>
+                </div>
                 <div v-for="(item, index) in menuList" :key="index" class="item">
                   <div
                     class="move-icon"
@@ -278,38 +291,45 @@
                   </div>
                   <div class="info">
                     <div v-if="typeName !== 'userBanner'" class="info-item">
-                      <span>标题</span>
+                      <span>{{ $t('content.title') }}</span>
                       <div class="input-box">
                         <el-input
-                          v-if="typeName !== 'indexNews'"
+                          v-if="typeName === 'userMenu'"
+                          :value="getNavName(item)"
+                          :placeholder="navNamePlaceholder"
+                          :maxlength="navNameMaxlength"
+                          @input="setNavName(item, $event)"
+                        />
+                        <el-input
+                          v-else-if="typeName !== 'indexNews'"
                           v-model.trim="item.name"
-                          :placeholder="'请填写' + item.name"
+                          :placeholder="$t('pagediy.pleaseFillTitle')"
                           maxlength="4"
                         />
-                        <el-input v-else v-model.trim="item.info" :placeholder="'请填写' + item.info" />
+                        <el-input v-else v-model.trim="item.info" :placeholder="$t('pagediy.pleaseFillTitle')" />
                       </div>
                     </div>
                     <div class="info-item" v-if="addUrlStatus && typeName !== 'indexTabNav'">
-                      <span>链接</span>
+                      <span>{{ $t('pagediy.link') }}</span>
                       <div class="input-box" @click="getLink(index)">
                         <el-input v-model.trim="item.url" placeholder="请填写链接" />
                       </div>
                     </div>
                     <div class="info-item" v-if="typeName == 'indexTabNav'">
-                      <span>简介</span>
+                      <span>{{ $t('maintain.intro') }}</span>
                       <div class="input-box">
                         <el-input v-model.trim="item.info" placeholder="请填写简介" />
                       </div>
                     </div>
                     <div class="info-item">
-                      <span>状态</span>
+                      <span>{{ $t('common.status') }}</span>
                       <div class="input-box">
                         <el-switch
                           v-model="item.status"
                           :active-value="true"
                           :inactive-value="false"
-                          active-text="显示"
-                          inactive-text="隐藏"
+                          :active-text="$t('common.show')"
+                          :inactive-text="$t('menu.hide')"
                         />
                       </div>
                     </div>
@@ -317,7 +337,7 @@
                 </div>
               </template>
               <div class="add-btn mb20 mt20">
-                <el-button @click="addBox" type="primary">添加数据</el-button>
+                <el-button @click="addBox" type="primary">{{ $t('maintain.addData') }}</el-button>
               </div>
             </div>
           </div>
@@ -338,7 +358,7 @@
             'platform:page:layout:bottom:navigation',
             'platform:page:layout:bottom:navigation:save',
           ]"
-          >保存</el-button
+          >{{ $t('common.save') }}</el-button
         >
       </div>
     </el-card>
@@ -360,6 +380,9 @@ import ClipboardJS from 'clipboard';
 import linkaddress from '@/components/linkaddress';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
 import { Debounce } from '@/utils/validate';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { parseLangJsonMap, resolveFormActiveLang, getLocalizedName, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'index',
   data() {
@@ -384,7 +407,7 @@ export default {
       tip: false,
       mockGoods: false,
       cateArr: [
-        { img: require('@/assets/imgs/moren.png'), tit: '默认模板' },
+        { img: require('@/assets/imgs/moren.png'), tit: this.$t('pagediy.defaultTemplate') },
         { img: require('@/assets/imgs/youxuan.png'), tit: '模板1' },
         { img: require('@/assets/imgs/haowu.png'), tit: '模板2' },
         { img: require('@/assets/imgs/shengxian.png'), tit: '模板3' },
@@ -395,12 +418,31 @@ export default {
       radio: true,
       newsInfo: '',
       listActive: 0,
-      tabList: ['底部导航', '个人中心'],
+      tabItems: [
+        { key: 'pagediy.bottomNav' },
+        { key: 'maintain.personalCenter' },
+      ],
       itemIndex: 0,
       navigationList: [], //底部导航
       navigationListTab: [], //底部导航左侧展示
       isCustom: 0,
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
     };
+  },
+  computed: {
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
+    },
+    navNamePlaceholder() {
+      if (this.activeLang === this.defaultLangCode) return this.$t('pagediy.max4Chars');
+      return this.$t('pagediy.inputMenuNameInLang', { lang: this.activeLangLabel });
+    },
+    navNameMaxlength() {
+      return this.activeLang === this.defaultLangCode ? 4 : 20;
+    },
   },
   components: {
     linkaddress,
@@ -413,16 +455,63 @@ export default {
     window.addEventListener('message', this.handleMessage, 'bottomNavigation');
     if (checkPermi(['platform:page:layout:index'])) this.designList();
     if (checkPermi(['platform:page:layout:bottom:navigation'])) this.getBottomNavigation();
+    this.getLanguageList();
     this.$set(this, 'tip', true);
     this.$nextTick(function () {
       const clipboard = new ClipboardJS('.copy-data');
       clipboard.on('success', () => {
-        this.$message.success('复制成功');
+        this.$message.success(this.$t('application.copySuccess'));
       });
     });
   },
   methods: {
     checkPermi,
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
+    getNavName(item) {
+      if (!item) return '';
+      if (this.activeLang === this.defaultLangCode) return item.name || '';
+      return parseLangJsonMap(item.nameJson)[this.activeLang] || '';
+    },
+    setNavName(item, val) {
+      if (this.activeLang === this.defaultLangCode) {
+        this.$set(item, 'name', val);
+        return;
+      }
+      const map = parseLangJsonMap(item.nameJson);
+      if (String(val || '').trim()) map[this.activeLang] = val;
+      else delete map[this.activeLang];
+      this.$set(item, 'nameJson', Object.keys(map).length ? JSON.stringify(map) : '');
+    },
+    navPreviewName(item) {
+      return getLocalizedName(item, getUiLocale(this));
+    },
+    stringifyNavNameJson(item) {
+      if (!item) return item;
+      if (item.nameJson && typeof item.nameJson === 'object') {
+        item.nameJson = JSON.stringify(item.nameJson);
+      }
+      return item;
+    },
     //删除底部菜单中的配置项
     handleDelMenu(item, index) {
       this.navigationList.splice(index, 1);
@@ -433,31 +522,33 @@ export default {
         const indexMenu = JSON.parse(JSON.stringify(this.navigationList[0]));
         indexMenu.id = null;
         indexMenu.name = '';
+        indexMenu.nameJson = '';
         indexMenu.link = '';
         indexMenu.checked = '';
         indexMenu.unchecked = '';
         this.navigationList.push(indexMenu);
       } else if (this.menuList.length >= 10 && this.typeName == 'indexMenu') {
-        this.$message.warning('设置数据不能超过10条');
+        this.$message.warning(this.$t('pagediy.dataLimit10'));
       } else if (this.typeName == 'indexTabNav' && this.menuList.length >= 4) {
         this.addUrlStatus = false;
         this.infoStatus = true;
-        this.$message.warning('设置数据不能超过4条');
+        this.$message.warning(this.$t('pagediy.dataLimit4'));
       } else {
         const indexMenu = JSON.parse(JSON.stringify(this.menuList[0]));
         indexMenu.id = null;
-        indexMenu.name = '';
-        indexMenu.url = '';
-        indexMenu.info = '';
-        indexMenu.pic = '';
-        this.menuList.push(indexMenu);
+                        indexMenu.name = '';
+                        indexMenu.nameJson = '';
+                        indexMenu.url = '';
+                        indexMenu.info = '';
+                        indexMenu.pic = '';
+                        this.menuList.push(indexMenu);
       }
     },
     //获取底部导航
     getBottomNavigation() {
       getBottomNavigationApi().then((res) => {
-        this.navigationList = res.bottomNavigationList;
-        let data = res.bottomNavigationList.filter((item) => {
+        this.navigationList = (res.bottomNavigationList || []).map((item) => this.stringifyNavNameJson(item));
+        let data = this.navigationList.filter((item) => {
           return item.status;
         });
         this.navigationListTab = data;
@@ -468,6 +559,9 @@ export default {
     designList() {
       designListApi().then((res) => {
         this.menuInfo = res;
+        if (this.menuInfo.userMenu) {
+          this.menuInfo.userMenu = this.menuInfo.userMenu.map((item) => this.stringifyNavNameJson(item));
+        }
         let newArr = [];
         let indexMenu = res.indexMenu.filter((item, index, arr) => {
           return item.status == true;
@@ -484,6 +578,9 @@ export default {
         });
         newArr.push(indexMenu, indexBanner, userMenu, indexNews, userBanner);
         this.dataList = newArr;
+        if (this.typeName === 'userMenu') {
+          this.menuList = this.menuInfo.userMenu;
+        }
         this.$set(this, 'newsInfo', indexNews[0] ? indexNews[0].title : '这是一个新闻标题');
       });
     },
@@ -594,16 +691,23 @@ export default {
       });
       let data = {};
       if (param === 'bottomNavigation') {
-        data = { bottomNavigationList: this.changeIndex(this.navigationList), isCustom: this.isCustom };
-        if (navigationList.length < 4) return this.$message.warning('设置数据不能小于4条');
+        data = {
+          bottomNavigationList: this.changeIndex(this.navigationList).map((item) => this.stringifyNavNameJson(item)),
+          isCustom: this.isCustom,
+        };
+        if (navigationList.length < 4) return this.$message.warning(this.$t('pagediy.dataMin4'));
       } else {
-        if (param === 'indexMenu' && tArr.length < 5) return this.$message.warning('设置数据不能小于5条');
-        if (param === 'indexTabNav' && tArr.length < 2) return this.$message.warning('设置数据不能小于2条');
-        if (param === 'indexNews' && tArr.length < 1) return this.$message.warning('设置数据不能小于1条');
-        data = { [param]: this.changeIndex(this.menuList) };
+        if (param === 'indexMenu' && tArr.length < 5) return this.$message.warning(this.$t('pagediy.dataMin5'));
+        if (param === 'indexTabNav' && tArr.length < 2) return this.$message.warning(this.$t('pagediy.dataMin2'));
+        if (param === 'indexNews' && tArr.length < 1) return this.$message.warning(this.$t('pagediy.dataMin1'));
+        const list =
+          param === 'userMenu'
+            ? this.changeIndex(this.menuList).map((item) => this.stringifyNavNameJson(item))
+            : this.changeIndex(this.menuList);
+        data = { [param]: list };
       }
       SaveDataApi(data, url).then((res) => {
-        this.$message.success('保存成功');
+        this.$message.success(this.$t('user.saveSuccess'));
         if (param === 'bottomNavigation') {
           this.getBottomNavigation();
         } else {
@@ -676,7 +780,7 @@ export default {
         is_show_category: this.radio,
       };
       SaveDataApi(data, '/admin/page/layout/category/config/save').then((res) => {
-        this.$message.success('保存成功');
+        this.$message.success(this.$t('user.saveSuccess'));
       });
     }),
     getConfig() {
@@ -715,6 +819,14 @@ export default {
   position: fixed;
   bottom: 0;
   width: 373px;
+}
+.lang-name-switch {
+  width: 100%;
+  margin: 10px 0;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 .box-item {
   position: relative;

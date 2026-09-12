@@ -26,6 +26,8 @@ import com.zbkj.common.request.*;
 import com.zbkj.common.response.*;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.ProductSpecI18nUtil;
 import com.zbkj.common.utils.RedisUtil;
 import com.zbkj.common.vo.MyRecord;
 import com.zbkj.common.vo.PreMerchantOrderVo;
@@ -131,7 +133,7 @@ public class SeckillServiceImpl implements SeckillService {
         }
         seckillProductList.forEach(sp -> {
             Product product = productService.getById(sp.getProductId());
-            sp.setName(product.getName());
+            sp.setName(I18nJsonUtil.resolveByRequest(product.getName(), product.getNameJson()));
             sp.setImage(product.getImage());
         });
         return seckillProductList;
@@ -226,7 +228,7 @@ public class SeckillServiceImpl implements SeckillService {
             Product baseProduct = productService.getById(product.getProductId());
             BeanUtils.copyProperties(product, response);
             response.setImage(baseProduct.getImage());
-            response.setName(baseProduct.getName());
+            response.setName(I18nJsonUtil.resolveByRequest(baseProduct.getName(), baseProduct.getNameJson()));
             BigDecimal divide = new BigDecimal(String.valueOf((product.getQuotaShow() - product.getQuota()))).divide(new BigDecimal(product.getQuotaShow().toString()), 2, BigDecimal.ROUND_HALF_UP);
             int range = divide.multiply(new BigDecimal("100")).intValue();
             response.setPayRange(range + "%");
@@ -268,8 +270,10 @@ public class SeckillServiceImpl implements SeckillService {
         product.setStock(seckillProduct.getQuota());
         product.setSales(seckillProduct.getQuotaShow() - seckillProduct.getQuota());
         product.setContent(seckillProduct.getContent());
+        product.setContentJson(seckillProduct.getContentJson());
         product.setVipPrice(BigDecimal.ZERO);
         product.setIsPaidMember(false);
+        I18nJsonUtil.applyProductDisplay(product);
         productDetailResponse.setProductInfo(product);
         if (StrUtil.isNotBlank(baseProduct.getGuaranteeIds())) {
             List<ProductGuarantee> productGuaranteeList = productGuaranteeService.findByIdList(CrmebUtil.stringToArray(baseProduct.getGuaranteeIds()));
@@ -295,6 +299,7 @@ public class SeckillServiceImpl implements SeckillService {
             skuMap.put(atr.getSku(), atr);
         }
         productDetailResponse.setProductValue(skuMap);
+        ProductSpecI18nUtil.localizeForFront(attributeList, skuMap);
         productDetailResponse.setOneQuota(seckillActivity.getOneQuota());
 
         // 秒杀时段
@@ -429,7 +434,7 @@ public class SeckillServiceImpl implements SeckillService {
 
         PreMerchantOrderVo merchantOrderVo = new PreMerchantOrderVo();
         merchantOrderVo.setMerId(merchant.getId());
-        merchantOrderVo.setMerName(merchant.getName());
+        merchantOrderVo.setMerName(I18nJsonUtil.resolveMerchantName(merchant));
         merchantOrderVo.setFreightFee(BigDecimal.ZERO);
         merchantOrderVo.setCouponFee(BigDecimal.ZERO);
         merchantOrderVo.setUserCouponId(0);
@@ -814,7 +819,7 @@ public class SeckillServiceImpl implements SeckillService {
             Product baseProduct = productService.getById(product.getProductId());
             BeanUtils.copyProperties(product, response);
             response.setImage(baseProduct.getImage());
-            response.setName(baseProduct.getName());
+            response.setName(I18nJsonUtil.resolveByRequest(baseProduct.getName(), baseProduct.getNameJson()));
             BigDecimal divide = new BigDecimal(String.valueOf((product.getQuotaShow() - product.getQuota()))).divide(new BigDecimal(product.getQuotaShow().toString()), 2, BigDecimal.ROUND_HALF_UP);
             int range = divide.multiply(new BigDecimal("100")).intValue();
             response.setPayRange(range + "%");

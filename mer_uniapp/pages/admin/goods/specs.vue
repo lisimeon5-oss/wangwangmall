@@ -10,38 +10,38 @@
 				<!-- #endif -->
 				<view class="listCon">
 					<!-- <view class="item acea-row row-middle">
-						<view class="name">商品图</view>
+						<view class="name">{{$t('商品图')}}</view>
 						<view class="pictrue">
 							<image :src="item.image" mode="aspectFill"></image>
 						</view>
 					</view> -->
 					<view class="item acea-row row-middle">
-						<view class="name">规格名称</view>
+						<view class="name">{{$t('规格名称')}}</view>
 						<view class="info">{{item.attrValue}}</view>
 					</view>
 					<view class="item acea-row row-middle">
-						<view class="name">成本价</view>
+						<view class="name">{{$t('成本价')}}</view>
 						<input type="number" :disabled="administer" v-model="item.cost" 
 							placeholder-class="placeholder" />
 					</view>
 					<view class="item acea-row row-middle">
-						<view class="name">划线价</view>
+						<view class="name">{{$t('划线价')}}</view>
 						<input type="number" :disabled="administer" v-model="item.otPrice" 
 							placeholder-class="placeholder" />
 					</view>
 					<view class="item acea-row row-middle">
-						<view class="name">售价</view>
+						<view class="name">{{$t('售价')}}</view>
 						<input type="number"  @blur="handleInput(item)" :disabled="administer" min='0' v-model="item.price"
-							placeholder="请填写售价" placeholder-class="placeholder" />
+							:placeholder="$t('请填写售价')" placeholder-class="placeholder" />
 					</view>
 					<view class="item acea-row row-middle" v-if="isPaidMember">
-						<view class="name">会员价</view>
+						<view class="name">{{$t('会员价')}}</view>
 						<input @blur="handleInput(item)"  type="number" :disabled="administer" min='0' v-model="item.vipPrice"
-							placeholder="请填写会员价" placeholder-class="placeholder" />
+							:placeholder="$t('请填写会员价')" placeholder-class="placeholder" />
 					</view>
 					<view class="item acea-row row-middle">
-						<view class="name">库存</view>
-						<input type="number" :disabled="administer" v-model="item.stock" placeholder="请填写库存"
+						<view class="name">{{$t('库存')}}</view>
+						<input type="number" :disabled="administer" v-model="item.stock" :placeholder="$t('请填写库存')"
 							placeholder-class="placeholder" />
 					</view>
 				</view>
@@ -50,16 +50,16 @@
 		<view class="footer on acea-row row-between-wrapper" v-if="administer">
 			<checkbox-group @change="checkboxAllChange">
 				<checkbox value="all" :checked="isAllSelect" />
-				<text class='checkAll'>全选</text>
+				<text class='checkAll'>{{$t('全选')}}</text>
 			</checkbox-group>
 			<view class="acea-row row-middle">
-				<view class="bnt acea-row row-center-wrapper" @click="manageTap">取消</view>
-				<view class="bnt on acea-row row-center-wrapper" @click="batchEdit">批量修改</view>
+				<view class="bnt acea-row row-center-wrapper" @click="manageTap">{{$t('取消')}}</view>
+				<view class="bnt on acea-row row-center-wrapper" @click="batchEdit">{{$t('批量修改')}}</view>
 			</view>
 		</view>
 		<view class="footer acea-row row-between-wrapper" v-else>
-			<view class="bnt acea-row row-center-wrapper" @click="manageTap">批量操作</view>
-			<view class="bnt on acea-row row-center-wrapper" @click="define">保存</view>
+			<view class="bnt acea-row row-center-wrapper" @click="manageTap">{{$t('批量操作')}}</view>
+			<view class="bnt on acea-row row-center-wrapper" @click="define">{{$t('保存')}}</view>
 		</view>
 		<edit-price :visible='visiblePrice' :isPaidMember="isPaidMember"  :goodsInfo='goodsInfo' @closeDrawer='priceCloseDrawer'
 			@successChange='successChange'></edit-price>
@@ -129,7 +129,7 @@
 			batchEdit() {
 				if (!this.getIds().length) {
 					this.$util.Tips({
-						title: '请选择商品规格'
+						title: this.$t('请选择商品规格')
 					});
 					return
 				}
@@ -165,7 +165,7 @@
 				reviewFreeEdit(requestObj).then(res => {
 					if (res.code == 200) {
 						this.$util.Tips({
-							title: '操作成功'
+							title: this.$t('操作成功')
 						});
 						setTimeout(function() {
 							uni.navigateBack()
@@ -275,13 +275,13 @@
 </script>
 
 <style lang="scss" scoped>
-	/deep/checkbox .uni-checkbox-input.uni-checkbox-input-checked {
+	::v-deep checkbox .uni-checkbox-input.uni-checkbox-input-checked {
 		border: 1px solid #2A7EFB !important;
 		background-color: #2A7EFB !important;
 		color: #fff !important;
 	}
 
-	/deep/checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+	::v-deep checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 		border: 1px solid #2A7EFB !important;
 		background-color: #2A7EFB !important;
 		color: #fff !important;

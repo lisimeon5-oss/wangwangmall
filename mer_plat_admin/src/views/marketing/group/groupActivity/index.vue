@@ -9,131 +9,135 @@
     >
       <div class="padding-add">
         <el-form size="small" label-position="right" inline @submit.native.prevent>
-          <el-form-item label="活动名称：">
-            <el-input v-model="formData.groupName" placeholder="请输入活动名称" class="selWidth" clearable></el-input>
+          <el-form-item :label="$t('marketing.activityNameLabel')">
+            <el-input v-model="formData.groupName" :placeholder="$t('marketing.pleaseEnterActivityName')" class="selWidth" clearable></el-input>
           </el-form-item>
-          <el-form-item label="活动进程：" class="inline">
+          <el-form-item :label="$t('marketing.activityProgressLabel')" class="inline">
             <el-select
               @change="selectChange"
               v-model="formData.groupProcess"
               clearable
-              placeholder="请选择活动进程"
+              :placeholder="$t('marketing.pleaseSelectActivityProgress')"
               class="selWidth"
             >
-              <el-option label="未开始" value="0" />
-              <el-option label="进行中" value="1" />
-              <el-option label="已结束" value="2" />
+              <el-option :label="$t('common.notStarted')" value="0" />
+              <el-option :label="$t('common.ongoing')" value="1" />
+              <el-option :label="$t('common.ended')" value="2" />
             </el-select>
           </el-form-item>
-          <el-form-item label="活动日期：" class="inline">
+          <el-form-item :label="$t('marketing.activityDateLabel')" class="inline">
             <el-date-picker
               @change="selectChange"
               class="selWidth"
               v-model="formData.startTime"
               type="date"
-              placeholder="选择日期"
+              :placeholder="$t('user.chooseDate')"
               value-format="yyyy-MM-dd"
             >
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="活动状态：" class="inline">
+          <el-form-item :label="$t('marketing.activityStatusLabel')" class="inline">
             <el-select
               @change="selectChange"
               v-model="formData.activityStatus"
               clearable
-              placeholder="请选择活动状态"
+              :placeholder="$t('marketing.pleaseSelectActivityStatus')"
               class="selWidth"
             >
-              <el-option label="开启" value="1" />
-              <el-option label="关闭" value="0" />
+              <el-option :label="$t('common.open')" value="1" />
+              <el-option :label="$t('common.close')" value="0" />
             </el-select>
           </el-form-item>
-          <el-form-item label="商户分类：" class="inline">
+          <el-form-item :label="$t('merchant.merchantCategoryLabel')" class="inline">
             <el-select
               @change="selectChange"
               v-model="formData.categoryId"
               clearable
               size="small"
-              placeholder="请选择"
+              :placeholder="$t('el.select.placeholder')"
               class="selWidth"
             >
               <el-option v-for="item in merchantClassify" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
-          <el-form-item label="商户名称：">
-            <el-input v-model="formData.merName" placeholder="请输入商户名称" class="selWidth" clearable></el-input>
+          <el-form-item :label="$t('product.merchantNameLabel')">
+            <el-input v-model="formData.merName" :placeholder="$t('merchant.pleaseEnterMerchantName')" class="selWidth" clearable></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="search">查询</el-button>
-            <el-button size="small" @click="reset">重置</el-button>
+            <el-button type="primary" size="small" @click="search">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '0 20px 20px' }" shadow="never" :bordered="false">
       <el-tabs v-if="hedaList.length" @tab-click="getTabList" v-model="formData.groupStatus" class="list-tabs">
-        <el-tab-pane :label="`已通过(${hedaList[2].count})`" name="4" />
-        <el-tab-pane :label="`待审核(${hedaList[1].count})`" name="3" />
-        <el-tab-pane :label="`已拒绝(${hedaList[0].count})`" name="1" />
+        <el-tab-pane :label="$t('marketing.tabApprovedCount', { count: hedaList[2].count })" name="4" />
+        <el-tab-pane :label="$t('marketing.tabPendingAuditCount', { count: hedaList[1].count })" name="3" />
+        <el-tab-pane :label="$t('marketing.tabRejectedCount', { count: hedaList[0].count })" name="1" />
       </el-tabs>
       <el-table :data="tableData" size="small" ref="multipleTable" row-key="id" class="mt20 tableSelection">
         <el-table-column label="ID" prop="id" width="60" />
-        <el-table-column label="活动名称" prop="groupName" min-width="120" />
-        <el-table-column label="活动时间" prop="time" min-width="150">
+        <el-table-column :label="$t('marketing.activityName')" min-width="120" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ localizedGroupName(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('marketing.activityTime')" prop="time" min-width="150">
           <template slot-scope="scope">
-            <span>{{ `${scope.row.startTime}至${scope.row.endTime}` }}</span>
+            <span>{{ scope.row.startTime }} {{ $t('marketing.timeTo') }} {{ scope.row.endTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="创建商户" prop="merName" />
-        <el-table-column label="成团人数" prop="buyCount" />
-        <el-table-column label="活动进程" prop="doing">
+        <el-table-column :label="$t('marketing.createMerchant')" min-width="120">
+          <template slot-scope="scope">{{ localizedMerName(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('marketing.formedCount')" prop="buyCount" />
+        <el-table-column :label="$t('marketing.activityProgress')" prop="doing">
           <template slot-scope="scope">
-            <span v-if="scope.row.groupProcess == 0">未开始</span>
-            <span v-if="scope.row.groupProcess == 1">进行中</span>
-            <span v-if="scope.row.groupProcess == 2">已结束</span>
+            <span v-if="scope.row.groupProcess == 0">{{ $t('common.notStarted') }}</span>
+            <span v-if="scope.row.groupProcess == 1">{{ $t('common.ongoing') }}</span>
+            <span v-if="scope.row.groupProcess == 2">{{ $t('common.ended') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参与商品数" prop="productCount" />
-        <el-table-column label="开团数" prop="totalActivityBegin" :render-header="totalActivityBeginHeader" />
-        <el-table-column label="成团数" prop="totalActivityDone" :render-header="totalActivityDoneHeader" />
+        <el-table-column :label="$t('marketing.joinProductCount')" prop="productCount" />
+        <el-table-column :label="$t('marketing.startedGroupCount')" prop="totalActivityBegin" :render-header="totalActivityBeginHeader" />
+        <el-table-column :label="$t('marketing.formedGroupCount')" prop="totalActivityDone" :render-header="totalActivityDoneHeader" />
         <el-table-column
-          label="参团订单数"
+          :label="$t('marketing.joinGroupOrderCount')"
           prop="totalOrderBegin"
           min-width="100"
           :render-header="totalOrderBeginHeader"
         />
         <el-table-column
-          label="成团订单数"
+          :label="$t('marketing.formedOrderCount')"
           prop="totalOrderDone"
           min-width="100"
           :render-header="totalOrderDoneHeader"
         />
-        <el-table-column label="拒绝原因" prop="refusal" v-if="formData.groupStatus == 1" width="100">
+        <el-table-column :label="$t('product.rejectReason')" prop="refusal" v-if="formData.groupStatus == 1" width="100">
           <template slot-scope="scope">
-            <span>{{ scope.row.refusal || '平台强制关闭' }}</span>
+            <span>{{ scope.row.refusal || $t('marketing.platformForceClose') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="活动状态" prop="status">
+        <el-table-column :label="$t('marketing.activityStatus')" prop="status">
           <template slot-scope="scope">
-            <span v-if="scope.row.activityStatus == 1">开启</span>
-            <span v-if="scope.row.activityStatus == 0">关闭</span>
+            <span v-if="scope.row.activityStatus == 1">{{ $t('common.open') }}</span>
+            <span v-if="scope.row.activityStatus == 0">{{ $t('common.close') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" prop="operate" min-width="155">
+        <el-table-column :label="$t('common.operate')" prop="operate" min-width="155">
           <template slot-scope="scope">
-            <a @click="toDeatil(scope.row)" v-hasPermi="['platform:groupbuy:activity:info']">详情</a>
+            <a @click="toDeatil(scope.row)" v-hasPermi="['platform:groupbuy:activity:info']">{{ $t('common.detail') }}</a>
             <el-divider v-if="scope.row.groupStatus != 1" direction="vertical"></el-divider>
             <a
               v-if="scope.row.groupStatus == 4"
               @click="close(scope.row)"
               v-hasPermi="['platform:groupbuy:activity:review:close']"
-              >强制关闭</a
+              >{{ $t('marketing.forceClose') }}</a
             >
             <a
               v-if="scope.row.groupStatus == 3"
               @click="toDeatil(scope.row)"
               v-hasPermi="['platform:groupbuy:activity:review:pass']"
-              >审核</a
+              >{{ $t('finance.audit') }}</a
             >
           </template>
         </el-table-column>
@@ -161,6 +165,7 @@ import { checkPermi } from '@/utils/permission'; // 权限判断函数
 import { mapGetters } from 'vuex';
 import activityDetail from './detail.vue';
 import { groupActivityList, groupActivityCount, groupActivityInfo, groupActivityClose } from '@/api/group';
+import { getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   components: {
     activityDetail,
@@ -191,6 +196,12 @@ export default {
     if (checkPermi(['platform:groupbuy:activity:list'])) this.getList();
   },
   methods: {
+    localizedGroupName(row) {
+      return getLocalizedText(row.groupName, row.groupNameJson, getUiLocale(this));
+    },
+    localizedMerName(row) {
+      return getLocalizedText(row.merName, row.merNameJson, getUiLocale(this));
+    },
     selectChange() {
       this.formData.page = 1;
       this.getList();
@@ -203,18 +214,18 @@ export default {
       return this.headerText(
         h,
         column,
-        '成团订单数：此拼团活动用户已经拼团成功的所有成功订单数统计（不包含未支付的订单数据）',
+        this.$t('marketing.formedOrderCountTip'),
       );
     },
     totalOrderBeginHeader(h, { column }) {
-      return this.headerText(h, column, '参团订单数：此拼团活动用户开团的所有订单数统计（不包含未支付的订单数据）');
+      return this.headerText(h, column, this.$t('marketing.joinGroupOrderCountTip'));
     },
     totalActivityDoneHeader(h, { column }) {
-      return this.headerText(h, column, '成团数：此拼团活动用户已经拼团成功的团次数统计');
+      return this.headerText(h, column, this.$t('marketing.formedGroupCountTip'));
     },
     // 开团提示
     totalActivityBeginHeader(h, { column }) {
-      return this.headerText(h, column, '开团数：此拼团活动用户开团的次数统计');
+      return this.headerText(h, column, this.$t('marketing.startedGroupCountTip'));
     },
     headerText(h, column, text) {
       const serviceContent = [
@@ -278,11 +289,11 @@ export default {
     },
     //关闭
     close(row) {
-      this.$modalSure('要将此活动强制关闭吗？').then(() => {
+      this.$modalSure(this.$t('marketing.forceCloseConfirm')).then(() => {
         groupActivityClose(row.id).then((res) => {
           this.$message({
             type: 'success',
-            message: '关闭成功!',
+            message: this.$t('marketing.closeSuccessExcl'),
           });
           this.getList();
         });

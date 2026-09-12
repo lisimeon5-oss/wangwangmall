@@ -1,7 +1,7 @@
 <template>
   <div class="layout-breadcrumb-seting">
     <el-drawer
-      title="主题编辑"
+      :title="$t('layout.themeEdit')"
       :visible.sync="getThemeConfig.isDrawer"
       direction="rtl"
       destroy-on-close
@@ -10,7 +10,7 @@
     >
       <el-scrollbar class="layout-breadcrumb-seting-bar el-main">
         <!-- 布局切换 -->
-        <el-divider :content-position="contentPosotion">布局切换</el-divider>
+        <el-divider :content-position="contentPosotion">{{ $t('layout.layoutSwitch') }}</el-divider>
         <div class="layout-drawer-content-flex">
           <!-- defaults 布局 -->
           <div
@@ -84,26 +84,26 @@
           </div>
         </div>
         <!-- 界面设置 -->
-        <el-divider :content-position="contentPosotion">界面设置</el-divider>
+        <el-divider :content-position="contentPosotion">{{ $t('layout.uiSettings') }}</el-divider>
         <div class="layout-breadcrumb-seting-bar-flex mb10">
-          <div class="layout-breadcrumb-seting-bar-flex-label">主题</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.theme') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-select
               v-model="getThemeConfig.themeStyle"
-              placeholder="请选择"
+              :placeholder="$t('common.pleaseSelect')"
               size="mini"
               style="width: 90px"
               @change="setLocalTheme"
             >
-              <el-option label="蓝黑" value="theme-1"></el-option>
-              <el-option label="蓝白" value="theme-2"></el-option>
-              <el-option label="绿黑" value="theme-3"></el-option>
-              <el-option label="绿白" value="theme-4"></el-option>
-              <el-option label="紫黑" value="theme-5"></el-option>
-              <el-option label="紫白" value="theme-6"></el-option>
-              <el-option label="红黑" value="theme-7"></el-option>
-              <el-option label="红白" value="theme-8"></el-option>
-              <el-option label="渐变" value="theme-9" v-if="getThemeConfig.layout === 'columns'"></el-option>
+              <el-option :label="$t('layout.themeBlueBlack')" value="theme-1"></el-option>
+              <el-option :label="$t('layout.themeBlueWhite')" value="theme-2"></el-option>
+              <el-option :label="$t('layout.themeGreenBlack')" value="theme-3"></el-option>
+              <el-option :label="$t('layout.themeGreenWhite')" value="theme-4"></el-option>
+              <el-option :label="$t('layout.themePurpleBlack')" value="theme-5"></el-option>
+              <el-option :label="$t('layout.themePurpleWhite')" value="theme-6"></el-option>
+              <el-option :label="$t('layout.themeRedBlack')" value="theme-7"></el-option>
+              <el-option :label="$t('layout.themeRedWhite')" value="theme-8"></el-option>
+              <el-option :label="$t('layout.themeGradient')" value="theme-9" v-if="getThemeConfig.layout === 'columns'"></el-option>
             </el-select>
           </div>
         </div>
@@ -112,31 +112,31 @@
           class="layout-breadcrumb-seting-bar-flex"
           v-if="getThemeConfig.layout === 'columns' || getThemeConfig.layout === 'defaults'"
         >
-          <div class="layout-breadcrumb-seting-bar-flex-label">菜单水平折叠</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.menuCollapse') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-switch v-model="getThemeConfig.isCollapse" :width="35" @change="setLocalThemeConfig"> </el-switch>
           </div>
         </div>
         <div class="layout-breadcrumb-seting-bar-flex mt15">
-          <div class="layout-breadcrumb-seting-bar-flex-label">菜单手风琴</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.menuAccordion') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-switch v-model="getThemeConfig.isUniqueOpened" :width="35" @change="setLocalThemeConfig"> </el-switch>
           </div>
         </div>
         <div class="layout-breadcrumb-seting-bar-flex mt15">
-          <div class="layout-breadcrumb-seting-bar-flex-label">固定 Header</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.fixedHeader') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-switch v-model="getThemeConfig.isFixedHeader" :width="35" @change="setLocalThemeConfig"> </el-switch>
           </div>
         </div>
 
         <!-- 界面显示 -->
-        <el-divider :content-position="contentPosotion">界面显示</el-divider>
+        <el-divider :content-position="contentPosotion">{{ $t('layout.uiDisplay') }}</el-divider>
         <div
           v-show="$store.state.themeConfig.themeConfig.layout !== 'columns'"
           class="layout-breadcrumb-seting-bar-flex"
         >
-          <div class="layout-breadcrumb-seting-bar-flex-label">侧边栏 Logo</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.sidebarLogo') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-switch v-model="getThemeConfig.isShowLogo" :width="35" @change="setLocalThemeConfig"> </el-switch>
           </div>
@@ -147,7 +147,7 @@
             opacity: getThemeConfig.layout === 'classic' || getThemeConfig.layout === 'transverse' ? 0.5 : 1,
           }"
         >
-          <div class="layout-breadcrumb-seting-bar-flex-label">面包屑</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.breadcrumb') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-switch
               v-model="getThemeConfig.isBreadcrumb"
@@ -159,40 +159,40 @@
           </div>
         </div>
         <div class="layout-breadcrumb-seting-bar-flex mt15">
-          <div class="layout-breadcrumb-seting-bar-flex-label">面包屑图标</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.breadcrumbIcon') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-switch v-model="getThemeConfig.isBreadcrumbIcon" :width="35" @change="setLocalThemeConfig"> </el-switch>
           </div>
         </div>
         <div class="layout-breadcrumb-seting-bar-flex mt15">
-          <div class="layout-breadcrumb-seting-bar-flex-label">历史菜单</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.historyMenu') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-switch v-model="getThemeConfig.isTagsview" :width="35" @change="setLocalThemeConfig"> </el-switch>
           </div>
         </div>
         <div class="layout-breadcrumb-seting-bar-flex mt15">
-          <div class="layout-breadcrumb-seting-bar-flex-label">Footer</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.footer') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-switch v-model="getThemeConfig.isFooter" :width="35" @change="setLocalThemeConfig"> </el-switch>
           </div>
         </div>
         <div class="layout-breadcrumb-seting-bar-flex mt15">
-          <div class="layout-breadcrumb-seting-bar-flex-label">灰色模式</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.grayscale') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-switch v-model="getThemeConfig.isGrayscale" :width="35" @change="onAddFilterChange('grayscale')">
             </el-switch>
           </div>
         </div>
         <div class="layout-breadcrumb-seting-bar-flex mt15">
-          <div class="layout-breadcrumb-seting-bar-flex-label">色弱模式</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.colorWeak') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-switch v-model="getThemeConfig.isInvert" :width="35" @change="onAddFilterChange('invert')"> </el-switch>
           </div>
         </div>
         <!-- 其它设置 -->
-        <el-divider :content-position="contentPosotion">其它设置</el-divider>
+        <el-divider :content-position="contentPosotion">{{ $t('layout.otherSettings') }}</el-divider>
         <div class="layout-breadcrumb-seting-bar-flex mt15">
-          <div class="layout-breadcrumb-seting-bar-flex-label">历史菜单风格</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.historyMenuStyle') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-radio-group
               v-model="getThemeConfig.tagsStyle"
@@ -200,19 +200,19 @@
               size="mini"
               @change="setLocalThemeConfig"
             >
-              <el-radio-button label="tags-style-one">卡片</el-radio-button>
-              <el-radio-button label="tags-style-four">灵动</el-radio-button>
-              <el-radio-button label="tags-style-five">圆滑</el-radio-button>
+              <el-radio-button label="tags-style-one">{{ $t('layout.styleCard') }}</el-radio-button>
+              <el-radio-button label="tags-style-four">{{ $t('layout.styleSmart') }}</el-radio-button>
+              <el-radio-button label="tags-style-five">{{ $t('layout.styleSmooth') }}</el-radio-button>
             </el-radio-group>
           </div>
         </div>
         <div class="layout-breadcrumb-seting-bar-flex mt15">
-          <div class="layout-breadcrumb-seting-bar-flex-label">主页面切换动画</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.pageAnimation') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-radio-group v-model="getThemeConfig.animation" size="mini" @input="setLocalThemeConfig">
-              <el-radio-button label="slide-left">左滑</el-radio-button>
-              <el-radio-button label="opacitys">透明</el-radio-button>
-              <el-radio-button label="slide-right">右滑</el-radio-button>
+              <el-radio-button label="slide-left">{{ $t('layout.slideLeft') }}</el-radio-button>
+              <el-radio-button label="opacitys">{{ $t('layout.fade') }}</el-radio-button>
+              <el-radio-button label="slide-right">{{ $t('layout.slideRight') }}</el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -222,11 +222,11 @@
             mb28: getThemeConfig.layout !== 'columns' && getThemeConfig.layout !== 'classic',
           }"
         >
-          <div class="layout-breadcrumb-seting-bar-flex-label">菜单高亮风格</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.menuHighlightStyle') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-radio-group v-model="getThemeConfig.columnsAsideStyle" size="mini" @input="setLocalThemeConfig">
-              <el-radio-button label="columns-round">圆角</el-radio-button>
-              <el-radio-button label="columns-card">卡片</el-radio-button>
+              <el-radio-button label="columns-round">{{ $t('layout.round') }}</el-radio-button>
+              <el-radio-button label="columns-card">{{ $t('layout.styleCard') }}</el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -234,11 +234,11 @@
           class="layout-breadcrumb-seting-bar-flex mt15 mb28"
           v-if="getThemeConfig.layout === 'columns' || getThemeConfig.layout === 'classic'"
         >
-          <div class="layout-breadcrumb-seting-bar-flex-label">顶级菜单风格</div>
+          <div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('layout.topMenuStyle') }}</div>
           <div class="layout-breadcrumb-seting-bar-flex-value">
             <el-radio-group v-model="getThemeConfig.columnsAsideLayout" size="mini" @input="setLocalThemeConfig">
-              <el-radio-button label="columns-horizontal">水平</el-radio-button>
-              <el-radio-button label="columns-vertical">垂直</el-radio-button>
+              <el-radio-button label="columns-horizontal">{{ $t('layout.horizontal') }}</el-radio-button>
+              <el-radio-button label="columns-vertical">{{ $t('layout.vertical') }}</el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -657,12 +657,12 @@ export default {
         text: () => JSON.stringify(this.$store.state.themeConfig.themeConfig),
       });
       clipboardJS.on('success', () => {
-        this.$message.success('配置复制成功');
+        this.$message.success(this.$t('layout.copyConfigSuccess'));
         this.isDrawer = false;
         clipboardJS.destroy();
       });
       clipboardJS.on('error', () => {
-        this.$message.error('配置复制失败');
+        this.$message.error(this.$t('layout.copyConfigFailed'));
       });
     },
     // 一键恢复默认

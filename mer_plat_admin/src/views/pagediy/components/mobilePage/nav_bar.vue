@@ -9,7 +9,7 @@
           color: curIndex === index ? (themeStyle ? configObj.checkColor.color[0].item : themeColor) : fontColor,
         }"
       >
-        {{ item.title }} <span :style="checkColor"></span>
+        {{ tabTitleText(item) }} <span :style="checkColor"></span>
       </div>
     </div>
   </div>
@@ -26,10 +26,12 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapGetters } from 'vuex';
+import { diyCname } from '@/utils/diyCname';
+import { getLocalizedDiyTitle, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'nav_bar',
   configName: 'c_nav_bar',
-  cname: '商品分类',
+  ...diyCname('marketing.productCategory'),
   icon: 't-icon-zujian-shangpinfenlei',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
   defaultName: 'tabNav', // 外面匹配名称
@@ -101,34 +103,36 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '商品分类',
+          cname: this.$t('marketing.productCategory'),
         },
         listConfig: {
-          title: '鼠标拖拽左侧圆点可调整选项卡顺序',
-          tabTitle: '选项卡设置',
+          title: this.$t('pagediy.dragToReorderTabs'),
+          tabTitle: this.$t('pagediy.tabSettings'),
           max: 10,
           list: [
             {
               title: '精选',
+              titleJson: '',
               val: '',
               type: 0,
             },
             {
               title: '靓丽美妆',
+              titleJson: '',
               val: '',
               type: 0,
             },
           ],
         },
         status: {
-          title: '开关',
+          title: this.$t('pagediy.switch'),
           default: {
             status: false,
           },
         },
         fontColor: {
-          tabTitle: '标签设置',
-          title: '文字颜色',
+          tabTitle: this.$t('pagediy.tagSettings'),
+          title: this.$t('pagediy.textColor'),
           name: 'fontColor',
           color: [
             {
@@ -143,21 +147,21 @@ export default {
         },
         //色调
         themeStyleConfig: {
-          title: '色调',
+          title: this.$t('pagediy.colorTone'),
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '跟随主题风格',
+              val: this.$t('pagediy.followTheme'),
             },
             {
-              val: '自定义',
+              val: this.$t('pagediy.customStyle'),
             },
           ],
         },
         checkColor: {
           isShow: 0,
-          title: '选中颜色',
+          title: this.$t('pagediy.selectedColor'),
           name: 'checkColor',
           color: [
             {
@@ -172,8 +176,8 @@ export default {
         },
         // 背景颜色
         bgColor: {
-          title: '背景颜色',
-          tabTitle: '颜色设置',
+          title: this.$t('pagediy.backgroundColor'),
+          tabTitle: this.$t('pagediy.colorSettings'),
           default: [
             {
               item: '#FFFFFF',
@@ -193,14 +197,14 @@ export default {
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 0,
           min: 0,
           max: 30,
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
@@ -224,6 +228,9 @@ export default {
     });
   },
   methods: {
+    tabTitleText(item) {
+      return getLocalizedDiyTitle(item, getUiLocale(this));
+    },
     setConfig(data) {
       if (!data) return;
       if (data) {

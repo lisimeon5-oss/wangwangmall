@@ -79,7 +79,7 @@
 								<view class="pictrues acea-row row-center-wrapper">
 									<text class="iconfont icon-gengduo2"></text>
 								</view>
-								<view class="text">更多</view>
+								<view class="text">{{$t('更多')}}</view>
 							</view>
 						</view>
 					</view>
@@ -90,7 +90,7 @@
 						<view class='pictrue'>
 							<image :src="urlDomain+'crmebimage/presets/noShopper.png'"></image>
 						</view>
-						<text class="text-ccc">暂无商品</text>
+						<text class="text-ccc">{{$t('暂无商品')}}</text>
 					</view>
 				</view>
 
@@ -104,14 +104,14 @@
 		<view v-else>
 			<view class="error-network">
 				<image class="img" src="./error-network.png"></image>
-				<view class="title">网络连接断开</view>
+				<view class="title">{{$t('网络连接断开')}}</view>
 				<view class="con">
-					<view class="label">请检查情况：</view>
-					<view class="item">· 在设置中是否已开启网络权限</view>
-					<view class="item">· 当前是否处于弱网环境</view>
-					<view class="item">· 版本是否过低，升级试试吧</view>
+					<view class="label">{{$t('请检查情况：')}}</view>
+					<view class="item">· {{$t('在设置中是否已开启网络权限')}}</view>
+					<view class="item">· {{$t('当前是否处于弱网环境')}}</view>
+					<view class="item">· {{$t('版本是否过低')}}，{{$t('升级试试吧')}}</view>
 				</view>
-				<view class="btn" @click="reconnect">重新连接</view>
+				<view class="btn" @click="reconnect">{{$t('重新连接')}}</view>
 			</view>
 		</view>
 		<!-- 备案号、授权信息 -->
@@ -407,7 +407,7 @@
 				let that = this;
 				that.styleConfig = []
 				uni.showLoading({
-					title: '加载中...'
+					title: this.$t('加载中...')
 				});
 				getDiy(id).then(res => {
 					that.errorNetwork = false;
@@ -485,7 +485,7 @@
 						this.sortList = [];
 						this.categoryId = 0;
 						this.$util.Tips({
-							title: "请在平台端选择商品分类！确保加载商品分类数据。"
+							title: this.$t('请在平台端选择商品分类！确保加载商品分类数据。')
 						});
 						return;
 					} else {
@@ -504,7 +504,7 @@
 					this.categoryId = 0;
 					if (!item.val) {
 						return this.$util.Tips({
-							title: "请在平台端选择微页面链接！确保加载微页面数据。"
+							title: this.$t('请在平台端选择微页面链接！确保加载微页面数据。')
 						});
 					} else {
 						this.styleConfig = [];
@@ -608,8 +608,8 @@
 							success: (res) => {
 								if (appVersion > nowVersion) {
 									uni.showModal({
-										title: '更新提示',
-										content: '发现新版本，是否前去下载?',
+										title: this.$t('更新提示'),
+										content: this.$t('发现新版本，是否前去下载?'),
 										showCancel: that.appUpdate.openUpgrade == '1' ?
 											true : false,
 										cancelColor: '#eeeeee',
@@ -810,7 +810,7 @@
 					overflow: hidden;
 				}
 
-				/deep/ .easy-loadimage,
+				::v-deep  .easy-loadimage,
 				uni-image,
 				.easy-loadimage {
 					width: 90rpx;

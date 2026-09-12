@@ -9,7 +9,7 @@
     >
       <div class="padding-add">
         <el-form size="small" inline label-width="80" @submit.native.prevent>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('product.timeSelectLabel')">
             <el-date-picker
               v-model="timeVal"
               align="right"
@@ -18,9 +18,9 @@
               format="yyyy-MM-dd"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
+              :placeholder="$t('product.customTime')"
+              :start-placeholder="$t('product.startDate')"
+              :end-placeholder="$t('product.endDate')"
               class="selWidth"
               :picker-options="pickerOptions"
               @change="onchangeTime"
@@ -34,8 +34,8 @@
               value-format="yyyy-MM"
               format="yyyy-MM"
               @change="onchangeTime"
-              start-placeholder="开始月份"
-              end-placeholder="结束月份"
+              :start-placeholder="$t('finance.startMonth')"
+              :end-placeholder="$t('finance.endMonth')"
               class="selWidth"
               :picker-options="pickerOptionsYear"
               v-else
@@ -50,38 +50,38 @@
         <el-tabs class="list-tabs" v-model="activeName" @tab-click="handleClick">
           <el-tab-pane
             v-hasPermi="['platform:finance:daily:statement:page:list']"
-            label="日账单"
+            :label="$t('finance.dayStatement')"
             name="day"
           ></el-tab-pane>
           <el-tab-pane
             v-hasPermi="['platform:finance:month:statement:page:list']"
-            label="月账单"
+            :label="$t('finance.monthStatement')"
             name="month"
           ></el-tab-pane>
         </el-tabs>
       </div>
       <el-table v-loading="listLoading" :data="tableData.data" class="mt5" size="small" highlight-current-row>
         <el-table-column prop="id" label="ID" min-width="90" />
-        <el-table-column prop="dataDate" :label="activeName === 'day' ? '日期' : '月份'" min-width="150" />
+        <el-table-column prop="dataDate" :label="activeName === 'day' ? $t('finance.dateCol') : $t('finance.monthCol')" min-width="150" />
         <el-table-column
           prop="currentDayBalance"
-          :label="activeName === 'day' ? '当日结余' : '当月结余'"
+          :label="activeName === 'day' ? $t('finance.dailyBalance') : $t('finance.monthlyBalance')"
           min-width="100"
         />
-        <el-table-column prop="brokerage" label="佣金" min-width="100" />
-        <el-table-column prop="orderReceivable" label="订单应收金额" min-width="100" />
-        <el-table-column prop="payNum" label="订单应收笔数" min-width="100" />
-        <el-table-column prop="orderRefundable" label="订单应退金额" min-width="120" />
-        <el-table-column prop="refundNum" label="订单应退笔数" min-width="120" />
-        <el-table-column prop="merchantTransferAmount" label="商家分账" min-width="150" />
+        <el-table-column prop="brokerage" :label="$t('finance.commission')" min-width="100" />
+        <el-table-column prop="orderReceivable" :label="$t('finance.orderReceivableAmount')" min-width="100" />
+        <el-table-column prop="payNum" :label="$t('finance.orderReceivableCount')" min-width="100" />
+        <el-table-column prop="orderRefundable" :label="$t('finance.orderRefundableAmount')" min-width="120" />
+        <el-table-column prop="refundNum" :label="$t('finance.orderRefundableCount')" min-width="120" />
+        <el-table-column prop="merchantTransferAmount" :label="$t('finance.merchantShareAmount')" min-width="150" />
         <el-table-column
-          label="操作"
+          :label="$t('common.operate')"
           width="70"
           fixed="right"
           v-hasPermi="['platform:finance:daily:statement:page:list', 'platform:finance:month:statement:page:list']"
         >
           <template slot-scope="scope">
-            <a @click="onDetails(scope.row)">详情</a>
+            <a @click="onDetails(scope.row)">{{ $t('common.detail') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -99,7 +99,7 @@
       </div>
     </el-card>
     <el-dialog
-      :title="activeName === 'day' ? '日账单详情' : '月账单详情'"
+      :title="activeName === 'day' ? $t('finance.dayStatementDetail') : $t('finance.monthStatementDetail')"
       :visible.sync="dialogVisible"
       id="statement_detail_dialog"
       width="1200px"
@@ -117,12 +117,12 @@
         <el-col :span="21">
           <el-col :span="10">
             <div class="grid-content">
-              <span class="card_title">实际收入</span>
+              <span class="card_title">{{ $t('finance.actualIncome') }}</span>
               <span class="card_title_price">
                 {{ Number(accountDetails.realIncome) >= 0 ? '' : '-' }}
-                ￥{{ Math.abs(accountDetails.realIncome) }}</span
+                ฿{{ Math.abs(accountDetails.realIncome) }}</span
               >
-              <!--<span class="count font-red">{{ accountDetails.totalOrderNum }}笔</span>-->
+              <!--<span class="count font-red">{{ accountDetails.totalOrderNum }}{{ $t('finance.unitCount') }}</span>-->
               <div class="list">
                 <el-card
                   class="mb10"
@@ -131,59 +131,59 @@
                   :bordered="false"
                 >
                   <div slot="header" class="acea-row row-between-wrapper">
-                    <span class="header_title">订单实收</span>
-                    <div class="card_title">￥{{ accountDetails.orderRealIncome }}</div>
+                    <span class="header_title">{{ $t('finance.orderReceived') }}</span>
+                    <div class="card_title">฿{{ accountDetails.orderRealIncome }}</div>
                   </div>
                   <div class="text item">
                     <el-row class="item mb20">
-                      <el-col :span="13" class="name">订单应收</el-col>
+                      <el-col :span="13" class="name">{{ $t('finance.orderReceivable') }}</el-col>
                       <el-col :span="11" class="cost mb10">
-                        <span class="cost_price">￥{{ accountDetails.orderReceivable }}</span>
+                        <span class="cost_price">฿{{ accountDetails.orderReceivable }}</span>
                       </el-col>
                       <el-col :span="13" class="name">&nbsp;&nbsp;&nbsp;</el-col>
                       <el-col :span="11" class="cost">
-                        <span class="cost_num">{{ accountDetails.payNum }}笔</span>
+                        <span class="cost_num">{{ accountDetails.payNum }}{{ $t('finance.unitCount') }}</span>
                       </el-col>
                     </el-row>
                     <el-row class="item mb20">
-                      <el-col :span="13" class="name">平台优惠券补贴</el-col>
+                      <el-col :span="13" class="name">{{ $t('finance.platformCouponSubsidy') }}</el-col>
                       <el-col :span="11" class="cost">
-                        <span class="cost_price">-￥{{ accountDetails.platCouponPrice }}</span>
+                        <span class="cost_price">-฿{{ accountDetails.platCouponPrice }}</span>
                       </el-col>
                     </el-row>
                     <el-row class="item">
-                      <el-col :span="13" class="name">平台积分补贴</el-col>
+                      <el-col :span="13" class="name">{{ $t('finance.platformIntegralSubsidy') }}</el-col>
                       <el-col :span="11" class="cost">
-                        <span class="cost_price">-￥{{ accountDetails.integralPrice }}</span>
+                        <span class="cost_price">-฿{{ accountDetails.integralPrice }}</span>
                       </el-col>
                     </el-row>
                   </div>
                 </el-card>
                 <el-card body-style="background-color: #F9F9F9;padding: 20px 15px;" shadow="never" :bordered="false">
                   <div slot="header" class="acea-row row-between-wrapper">
-                    <span class="header_title">订单实退</span>
-                    <div class="card_title">-￥{{ accountDetails.orderRealRefund }}</div>
+                    <span class="header_title">{{ $t('finance.orderActualRefund') }}</span>
+                    <div class="card_title">-฿{{ accountDetails.orderRealRefund }}</div>
                   </div>
                   <el-row class="item mb20">
-                    <el-col :span="13" class="name">订单应退</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.orderRefundable') }}</el-col>
                     <el-col :span="11" class="cost mb10">
-                      <span class="cost_price">-￥{{ accountDetails.orderRefundable }}</span>
+                      <span class="cost_price">-฿{{ accountDetails.orderRefundable }}</span>
                     </el-col>
                     <el-col :span="13" class="name">&nbsp;&nbsp;&nbsp;</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_num">{{ accountDetails.refundNum }}笔</span>
+                      <span class="cost_num">{{ accountDetails.refundNum }}{{ $t('finance.unitCount') }}</span>
                     </el-col>
                   </el-row>
                   <el-row class="item mb20">
-                    <el-col :span="13" class="name">退还平台优惠券补贴</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.refundPlatformCouponSubsidy') }}</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_price">￥{{ accountDetails.refundPlatCouponPrice }}</span>
+                      <span class="cost_price">฿{{ accountDetails.refundPlatCouponPrice }}</span>
                     </el-col>
                   </el-row>
                   <el-row class="item">
-                    <el-col :span="13" class="name">退还平台积分补贴</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.refundPlatformIntegralSubsidy') }}</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_price">￥{{ accountDetails.refundIntegralPrice }}</span>
+                      <span class="cost_price">฿{{ accountDetails.refundIntegralPrice }}</span>
                     </el-col>
                   </el-row>
                 </el-card>
@@ -193,12 +193,12 @@
           </el-col>
           <el-col :span="10">
             <div class="grid-content">
-              <span class="card_title">实际支出</span>
+              <span class="card_title">{{ $t('finance.actualExpense') }}</span>
               <span class="card_title_price">
                 {{ Number(accountDetails.actualExpenditure) >= 0 ? '' : '-' }}
-                ￥{{ Math.abs(accountDetails.actualExpenditure) }}
+                ฿{{ Math.abs(accountDetails.actualExpenditure) }}
               </span>
-              <!--<span class="count font-red">{{ accountDetails.totalOrderNum }}笔</span>-->
+              <!--<span class="count font-red">{{ accountDetails.totalOrderNum }}{{ $t('finance.unitCount') }}</span>-->
               <div class="list">
                 <el-card
                   body-style="background-color: #F9F9F9;padding: 20px 15px;"
@@ -207,22 +207,22 @@
                   :bordered="false"
                 >
                   <div slot="header" class="acea-row row-between-wrapper">
-                    <span class="header_title">商家分账</span>
+                    <span class="header_title">{{ $t('finance.merchantShareAmount') }}</span>
                     <div class="card_title">
                       {{ Number(accountDetails.merchantTransferAmount) >= 0 ? '' : '-' }}
-                      ￥{{ Math.abs(accountDetails.merchantTransferAmount) }}
+                      ฿{{ Math.abs(accountDetails.merchantTransferAmount) }}
                     </div>
                   </div>
                   <el-row class="item mb20">
-                    <el-col :span="13" class="name">支付分账</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.payShare') }}</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_price">￥{{ accountDetails.payTransfer }}</span>
+                      <span class="cost_price">฿{{ accountDetails.payTransfer }}</span>
                     </el-col>
                   </el-row>
                   <el-row class="item">
-                    <el-col :span="13" class="name">退款分账</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.refundShare') }}</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_price">-￥{{ accountDetails.refundTransfer }}</span>
+                      <span class="cost_price">-฿{{ accountDetails.refundTransfer }}</span>
                     </el-col>
                   </el-row>
                 </el-card>
@@ -233,49 +233,49 @@
                   :bordered="false"
                 >
                   <div slot="header" class="acea-row row-between-wrapper">
-                    <span class="header_title">佣金</span>
+                    <span class="header_title">{{ $t('finance.commission') }}</span>
                     <div class="card_title">
                       {{ Number(accountDetails.brokerage) >= 0 ? '' : '-' }}
-                      ￥{{ Math.abs(accountDetails.brokerage) }}
+                      ฿{{ Math.abs(accountDetails.brokerage) }}
                     </div>
                   </div>
                   <el-row class="item mb20">
-                    <el-col :span="13" class="name">支付佣金</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.commissionPay') }}</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_price">￥{{ accountDetails.brokeragePrice }}</span>
+                      <span class="cost_price">฿{{ accountDetails.brokeragePrice }}</span>
                     </el-col>
                   </el-row>
                   <el-row class="item mb20">
-                    <el-col :span="13" class="name">退还佣金</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.commissionRefund') }}</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_price">-￥{{ accountDetails.refundBrokeragePrice }}</span>
+                      <span class="cost_price">-฿{{ accountDetails.refundBrokeragePrice }}</span>
                     </el-col>
                   </el-row>
                   <el-row class="item">
-                    <el-col :span="13" class="name">退款佣金代扣</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.refundCommissionDeduct') }}</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_price">￥{{ accountDetails.refundReplaceBrokerage }}</span>
+                      <span class="cost_price">฿{{ accountDetails.refundReplaceBrokerage }}</span>
                     </el-col>
                   </el-row>
                 </el-card>
                 <el-card body-style="background-color: #F9F9F9;padding: 20px 15px;" shadow="never" :bordered="false">
                   <div slot="header" class="acea-row row-between-wrapper">
-                    <span class="header_title">运费</span>
+                    <span class="header_title">{{ $t('finance.freight') }}</span>
                     <div class="card_title">
                       {{ Number(accountDetails.freight) >= 0 ? '' : '-' }}
-                      ￥{{ Math.abs(accountDetails.freight) }}
+                      ฿{{ Math.abs(accountDetails.freight) }}
                     </div>
                   </div>
                   <el-row class="item mb20">
-                    <el-col :span="13" class="name">支付运费</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.freightPay') }}</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_price">￥{{ accountDetails.freightFee }}</span>
+                      <span class="cost_price">฿{{ accountDetails.freightFee }}</span>
                     </el-col>
                   </el-row>
                   <el-row class="item">
-                    <el-col :span="13" class="name">退还运费</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.freightRefund') }}</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_price">-￥{{ accountDetails.refundFreightFee }}</span>
+                      <span class="cost_price">-฿{{ accountDetails.refundFreightFee }}</span>
                     </el-col>
                   </el-row>
                 </el-card>
@@ -285,17 +285,17 @@
           </el-col>
           <el-col :span="4">
             <div class="grid-content center">
-              <div class="title mb20">{{ activeName === 'day' ? '当日结余' : '当月结余' }}</div>
+              <div class="title mb20">{{ activeName === 'day' ? $t('finance.dailyBalance') : $t('finance.monthlyBalance') }}</div>
               <div class="color_gray">
                 {{ Number(accountDetails.currentDayBalance) >= 0 ? '' : '-' }}
-                ￥{{ Math.abs(accountDetails.currentDayBalance) }}
+                ฿{{ Math.abs(accountDetails.currentDayBalance) }}
               </div>
             </div>
           </el-col>
         </el-col>
       </el-row>
       <span slot="footer">
-        <el-button type="primary" size="small" @click="dialogVisible = false">我知道了</el-button>
+        <el-button type="primary" size="small" @click="dialogVisible = false">{{ $t('finance.iKnow') }}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -333,9 +333,17 @@ export default {
       },
       dialogVisible: false,
       accountDetails: {},
-      pickerOptions: this.$timeOptions,
-      pickerOptionsYear: yearOptions,
     };
+  },
+  computed: {
+    pickerOptions() {
+      this.$i18n.locale;
+      return this.$createTimeOptions();
+    },
+    pickerOptionsYear() {
+      this.$i18n.locale;
+      return yearOptions();
+    },
   },
   mounted() {
     if (checkPermi(['platform:finance:daily:statement:page:list', 'platform:finance:month:statement:page:list']))

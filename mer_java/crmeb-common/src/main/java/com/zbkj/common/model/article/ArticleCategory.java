@@ -1,6 +1,7 @@
 package com.zbkj.common.model.article;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -35,6 +36,10 @@ public class ArticleCategory implements Serializable {
 
     @ApiModelProperty(value = "分类名称")
     private String name;
+
+    @ApiModelProperty(value = "多语言分类名称(JSON)")
+    @TableField("name_json")
+    private String nameJson;
 
     @ApiModelProperty(value = "分类图标")
     private String icon;

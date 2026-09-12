@@ -36,6 +36,9 @@ public class GroupBuyActivity implements Serializable {
     @ApiModelProperty(value = "拼团活动名称")
     private String groupName;
 
+    @ApiModelProperty(value = "多语言拼团活动名称(JSON)")
+    private String groupNameJson;
+
     @ApiModelProperty(value = "开始时间")
     private Date startTime;
 

@@ -2,31 +2,31 @@
 	<view :data-theme="theme" class="user_payment">
 		<form @submit="submitSub" report-submit='true'>
 			<view class="payment-top acea-row row-column row-center-wrapper">
-				<span class="name1">转入至</span>
-				<span class="name2"><text class="iconfont icon-yue"></text>余额</span>
+				<span class="name1">{{$t('转入至')}}</span>
+				<span class="name2"><text class="iconfont icon-yue"></text>{{$t('余额')}}</span>
 			</view>
 			<view class="payment">
 				<view class="tip">
 					<view class="pay-money">
-						转入金额
+						{{$t('转入金额')}}
 					</view>
-					<view class='input'><text>￥</text>
+					<view class='input'><text>฿</text>
 					<input placeholder="0.00" type='number' v-model="toPrice" placeholder-class='placeholder'></input></view>
 					<view class="tips-title">
-						<view style="font-weight: bold; font-size: 26rpx;">提示：</view>
+						<view style="font-weight: bold; font-size: 26rpx;">{{$t('提示：')}}</view>
 						<view style="margin-top: 10rpx;">
-							当前佣金为 <text class=' mr10'>￥{{nowMoney || 0}}, </text>
-							<text class="font-color" @click="getAll">全部转入</text>
+							{{$t('当前佣金为')}} <text class=' mr10'>฿{{nowMoney || 0}}, </text>
+							<text class="font-color" @click="getAll">{{$t('全部转入')}}</text>
 						</view>
 					</view>
 					<view class="tips-box">
-						<view class="tips mt-30">注意事项：</view>
+						<view class="tips mt-30">{{$t('注意事项：')}}</view>
 						<view class="tips-samll" v-for="item in noticeList" :key="item">
 							{{ item }}
 						</view>
 					</view>
 				</view>
-				<button class='but' :class="parseFloat(this.nowMoney)<=0?'bg-color-hui':''" formType="submit"> 立即转入</button>
+				<button class='but' :class="parseFloat(this.nowMoney)<=0?'bg-color-hui':''" formType="submit"> {{$t('立即转入')}}</button>
 				<view class="alipaysubmit" v-html="formContent"></view>
 			</view>
 		</form>
@@ -105,7 +105,7 @@
 			getAll(){
 				if(parseFloat(this.nowMoney)<=0) {
 					return this.$util.Tips({
-						title: '您暂无佣金'
+						title: this.$t('您暂无佣金')
 					});
 				}
 				this.toPrice = this.nowMoney
@@ -125,19 +125,19 @@
 				// 转入余额
 				if (parseFloat(that.toPrice) < 0 || parseFloat(that.toPrice) == NaN || that.toPrice == undefined || that.toPrice == "") {
 					return that.$util.Tips({
-						title: '请输入金额'
+						title: this.$t('请输入金额')
 					});
 				}
 				uni.showModal({
-					title: '转入余额',
-					content: '转入余额后无法再次转出，确认是否转入余额',
+					title: this.$t('转入余额'),
+					content: this.$t('转入余额后无法再次转出，确认是否转入余额'),
 					success(res) {
 						if (res.confirm) {
 							transferIn({
 										price: parseFloat(that.toPrice)
 							}).then(res => {
 								return that.$util.Tips({
-									title: '转入成功',
+									title: this.$t('转入成功'),
 									icon: 'success'
 								}, {
 									tab: 5,
@@ -150,7 +150,7 @@
 							})
 						} else if (res.cancel) {
 							return that.$util.Tips({
-								title: '已取消'
+								title: this.$t('已取消')
 							});
 						}
 					},

@@ -8,6 +8,8 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 
+import { localizeNamedTree } from '@/utils/localizedName';
+
 const getters = {
   sidebar: (state) => state.app.sidebar,
   size: (state) => state.app.size,
@@ -24,10 +26,22 @@ const getters = {
   sidebarRouters: (state) => state.permission.sidebarRouters,
   errorLogs: (state) => state.errorLog.logs,
   isLogin: (state) => state.user.isLogin,
-  merPlatProductClassify: (state) => state.product.merPlatProductClassify,
+  merPlatProductClassify: (state) =>
+    localizeNamedTree(
+      state.product.merPlatProductClassify,
+      (state.themeConfig && state.themeConfig.themeConfig && state.themeConfig.themeConfig.globalI18n) || 'zh-cn',
+    ),
   productBrand: (state) => state.product.productBrand,
-  merchantClassify: (state) => state.merchant.merchantClassify,
-  merchantType: (state) => state.merchant.merchantType,
+  merchantClassify: (state) =>
+    localizeNamedTree(
+      state.merchant.merchantClassify,
+      (state.themeConfig && state.themeConfig.themeConfig && state.themeConfig.themeConfig.globalI18n) || 'zh-cn',
+    ),
+  merchantType: (state) =>
+    localizeNamedTree(
+      state.merchant.merchantType,
+      (state.themeConfig && state.themeConfig.themeConfig && state.themeConfig.themeConfig.globalI18n) || 'zh-cn',
+    ),
   frontDomain: (state) => state.settings.frontDomain,
   mediaDomain: (state) => state.settings.mediaDomain,
   mobileTheme: (state) => state.settings.mobileTheme,

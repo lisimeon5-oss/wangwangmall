@@ -1,0 +1,199 @@
+REUSE menu.button | 按钮
+REUSE common.save | 保存
+REUSE user.saveSuccess | 保存成功
+REUSE common.edit | 编辑
+REUSE product.editSuccess | 编辑成功
+REUSE menu.menu | 菜单
+REUSE menu.name | 菜单名称
+REUSE menu.menuName | 菜单名称：
+REUSE common.operate | 操作
+REUSE product.operateSuccess | 操作成功
+REUSE common.query | 查询
+REUSE product.createTime | 创建时间
+REUSE common.sms | 短信
+REUSE user.updateStatusSuccess | 更新状态成功
+REUSE common.close | 关闭
+REUSE common.disable | 禁用
+REUSE common.open | 开启
+REUSE common.type | 类型
+REUSE menu.directory | 目录
+REUSE product.sort | 排序
+REUSE product.sortLabel | 排序：
+REUSE common.enable | 启用
+REUSE menu.inputMenuName | 请输入菜单名称
+REUSE product.pleaseSelectParticipationType | 请选择参与类型和对应规则
+REUSE el.messagebox.cancel | 取消
+REUSE menu.permissionTag | 权限标识
+REUSE finance.confirmSpaced | 确 定
+REUSE el.messagebox.confirm | 确定
+REUSE common.delete | 删除
+REUSE product.deleteSuccess | 删除成功
+REUSE content.deleteDataSuccess | 删除数据成功
+REUSE merchant.enableLabel | 是否开启：
+REUSE product.isShow | 是否显示
+REUSE user.phoneCol | 手机号
+REUSE user.phoneLabel | 手机号：
+REUSE common.search | 搜索
+REUSE common.submit | 提交
+REUSE finance.submitting | 提交中 ...
+REUSE menu.icon | 图标
+REUSE common.show | 显示
+REUSE common.detail | 详情
+REUSE common.miniProgram | 小程序
+REUSE user.addNew | 新增
+REUSE product.addSuccess | 新增成功
+REUSE common.modify | 修改
+REUSE category.updateSuccess | 修改成功
+REUSE menu.hide | 隐藏
+REUSE user.noPermission | 暂无操作权限
+REUSE menu.toggleExpand | 展开/折叠
+REUSE product.specifiedCategoryParticipation | 指定分类参与
+REUSE product.specifiedBrandParticipation | 指定品牌参与
+REUSE product.specifiedMerchantParticipation | 指定商户参与
+REUSE product.specifiedProductParticipation | 指定商品参与
+REUSE el.table.resetFilter | 重置
+REUSE menu.mainCategory | 主类目
+REUSE menu.mainDirectory | 主目录
+REUSE common.status | 状态
+REUSE user.statusColon | 状态：
+REUSE menu.componentPathText | 组件路径
+NEW  | // +---------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +---------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +---------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +---------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | 百货/超市/便利店
+NEW  | 板块名称
+NEW  | 板块名称：
+NEW  | 编辑管理员
+NEW  | 编辑身份
+NEW  | 编辑推荐板块
+NEW  | 标识
+NEW  | 表单配置不正确，请关联正确表单后使用
+NEW  | 菜单权限：
+NEW  | 菜单状态：
+NEW  | 创建管理员
+NEW  | 创建管理员成功
+NEW  | 创建身份
+NEW  | 创建身份成功
+NEW  | 的数据项？
+NEW  | 顶部菜单
+NEW  | 二维码配置
+NEW  | 发送短信
+NEW  | 父子联动
+NEW  | 付费会员协议
+NEW  | 更新
+NEW  | 更新管理员成功
+NEW  | 更新身份成功
+NEW  | 更新时间
+NEW  | 公众号/H5
+NEW  | 公众号经营类目：IT科技/互联网|电子商务，IT科技/IT软件与服务
+NEW  | 公众号模板
+NEW  | 公众号模板消息
+NEW  | 关于我们
+NEW  | 管理员密码
+NEW  | 管理员密码：
+NEW  | 管理员身份：
+NEW  | 管理员搜索：
+NEW  | 管理员姓名
+NEW  | 管理员姓名：
+NEW  | 管理员账号
+NEW  | 管理员账号：
+NEW  | 管理员状态
+NEW  | 管理员状态：
+NEW  | 广告图(471*350)：
+NEW  | 广告图链接：
+NEW  | 加载中，请稍候
+NEW  | 角色编号
+NEW  | 角色名称：
+NEW  | 角色昵称
+NEW  | 角色昵称：
+NEW  | 接收短信
+NEW  | 经营理念
+NEW  | 理念描述不能为空
+NEW  | 两次输入密码不一致!
+NEW  | 模板编号
+NEW  | 模板名
+NEW  | 模板内容
+NEW  | 模板说明
+NEW  | 模板ID
+NEW  | 模块链接
+NEW  | 品牌好店广告图(288*422)：
+NEW  | 平台规则
+NEW  | 请上传氛围图
+NEW  | 请上传品牌好店广告图
+NEW  | 请上传左上角logo
+NEW  | 请输入板块名称
+NEW  | 请输入备案号
+NEW  | 请输入管理员密码
+NEW  | 请输入广告图链接
+NEW  | 请输入角色昵称
+NEW  | 请输入名称
+NEW  | 请输入手机号
+NEW  | 请输入授权信息
+NEW  | 请输入协议信息！
+NEW  | 请输入姓名或者账号
+NEW  | 请填写管理员姓名
+NEW  | 请填写管理员账号
+NEW  | 请填写角色名称
+NEW  | 请选择菜单状态
+NEW  | 请选择管理员身份
+NEW  | 请选择管理员状态
+NEW  | 请选择商品关联类型
+NEW  | 请选择手机体验购买二维码类型
+NEW  | 请选择图片
+NEW  | 请再次输入密码
+NEW  | 取 消
+NEW  | 全选/全不选
+NEW  | 确认密码
+NEW  | 确认密码：
+NEW  | 确认密码密码
+NEW  | 确认删除当前数据
+NEW  | 入驻协议
+NEW  | 删除该模块吗？
+NEW  | 商户入驻入口：
+NEW  | 身份
+NEW  | 身份名称
+NEW  | 是否确认删除名称为
+NEW  | 手机体验：
+NEW  | 首页广告
+NEW  | 首页推荐
+NEW  | 首页banner
+NEW  | 授权备案
+NEW  | 添加板块
+NEW  | 添加管理员
+NEW  | 添加角色
+NEW  | 添加数据成功
+NEW  | 添加推荐板块
+NEW  | 通知场景说明
+NEW  | 通知管理员
+NEW  | 通知会员
+NEW  | 通知类型
+NEW  | 通知详情
+NEW  | 同步成功
+NEW  | 同步微信模版消息
+NEW  | 同步小程序订阅消息
+NEW  | 图片地址不能为空
+NEW  | 小程序订阅
+NEW  | 小程序订阅消息
+NEW  | 姓名
+NEW  | 修改密码
+NEW  | 修改密码成功
+NEW  | 选择商品：
+NEW  | 隐私协议
+NEW  | 用户协议
+NEW  | 优惠券协议
+NEW  | 友情链接
+NEW  | 长度6-20个字符
+NEW  | 账号
+NEW  | 注销声明
+NEW  | 注销协议
+NEW  | 资质证照
+NEW  | 最后登录时间
+NEW  | 最后登录IP
+NEW  | PC商城左上角logo(100*36)：
+
+TOTAL unique: 190, NEW: 131

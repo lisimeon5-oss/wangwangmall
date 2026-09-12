@@ -3,7 +3,7 @@
     <el-card :bordered="false" shadow="never" class="ivu-mt" :body-style="{ padding: 0 }">
       <div class="padding-add">
         <el-form size="small" label-position="right" inline @submit.native.prevent>
-          <el-form-item label="开团日期：" class="inline">
+          <el-form-item :label="$t('marketing.groupOpenDateLabel')" class="inline">
             <el-date-picker
               v-model="time"
               value-format="yyyy-MM-dd"
@@ -11,48 +11,52 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               class="selWidth"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
+              :start-placeholder="$t('product.startDate')"
+              :end-placeholder="$t('product.endDate')"
               @change="timeChange"
             />
           </el-form-item>
-          <el-form-item label="活动名称：">
+          <el-form-item :label="$t('marketing.activityNameLabel')">
             <el-input
               v-model="formData.groupActivityName"
-              placeholder="请输入活动名称"
+              :placeholder="$t('marketing.pleaseEnterActivityName')"
               class="selWidth"
               clearable
             ></el-input>
           </el-form-item>
-          <el-form-item label="商品搜索：">
-            <el-input v-model="formData.productName" placeholder="请输入商品名称" class="selWidth" clearable></el-input>
+          <el-form-item :label="$t('product.productSearchLabel')">
+            <el-input v-model="formData.productName" :placeholder="$t('product.pleaseEnterProductName')" class="selWidth" clearable></el-input>
           </el-form-item>
-          <el-form-item label="团长搜索：">
+          <el-form-item :label="$t('marketing.groupLeaderSearchLabel')">
             <UserSearchInput v-model="formData" class="selWidth" />
           </el-form-item>
-          <el-form-item label="商户搜索：">
-            <el-input v-model="formData.merName" placeholder="请输入商户名称" class="selWidth" clearable></el-input>
+          <el-form-item :label="$t('merchant.merchantSearchLabel')">
+            <el-input v-model="formData.merName" :placeholder="$t('merchant.pleaseEnterMerchantName')" class="selWidth" clearable></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="search">查询</el-button>
-            <el-button size="small" @click="reset">重置</el-button>
+            <el-button type="primary" size="small" @click="search">{{ $t('common.query') }}</el-button>
+            <el-button size="small" @click="reset">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="box-card mt14" :body-style="{ padding: '0 20px 20px' }" shadow="never" :bordered="false">
       <el-tabs @tab-click="handleClick" v-model="formData.recordStatus" class="list-tabs">
-        <el-tab-pane :label="`已成功(${hedaList.successNum || 0})`" name="10" />
-        <el-tab-pane :label="`拼团中(${hedaList.ingNum || 0})`" name="0" />
-        <el-tab-pane :label="`已失败(${hedaList.failNum || 0})`" name="-1" />
+        <el-tab-pane :label="$t('marketing.tabSucceededCount', { count: hedaList.successNum || 0 })" name="10" />
+        <el-tab-pane :label="$t('marketing.tabGroupingCount', { count: hedaList.ingNum || 0 })" name="0" />
+        <el-tab-pane :label="$t('marketing.tabFailedCount', { count: hedaList.failNum || 0 })" name="-1" />
       </el-tabs>
       <el-table :data="tableData" size="small" ref="multipleTable" row-key="id" class="mt20 tableSelection">
         <el-table-column label="ID" prop="groupBuyingId" width="50" />
-        <el-table-column label="活动名称" prop="groupName" min-width="120" />
-        <el-table-column label="创建商户" prop="merName" min-width="120" />
-        <el-table-column label="团长信息" prop="creater" min-width="150">
+        <el-table-column :label="$t('marketing.activityName')" min-width="120" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{ localizedGroupName(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('marketing.createMerchant')" min-width="120">
+          <template slot-scope="scope">{{ localizedMerName(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('marketing.groupLeaderInfo')" prop="creater" min-width="150">
           <template slot-scope="scope">
             <div class="acea-row">
               <div>{{ scope.row.groupLeaderNickname }}</div>
@@ -61,29 +65,29 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="商品信息" prop="product" min-width="300">
+        <el-table-column :label="$t('product.productInfo')" prop="product" min-width="300">
           <template slot-scope="scope">
             <div class="acea-row al-c">
               <img :src="scope.row.productImage" alt="" />
               <div :style="{ marginLeft: '10px' }">
-                <div class="line1">{{ scope.row.productName }}</div>
+                <div class="line1">{{ localizedProductName(scope.row) }}</div>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="拼团时间" prop="time" min-width="200">
+        <el-table-column :label="$t('marketing.groupBuyTime')" prop="time" min-width="220">
           <template slot-scope="scope">
             <div>
-              <div>开团时间：{{ scope.row.createTime }}</div>
-              <div>结束时间：{{ scope.row.endTime }}</div>
+              <div>{{ $t('marketing.groupOpenTimeLabel') }}{{ scope.row.createTime }}</div>
+              <div>{{ $t('marketing.groupEndTimeLabel') }}{{ scope.row.endTime }}</div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="成团人数" prop="buyingCountNum" />
-        <el-table-column label="已参团人数" prop="yetBuyingNum" />
-        <el-table-column label="操作" prop="operate" min-width="155">
+        <el-table-column :label="$t('marketing.formedCount')" prop="buyingCountNum" />
+        <el-table-column :label="$t('marketing.joinedGroupCount')" prop="yetBuyingNum" />
+        <el-table-column :label="$t('common.operate')" prop="operate" min-width="155">
           <template slot-scope="scope">
-            <a @click="toDeatil(scope.row)">详情</a>
+            <a @click="toDeatil(scope.row)">{{ $t('common.detail') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -109,6 +113,7 @@
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
 import activityDetail from './detail.vue';
 import { groupRecordList, groupRecordCount, groupRecordInfo } from '@/api/group';
+import { getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   components: {
     activityDetail,
@@ -137,6 +142,15 @@ export default {
     if (checkPermi(['platform:groupbuy:record:list'])) this.getList();
   },
   methods: {
+    localizedGroupName(row) {
+      return getLocalizedText(row.groupName, row.groupNameJson, getUiLocale(this));
+    },
+    localizedMerName(row) {
+      return getLocalizedText(row.merName, row.merNameJson, getUiLocale(this));
+    },
+    localizedProductName(row) {
+      return getLocalizedText(row.productName, row.productNameJson, getUiLocale(this));
+    },
     search() {
       this.formData.page = 1;
       this.getList();

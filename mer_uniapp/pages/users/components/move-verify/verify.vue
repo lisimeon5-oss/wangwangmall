@@ -2,7 +2,7 @@
 	<view :class="mode=='pop'?'masks':''" v-if="clickShow">
 		<view :class="mode=='pop'?'verifybox':''">
 			<view class="verifybox-top" v-if="mode=='pop'">
-				请完成安全验证
+				{{$t('请完成安全验证')}}
 				<text class="verifybox-close" @click="clickShow = false">
 					<text class="iconfont icon-close"></text>
 				</text>

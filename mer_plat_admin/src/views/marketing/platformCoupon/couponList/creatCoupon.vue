@@ -3,7 +3,7 @@
     <div class="container_box">
       <pages-header
         ref="pageHeader"
-        :title="isEdit && !isCopy ? '编辑优惠券' : !isCopy ? '添加优惠券' : '复制优惠券'"
+        :title="isEdit && !isCopy ? $t('marketing.editCoupon') : !isCopy ? $t('marketing.addCouponWord') : $t('marketing.copyCoupon')"
         backUrl="/marketing/PlatformCoupon/list"
       ></pages-header>
       <el-card class="mt14" :body-style="{ padding: '0 20px 20px' }" shadow="never" :bordered="false">
@@ -20,16 +20,32 @@
           @submit.native.prevent
         >
           <div v-show="currentTab === '1'">
-            <el-form-item label="优惠券名称：" prop="name">
-              <el-input
-                v-model="formValidate.name"
-                size="small"
-                class="from-ipt-width"
-                placeholder="请输入优惠券名称"
-                maxlength="20"
-              />
+            <el-form-item :label="$t('marketing.couponNameLabel')" prop="name">
+              <div class="lang-name-switch from-ipt-width">
+                <el-radio-group v-model="activeLang" size="small">
+                  <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                    {{ lang.label }}
+                  </el-radio-button>
+                </el-radio-group>
+                <el-input
+                  v-if="activeLang === defaultLangCode"
+                  v-model.trim="formValidate.name"
+                  size="small"
+                  class="lang-name-input"
+                  :placeholder="$t('user.pleaseEnterCouponName')"
+                  maxlength="20"
+                />
+                <el-input
+                  v-else
+                  v-model.trim="nameJsonForm[activeLang]"
+                  size="small"
+                  class="lang-name-input"
+                  :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+                  maxlength="20"
+                />
+              </div>
             </el-form-item>
-            <el-form-item label="优惠券面值(元)：" prop="money">
+            <el-form-item :label="$t('marketing.couponValueYuanLabel')" prop="money">
               <el-input-number
                 type="number"
                 v-model="formValidate.money"
@@ -39,13 +55,13 @@
                 :min="1"
                 :step="1"
                 step-strictly
-                placeholder="请输入优惠券面值"
+                :placeholder="$t('marketing.pleaseEnterCouponFace')"
                 controls-position="right"
               >
-                <span slot="suffix" class="suffix_text">元</span>
+                <span slot="suffix" class="suffix_text">{{ $t('dashboard.yuan') }}</span>
               </el-input-number>
             </el-form-item>
-            <el-form-item label="使用门槛(元)：" prop="minPrice">
+            <el-form-item :label="$t('marketing.useThresholdYuanLabel')" prop="minPrice">
               <el-input-number
                 v-model="formValidate.minPrice"
                 size="small"
@@ -54,27 +70,27 @@
                 :min="0"
                 :step="1"
                 step-strictly
-                placeholder="请输入使用门槛"
+                :placeholder="$t('marketing.pleaseEnterUseThreshold')"
                 controls-position="right"
               >
-                <span slot="suffix" class="suffix_text">元</span>
+                <span slot="suffix" class="suffix_text">{{ $t('dashboard.yuan') }}</span>
               </el-input-number>
-              <p class="desc mt10">填写优惠券的最低消费金额，使用门槛为0时指无门槛</p>
+              <p class="desc mt10">{{ $t('marketing.fillCouponMinAmountTip') }}</p>
             </el-form-item>
-            <el-form-item label="领取方式：" prop="receiveType">
+            <el-form-item :label="$t('marketing.receiveMethodLabel')" prop="receiveType">
               <el-radio-group v-model="formValidate.receiveType" :disabled="isEdit && !isCopy">
-                <el-radio :label="1">用户领取</el-radio>
-                <el-radio :label="3">平台活动使用</el-radio>
+                <el-radio :label="1">{{ $t('marketing.userReceive') }}</el-radio>
+                <el-radio :label="3">{{ $t('marketing.platformActivityUse') }}</el-radio>
               </el-radio-group>
               <p class="desc mt10">
-                1. 用户手动领取指用户需要在移动端的领券中心领取优惠券；<br />
-                2. 平台活动使用指其他营销活动可选择此类型优惠券，用户满足活动条件后直接提示发放 ；
+                {{ $t('marketing.manualReceiveTip') }}<br />
+                {{ $t('marketing.platformActivityTip') }}
               </p>
             </el-form-item>
-            <el-form-item label="领取时间：" prop="isTimeReceive" v-if="formValidate.receiveType === 1">
+            <el-form-item :label="$t('marketing.receiveTimeLabel')" prop="isTimeReceive" v-if="formValidate.receiveType === 1">
               <el-radio-group v-model="formValidate.isTimeReceive" :disabled="isEdit && !isCopy">
-                <el-radio :label="true">时间段</el-radio>
-                <el-radio :label="false">不限时</el-radio>
+                <el-radio :label="true">{{ $t('marketing.timePeriod') }}</el-radio>
+                <el-radio :label="false">{{ $t('marketing.noTimeLimit') }}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item v-if="formValidate.isTimeReceive && formValidate.receiveType === 1" prop="collectionTime">
@@ -85,27 +101,27 @@
                 value-format="yyyy-MM-dd HH:mm:ss"
                 format="yyyy-MM-dd HH:mm:ss"
                 :default-time="['00:00:00', '23:59:59']"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                :start-placeholder="$t('product.startDate')"
+                :end-placeholder="$t('product.endDate')"
                 :picker-options="pickerOptionsForEditCoupon"
                 align="right"
                 @change="onChangeCollectionTime"
               />
-              <p class="desc mt10">优惠券可以在此时间范围之内领取</p>
+              <p class="desc mt10">{{ $t('marketing.couponReceivePeriodTip') }}</p>
             </el-form-item>
-            <el-form-item label="使用有效期：" prop="isFixedTime">
+            <el-form-item :label="$t('marketing.useValidityLabel')" prop="isFixedTime">
               <el-radio-group v-model="formValidate.isFixedTime">
-                <el-radio :label="false">天数</el-radio>
-                <el-radio :label="true">时间段</el-radio>
+                <el-radio :label="false">{{ $t('marketing.days') }}</el-radio>
+                <el-radio :label="true">{{ $t('marketing.timePeriod') }}</el-radio>
               </el-radio-group>
               <p class="desc mt10">
-                {{ !isEdit || isCopy ? '' : '优惠券编辑后，之前已经领取的优惠券使用有效期不会改变' }}
+                {{ !isEdit || isCopy ? '' : $t('marketing.couponEditTip') }}
               </p>
             </el-form-item>
             <el-form-item v-if="!formValidate.isFixedTime" prop="day">
               <el-input-number
                 size="small"
-                placeholder="请输入天数"
+                :placeholder="$t('marketing.pleaseEnterDaysCount')"
                 :max="999"
                 :min="1"
                 :step="1"
@@ -113,9 +129,9 @@
                 v-model="formValidate.day"
                 controls-position="right"
               >
-                <span slot="suffix" class="suffix_text">天</span>
+                <span slot="suffix" class="suffix_text">{{ $t('user.day') }}</span>
               </el-input-number>
-              <p class="desc mt10">领取之后多少天之后失效，失效的优惠券将不能使用</p>
+              <p class="desc mt10">{{ $t('marketing.expireAfterReceiveTip') }}</p>
             </el-form-item>
             <el-form-item v-if="formValidate.isFixedTime" prop="validityTime">
               <el-date-picker
@@ -125,24 +141,24 @@
                 value-format="yyyy-MM-dd HH:mm:ss"
                 format="yyyy-MM-dd HH:mm:ss"
                 :default-time="['00:00:00', '23:59:59']"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                :start-placeholder="$t('product.startDate')"
+                :end-placeholder="$t('product.endDate')"
                 align="right"
                 @change="onChangeValidityTime"
                 :picker-options="pickerOptionsForEditCoupon"
               />
             </el-form-item>
-            <el-form-item :label="!isEdit || isCopy ? '发布数量(张)：' : '增加发布数量(张)：'" prop="isLimited">
+            <el-form-item :label="!isEdit || isCopy ? $t('marketing.publishCountUnitLabel') : $t('marketing.increasePublishCountLabel')" prop="isLimited">
               <el-radio-group v-model="formValidate.isLimited" :disabled="isEdit && !isCopy">
-                <el-radio :label="true">限量</el-radio>
-                <el-radio :label="false">不限量</el-radio>
+                <el-radio :label="true">{{ $t('marketing.limited') }}</el-radio>
+                <el-radio :label="false">{{ $t('user.unlimited') }}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item v-if="formValidate.isLimited" prop="total">
               <el-input-number
                 v-if="!isEdit || isCopy"
                 size="small"
-                placeholder="请输入优惠券数量"
+                :placeholder="$t('marketing.pleaseEnterCouponCount')"
                 :max="999999"
                 :step="1"
                 :min="1"
@@ -150,12 +166,12 @@
                 v-model="formValidate.total"
                 controls-position="right"
               >
-                <span slot="suffix" class="suffix_text">张</span>
+                <span slot="suffix" class="suffix_text">{{ $t('marketing.pcs') }}</span>
               </el-input-number>
               <el-input-number
                 v-else
                 size="small"
-                placeholder="请输入优惠券数量"
+                :placeholder="$t('marketing.pleaseEnterCouponCount')"
                 :max="999999"
                 :step="1"
                 :min="1"
@@ -163,51 +179,51 @@
                 v-model="formValidate.num"
                 controls-position="right"
               >
-                <span slot="suffix" class="suffix_text">张</span>
+                <span slot="suffix" class="suffix_text">{{ $t('marketing.pcs') }}</span>
               </el-input-number>
               <p class="desc mt10">
                 {{
                   !isEdit || isCopy
-                    ? '填写优惠券的发放数量'
-                    : '编辑时，填写优惠券增加的数量；例如：新增时填写2张优惠券，编辑时填写1，则编辑后总共发布3张优惠券'
+                    ? $t('marketing.fillCouponCount')
+                    : $t('marketing.editCouponTip')
                 }}
               </p>
             </el-form-item>
-            <el-form-item label="重复领取：" prop="isRepeated">
+            <el-form-item :label="$t('marketing.repeatReceiveLabel')" prop="isRepeated">
               <el-radio-group v-model="formValidate.isRepeated">
-                <el-radio :label="false">不可重复</el-radio>
-                <el-radio :label="true">可重复</el-radio>
+                <el-radio :label="false">{{ $t('marketing.noRepeat') }}</el-radio>
+                <el-radio :label="true">{{ $t('marketing.canRepeat') }}</el-radio>
               </el-radio-group>
               <p v-if="formValidate.receiveType === 1" class="desc mt10">
-                可重复领取，若用户领取该优惠券且使用过后，可以再次领取；<br />
-                不可重复领取，若用户领取该优惠券无论是否使用，都不可再次领取
+                {{ $t('marketing.canRepeatReceiveUsedTip') }}<br />
+                {{ $t('marketing.noRepeatReceiveTip') }}
               </p>
               <p v-else class="desc mt10">
-                可重复领取，若多个营销活动赠送同一优惠券，一个用户可领取多张；<br />
-                不可重复领取，若多个营销活动赠送同一优惠券，一个用户只能领取1张
+                {{ $t('marketing.canRepeatReceiveActivityTip') }}<br />
+                {{ $t('marketing.noRepeatReceiveMultiTip') }}
               </p>
             </el-form-item>
-            <el-form-item label="是否开启:">
+            <el-form-item :label="$t('marketing.isEnabledColon')">
               <el-switch
                 :width="56"
                 :disabled="isEdit && !isCopy"
                 v-model="formValidate.status"
-                active-text="开启"
-                inactive-text="关闭"
+                :active-text="$t('common.open')"
+                :inactive-text="$t('common.close')"
               />
             </el-form-item>
           </div>
           <div v-show="currentTab === '2'">
             <el-form-item label-width="0">
               <el-radio-group v-model="formValidate.category" :disabled="isEdit && !isCopy">
-                <el-radio :label="3">通用</el-radio>
-                <el-radio :label="4">品类</el-radio>
-                <el-radio :label="2">商品</el-radio>
-                <el-radio :label="5">品牌</el-radio>
-                <el-radio :label="6">跨店</el-radio>
+                <el-radio :label="3">{{ $t('marketing.general') }}</el-radio>
+                <el-radio :label="4">{{ $t('marketing.category') }}</el-radio>
+                <el-radio :label="2">{{ $t('marketing.product') }}</el-radio>
+                <el-radio :label="5">{{ $t('product.brand') }}</el-radio>
+                <el-radio :label="6">{{ $t('marketing.crossStore') }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="formValidate.category == 4" label="选择分类:" :span="24" label-width="64px">
+            <el-form-item v-if="formValidate.category == 4" :label="$t('marketing.selectCategoryColon')" :span="24" label-width="64px">
               <el-cascader
                 class="from-ipt-width"
                 ref="cascader"
@@ -218,7 +234,7 @@
               />
             </el-form-item>
             <el-form-item v-if="formValidate.category == 2" label-width="0">
-              <el-button size="small" type="primary" @click="addGoods">添加商品</el-button>
+              <el-button size="small" type="primary" @click="addGoods">{{ $t('marketing.addProduct') }}</el-button>
               <el-button size="small" @click="batchDel" :disabled="!multipleSelection.length">批量删除</el-button>
             </el-form-item>
             <el-form-item v-if="formValidate.category == 2" label-width="0">
@@ -235,26 +251,26 @@
               >
                 <el-table-column type="selection" width="55"> </el-table-column>
                 <el-table-column prop="id" label="ID" width="55"> </el-table-column>
-                <el-table-column label="商品图" min-width="80">
+                <el-table-column :label="$t('product.productImage')" min-width="80">
                   <template slot-scope="scope">
                     <div class="demo-image__preview line-heightOne">
                       <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column :show-overflow-tooltip="true" prop="name" label="商品名称" min-width="200" />
-                <el-table-column prop="price" label="售价" min-width="90" />
-                <el-table-column prop="stock" label="库存" min-width="70" />
-                <el-table-column label="操作" width="140" fixed="right">
+                <el-table-column :show-overflow-tooltip="true" prop="name" :label="$t('product.productName')" min-width="200" />
+                <el-table-column prop="price" :label="$t('user.salePricePlaceholder')" min-width="90" />
+                <el-table-column prop="stock" :label="$t('product.stock')" min-width="70" />
+                <el-table-column :label="$t('common.operate')" width="140" fixed="right">
                   <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">{{ $t('common.delete') }}</el-button>
                   </template>
                 </el-table-column>
               </el-table>
             </el-form-item>
             <el-form-item
               v-if="formValidate.category == 5"
-              label="选择品牌:"
+              :label="$t('marketing.selectBrandColon')"
               :span="24"
               prop="proBrandList"
               label-width="64px"
@@ -266,14 +282,14 @@
                 v-model="proBrandList"
                 :loading="loading"
                 remote
-                placeholder="请选择品牌"
+                :placeholder="$t('videoChannel.pleaseSelectBrand')"
               >
                 <el-option v-for="(v, i) in productBrand" :key="i" :label="v.name" :value="v.id" :disabled="!v.isShow">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item
-              label="选择商户:"
+              :label="$t('marketing.selectMerchantColon')"
               v-if="formValidate.category == 6"
               :span="24"
               label-width="64px"
@@ -301,10 +317,10 @@
             }
           "
           size="small"
-          >下一步</el-button
+          >{{ $t('product.nextStep') }}</el-button
         >
         <el-button v-show="currentTab === '2'" @click="currentTab = '1'" size="small" class="priamry_border"
-          >上一步</el-button
+          >{{ $t('product.previousStep') }}</el-button
         >
         <el-button
           v-show="currentTab === '2' && checkPermi(['platform:coupon:add', 'platform:coupon:update'])"
@@ -315,7 +331,7 @@
             }
           "
           size="small"
-          >保存</el-button
+          >{{ $t('common.save') }}</el-button
         >
       </div>
     </el-card>
@@ -327,14 +343,18 @@ import { mapGetters } from 'vuex';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
 import merchantName from '@/components/merUseCategory';
 import { Debounce } from '@/utils/validate';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+
+import { resolveFormActiveLang, hasI18nNameContent, buildI18nNameJson, pickFormName } from '@/utils/localizedName';
 export default {
   name: 'createCoupon',
   data() {
     return {
       currentTab: '1',
       tabList: [
-        { value: '1', title: '基础设置' },
-        { value: '2', title: '使用范围' },
+        { value: '1', title: this.$t('product.basicSetting') },
+        { value: '2', title: this.$t('product.usageScope') },
       ],
       loading: false,
       formValidate: {
@@ -358,7 +378,15 @@ export default {
         status: false,
         validityTime: [], //使用有效期
         collectionTime: [], //领取时间
+        nameJson: '',
       },
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
       pickerOptionsForEditCoupon: {
         // 时间有效校验
         disabledDate(time) {
@@ -366,7 +394,12 @@ export default {
         },
       },
       ruleValidate: {
-        name: [{ required: true, message: '请输入优惠券名称' }],
+        name: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(pickFormName(this), this.nameJsonForm)) callback();
+            else callback(new Error(this.$t('user.pleaseEnterCouponName')));
+          },
+        }],
         money: [{ required: true, message: '请输入优惠券面值' }],
         minPrice: [{ required: true, message: '请输入优惠券使用门槛' }],
         receiveType: [{ required: true, message: '请选择领取方式' }],
@@ -450,12 +483,17 @@ export default {
     isCopy() {
       return this.$route.params.copy ? true : false;
     },
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
   },
   created() {
     this.tempRoute = Object.assign({}, this.$route);
   },
   mounted() {
     this.setTagsViewTitle();
+    this.getLanguageList();
     if (!localStorage.getItem('merPlatProductClassify')) this.$store.dispatch('product/getAdminProductClassify');
     if (!localStorage.getItem('productBrand')) this.$store.dispatch('product/getMerProductBrand');
     if (this.isEdit) {
@@ -464,10 +502,56 @@ export default {
   },
   methods: {
     checkPermi,
+    emptyNameJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    parseNameJson(nameJson) {
+      const form = this.emptyNameJsonForm();
+      if (!nameJson) return form;
+      try {
+        const obj = typeof nameJson === 'string' ? JSON.parse(nameJson) : nameJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // 解析失败时保持为空
+      }
+      return form;
+    },
+    buildNameJson() {
+      return buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, pickFormName(this));
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseNameJson(this.formValidate && this.formValidate.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseNameJson(this.formValidate && this.formValidate.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
     //设置标题
     setTagsViewTitle() {
       if (this.$route.params.id && this.$route.params.id != 0) {
-        const title = this.isEdit && !this.isCopy ? '编辑优惠券' : this.isCopy ? '复制优惠券' : '添加优惠券';
+        const title = this.isEdit && !this.isCopy ? this.$t('marketing.editCoupon') : this.isCopy ? this.$t('marketing.copyCoupon') : this.$t('marketing.addCouponWord');
         const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.$route.params.id}` });
         this.$store.dispatch('tagsView/updateVisitedView', route);
       }
@@ -569,6 +653,8 @@ export default {
           this.$set(this.formValidate, 'validityTime', [res.useStartTime, res.useEndTime]);
         }
         this.formValidate.num = 1;
+        this.nameJsonForm = this.parseNameJson(this.formValidate.nameJson);
+        this.activeLang = resolveFormActiveLang(this);
       });
     },
     submitForm: Debounce(function (formName) {
@@ -603,17 +689,18 @@ export default {
           break;
       }
       if (this.formValidate.receiveType === 3) this.formValidate.isTimeReceive = false;
+      this.formValidate.nameJson = this.buildNameJson();
       if (!this.formValidate.isLimited) {
         this.formValidate.total = 1;
       }
       if (this.isEdit && !this.isCopy) {
         platformCouponEditApi(this.formValidate).then((res) => {
-          this.$message.success('添加成功');
+          this.$message.success(this.$t('user.addSuccess'));
           this.back();
         });
       } else {
         platformCouponAddApi(this.formValidate).then((res) => {
-          this.$message.success('添加成功');
+          this.$message.success(this.$t('user.addSuccess'));
           this.back();
         });
       }
@@ -635,6 +722,16 @@ export default {
 }
 .from-ipt-width {
   width: 460px;
+}
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.lang-name-input {
+  margin-top: 10px;
 }
 .input_width {
   width: 100px;

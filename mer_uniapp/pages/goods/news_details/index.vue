@@ -17,19 +17,19 @@
 				<view class="text">
 					<view class="name line1">{{store_info.storeName}}</view>
 					<view class="money price_color">
-						￥<text class="num">{{store_info.price}}</text>
+						฿<text class="num">{{store_info.price}}</text>
 					</view>
-					<view class="y_money">￥{{store_info.otPrice}}</view>
+					<view class="y_money">฿{{store_info.otPrice}}</view>
 				</view>
 				<navigator :url="'/pages/goods/goods_details/index?id='+store_info.id+'&mt=0'" hover-class="none" class="label">
-					<text class="span">查看商品</text></navigator>
+					<text class="span">{{$t('查看商品')}}</text></navigator>
 			</view>
 			<!-- #ifdef H5 -->
 			<button class="bnt bg_color" hover-class='none' @click="listenerActionSheet"
-				v-if="this.$wechat.isWeixin()">和好友一起分享</button>
+				v-if="this.$wechat.isWeixin()">{{$t('和好友一起分享')}}</button>
 			<!-- #endif -->
 			<!-- #ifdef MP -->
-			<button class="bnt bg_color" open-type="share" hover-class='none'>和好友一起分享</button>
+			<button class="bnt bg_color" open-type="share" hover-class='none'>{{$t('和好友一起分享')}}</button>
 			<!-- #endif -->
 		</view>
 		<shareInfo @setShareInfoStatus="setShareInfoStatus" :shareInfoStatus="shareInfoStatus"></shareInfo>

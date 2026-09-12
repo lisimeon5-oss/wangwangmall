@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- #ifdef MP || APP-PLUS -->
-		<NavBar titleText="售后详情" :iconColor="iconColor" :textColor="iconColor" :isScrolling="isScrolling" showBack>
+		<NavBar :titleText="$t('售后详情')" :iconColor="iconColor" :textColor="iconColor" :isScrolling="isScrolling" showBack>
 		</NavBar>
 		<!-- #endif -->
 		<view class="headerBg">
@@ -13,33 +13,33 @@
 			<view class="header">
 				<view class="state">{{statusArr[refundInfo.refundStatus]}}</view>
 				<view class="data">
-					<span v-if="refundInfo.refundStatus==0">用户提交退款申请，请您及时处理哦～</span>
-					<span v-if="refundInfo.refundStatus==4">您已同意此退款申请，等待用户退货中～</span>
-					<span v-if="refundInfo.refundStatus==5">用户已经填写退货信息，请您耐心等待～</span>
-					<span v-if="refundInfo.refundStatus==2">退款金额原支付路径返回中！</span>
-					<span v-if="refundInfo.refundStatus==3">退款金额已返还用户账户！</span>
-					<span v-if="refundInfo.refundStatus==6">用户已经撤销此退款申请！</span>
+					<span v-if="refundInfo.refundStatus==0">{{$t('用户提交退款申请')}}，{{$t('请您及时处理哦')}}～</span>
+					<span v-if="refundInfo.refundStatus==4">{{$t('您已同意此退款申请，等待用户退货中')}}～</span>
+					<span v-if="refundInfo.refundStatus==5">{{$t('用户已经填写退货信息')}}，{{$t('请您耐心等待')}}～</span>
+					<span v-if="refundInfo.refundStatus==2">{{$t('退款金额原支付路径返回中！')}}</span>
+					<span v-if="refundInfo.refundStatus==3">{{$t('退款金额已返还用户账户！')}}</span>
+					<span v-if="refundInfo.refundStatus==6">{{$t('用户已经撤销此退款申请！')}}</span>
 					<span v-if="refundInfo.refundStatus==1">{{refundInfo.refundReason}}</span>
 				</view>
 			</view>
 			<view class='wrapper'>
 				<view class='item acea-row title'>
-					<view>退款明细</view>
+					<view>{{$t('退款明细')}}</view>
 				</view>
 				<view class='item acea-row row-between'>
-					<view>退款金额</view>
-					<view class='conter'>¥{{refundInfo.refundPrice}}</view>
+					<view>{{$t('退款金额')}}</view>
+					<view class='conter'>฿{{refundInfo.refundPrice}}</view>
 				</view>
 				<view class='item acea-row row-between'>
-					<view>退回运费</view>
-					<view class='conter'>¥{{refundInfo.refundFreightFee}}</view>
+					<view>{{$t('退回运费')}}</view>
+					<view class='conter'>฿{{refundInfo.refundFreightFee}}</view>
 				</view>
 				<view class='item acea-row row-between'>
-					<view>退回抵扣积分</view>
+					<view>{{$t('退回抵扣积分')}}</view>
 					<view class='conter'>{{refundInfo.refundUseIntegral}}</view>
 				</view>
 				<view class='item acea-row row-between'>
-					<view>收回赠送积分</view>
+					<view>{{$t('收回赠送积分')}}</view>
 					<view class='conter'>{{refundInfo.refundGainIntegral}}</view>
 				</view>
 			</view>
@@ -50,31 +50,31 @@
 					<view class="product-right">
 						<view class="product-name prodyct-item">{{refundInfo.productName}}</view>
 						<view class="product-sku prodyct-item">{{refundInfo.sku}}</view>
-						<view class="product-price prodyct-item">￥{{refundInfo.price}}</view>
+						<view class="product-price prodyct-item">฿{{refundInfo.price}}</view>
 					</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>退款件数</view>
+					<view>{{$t('退款件数')}}</view>
 					<view class="conter">{{ refundInfo.applyRefundNum }}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>售后类型</view>
-					<view class="conter">{{ refundInfo.afterSalesType==1?'仅退款':'退货退款' }}</view>
+					<view>{{$t('售后类型')}}</view>
+					<view class="conter">{{ refundInfo.afterSalesType==1? $t('仅退款') : $t('退货退款') }}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>退货方式</view>
-					<view class="conter">{{ refundInfo.returnGoodsType==0?'不退货':refundInfo.returnGoodsType==1?'快递退回':'到店退货' }}</view>
+					<view>{{$t('退货方式')}}</view>
+					<view class="conter">{{ refundInfo.returnGoodsType==0?$t('不退货'):refundInfo.returnGoodsType==1? $t('快递退回') : $t('到店退货') }}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>退款原因</view>
+					<view>{{$t('退款原因')}}</view>
 					<view class="conter">{{ refundInfo.refundReasonWap }}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>备注说明</view>
+					<view>{{$t('备注说明')}}</view>
 					<view class="conter">{{ refundInfo.refundReasonWapExplain }}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>退款凭证</view>
+					<view>{{$t('退款凭证')}}</view>
 					<view class="conter">
 						<scroll-view class="picTxt scroll-view" scroll-x="true" v-if="refundInfo.refundReasonWapImg">
 							<view class="pictrue" v-for="(val, key) in refundInfo.refundReasonWapImg.split(',')" :key="key">
@@ -86,64 +86,64 @@
 			</view>
 			<view class="wrapper">
 				<view class="item acea-row row-between">
-					<view>订单编号</view>
+					<view>{{$t('订单编号')}}</view>
 					<view class="conter">
 						{{ orderInfoVo.orderNo}}
 						<!-- #ifdef H5 -->
-						<text class="copy copy-data" :data-clipboard-text="orderInfoVo.orderNo">复制</text>
+						<text class="copy copy-data" :data-clipboard-text="orderInfoVo.orderNo">{{$t('复制')}}</text>
 						<!-- #endif -->
 						<!-- #ifdef MP -->
-						<text class="copy copy-data" @click="copyNum(orderInfoVo.orderNo)">复制</text>
+						<text class="copy copy-data" @click="copyNum(orderInfoVo.orderNo)">{{$t('复制')}}</text>
 						<!-- #endif -->
 					</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>退款编号</view>
+					<view>{{$t('退款编号')}}</view>
 					<view class="conter">
 						{{ refundInfo.refundOrderNo }}
 						<!-- #ifdef H5 -->
-						<text class="copy copy-data" :data-clipboard-text="refundInfo.refundOrderNo">复制</text>
+						<text class="copy copy-data" :data-clipboard-text="refundInfo.refundOrderNo">{{$t('复制')}}</text>
 						<!-- #endif -->
 						<!-- #ifdef MP -->
-						<text class="copy copy-data" @click="copyNum(refundInfo.refundOrderNo)">复制</text>
+						<text class="copy copy-data" @click="copyNum(refundInfo.refundOrderNo)">{{$t('复制')}}</text>
 						<!-- #endif -->
 					</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>申请时间</view>
+					<view>{{$t('申请时间')}}</view>
 					<view class="conter">{{ orderInfoVo.createTime }}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>退款方式</view>
+					<view>{{$t('退款方式')}}</view>
 					<view class="conter">{{ payType[`${orderInfoVo.payType}`] }}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>退一级返佣</view>
+					<view>{{$t('退一级返佣')}}</view>
 					<view class="conter">{{ refundInfo.refundFirstBrokerageFee }}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>退二级返佣</view>
+					<view>{{$t('退二级返佣')}}</view>
 					<view class="conter">{{ refundInfo.refundSecondBrokerageFee }}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>平台备注</view>
+					<view>{{$t('平台备注')}}</view>
 					<view class="conter">{{ refundInfo.platformRemark||'' }}</view>
 				</view>
 				<view class="item acea-row row-between">
-					<view>商家备注</view>
+					<view>{{$t('商家备注')}}</view>
 					<view class="conter">{{  refundInfo.merRemark||''}}</view>
 				</view>
 			</view>
 			<view class="height-add"></view>
 			<view class="footer acea-row row-right row-middle" v-if="goname != 'looks'">
-				<view class="btn" @click="modify(refundInfo, 7)">退款单备注</view>
+				<view class="btn" @click="modify(refundInfo, 7)">{{$t('退款单备注')}}</view>
 				<view class="btn on" v-if="(refundInfo.returnGoodsType==0||refundInfo.returnGoodsType==2)&&refundInfo.refundStatus==0"  @click="modify(refundInfo,'2',1,0)">
-					退款审核
+					{{$t('退款审核')}}
 				</view>
 				<view class="btn on" v-if="refundInfo.returnGoodsType==1&&refundInfo.refundStatus==0"  @click="modify(refundInfo,'2',0,1)">
-					退款审核
+					{{$t('退款审核')}}
 				</view>
-				<view class="btn on" v-if="refundInfo.refundStatus==5" @click="modify(refundInfo, 2, 1,2)">确认收货</view>
+				<view class="btn on" v-if="refundInfo.refundStatus==5" @click="modify(refundInfo, 2, 1,2)">{{$t('确认收货')}}</view>
 			</view>
 			<PriceChange :change="change" :orderInfo="orderInfo" :isRefund="isRefund"
 				v-on:statusChange="statusChange($event)" v-on:closechange="changeclose($event)" v-on:savePrice="savePrice"
@@ -216,12 +216,12 @@ import {refundOrderList,refundOrderMark,refundStatusNum,refundOrderAudit,refundR
 				var clipboard = new ClipboardJS('.copy-data');
 				clipboard.on('success', function(e) {
 					this.$util.Tips({
-						title: '复制成功'
+						title: this.$t('复制成功')
 					})
 				});
 				clipboard.on('error', function(e) {
 					this.$util.Tips({
-						title: '复制失败'
+						title: this.$t('复制失败')
 					})
 				});
 			});
@@ -270,7 +270,7 @@ import {refundOrderList,refundOrderMark,refundStatusNum,refundOrderAudit,refundR
 				if (that.apiModalType == 0) {
 					if(opt.type==2&&!opt.refuse_reason){
 						return this.$util.Tips({
-							title: '请输入拒绝理由'
+							title: this.$t('请输入拒绝理由')
 						})
 					}
 					let requestObj = {
@@ -281,7 +281,7 @@ import {refundOrderList,refundOrderMark,refundStatusNum,refundOrderAudit,refundR
 					refundOrderAudit(requestObj).then(res=>{
 						if(res.code==200){
 							this.$util.Tips({
-								title: '审核成功'
+								title: this.$t('审核成功')
 							})
 							this.init();
 							this.change = false
@@ -295,12 +295,12 @@ import {refundOrderList,refundOrderMark,refundStatusNum,refundOrderAudit,refundR
 					//退货退款审核
 					if(opt.type==2&&!opt.refuse_reason){
 						return this.$util.Tips({
-							title: '请输入拒绝理由'
+							title: this.$t('请输入拒绝理由')
 						})
 					}
 					if(opt.type==1&&!opt.merAddressId){
 						return this.$util.Tips({
-							title: '请选择退货地址'
+							title: this.$t('请选择退货地址')
 						})
 					}
 					//退货退款拒绝
@@ -313,7 +313,7 @@ import {refundOrderList,refundOrderMark,refundStatusNum,refundOrderAudit,refundR
 						refundOrderAudit(requestObj).then(res=>{
 							if(res.code==200){
 								this.$util.Tips({
-									title: '操作成功'
+									title: this.$t('操作成功')
 								})
 								this.init();
 								this.change = false
@@ -334,7 +334,7 @@ import {refundOrderList,refundOrderMark,refundStatusNum,refundOrderAudit,refundR
 						refundOrderAudit(requestObj).then(res=>{
 							if(res.code==200){
 								this.$util.Tips({
-									title: '操作成功'
+									title: this.$t('操作成功')
 								})
 								this.init();
 								this.change = false
@@ -349,7 +349,7 @@ import {refundOrderList,refundOrderMark,refundStatusNum,refundOrderAudit,refundR
 					//确认收货
 					if(opt.type==2&&!opt.refuse_reason){
 						return this.$util.Tips({
-							title: '请输入拒绝理由'
+							title: this.$t('请输入拒绝理由')
 						})
 					}
 					if(opt.type==1){
@@ -357,7 +357,7 @@ import {refundOrderList,refundOrderMark,refundStatusNum,refundOrderAudit,refundR
 						refundReceiving(that.orderInfo.refundOrderNo).then(res=>{
 							if(res.code==200){
 								this.$util.Tips({
-									title: '操作成功'
+									title: this.$t('操作成功')
 								})
 								this.init();
 								this.change = false
@@ -377,7 +377,7 @@ import {refundOrderList,refundOrderMark,refundStatusNum,refundOrderAudit,refundR
 						refundReceivingReject(requestObj).then(res=>{
 							if(res.code==200){
 								this.$util.Tips({
-									title: '操作成功'
+									title: this.$t('操作成功')
 								})
 								this.init();
 								this.change = false
@@ -392,13 +392,13 @@ import {refundOrderList,refundOrderMark,refundStatusNum,refundOrderAudit,refundR
 					data.remark=opt.remark
 					if (!data.remark) {
 						return this.$util.Tips({
-							title: '请输入备注'
+							title: this.$t('请输入备注')
 						})
 					}
 					refundOrderMark(data).then(res=>{
 						if(res.code==200){
 							this.$util.Tips({
-								title: '备注成功'
+								title: this.$t('备注成功')
 							})
 							this.getIndex();
 							this.change = false
@@ -460,7 +460,7 @@ import {refundOrderList,refundOrderMark,refundStatusNum,refundOrderAudit,refundR
 	}
 
 	.height-add {
-		height: calc(120rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(120rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(120rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 	}
 
@@ -666,9 +666,9 @@ import {refundOrderList,refundOrderMark,refundStatusNum,refundOrderAudit,refundR
 		background-color: #fff;
 		padding: 0 30upx;
 		border-top: 1px solid #eee;
-		height: calc(100rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		height: calc(100rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		height: calc(100rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
-		padding-bottom: calc(0rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+		padding-bottom: calc(0rpx + constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
 		padding-bottom: calc(0rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/
 	}
 

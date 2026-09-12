@@ -3,26 +3,43 @@
     <div class="container_box">
       <pages-header
         ref="pageHeader"
-        :title="pageType ? '添加商品' : `${title}秒杀活动`"
+        :title="pageType ? $t('marketing.addProduct') : isEdit ? $t('marketing.editSpikeActivity') : $t('marketing.addSpikeActivity')"
         backUrl="/marketing/seckill/seckillActivity"
       ></pages-header>
       <el-card class="box-card box-body mt14" :bordered="false" shadow="never">
         <el-tabs v-model="activeName" class="mb25 list-tabs">
-          <el-tab-pane v-if="!pageType" label="基础设置" name="first"></el-tab-pane>
-          <el-tab-pane :label="!isEdit || pageType ? '添加商品' : '商品列表'" name="second"></el-tab-pane>
+          <el-tab-pane v-if="!pageType" :label="$t('product.basicSetting')" name="first"></el-tab-pane>
+          <el-tab-pane :label="!isEdit || pageType ? $t('marketing.addProduct') : $t('marketing.productList')" name="second"></el-tab-pane>
         </el-tabs>
-        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="75px" size="small" class="demo-ruleForm">
+        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="140px" size="small" class="demo-ruleForm">
           <div v-loading="loading">
             <template v-if="activeName == 'first' && !pageType">
-              <el-form-item label="活动名称：" prop="name">
-                <el-input
-                  :disabled="pageType"
-                  v-model="ruleForm.name"
-                  placeholder="请输入活动名称"
-                  class="from-ipt-width"
-                ></el-input>
+              <el-form-item :label="$t('marketing.activityNameLabel')" prop="name">
+                <div class="lang-name-switch">
+                  <el-radio-group :disabled="pageType" v-model="activeLang" size="small">
+                    <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                      {{ lang.label }}
+                    </el-radio-button>
+                  </el-radio-group>
+                  <el-input
+                    v-if="activeLang === defaultLangCode"
+                    :disabled="pageType"
+                    v-model.trim="ruleForm.name"
+                    maxlength="30"
+                    :placeholder="$t('marketing.pleaseEnterActivityName')"
+                    class="from-ipt-width lang-name-input"
+                  />
+                  <el-input
+                    v-else
+                    :disabled="pageType"
+                    v-model.trim="nameJsonForm[activeLang]"
+                    maxlength="30"
+                    :placeholder="$t('category.inputNameInLang', { lang: activeLangLabel })"
+                    class="from-ipt-width lang-name-input"
+                  />
+                </div>
               </el-form-item>
-              <el-form-item label="活动日期：" prop="timeVal">
+              <el-form-item :label="$t('marketing.activityDateLabel')" prop="timeVal">
                 <el-date-picker
                   :disabled="pageType"
                   v-model="ruleForm.timeVal"
@@ -33,18 +50,18 @@
                   size="small"
                   type="daterange"
                   placement="bottom-end"
-                  placeholder="自定义时间"
+                  :placeholder="$t('product.customTime')"
                   class="from-ipt-width"
                   @change="onchangeTime"
                   :picker-options="pickerOptions"
                 />
-                <p class="desc mt10">设置活动开始日期与结束日期，用户可以在有效时间内参与秒杀</p>
+                <p class="desc mt10">{{ $t('marketing.setActivityDateTip') }}</p>
               </el-form-item>
-              <el-form-item label="秒杀场次:" prop="timeVal2">
+              <el-form-item :label="$t('marketing.spikeSession')" prop="timeVal2">
                 <el-select
                   :disabled="pageType"
                   v-model="ruleForm.timeVal2"
-                  placeholder="请选择秒杀场次"
+                  :placeholder="$t('marketing.pleaseSelectSpikeSession')"
                   multiple
                   cearable
                   class="from-ipt-width"
@@ -53,16 +70,16 @@
                   <el-option
                     v-for="item in spikeTimeList"
                     :key="item.id + 'onl'"
-                    :label="item.name + ' | ' + item.startTime + '-' + item.endTime"
+                    :label="getIntervalLabel(item)"
                     :value="item.id"
                     :disabled="item.status === 0"
                   />
                 </el-select>
                 <p class="desc mt10">
-                  选择商品开始时间段，该时间段内用户可参与购买；其它时间段会显示活动未开始或已结束，可多选
+                  {{ $t('marketing.selectTimePeriodTip') }}
                 </p>
               </el-form-item>
-              <el-form-item label="活动限购:">
+              <el-form-item :label="$t('marketing.activityPurchaseLimitColon')">
                 <el-input-number
                   :disabled="pageType"
                   v-model="ruleForm.allQuota"
@@ -72,10 +89,10 @@
                   class="from-ipt-width"
                 ></el-input-number>
                 <p class="desc mt10">
-                  活动有效期内每个用户可购买该商品总数限制。例如设置为4，表示本次活动有效期内，每个用户最多可购买总数4个，0为不限购
+                  {{ $t('marketing.activityPurchaseLimitTip') }}
                 </p>
               </el-form-item>
-              <el-form-item label="单次限购:">
+              <el-form-item :label="$t('marketing.singlePurchaseLimitColon')">
                 <el-input-number
                   :disabled="pageType"
                   v-model="ruleForm.oneQuota"
@@ -85,14 +102,14 @@
                   class="from-ipt-width"
                 ></el-input-number>
                 <p class="desc mt10">
-                  用户参与秒杀时，一次购买最大数量限制。例如设置为2，表示参与秒杀时，用户一次购买数量最大可选择2个，0为不限购
+                  {{ $t('marketing.spikePurchaseLimitTip') }}
                 </p>
               </el-form-item>
-              <el-form-item label="商品范围:">
+              <el-form-item :label="$t('marketing.productScopeColon')">
                 <el-select
                   :disabled="pageType"
                   v-model="ruleForm.proCategorylist"
-                  placeholder="请选择商品分类"
+                  :placeholder="$t('product.pleaseSelectCategory')"
                   multiple
                   class="from-ipt-width"
                 >
@@ -104,27 +121,27 @@
                     :disabled="!item.isShow"
                   />
                 </el-select>
-                <p class="desc mt10">设置秒杀活动可以参与的商品分类，可多选，不选为全品类商品。</p>
+                <p class="desc mt10">{{ $t('marketing.setCategoryTip') }}</p>
               </el-form-item>
-              <el-form-item label="参与门槛:" prop="merStars">
+              <el-form-item :label="$t('marketing.joinThreshold')" prop="merStars">
                 <el-rate :disabled="pageType" v-model="ruleForm.merStars" style="margin-top: 6px"></el-rate>
-                <p class="desc mt10">设置秒杀活动可以参与的商户星级。</p>
+                <p class="desc mt10">{{ $t('marketing.setMerchantStarTip') }}</p>
               </el-form-item>
             </template>
             <template v-if="activeName == 'second'">
               <div v-if="!isEdit || pageType" class="acea-row row-between-wrapper">
                 <div class="acea-row mb20">
-                  <el-button size="small" type="primary" @click="addGoods()">添加商品</el-button>
+                  <el-button size="small" type="primary" @click="addGoods()">{{ $t('marketing.addProduct') }}</el-button>
                   <el-dropdown size="small" class="ml10 mr10">
                     <el-button :disabled="isShowCheck">
-                      批量设置<i class="el-icon-arrow-down el-icon--right"></i>
+                      {{ $t('user.batchSet') }}<i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item :disabled="isShowCheck" @click.native="setPrice(2)">限量</el-dropdown-item>
-                      <el-dropdown-item :disabled="isShowCheck" @click.native="setPrice(1)">活动价</el-dropdown-item>
+                      <el-dropdown-item :disabled="isShowCheck" @click.native="setPrice(2)">{{ $t('marketing.limited') }}</el-dropdown-item>
+                      <el-dropdown-item :disabled="isShowCheck" @click.native="setPrice(1)">{{ $t('marketing.activityPrice') }}</el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
-                  <el-button size="small" @click="batchDel" :disabled="isShowCheck">批量删除</el-button>
+                  <el-button size="small" @click="batchDel" :disabled="isShowCheck">{{ $t('product.batchDelete') }}</el-button>
                 </div>
               </div>
               <el-table
@@ -146,24 +163,26 @@
                     <el-checkbox :value="scope.row.checked" @change="(v) => handleCheckOneChange(v, scope.row)" />
                   </template>
                 </el-table-column>
-                <el-table-column width="240" label="商品信息">
+                <el-table-column width="240" :label="$t('product.productInfo')">
                   <template slot-scope="scope">
                     <div class="acea-row">
                       <div class="demo-image__preview mr10 line-heightOne">
                         <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
                       </div>
-                      <div class="row_title line2">{{ scope.row.name }}</div>
+                      <div class="row_title line2">{{ scope.row.sku ? localizedSku(scope.row) : localizedName(scope.row) }}</div>
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column prop="categoryName" label="商品分类" min-width="80" />
-                <el-table-column prop="price" label="售价" width="120" />
-                <el-table-column :label="isEdit && !pageType ? '限量剩余' : '库存'" min-width="80">
+                <el-table-column :label="$t('marketing.productCategory')" min-width="100">
+                  <template slot-scope="scope">{{ localizedText(scope.row.categoryName, scope.row.categoryNameI18n || scope.row.categoryNameJson) }}</template>
+                </el-table-column>
+                <el-table-column prop="price" :label="$t('user.salePricePlaceholder')" width="120" />
+                <el-table-column :label="isEdit && !pageType ? $t('marketing.limitedRemaining') : $t('product.stock')" min-width="80">
                   <template slot-scope="scope">
                     {{ isEdit && !pageType ? scope.row.quota : scope.row.stock }}
                   </template>
                 </el-table-column>
-                <el-table-column label="限量" width="120">
+                <el-table-column :label="$t('marketing.limited')" width="120">
                   <template slot-scope="scope" v-if="scope.row.sku || ($route.params.id!=0 && !pageType)">
                     <span v-if="isEdit && !pageType">{{ scope.row.quotaShow }}</span>
                     <el-input-number
@@ -179,7 +198,7 @@
                     </el-input-number>
                   </template>
                 </el-table-column>
-                <el-table-column prop="activityPrice" label="活动价格" width="120">
+                <el-table-column prop="activityPrice" :label="$t('marketing.activityPriceFull')" width="120">
                   <template slot-scope="scope" v-if="scope.row.sku || ($route.params.id!=0 && !pageType)">
                     <span v-if="isEdit && !pageType">{{ scope.row.seckillPrice }}</span>
                     <el-input-number
@@ -196,7 +215,7 @@
                     </el-input-number>
                   </template>
                 </el-table-column>
-                <el-table-column prop="sort" label="排序" width="120">
+                <el-table-column prop="sort" :label="$t('product.sort')" width="120">
                   <template slot-scope="scope" v-if="!scope.row.sku">
                     <el-input-number
                       :disabled="isEdit && !pageType"
@@ -211,7 +230,7 @@
                     </el-input-number>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作" width="60" fixed="right">
+                <el-table-column :label="$t('common.operate')" width="60" fixed="right">
                   <template slot-scope="scope">
                     <el-button
                       type="text"
@@ -219,7 +238,7 @@
                       :disabled="isEdit && !pageType"
                       v-if="!scope.row.sku"
                       @click="handleDelete(scope.$index, scope.row)"
-                      >删除</el-button
+                      >{{ $t('common.delete') }}</el-button
                     >
                   </template>
                 </el-table-column>
@@ -231,14 +250,14 @@
       <el-card dis-hover class="fixed-card box-card" :bordered="false" shadow="never">
         <div class="acea-row row-center-wrapper">
           <el-button v-show="activeName == 'first'" size="small" type="primary" @click="activeName = 'second'"
-            >下一步</el-button
+            >{{ $t('product.nextStep') }}</el-button
           >
           <el-button
             v-show="activeName == 'second' && !pageType"
             size="small"
             class="priamry_border"
             @click="activeName = 'first'"
-            >上一步</el-button
+            >{{ $t('product.previousStep') }}</el-button
           >
 
           <el-button
@@ -254,7 +273,7 @@
               }
             "
             size="small"
-            >保存</el-button
+            >{{ $t('common.save') }}</el-button
           >
         </div>
       </el-card>
@@ -275,6 +294,17 @@ import { mapGetters } from 'vuex';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
 import activity from './activity.vue';
 import { Debounce } from '@/utils/validate';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import {
+  getLocalizedName,
+  getLocalizedText,
+  localizeSpecSku,
+  resolveFormActiveLang,
+  hasI18nNameContent,
+  buildI18nNameJson,
+  pickFormName,
+} from '@/utils/localizedName';
 export default {
   name: 'creatSeckill',
   components: {
@@ -288,6 +318,7 @@ export default {
         endDate: '',
         merStars: 1,
         name: '',
+        nameJson: '',
         oneQuota: 0,
         proCategory: '',
         startDate: '',
@@ -298,14 +329,13 @@ export default {
         timeVal: [],
         proCategorylist: [],
       },
-      rules: {
-        name: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
-        share: [{ required: true, message: '请选择优惠比例', trigger: 'change' }],
-        timeVal: [{ required: true, message: '请选择活动日期' }],
-        discount: [{ required: true, message: '请选择优惠方式' }],
-        timeVal2: [{ type: 'array', required: true, message: '请选择秒杀场次', trigger: 'change' }],
-        merStars: [{ required: true, message: '请选择商户星级', trigger: 'change' }],
-      },
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() < Date.now() - 8.64e7;
@@ -329,6 +359,7 @@ export default {
   },
   mounted() {
     if (!this.merPlatProductClassify.length) this.$store.dispatch('product/getAdminProductClassify');
+    this.getLanguageList();
     if (this.pageType) this.activeName = 'second';
     this.setTagsViewTitle();
     this.getSeckillIntervalList();
@@ -344,18 +375,110 @@ export default {
       return this.$route.params.id!=0 ? true : false;
     },
     title() {
-      return this.$route.params.id!=0 ? '编辑' : '添加';
+      return this.$route.params.id!=0 ? this.$t('common.edit') : this.$t('common.add');
+    },
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    rules() {
+      return {
+        name: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(pickFormName(this), this.nameJsonForm)) callback();
+            else callback(new Error(this.$t('marketing.pleaseEnterActivityName')));
+          },
+          trigger: 'blur',
+        }],
+        share: [{ required: true, message: this.$t('el.select.placeholder'), trigger: 'change' }],
+        timeVal: [{ required: true, message: this.$t('marketing.pleaseSelectActivityDate') }],
+        discount: [{ required: true, message: this.$t('el.select.placeholder') }],
+        timeVal2: [{ type: 'array', required: true, message: this.$t('marketing.pleaseSelectSpikeSession'), trigger: 'change' }],
+        merStars: [{ required: true, message: this.$t('marketing.pleaseSelectMerchantStar'), trigger: 'change' }],
+      };
     },
     //页面是添加商品还是编辑页面，add添加商品，edit编辑
     pageType() {
       return this.$route.params.type === 'add' ? true : false;
     },
+    currentLocale() {
+      return (
+        (this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        this.$i18n.locale ||
+        'zh-cn'
+      );
+    },
   },
   methods: {
     checkPermi,
+    localizedName(row) {
+      return getLocalizedName(row, this.currentLocale);
+    },
+    localizedText(text, json) {
+      return getLocalizedText(text, json, this.currentLocale);
+    },
+    localizedSku(row) {
+      let attrList = row && row.attrList;
+      if ((!attrList || !attrList.length) && this.proData && this.proData.length) {
+        const parent = this.proData.find((p) => (p.children || []).some((c) => c === row || (c && row && c.id === row.id)));
+        attrList = parent && parent.attrList;
+      }
+      return localizeSpecSku(row && row.sku, this.$t.bind(this), attrList, this.currentLocale);
+    },
+    emptyNameJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseNameJson(this.ruleForm && this.ruleForm.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseNameJson(this.ruleForm && this.ruleForm.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
+    parseNameJson(nameJson) {
+      const form = this.emptyNameJsonForm();
+      if (!nameJson) return form;
+      try {
+        const obj = typeof nameJson === 'string' ? JSON.parse(nameJson) : nameJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // 解析失败时保持为空
+      }
+      return form;
+    },
+    buildNameJson() {
+      return buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, pickFormName(this));
+    },
+    getIntervalLabel(item) {
+      return getLocalizedName(item, this.currentLocale) + ' | ' + item.startTime + '-' + item.endTime;
+    },
     setTagsViewTitle() {
       if (this.$route.params.id!=0) {
-        const title = this.pageType ? '添加商品' : this.$route.params.id!=0 ? '编辑秒杀活动' : '添加秒杀活动';
+        const title = this.pageType ? this.$t('marketing.addProduct') : this.$route.params.id!=0 ? this.$t('marketing.editSpikeActivity') : this.$t('marketing.addSpikeActivity');
         const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.$route.params.id}` });
         this.$store.dispatch('tagsView/updateVisitedView', route);
       }
@@ -403,6 +526,8 @@ export default {
             timeVal: [info.startDate, info.endDate],
             proCategorylist: info.proCategory !== '0' ? info.proCategory.split(',').map((item) => item * 1) : [],
           };
+          this.nameJsonForm = this.parseNameJson(info.nameJson);
+          this.activeLang = resolveFormActiveLang(this);
           this.getAttrValue(info.productList);
           this.loading = false;
           //this.isIndeterminate = !this.isIndeterminate;
@@ -416,7 +541,7 @@ export default {
     },
     //行删除
     handleDelete(index, row) {
-      this.$modalSure('删除该秒杀商品吗？').then(() => {
+      this.$modalSure(this.$t('marketing.deleteSeckillProductConfirm')).then(() => {
         let i = this.proData.findIndex((item) => item == row);
         this.proData.splice(i, 1);
       });
@@ -478,6 +603,9 @@ export default {
           _this.$set(i, 'name', i.sku);
           _this.$set(i, 'merName', item.merName);
           _this.$set(i, 'categoryName', item.categoryName);
+          _this.$set(i, 'categoryNameJson', item.categoryNameJson);
+          _this.$set(i, 'categoryNameI18n', item.categoryNameI18n);
+          _this.$set(i, 'attrList', item.attrList);
           _this.$set(i, 'quota', i.quota ? i.quota : 0);
           _this.$set(i, 'quotaShow', i.quotaShow ? i.quotaShow : 0);
           _this.$set(i, 'activityPrice', this.$route.params.id!=0 && !this.pageType ? i.price : 0);
@@ -489,7 +617,7 @@ export default {
       _this.isCkecked();
     },
     batchDel() {
-      this.$modalSure(`批量删除商品吗？`).then(() => {
+      this.$modalSure(this.$t('product.batchDeleteProductConfirm')).then(() => {
         this.proData = this.proData.filter((item) => !item.checked);
       });
     },
@@ -531,9 +659,9 @@ export default {
               });
             }
 
-            if (!total && total !== 0) return this.$message.warning('商品限量不能为空');
-            if (!price) return this.$message.warning('商品秒杀价格不能为空');
-            if (total < this.proData.length) return this.$message.warning('商品限量总和不能小于0');
+            if (!total && total !== 0) return this.$message.warning(this.$t('marketing.productLimitRequired'));
+            if (!price) return this.$message.warning(this.$t('marketing.spikePriceRequired'));
+            if (total < this.proData.length) return this.$message.warning(this.$t('marketing.productLimitSumTip'));
           }
           this.ruleForm.productList = this.proData.map((item) => {
             return {
@@ -551,13 +679,14 @@ export default {
           this.ruleForm.proCategory = this.ruleForm.proCategorylist.length
             ? this.ruleForm.proCategorylist.toString()
             : '0';
+          this.ruleForm.nameJson = this.buildNameJson();
           if (this.pageType) {
             seckillProAdd({
               id: this.$route.params.id,
               productList: this.ruleForm.productList,
             })
               .then((res) => {
-                this.$message.success('添加成功');
+                this.$message.success(this.$t('user.addSuccess'));
                 this.$router.push({ path: `/marketing/seckill/seckillActivity` });
               })
               .catch((res) => {});
@@ -565,13 +694,13 @@ export default {
             this.$route.params.id!=0
               ? seckillAtivityUpdateApi(this.ruleForm)
                   .then((res) => {
-                    this.$message.success('编辑成功');
+                    this.$message.success(this.$t('product.editSuccess'));
                     this.$router.push({ path: `/marketing/seckill/seckillActivity` });
                   })
                   .catch((res) => {})
               : seckillActivityAddApi(this.ruleForm)
                   .then((res) => {
-                    this.$message.success('添加成功');
+                    this.$message.success(this.$t('user.addSuccess'));
                     this.$router.push({ path: `/marketing/seckill/seckillActivity` });
                   })
                   .catch((res) => {});
@@ -621,6 +750,16 @@ export default {
 }
 .mr14 {
   margin-right: 14px;
+}
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.lang-name-input {
+  margin-top: 10px;
 }
 .pictrue {
   width: 58px;

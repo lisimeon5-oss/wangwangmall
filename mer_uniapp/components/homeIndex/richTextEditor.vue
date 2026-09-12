@@ -22,6 +22,7 @@
 	// | Author: CRMEB Team <admin@crmeb.com>
 	// +----------------------------------------------------------------------
 	import mpHtml from "@/uni_modules/mp-html/components/mp-html/mp-html.vue";
+	import { getLocalizedText } from '@/utils/localizedName';
 	export default {
 		name: 'richText',
 		props: {
@@ -54,7 +55,9 @@
 			},
 			//富文本内容
 			description() {
-				return this.dataConfig.richText.val.replace(/\<img/gi, '<img style="max-width:100%;height:auto" ')
+				const rich = (this.dataConfig && this.dataConfig.richText) || {};
+				const html = getLocalizedText(rich.val, rich.valJson) || '';
+				return html.replace(/\<img/gi, '<img style="max-width:100%;height:auto" ')
 					.replace(/style="text-wrap: wrap;"/gi, '')
 			}
 		},

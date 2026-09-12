@@ -34,6 +34,7 @@ import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.CouponResultCode;
 import com.zbkj.common.result.OrderResultCode;
 import com.zbkj.common.utils.CrmebDateUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.utils.RedisUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.common.utils.ValidateFormUtil;
@@ -121,7 +122,8 @@ public class CouponUserServiceImpl extends ServiceImpl<CouponUserDao, CouponUser
         lqw.eq(CouponUser::getMerId, systemAdmin.getMerId());
         if (StrUtil.isNotBlank(request.getName())) {
             String couponName = URLUtil.decode(request.getName());
-            lqw.like(CouponUser::getName, couponName);
+            lqw.and(i -> i.like(CouponUser::getName, couponName)
+                    .or().apply("coupon_id in (select id from eb_coupon where name_json like CONCAT('%', {0}, '%'))", couponName));
         }
         if (ObjectUtil.isNotNull(request.getUid()) && request.getUid() > 0) {
             lqw.eq(CouponUser::getUid, request.getUid());
@@ -203,7 +205,9 @@ public class CouponUserServiceImpl extends ServiceImpl<CouponUserDao, CouponUser
             map.put("date", date);
             map.put("uid", uid);
             map.put("pidPrimaryKeySql", pidPrimaryKeySql);
-            return dao.findListByPreOrder(map);
+            List<CouponUserOrderResponse> orderList = dao.findListByPreOrder(map);
+            applyLocalizedNameForOrder(orderList);
+            return orderList;
         }
         List<PreOrderInfoDetailVo> orderInfoList = new ArrayList<>();
         List<Integer> merIdList = new ArrayList<>();
@@ -223,6 +227,7 @@ public class CouponUserServiceImpl extends ServiceImpl<CouponUserDao, CouponUser
         List<Integer> brandIdList = productList.stream().map(Product::getBrandId).collect(Collectors.toList());
         // 查询适用的用户平台优惠券
         List<CouponUser> platCouponUserList = findManyPlatByUidAndMerIdAndMoneyAndProList(uid, proIdsList, proCategoryIdList, merIdList, brandIdList, price);
+        applyLocalizedName(platCouponUserList);
         return platCouponUserList.stream().map(e -> {
             CouponUserOrderResponse response = new CouponUserOrderResponse();
             BeanUtils.copyProperties(e, response);
@@ -542,6 +547,10 @@ public class CouponUserServiceImpl extends ServiceImpl<CouponUserDao, CouponUser
 
             responseList.add(userCouponResponse);
         }
+        applyLocalizedName(couponUserList);
+        for (int i = 0; i < responseList.size(); i++) {
+            responseList.get(i).setName(couponUserList.get(i).getName());
+        }
         return CommonPage.copyPageInfo(page, responseList);
     }
 
@@ -751,6 +760,43 @@ public class CouponUserServiceImpl extends ServiceImpl<CouponUserDao, CouponUser
         map.put("money", money);
         map.put("nowDate", now);
         return dao.findManyPlatByUidAndMerIdAndMoneyAndProList(map);
+    }
+
+    @Override
+    public void applyLocalizedName(List<CouponUser> list) {
+        if (CollUtil.isEmpty(list)) {
+            return;
+        }
+        List<Integer> couponIds = list.stream().map(CouponUser::getCouponId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        if (CollUtil.isEmpty(couponIds)) {
+            return;
+        }
+        Map<Integer, Coupon> couponMap = couponService.findByIds(couponIds).stream()
+                .collect(Collectors.toMap(Coupon::getId, c -> c, (a, b) -> a));
+        for (CouponUser couponUser : list) {
+            Coupon coupon = couponMap.get(couponUser.getCouponId());
+            if (coupon != null) {
+                couponUser.setName(I18nJsonUtil.resolveByRequest(coupon.getName(), coupon.getNameJson()));
+            }
+        }
+    }
+
+    private void applyLocalizedNameForOrder(List<CouponUserOrderResponse> list) {
+        if (CollUtil.isEmpty(list)) {
+            return;
+        }
+        List<Integer> couponIds = list.stream().map(CouponUserOrderResponse::getCouponId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        if (CollUtil.isEmpty(couponIds)) {
+            return;
+        }
+        Map<Integer, Coupon> couponMap = couponService.findByIds(couponIds).stream()
+                .collect(Collectors.toMap(Coupon::getId, c -> c, (a, b) -> a));
+        for (CouponUserOrderResponse response : list) {
+            Coupon coupon = couponMap.get(response.getCouponId());
+            if (coupon != null) {
+                response.setName(I18nJsonUtil.resolveByRequest(coupon.getName(), coupon.getNameJson()));
+            }
+        }
     }
 
 }

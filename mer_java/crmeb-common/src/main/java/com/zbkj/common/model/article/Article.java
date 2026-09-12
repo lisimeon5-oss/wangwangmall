@@ -1,6 +1,7 @@
 package com.zbkj.common.model.article;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -39,6 +40,10 @@ public class Article implements Serializable {
     @ApiModelProperty(value = "文章标题")
     private String title;
 
+    @ApiModelProperty(value = "多语言文章标题(JSON)")
+    @TableField("title_json")
+    private String titleJson;
+
     @ApiModelProperty(value = "文章作者")
     private String author;
 
@@ -48,8 +53,16 @@ public class Article implements Serializable {
     @ApiModelProperty(value = "文章简介")
     private String synopsis;
 
+    @ApiModelProperty(value = "多语言文章简介(JSON)")
+    @TableField("synopsis_json")
+    private String synopsisJson;
+
     @ApiModelProperty(value = "文章内容")
     private String content;
+
+    @ApiModelProperty(value = "多语言文章内容(JSON)")
+    @TableField("content_json")
+    private String contentJson;
 
     @ApiModelProperty(value = "浏览次数")
     private Long visit;

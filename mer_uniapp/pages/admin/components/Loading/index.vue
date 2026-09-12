@@ -5,11 +5,11 @@
 			<view v-if="loading">
 				<view class="iconfont icon-jiazai loading acea-row row-center-wrapper"></view>
 				<slot name="loading"></slot>
-				正在加载中
+				{{$t('正在加载中')}}
 			</view>
 			<view v-else>
 				<slot name="load"></slot>
-				上拉加载更多
+				{{$t('上拉加载更多')}}
 			</view>
 		</view>
 	</view>

@@ -3,9 +3,9 @@
     <el-card class="box-card" :bordered="false" shadow="never">
       <div slot="header" class="clearfix acea-row">
         <el-form>
-          <el-form-item label="用户搜索：" class="search-form-sub">
+          <el-form-item :label="$t('user.userSearchLabel')" class="search-form-sub">
             <UserSearchInput v-model="tableFrom" />
-            <el-button class="search-btn" type="primary" @click="initList">查询</el-button>
+            <el-button class="search-btn" type="primary" @click="initList">{{ $t('common.query') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -15,13 +15,13 @@
             <el-radio :label="scope.row.id" @change.native="changeRow(scope.row)" v-model="templateRadio"></el-radio>
           </template>
         </el-table-column>
-        <el-table-column label="头像" min-width="60">
+        <el-table-column :label="$t('user.avatar')" min-width="60">
           <template slot-scope="{ row }">
             <img :src="row.avatar" alt="" />
           </template>
         </el-table-column>
-        <el-table-column label="昵称" min-width="160" prop="nickname"> </el-table-column>
-        <el-table-column label="手机号" min-width="80" prop="phone"> </el-table-column>
+        <el-table-column :label="$t('user.nickname')" min-width="160" prop="nickname"> </el-table-column>
+        <el-table-column :label="$t('user.phoneCol')" min-width="80" prop="phone"> </el-table-column>
       </el-table>
       <div class="bottom">
         <el-pagination

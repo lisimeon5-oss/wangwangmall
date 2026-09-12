@@ -22,7 +22,7 @@ import { formatDate } from '@/utils/validate';
 import { mapState } from 'vuex';
 export default {
   name: 'home_date',
-  cname: '日期',
+  cname: 'maintain.date',
   icon: 'icon-biaodanzujian-riqi',
   configName: 'c_home_date',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -66,46 +66,46 @@ export default {
         name: 'dates',
         timestamp: this.num,
         titleConfig: {
-          title: '标题',
-          val: '日期',
-          place: '请输入标题',
+          title: this.$t('formGenerator.title'),
+          val: this.$t('maintain.date'),
+          place: this.$t('formGenerator.pleaseEnterTitle'),
           max: 10,
           type: 'form',
           isShow: 1,
         },
         valConfig: {
-          title: '默认值',
+          title: this.$t('formGenerator.defaultValue'),
           type: 'data',
           specifyDate: '',
           tabVal: 0,
           tabData: 0,
           tabList: [
             {
-              name: '显示',
+              name: this.$t('common.show'),
             },
             {
-              name: '隐藏',
+              name: this.$t('product.hide'),
             },
           ],
           dataList: [
             {
-              name: '当前日期',
+              name: this.$t('maintain.currentDate'),
             },
             {
-              name: '指定日期',
+              name: this.$t('maintain.specifiedDate'),
             },
           ],
         },
         tipConfig: {
-          title: '提示语',
-          val: '请选择',
-          place: '请输入提示语',
+          title: this.$t('maintain.prompt'),
+          val: this.$t('common.pleaseSelect'),
+          place: this.$t('maintain.pleaseEnterPrompt'),
           max: 10,
           type: 'form',
           isShow: 1,
         },
         titleShow: {
-          title: '是否必填',
+          title: this.$t('formGenerator.required'),
           val: true,
           type: 'form',
         },

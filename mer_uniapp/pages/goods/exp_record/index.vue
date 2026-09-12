@@ -9,7 +9,7 @@
 							<view class="itemn" v-for="(vo,indexn) in item.list" :key="indexn">
 								<view class='acea-row row-between-wrapper'>
 									<view>
-										<view class='name line1'>{{vo.title}}</view>
+										<view class='name line1'>{{$t(vo.title)}}</view>
 										<view>{{vo.createTime}}</view>
 									</view>
 									<view class='num font_color'>+{{vo.experience}}</view>
@@ -21,10 +21,10 @@
 				</view>
 				<view class='loadingicon acea-row row-center-wrapper'>
 					<text class='loading iconfont icon-jiazai'
-						:hidden='loading==false'></text>{{userBillList.length > 0?loadTitle:''}}
+						:hidden='loading==false'></text>{{userBillList.length > 0?$t(loadTitle):''}}
 				</view>
 				<view v-if="userBillList.length == 0 && !loading">
-					<emptyPage title="暂无账单的记录哦～" :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
+					<emptyPage :title="$t('暂无账单的记录哦～')" :imgSrc="urlDomain+'crmebimage/presets/noJilu.png'"></emptyPage>
 				</view>
 			</view>
 		</view>

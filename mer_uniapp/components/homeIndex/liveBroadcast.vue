@@ -11,7 +11,7 @@
 				</view>
 				<navigator v-if="!merId" :url="moreLink" class="more-btn" hover-class="none">
 					<view class='more tui-skeleton-rect' :style="[moreColor]">
-            更多
+            {{$t('更多')}}
 						<text class="iconfont icon-jiantou"></text>
 					</view>
 				</navigator>
@@ -30,19 +30,19 @@
 									:class="item.liveStatus == 102 ? 'playRadius' : 'notPlayRadius'">
 									<view v-if="item.liveReplay">
 										<text class="iconfont icon-zhibo-huifang"></text>
-										<text>回放</text>
+										<text>{{$t('回放')}}</text>
 									</view>
 									<view v-else-if="item.liveStatus == 101">
 										<text class="iconfont icon-zhibo-zhibozhong"></text>
-										<text>直播中</text>
+										<text>{{$t('直播中')}}</text>
 									</view>
 									<view v-else-if="item.liveStatus == 103 ">
 										<text class="iconfont icon-zhibo-yugao"></text>
-										<text>已结束</text>
+										<text>{{$t('已结束')}}</text>
 									</view>
 									<view v-else-if="item.liveStatus == 102">
 										<text class="iconfont icon-zhibo-yugao"></text>
-										<text>预告</text>
+										<text>{{$t('预告')}}</text>
 									</view>
 								</view>
 								<view v-if="item.liveStatus == 101 || item.liveStatus == 102" class="broadcast-time">
@@ -62,18 +62,18 @@
 						<view class="img-box">
 							<view class="label bggary" v-if="item.liveReplay">
 								<text class="iconfont icon-zhibo-huifang"></text>
-								<text>回放</text>
+								<text>{{$t('回放')}}</text>
 							</view>
 							<view class="label bgred" v-else-if="item.liveStatus==101">
 								<text class="iconfont icon-zhibo-zhibozhong"></text>
-								<text>直播中</text>
+								<text>{{$t('直播中')}}</text>
 							</view>
 							<view class="label bggary" v-else-if="item.liveStatus == 103 ">
 								<text class="iconfont icon-zhibo-yugao"></text>
-								<text>已结束</text>
+								<text>{{$t('已结束')}}</text>
 							</view>
 							<view class="label bgblue" v-else-if="item.liveStatus == 102">
-								<view class="txt">预告</view>
+								<view class="txt">{{$t('预告')}}</view>
 								<view class="msg">{{ igetPartTime(item.startTime) }}</view>
 							</view>
 							<image :src="item.feedsImgWx" mode="aspectFill" :style="[imgStyle]"></image>
@@ -87,14 +87,14 @@
 								<block v-if="item.broadcast && item.broadcast.length <=3 && item.broadcast.length > 0">
 									<view class="goods-item" v-for="(goods,index) in item.broadcast" :key="index">
 										<image :src="goods.coverImg" alt="">
-											<text class="line1">￥{{goods.price}}</text>
+											<text class="line1">฿{{goods.price}}</text>
 									</view>
 								</block>
 								<block v-if="item.broadcast && item.broadcast.length>3">
 									<view class="goods-item" v-for="(goods,index) in item.broadcast" :key="index"
 										v-if="index<2">
 										<image :src="goods.coverImg" alt="">
-											<text class="line1">￥{{goods.price}}</text>
+											<text class="line1">฿{{goods.price}}</text>
 									</view>
 									<view class="goods-item">
 										<image :src="item.broadcast[item.broadcast.length-1].goods.coverImg" alt="">
@@ -102,7 +102,7 @@
 									</view>
 								</block>
 								<block v-if="!item.broadcast || item.broadcast.length == 0">
-									<view class="empty-goods">暂无商品</view>
+									<view class="empty-goods">{{$t('暂无商品')}}</view>
 								</block>
 							</view>
 						</view>
@@ -117,18 +117,18 @@
 						<view class="img-box">
 							<view class="label bggary" v-if="item.liveReplay">
 								<text class="iconfont icon-zhibo-huifang"></text>
-								<text>回放</text>
+								<text>{{$t('回放')}}</text>
 							</view>
 							<view class="label bgred" v-else-if="item.liveStatus==101">
 								<text class="iconfont icon-zhibo-zhibozhong"></text>
-								<text>直播中</text>
+								<text>{{$t('直播中')}}</text>
 							</view>
 							<view class="label bggary" v-else-if="item.liveStatus == 103 ">
 								<text class="iconfont icon-zhibo-yugao"></text>
-								<text>已结束</text>
+								<text>{{$t('已结束')}}</text>
 							</view>
 							<view class="label bgblue" v-else-if="item.liveStatus == 102">
-								<view class="txt">预告</view>
+								<view class="txt">{{$t('预告')}}</view>
 								<view class="msg">{{ igetPartTime(item.startTime) }}</view>
 							</view>
 							<image :src="item.feedsImgWx"></image>
@@ -252,7 +252,7 @@
 		methods: {
 			getPartTime(val) {
 				var timearr = val.replace(" ", ":").replace(/:/g, "-").split("-");
-				var timestr = Number(timearr[1]) + "月" + timearr[2] + "日" + Number(timearr[3]) + ":" + timearr[4];
+				var timestr = Number(timearr[1]) + this.$t('月') + timearr[2] + this.$t('日') + Number(timearr[3]) + ":" + timearr[4];
 				return timestr;
 			},
 			// 直播

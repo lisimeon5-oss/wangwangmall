@@ -1,7 +1,7 @@
 <template>
 	<scroll-view class="rights-container" scroll-y="true" :style="'height:'+windowHeight+'px'" @touchstart="touchStart">
 		<!-- #ifdef MP -->
-		<NavBar navTitle="会员权益" :isBackgroundColor="false" iconColor='#fff' ref="navBarRef"></NavBar>
+		<NavBar :navTitle="$t('会员权益')" :isBackgroundColor="false" iconColor='#fff' ref="navBarRef"></NavBar>
 		<!-- #endif -->
 		<view class="header acea-row">
 			<view v-for="(item, index) in benefitsList" :key="index" class="item acea-row row-column row-middle"

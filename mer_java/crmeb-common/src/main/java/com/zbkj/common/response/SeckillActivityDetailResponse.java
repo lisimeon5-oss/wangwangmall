@@ -39,6 +39,9 @@ public class SeckillActivityDetailResponse implements Serializable {
     @ApiModelProperty(value = "秒杀活动名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言秒杀活动名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "秒杀开始日期")
     private String startDate;
 

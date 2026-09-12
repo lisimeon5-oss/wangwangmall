@@ -17,6 +17,7 @@ import com.zbkj.common.request.CancelCollectRequest;
 import com.zbkj.common.request.PageParamRequest;
 import com.zbkj.common.response.MerchantCollectResponse;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.service.dao.UserMerchantCollectDao;
 import com.zbkj.service.service.MerchantEmployeeService;
 import com.zbkj.service.service.MerchantService;
@@ -152,7 +153,7 @@ public class UserMerchantCollectServiceImpl extends ServiceImpl<UserMerchantColl
             MerchantCollectResponse response = new MerchantCollectResponse();
             BeanUtils.copyProperties(collect, response);
             Merchant merchant = merchantService.getById(collect.getMerId());
-            response.setMerName(merchant.getName());
+            response.setMerName(I18nJsonUtil.resolveMerchantName(merchant));
             response.setMerAvatar(merchant.getAvatar());
             response.setIsSelf(merchant.getIsSelf());
             response.setCollectNum(getCountByMerId(merchant.getId()));

@@ -22,6 +22,9 @@ import com.zbkj.common.response.ArticleInfoResponse;
 import com.zbkj.common.response.ArticleResponse;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.MarketingResultCode;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.service.dao.ArticleDao;
 import com.zbkj.service.service.ArticleService;
 import com.zbkj.service.service.SystemAttachmentService;
@@ -88,6 +91,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
         List<ArticleResponse> responseList = articleList.stream().map(e -> {
             ArticleResponse articleResponse = new ArticleResponse();
             BeanUtils.copyProperties(e, articleResponse);
+            applyFrontArticle(e, articleResponse);
             return articleResponse;
         }).collect(Collectors.toList());
         return CommonPage.copyPageInfo(articlePage, responseList);
@@ -148,6 +152,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
         }
         ArticleInfoResponse articleResponse = new ArticleInfoResponse();
         BeanUtils.copyProperties(article, articleResponse);
+        articleResponse.setTitle(I18nJsonUtil.resolveByRequest(article.getTitle(), article.getTitleJson()));
+        articleResponse.setSynopsis(I18nJsonUtil.resolveByRequest(article.getSynopsis(), article.getSynopsisJson()));
+        articleResponse.setContent(I18nJsonUtil.resolveByRequest(article.getContent(), article.getContentJson()));
         if (addArticleVisit(id)) {
             logger.error("增加文章阅读次数失败，文章id = {}", id);
         }
@@ -180,13 +187,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
             articleBannerLimit = Integer.parseInt(articleBannerLimitString);
         }
         LambdaQueryWrapper<Article> lqw = Wrappers.lambdaQuery();
-        lqw.select(Article::getId, Article::getCover, Article::getTitle);
+        lqw.select(Article::getId, Article::getCover, Article::getTitle, Article::getTitleJson);
         lqw.eq(Article::getIsBanner, true);
         lqw.eq(Article::getStatus, true);
         lqw.eq(Article::getIsDel, false);
         lqw.orderByDesc(Article::getSort, Article::getId);
         lqw.last(" limit " + articleBannerLimit);
-        return dao.selectList(lqw);
+        List<Article> list = dao.selectList(lqw);
+        list.forEach(e -> e.setTitle(I18nJsonUtil.resolveByRequest(e.getTitle(), e.getTitleJson())));
+        return list;
     }
 
     /**
@@ -197,7 +206,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
     @Override
     public List<ArticleResponse> getHotList() {
         LambdaQueryWrapper<Article> lqw = Wrappers.lambdaQuery();
-        lqw.select(Article::getId, Article::getCover, Article::getTitle, Article::getCreateTime);
+        lqw.select(Article::getId, Article::getCover, Article::getTitle, Article::getTitleJson, Article::getCreateTime);
         lqw.eq(Article::getIsHot, true);
         lqw.eq(Article::getStatus, true);
         lqw.eq(Article::getIsDel, false);
@@ -210,6 +219,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
         return articleList.stream().map(e -> {
             ArticleResponse articleResponse = new ArticleResponse();
             BeanUtils.copyProperties(e, articleResponse);
+            applyFrontArticle(e, articleResponse);
             return articleResponse;
         }).collect(Collectors.toList());
     }
@@ -225,9 +235,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
         Article article = new Article();
         BeanUtils.copyProperties(articleRequest, article);
         article.setId(null);
+        article.setTitle(I18nJsonUtil.emptyToBlank(articleRequest.getTitle()));
+        article.setTitleJson(StrUtil.blankToDefault(articleRequest.getTitleJson(), ""));
+        article.setSynopsis(I18nJsonUtil.emptyToBlank(articleRequest.getSynopsis()));
+        article.setSynopsisJson(StrUtil.blankToDefault(articleRequest.getSynopsisJson(), ""));
         String cdnUrl = systemAttachmentService.getCdnUrl();
         article.setCover(systemAttachmentService.clearPrefix(article.getCover(), cdnUrl));
-        article.setContent(systemAttachmentService.clearPrefix(article.getContent(), cdnUrl));
+        article.setContent(systemAttachmentService.clearPrefix(I18nJsonUtil.emptyToBlank(articleRequest.getContent()), cdnUrl));
+        article.setContentJson(clearPrefixJson(articleRequest.getContentJson(), cdnUrl));
         article.setVisit(0L);
         return save(article);
     }
@@ -267,9 +282,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
         getByIdException(articleRequest.getId());
         Article article = new Article();
         BeanUtils.copyProperties(articleRequest, article);
+        article.setTitle(I18nJsonUtil.emptyToBlank(articleRequest.getTitle()));
+        if (ObjectUtil.isNotNull(articleRequest.getTitleJson())) {
+            article.setTitleJson(articleRequest.getTitleJson());
+        }
+        article.setSynopsis(I18nJsonUtil.emptyToBlank(articleRequest.getSynopsis()));
+        if (ObjectUtil.isNotNull(articleRequest.getSynopsisJson())) {
+            article.setSynopsisJson(articleRequest.getSynopsisJson());
+        }
         String cdnUrl = systemAttachmentService.getCdnUrl();
         article.setCover(systemAttachmentService.clearPrefix(article.getCover(), cdnUrl));
-        article.setContent(systemAttachmentService.clearPrefix(article.getContent(), cdnUrl));
+        article.setContent(systemAttachmentService.clearPrefix(I18nJsonUtil.emptyToBlank(articleRequest.getContent()), cdnUrl));
+        if (ObjectUtil.isNotNull(articleRequest.getContentJson())) {
+            article.setContentJson(clearPrefixJson(articleRequest.getContentJson(), cdnUrl));
+        }
         return updateById(article);
     }
 
@@ -310,13 +336,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
     @Override
     public List<Article> getIndexHeadline() {
         LambdaQueryWrapper<Article> lqw = Wrappers.lambdaQuery();
-        lqw.select(Article::getId, Article::getTitle);
+        lqw.select(Article::getId, Article::getTitle, Article::getTitleJson);
         lqw.eq(Article::getIsHot, true);
         lqw.eq(Article::getStatus, true);
         lqw.eq(Article::getIsDel, false);
         lqw.orderByDesc(Article::getSort);
         lqw.last(" limit 10");
-        return dao.selectList(lqw);
+        List<Article> list = dao.selectList(lqw);
+        list.forEach(e -> e.setTitle(I18nJsonUtil.resolveByRequest(e.getTitle(), e.getTitleJson())));
+        return list;
     }
 
     /**
@@ -329,6 +357,32 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
         Article article = getByIdException(id);
         article.setStatus(!article.getStatus());
         return updateById(article);
+    }
+
+    private void applyFrontArticle(Article article, ArticleResponse response) {
+        response.setTitle(I18nJsonUtil.resolveByRequest(article.getTitle(), article.getTitleJson()));
+        response.setSynopsis(I18nJsonUtil.resolveByRequest(article.getSynopsis(), article.getSynopsisJson()));
+    }
+
+    private String clearPrefixJson(String json, String cdnUrl) {
+        if (StrUtil.isBlank(json)) {
+            return "";
+        }
+        try {
+            JSONObject obj = JSON.parseObject(json);
+            if (obj == null || obj.isEmpty()) {
+                return json;
+            }
+            for (String key : obj.keySet()) {
+                String val = obj.getString(key);
+                if (StrUtil.isNotBlank(val)) {
+                    obj.put(key, systemAttachmentService.clearPrefix(val, cdnUrl));
+                }
+            }
+            return obj.toJSONString();
+        } catch (Exception ignored) {
+            return json;
+        }
     }
 }
 

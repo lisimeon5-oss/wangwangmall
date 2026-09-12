@@ -1,26 +1,26 @@
 <template>
   <div class="divBox">
-    <el-dialog v-if="dialogVisible" title="商品信息" :visible.sync="dialogVisible" width="540px">
+    <el-dialog v-if="dialogVisible" :title="$t('product.productInfo')" :visible.sync="dialogVisible" width="540px">
       <div v-loading="loading">
         <div class="box-container">
           <div v-if="isEdit" class="list">
-            <label class="name">排序：</label>
+            <label class="name">{{ $t('product.sortLabel') }}</label>
             <el-input
               v-model.number="FormData.sort"
               type="number"
-              placeholder="请输入序号"
+              :placeholder="$t('marketing.pleaseEnterSerialNo')"
               class="selWidth"
               size="small"
               style="padding-right: 0"
             />
           </div>
           <div v-else class="list sp">
-            <label class="name">排序：</label>
+            <label class="name">{{ $t('product.sortLabel') }}</label>
             <span class="info">{{ FormData.sort }}</span>
           </div>
           <div class="dialog-footer">
-            <el-button size="small" @click="dialogVisible = false">取消</el-button>
-            <el-button size="small" type="primary" @click="handleSort">确定</el-button>
+            <el-button size="small" @click="dialogVisible = false">{{ $t('el.messagebox.cancel') }}</el-button>
+            <el-button size="small" type="primary" @click="handleSort">{{ $t('el.messagebox.confirm') }}</el-button>
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@ export default {
       liveGoodsSortApi(this.FormData.id, this.FormData.sort).then((res) => {
         this.dialogVisible = false;
         this.$emit('getList');
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('product.operateSuccess'));
       });
     },
   },

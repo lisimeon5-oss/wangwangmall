@@ -3,34 +3,49 @@
     <div class="container_box">
       <pages-header
         ref="pageHeader"
-        :title="`${type == 1 ? '编辑' : '添加'}拼团活动`"
+        :title="$t('marketing.groupActivityTitle', { action: type == 1 ? $t('common.edit') : $t('common.add') })"
         :backUrl="'/marketing/group/activity'"
       ></pages-header>
       <el-card class="box-card box-body mt14 list-tabs" shadow="never" :bordered="false">
         <el-tabs v-model="activeName">
-          <el-tab-pane label="基础设置" name="first"></el-tab-pane>
-          <el-tab-pane label="添加商品" name="second"></el-tab-pane>
+          <el-tab-pane :label="$t('product.basicSetting')" name="first"></el-tab-pane>
+          <el-tab-pane :label="$t('marketing.addProduct')" name="second"></el-tab-pane>
         </el-tabs>
         <el-form :model="formData" :rules="rules" ref="form" size="small" class="demo-ruleForm">
           <div v-show="activeName == 'first'">
             <div class="detailSection">
-              <div class="title">基础信息</div>
-              <el-form-item label="活动名称：" label-width="100px" prop="groupName">
-                <el-input
-                  class="from-ipt-width"
-                  v-model="formData.groupName"
-                  placeholder="请输入活动名称"
-                  :maxlength="20"
-                ></el-input>
-                <div class="from-tips">用于管理员区分活动，用户端不展示，最多输入20个字</div>
+              <div class="title">{{ $t('community.basicInfo') }}</div>
+              <el-form-item :label="$t('marketing.activityNameLabel')" label-width="100px" prop="groupName">
+                <div class="lang-name-switch">
+                  <el-radio-group v-model="activeLang" size="small">
+                    <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+                      {{ lang.label }}
+                    </el-radio-button>
+                  </el-radio-group>
+                  <el-input
+                    v-if="activeLang === defaultLangCode"
+                    class="from-ipt-width lang-name-input"
+                    v-model.trim="formData.groupName"
+                    :placeholder="$t('marketing.pleaseEnterActivityName')"
+                    :maxlength="20"
+                  />
+                  <el-input
+                    v-else
+                    class="from-ipt-width lang-name-input"
+                    v-model.trim="nameJsonForm[activeLang]"
+                    :placeholder="$t('marketing.inputNameInLang', { lang: activeLangLabel })"
+                    :maxlength="20"
+                  />
+                </div>
+                <div class="from-tips">{{ $t('marketing.groupNameAdminTip') }}</div>
               </el-form-item>
-              <el-form-item label="活动时间：" label-width="100px" prop="startTime">
+              <el-form-item :label="$t('marketing.activityTimeLabel')" label-width="100px" prop="startTime">
                 <el-date-picker
                   v-model="time"
                   class="selWidth"
                   type="datetimerange"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
+                  :start-placeholder="$t('product.startDate')"
+                  :end-placeholder="$t('product.endDate')"
                   :default-time="['00:00:00', '23:59:59']"
                   value-format="yyyy-MM-dd HH:mm:ss"
                   @change="timeChange"
@@ -39,7 +54,7 @@
                 >
                 </el-date-picker>
               </el-form-item>
-              <el-form-item label="成团人数：" label-width="100px" class="group-num-box" prop="buyCount">
+              <el-form-item :label="$t('marketing.formedCountLabel')" label-width="100px" class="group-num-box" prop="buyCount">
                 <el-input-number
                   :min="2"
                   :max="10000"
@@ -49,10 +64,10 @@
                   v-model="formData.buyCount"
                   :precision="0"
                 ></el-input-number>
-                <div class="from-tips">请填写2～10000的整数</div>
-                <span class="span">人</span>
+                <div class="from-tips">{{ $t('marketing.integerRange2To10000') }}</div>
+                <span class="span">{{ $t('dashboard.people') }}</span>
               </el-form-item>
-              <el-form-item label="成团有效期：" label-width="100px" class="group-num-box" prop="validHour">
+              <el-form-item :label="$t('marketing.formedValidityLabel')" label-width="100px" class="group-num-box" prop="validHour">
                 <el-input-number
                   type="number"
                   :controls="false"
@@ -62,12 +77,10 @@
                   v-model="formData.validHour"
                   :precision="0"
                 ></el-input-number>
-                <div class="from-tips">
-                  设置拼团的有效时间（请输入1～240的整数），用户开团后，需要在设置的时间内拼购指定人数，否则拼团失败，拼团失败系统自动退款。
-                </div>
-                <span class="span time">小时</span>
+                <div class="from-tips">{{ $t('marketing.groupValidityTip') }}</div>
+                <span class="span time">{{ $t('marketing.hours') }}</span>
               </el-form-item>
-              <el-form-item label="活动限购：" label-width="100px" prop="allQuota">
+              <el-form-item :label="$t('marketing.activityPurchaseLimitLabel')" label-width="100px" prop="allQuota">
                 <el-input-number
                   :min="0"
                   :max="9999"
@@ -77,11 +90,9 @@
                   v-model="formData.allQuota"
                   :precision="0"
                 ></el-input-number>
-                <div class="from-tips">
-                  请填写0～9999的整数，填0代表不限购；例如设置为4，表示本活动每个商品，每个用户最多可购买4件。
-                </div>
+                <div class="from-tips">{{ $t('marketing.activityLimitTip') }}</div>
               </el-form-item>
-              <el-form-item label="单次限购：" label-width="100px" prop="oncQuota">
+              <el-form-item :label="$t('marketing.singlePurchaseLimitLabel')" label-width="100px" prop="oncQuota">
                 <el-input-number
                   :min="0"
                   :max="9999"
@@ -91,41 +102,35 @@
                   v-model="formData.oncQuota"
                   :precision="0"
                 ></el-input-number>
-                <div class="from-tips">
-                  请填写0～9999的整数，填0代表不限购；例如设置为2，表示每次参与拼团时，用户一次购买数量最大可选择2件。
-                </div>
+                <div class="from-tips">{{ $t('marketing.singleLimitTip') }}</div>
               </el-form-item>
-              <div class="title">高级设置</div>
-              <el-form-item label="凑团：" label-width="100px">
+              <div class="title">{{ $t('marketing.advancedSettings') }}</div>
+              <el-form-item :label="$t('marketing.joinGroupLabel')" label-width="100px">
                 <el-switch
-                  active-text="开启"
-                  inactive-text="关闭"
+                  :active-text="$t('common.open')"
+                  :inactive-text="$t('common.close')"
                   v-model="showGroupSwitch"
                   :width="35"
                   @change="showGroup"
                 >
                 </el-switch>
-                <div class="from-tips">
-                  开启凑团后，活动商品详情页会显示待成团的团列表，买家可以直接任选一个参团，提升成团率。
-                </div>
+                <div class="from-tips">{{ $t('marketing.joinGroupTip') }}</div>
               </el-form-item>
-              <el-form-item label="虚拟成团：" label-width="100px" v-show="showGroupSwitch">
+              <el-form-item :label="$t('marketing.virtualGroupLabel')" label-width="100px" v-show="showGroupSwitch">
                 <el-switch
-                  active-text="开启"
-                  inactive-text="关闭"
+                  :active-text="$t('common.open')"
+                  :inactive-text="$t('common.close')"
                   v-model="fictiStatusSwitch"
                   :width="35"
                   @change="fictiStatus"
                 >
                 </el-switch>
-                <div class="from-tips">
-                  开启虚拟成团后，该团有效期结束时，人数未满的团，系统将会虚拟“匿名买家”凑满人数，使该团成团。只有已付款参团的真实买家才会获得商品，建议合理开启，以提高成团率.
-                </div>
+                <div class="from-tips">{{ $t('marketing.virtualGroupTip') }}</div>
               </el-form-item>
             </div>
           </div>
           <div v-show="activeName == 'second'">
-            <el-button type="primary" @click="addGoods">添加活动商品</el-button>
+            <el-button type="primary" @click="addGoods">{{ $t('marketing.addActivityProduct') }}</el-button>
             <div class="table-box" v-for="(item, index) in productList" :key="index">
               <div class="red-delete" @click="deleteGoods(index)">
                 <span class="iconfont icon-shanchu"></span>
@@ -156,7 +161,7 @@
                           type="number"
                           style="width: 120px"
                           v-model="item.inputPrice"
-                          placeholder="请输入拼团价"
+                          :placeholder="$t('marketing.pleaseEnterGroupPrice')"
                         ></el-input>
                         <el-button
                           class="ml14"
@@ -165,7 +170,7 @@
                             colosePrice(item);
                             item.priceVisible = false;
                           "
-                          >取消</el-button
+                          >{{ $t('common.cancel') }}</el-button
                         >
                         <el-button
                           type="primary"
@@ -174,10 +179,10 @@
                             setActivePrice(item, item.inputPrice);
                             item.priceVisible = false;
                           "
-                          >确定</el-button
+                          >{{ $t('common.confirmPrefix') }}</el-button
                         >
                       </div>
-                      <el-button slot="reference" size="small" class="mr10">设置拼团价</el-button>
+                      <el-button slot="reference" size="small" class="mr10">{{ $t('marketing.setGroupPrice') }}</el-button>
                     </el-popover>
                   </div>
                   <div>
@@ -187,7 +192,7 @@
                           type="number"
                           style="width: 120px"
                           v-model="item.inputNum"
-                          placeholder="请输入拼团限量"
+                          :placeholder="$t('marketing.pleaseEnterGroupLimit')"
                         ></el-input>
                         <el-button
                           class="ml14"
@@ -196,7 +201,7 @@
                             coloseNum(item);
                             item.numVisible = false;
                           "
-                          >取消</el-button
+                          >{{ $t('common.cancel') }}</el-button
                         >
                         <el-button
                           type="primary"
@@ -205,10 +210,10 @@
                             setQuotaShow(item, item.inputNum);
                             item.numVisible = false;
                           "
-                          >确定</el-button
+                          >{{ $t('common.confirmPrefix') }}</el-button
                         >
                       </div>
-                      <el-button slot="reference" size="small" class="mr10">设置拼团限量</el-button>
+                      <el-button slot="reference" size="small" class="mr10">{{ $t('marketing.setGroupLimit') }}</el-button>
                     </el-popover>
                   </div>
                 </div>
@@ -223,16 +228,16 @@
                   style="width: 100%"
                 >
                   <el-table-column width="30"></el-table-column>
-                  <el-table-column label="图片">
+                  <el-table-column :label="$t('product.image')">
                     <template slot-scope="scope">
                       <img :src="scope.row.image" alt="" />
                     </template>
                   </el-table-column>
-                  <el-table-column label="规格" prop="sku"></el-table-column>
-                  <el-table-column label="商品编码" prop="barCode"></el-table-column>
-                  <el-table-column label="售价（元）" prop="price"></el-table-column>
-                  <el-table-column label="剩余库存" prop="stock"></el-table-column>
-                  <el-table-column label="拼团价（元）">
+                  <el-table-column :label="$t('marketing.spec')" prop="sku"></el-table-column>
+                  <el-table-column :label="$t('marketing.productCode')" prop="barCode"></el-table-column>
+                  <el-table-column :label="$t('marketing.salePriceYuan')" prop="price"></el-table-column>
+                  <el-table-column :label="$t('marketing.remainingStock')" prop="stock"></el-table-column>
+                  <el-table-column :label="$t('marketing.groupPriceYuan')">
                     <template slot-scope="scope" v-if="scope.row.sku">
                       <el-input-number
                         type="number"
@@ -244,7 +249,7 @@
                       ></el-input-number>
                     </template>
                   </el-table-column>
-                  <el-table-column label="拼团限量">
+                  <el-table-column :label="$t('marketing.groupQuotaLimit')">
                     <template slot-scope="scope" v-if="scope.row.sku">
                       <el-input-number
                         :min="0"
@@ -264,8 +269,8 @@
       </el-card>
       <el-card dis-hover class="fixed-card" shadow="never" :bordered="false">
         <div class="acea-row row-center-wrapper">
-          <el-button v-show="activeName == 'second'" size="small" @click="activeName = 'first'">上一步</el-button>
-          <el-button v-show="activeName == 'first'" type="primary" size="small" @click="toGo('form')">下一步</el-button>
+          <el-button v-show="activeName == 'second'" size="small" @click="activeName = 'first'">{{ $t('product.prevStep') }}</el-button>
+          <el-button v-show="activeName == 'first'" type="primary" size="small" @click="toGo('form')">{{ $t('product.nextStep') }}</el-button>
           <el-button
             v-show="activeName == 'second'"
             type="primary"
@@ -275,7 +280,7 @@
                 submitForm('form');
               }
             "
-            >提交</el-button
+            >{{ $t('common.submit') }}</el-button
           >
         </div>
       </el-card>
@@ -285,6 +290,14 @@
 
 <script>
 import { groupBuySave, groupBuyInfo, groupBuyUpdate } from '@/api/group';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import {
+  resolveFormActiveLang,
+  hasI18nNameContent,
+  buildI18nNameJson,
+  pickFormName,
+} from '@/utils/localizedName';
 export default {
   data() {
     return {
@@ -292,47 +305,60 @@ export default {
       activeName: 'first',
       formData: {
         id: '',
-        //团名
         groupName: '',
-        //成团人数
+        groupNameJson: '',
         buyCount: '',
-        //有效期
         validHour: '',
-        //活动限购
         allQuota: '',
-        //单次限购
         oncQuota: '',
-        //凑团
         showGroup: 0,
-        //模拟成团
         fictiStatus: 0,
-        //开始时间
         startTime: '',
-        //结束时间
         endTime: '',
-        //sku
         groupBuySkuRequest: [],
       },
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
+      nameJsonForm: defaultLangList.reduce((acc, i) => {
+        if (i.value !== 'zh-cn') acc[i.value] = '';
+        return acc;
+      }, {}),
       productList: [],
       //凑团
       showGroupSwitch: 0,
       //模拟成团
       fictiStatusSwitch: 0,
       time: '',
-      rules: {
-        groupName: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
-        buyCount: [{ required: true, message: '请输入成团人数', trigger: 'blur' }],
-        validHour: [{ required: true, message: '请输入有效时间', trigger: 'blur' }],
-        allQuota: [{ required: true, message: '请输入活动限购数量', trigger: 'blur' }],
-        oncQuota: [{ required: true, message: '请输入单次限购数量', trigger: 'blur' }],
-        startTime: [{ required: true, message: '请选择活动时间', trigger: 'change' }],
-      },
       activityId: '',
       type: '',
       visible: false,
     };
   },
+  computed: {
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : '';
+    },
+    rules() {
+      return {
+        groupName: [{
+          validator: (rule, value, callback) => {
+            if (hasI18nNameContent(pickFormName(this), this.nameJsonForm)) callback();
+            else callback(new Error(this.$t('marketing.pleaseEnterActivityName')));
+          },
+          trigger: 'blur',
+        }],
+        buyCount: [{ required: true, message: this.$t('marketing.pleaseEnterFormedCount'), trigger: 'blur' }],
+        validHour: [{ required: true, message: this.$t('marketing.pleaseEnterValidTime'), trigger: 'blur' }],
+        allQuota: [{ required: true, message: this.$t('marketing.pleaseEnterActivityLimit'), trigger: 'blur' }],
+        oncQuota: [{ required: true, message: this.$t('marketing.pleaseEnterSingleLimit'), trigger: 'blur' }],
+        startTime: [{ required: true, message: this.$t('marketing.pleaseSelectActivityTime'), trigger: 'change' }],
+      };
+    },
+  },
   created() {
+    this.getLanguageList();
     if (this.$route.params.activityId) {
       this.type = this.$route.params.type;
       this.getInfo(this.$route.params.activityId);
@@ -343,6 +369,52 @@ export default {
     }
   },
   methods: {
+    emptyNameJsonForm() {
+      const form = {};
+      this.langOptions.forEach((lang) => {
+        if (lang.code !== this.defaultLangCode) form[lang.code] = '';
+      });
+      return form;
+    },
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.nameJsonForm = this.parseNameJson(this.formData && this.formData.groupNameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.nameJsonForm = this.parseNameJson(this.formData && this.formData.groupNameJson);
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
+    parseNameJson(nameJson) {
+      const form = this.emptyNameJsonForm();
+      if (!nameJson) return form;
+      try {
+        const obj = typeof nameJson === 'string' ? JSON.parse(nameJson) : nameJson;
+        Object.keys(form).forEach((key) => {
+          form[key] = obj[key] || '';
+        });
+      } catch (e) {
+        // ignore
+      }
+      return form;
+    },
+    buildNameJson() {
+      return buildI18nNameJson(this.langOptions, this.nameJsonForm, this.defaultLangCode, pickFormName(this));
+    },
     openClose(item) {
       if (item.visible) {
         this.$set(item, 'visible', false);
@@ -354,6 +426,8 @@ export default {
     getInfo(id) {
       groupBuyInfo(id).then((res) => {
         this.formData = res;
+        this.nameJsonForm = this.parseNameJson(res.groupNameJson);
+        this.activeLang = resolveFormActiveLang(this);
         this.time = [res.startTime, res.endTime];
         this.showGroupSwitch = res.showGroup == 0 ? false : true;
         this.fictiStatusSwitch = res.fictiStatus == 0 ? false : true;
@@ -438,11 +512,11 @@ export default {
     },
     //删除商品
     deleteGoods(index) {
-      this.$modalSure('要删除此商品吗？').then(() => {
+      this.$modalSure(this.$t('marketing.deleteProductConfirm')).then(() => {
         this.productList.splice(index, 1);
         this.$message({
           type: 'success',
-          message: '删除成功!',
+          message: this.$t('marketing.deleteSuccessExcl'),
         });
       });
     },
@@ -491,10 +565,10 @@ export default {
               price += i.activePrice;
             });
           });
-          if (!total && total !== 0) return this.$message.warning('商品限量不能为空');
-          if (!price) return this.$message.warning('商品拼团价格不能为空');
-          if (total < this.productList.length) return this.$message.warning('商品限量总和不能小于0');
-          if (this.productList.length > 10) return this.$message.warning('最多添加10个商品');
+          if (!total && total !== 0) return this.$message.warning(this.$t('marketing.productLimitRequired'));
+          if (!price) return this.$message.warning(this.$t('marketing.groupPriceRequired'));
+          if (total < this.productList.length) return this.$message.warning(this.$t('marketing.productLimitSumTip'));
+          if (this.productList.length > 10) return this.$message.warning(this.$t('marketing.maxTenProducts'));
           let arr = [];
           this.productList.forEach((item) => {
             item.attrValue.forEach((val) => {
@@ -510,10 +584,11 @@ export default {
           });
           this.formData.groupBuySkuRequest = arr;
           this.formData.productCount = this.productList.length;
+          this.formData.groupNameJson = this.buildNameJson();
           if (this.type == 1) {
             groupBuyUpdate(this.formData)
               .then((res) => {
-                this.$message.success('修改成功');
+                this.$message.success(this.$t('user.modifySuccess'));
                 this.$router.push({ path: '/marketing/group/activity/3' });
               })
               .catch((err) => {
@@ -522,7 +597,7 @@ export default {
           } else {
             groupBuySave(this.formData)
               .then((res) => {
-                this.$message.success('添加成功');
+                this.$message.success(this.$t('user.addSuccess'));
                 this.$router.push({ path: '/marketing/group/activity/3' });
               })
               .catch((err) => {
@@ -530,7 +605,7 @@ export default {
               });
           }
         } else {
-          this.$message.warning('请填写基础设置');
+          this.$message.warning(this.$t('marketing.pleaseFillBasicSettings'));
           return false;
         }
       });
@@ -674,5 +749,15 @@ export default {
 }
 ::v-deep .list-tabs .el-card__body {
   padding-bottom: 60px !important;
+}
+.lang-name-switch {
+  width: 100%;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.lang-name-input {
+  margin-top: 10px;
 }
 </style>

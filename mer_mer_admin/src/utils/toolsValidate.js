@@ -2,6 +2,7 @@
  * 2020.11.29 lyt 整理
  * 工具类集合，适用于平时开发
  */
+import i18n from '@/i18n';
 
 /**
  * 验证百分比（不可以小数）
@@ -153,9 +154,9 @@ export const PhoneReg = /^(1[3456789]\d{9}|(\d{3,4}-)?\d{7,8})$/;
 // 电话校验，表单中可使用
 export const validatePhone = (rule, value, callback) => {
   if (!value) {
-    return callback(new Error('请输入联系电话'));
+    return callback(new Error(i18n.t('common.pleaseEnterPhone')));
   } else if (!PhoneReg.test(value)) {
-    callback(new Error('联系电话格式不正确!'));
+    callback(new Error(i18n.t('common.invalidPhoneFormat')));
   } else {
     callback();
   }

@@ -3,7 +3,7 @@
   <div v-if="configData" class="acea-row row-middle borderPadding">
     <div class="c_label labelwidth">{{ configData.title }}</div>
     <div style="width: auto" class="ml22">
-      <el-switch v-model="configData.val" active-text="是" inactive-text="否" />
+      <el-switch v-model="configData.val" :active-text="translateText('是')" :inactive-text="translateText('否')" />
     </div>
   </div>
 </template>

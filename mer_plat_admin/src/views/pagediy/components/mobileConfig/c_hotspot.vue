@@ -28,10 +28,12 @@
 // +---------------------------------------------------------------------
 import toolCom from '../mobileConfigRight';
 import rightBtn from '../rightBtn';
+import { diyCname, applyDiyUiLabels } from '@/utils/diyCname';
+import hotspotPage from '../mobilePage/home_hotspot.vue';
 export default {
   name: 'c_hotspot',
   componentsName: 'home_hotspot',
-  cname: '热区',
+  ...diyCname('pagediy.hotZone'),
   props: {
     activeIndex: {
       type: null,
@@ -74,8 +76,7 @@ export default {
   },
   watch: {
     num(nVal) {
-      let value = JSON.parse(JSON.stringify(this.$store.state.mobildConfig.defaultArray[nVal]));
-      this.configObj = value;
+      this.loadConfig(nVal);
     },
     configObj: {
       handler(nVal, oVal) {
@@ -143,11 +144,17 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      let value = JSON.parse(JSON.stringify(this.$store.state.mobildConfig.defaultArray[this.num]));
-      this.configObj = value;
+      this.loadConfig(this.num);
     });
   },
-  methods: {},
+  methods: {
+    loadConfig(nVal) {
+      const raw = this.$store.state.mobildConfig.defaultArray[nVal];
+      if (!raw) return;
+      const value = JSON.parse(JSON.stringify(raw));
+      this.configObj = applyDiyUiLabels(value, { data: hotspotPage.data, num: nVal });
+    },
+  },
 };
 </script>
 

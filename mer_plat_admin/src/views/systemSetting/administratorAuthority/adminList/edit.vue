@@ -1,36 +1,36 @@
 <template>
   <div>
     <el-form ref="pram" :model="pram" :rules="rules" label-width="100px" @submit.native.prevent>
-      <el-form-item label="管理员账号：" prop="account">
-        <el-input v-model.trim="pram.account" placeholder="管理员账号" />
+      <el-form-item :label="$t('maintain.adminAccountLabel')" prop="account">
+        <el-input v-model.trim="pram.account" :placeholder="$t('maintain.adminAccount')" />
       </el-form-item>
-      <el-form-item v-if="isCreate === 0" label="管理员密码：" prop="pwd">
-        <el-input v-model.trim="pram.pwd" type="password" placeholder="管理员密码" clearable />
+      <el-form-item v-if="isCreate === 0" :label="$t('systemSetting.adminPasswordLabel')" prop="pwd">
+        <el-input v-model.trim="pram.pwd" type="password" :placeholder="$t('systemSetting.adminPassword')" clearable />
       </el-form-item>
-      <el-form-item v-if="pram.pwd && isCreate === 0" required label="确认密码：" prop="repwd">
-        <el-input v-model.trim="pram.repwd" placeholder="确认密码" clearable />
+      <el-form-item v-if="pram.pwd && isCreate === 0" required :label="$t('systemSetting.confirmPasswordLabel')" prop="repwd">
+        <el-input v-model.trim="pram.repwd" :placeholder="$t('systemSetting.confirmPassword')" clearable />
       </el-form-item>
-      <el-form-item label="管理员姓名：" prop="realName">
-        <el-input v-model.trim="pram.realName" maxlength="16" placeholder="管理员姓名" />
+      <el-form-item :label="$t('maintain.adminNameLabel')" prop="realName">
+        <el-input v-model.trim="pram.realName" maxlength="16" :placeholder="$t('maintain.adminName')" />
       </el-form-item>
-      <el-form-item label="管理员身份：" prop="roles">
-        <el-select v-model="pram.roles" placeholder="身份" clearable multiple style="width: 100%">
-          <el-option v-for="(item, index) in roleList.list" :key="index" :label="item.roleName" :value="item.id" />
+      <el-form-item :label="$t('systemSetting.adminIdentityLabel')" prop="roles">
+        <el-select v-model="pram.roles" :placeholder="$t('systemSetting.identity')" clearable multiple style="width: 100%">
+          <el-option v-for="(item, index) in roleList.list" :key="index" :label="localizedRoleName(item)" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="手机号：" prop="phone">
+      <el-form-item :label="$t('user.phoneLabel')" prop="phone">
         <el-input
           type="text"
           v-model.trim="pram.phone"
           prefix="ios-contact-outline"
-          placeholder="请输入手机号"
+          :placeholder="$t('onePass.pleaseEnterPhone')"
           size="large"
         />
       </el-form-item>
-      <el-form-item label="状态：">
+      <el-form-item :label="$t('user.statusColon')">
         <el-switch
-          active-text="开启"
-          inactive-text="关闭"
+          :active-text="$t('common.open')"
+          :inactive-text="$t('common.close')"
           v-model="pram.status"
           :active-value="true"
           :inactive-value="false"
@@ -39,13 +39,13 @@
       <el-form-item> </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer-inner">
-      <el-button @click="close">取消</el-button>
+      <el-button @click="close">{{ $t('el.messagebox.cancel') }}</el-button>
       <el-button
         type="primary"
         @click="handlerSubmit('pram')"
         v-hasPermi="['platform:admin:save', 'platform:admin:update']"
       >
-        {{ isCreate === 0 ? '确定' : '更新' }}</el-button
+        {{ isCreate === 0 ? $t('el.messagebox.confirm') : $t('systemSetting.update') }}</el-button
       >
     </div>
   </div>
@@ -65,6 +65,7 @@ import * as roleApi from '@/api/role.js';
 import * as systemAdminApi from '@/api/systemadmin.js';
 import { Debounce } from '@/utils/validate';
 import { validatePhone } from '@/utils/toolsValidate';
+import { getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   // name: "edit"
   components: {},
@@ -83,7 +84,7 @@ export default {
   data() {
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入管理员密码'));
+        callback(new Error(this.$t('systemSetting.pleaseEnterAdminPassword')));
       } else {
         if (this.pram.repwd !== '') {
           this.$refs.pram.validateField('repwd');
@@ -93,9 +94,9 @@ export default {
     };
     const confirmvalidatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'));
+        callback(new Error(this.$t('maintain.pleaseReenterPassword')));
       } else if (value !== this.pram.pwd) {
-        callback(new Error('两次输入密码不一致!'));
+        callback(new Error(this.$t('maintain.passwordMismatch')));
       } else {
         callback();
       }
@@ -115,14 +116,14 @@ export default {
       },
       roleList: [],
       rules: {
-        account: [{ required: true, message: '请填写管理员账号', trigger: ['blur', 'change'] }],
+        account: [{ required: true, message: this.$t('maintain.pleaseEnterAdminAccount'), trigger: ['blur', 'change'] }],
         pwd: [
           { required: true, validator: validatePass, trigger: 'blur' },
-          { required: true, min: 6, max: 20, message: '长度6-20个字符' },
+          { required: true, min: 6, max: 20, message: this.$t('maintain.passwordLength6to20') },
         ],
         repwd: [{ required: true, validator: confirmvalidatePass, trigger: 'blur' }],
-        realName: [{ required: true, message: '请填写管理员姓名', trigger: ['blur', 'change'] }],
-        roles: [{ required: true, message: '请选择管理员身份', trigger: ['blur', 'change'] }],
+        realName: [{ required: true, message: this.$t('systemSetting.pleaseEnterAdminName'), trigger: ['blur', 'change'] }],
+        roles: [{ required: true, message: this.$t('systemSetting.pleaseSelectAdminIdentity'), trigger: ['blur', 'change'] }],
         phone: [{ validator: validatePhone, trigger: ['blur', 'change'] }],
       },
     };
@@ -132,6 +133,9 @@ export default {
     this.handleGetRoleList();
   },
   methods: {
+    localizedRoleName(row) {
+      return getLocalizedText(row ? row.roleName : '', row ? row.roleNameJson : '', getUiLocale(this));
+    },
     close() {
       this.$emit('hideEditDialog');
     },
@@ -184,7 +188,7 @@ export default {
     }),
     handlerSave() {
       systemAdminApi.adminAdd(this.pram).then((data) => {
-        this.$message.success('创建管理员成功');
+        this.$message.success(this.$t('systemSetting.createAdminSuccess'));
         this.$emit('hideEditDialog');
       });
     },
@@ -193,7 +197,7 @@ export default {
       systemAdminApi
         .adminUpdate(this.pram)
         .then((data) => {
-          this.$message.success('更新管理员成功');
+          this.$message.success(this.$t('systemSetting.updateAdminSuccess'));
           this.$emit('hideEditDialog');
         })
         .catch(() => {

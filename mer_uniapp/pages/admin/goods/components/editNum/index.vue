@@ -1,19 +1,19 @@
 <template>
 	<base-drawer mode="bottom" :visible="visible" background-color="transparent" mask maskClosable @close="closeDrawer">
 		<view class="edit-price rd-t-40rpx" v-if="goodsInfo.attr_value">
-			<view class="title">增加库存
+			<view class="title">{{$t('增加库存')}}
 			  <view class="close acea-row row-center-wrapper" @tap="closeDrawer">
 				  <text class="iconfont icon-guanbi"></text>
 			  </view>
 			</view>
 			<view class="list">
 				<view class="item acea-row row-between-wrapper">
-					<view>库存</view>
+					<view>{{$t('库存')}}</view>
 					<input type="number" :placeholder="'请填写增加库存数'" placeholder-class="placeholder" v-model="goodsInfo.attr_value.stock" />
 				</view>
 			</view>
-			<view v-if="goodsInfo.spec_type" class="bnt acea-row row-center-wrapper" @tap="defineSpec">确定</view>
-			<view v-else class="bnt acea-row row-center-wrapper" @tap="define">保存</view>
+			<view v-if="goodsInfo.spec_type" class="bnt acea-row row-center-wrapper" @tap="defineSpec">{{$t('确定')}}</view>
+			<view v-else class="bnt acea-row row-center-wrapper" @tap="define">{{$t('保存')}}</view>
 		</view>
 	</base-drawer>
 </template>
@@ -52,7 +52,7 @@ export default {
 				this.$emit('successChange',info);
 			}else{
 				this.$util.Tips({
-					title: '修改类容至少填写一项'
+					title: this.$t('修改类容至少填写一项')
 				});
 			}
 		},

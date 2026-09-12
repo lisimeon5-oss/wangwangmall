@@ -51,9 +51,9 @@ export default {
             _this.OneattrValue[0].image = img[0].sattDir;
           }
           if (multiple && !num) {
-            if (img.length > 10) return this.$message.warning('最多选择10张图片！');
+            if (img.length > 10) return this.$message.warning(this.$t('merchant.maxTenImages'));
             if (img.length + _this.formValidate.sliderImages.length > 10)
-              return this.$message.warning('最多选择10张图片！');
+              return this.$message.warning(this.$t('merchant.maxTenImages'));
             img.map((item) => {
               _this.formValidate.sliderImages.push(item.sattDir);
             });
@@ -262,7 +262,7 @@ export default {
         this.brandList = res.list;
         this.brandList.unshift({
           id: 0,
-          name: '其他',
+          name: this.$t('product.other'),
           isShow: true,
         });
       });

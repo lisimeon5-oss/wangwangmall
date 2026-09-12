@@ -11,14 +11,14 @@
 					<view class="item">
 						<view class="acea-row row-middle">
 							<text class="iconfont icon-phone_"></text>
-							<input type="number" class="texts" placeholder="输入手机号码" v-model="phone" maxlength="11"
+							<input type="number" class="texts" :placeholder="$t('login.phonePlaceholder')" v-model="phone" maxlength="11"
 								required />
 						</view>
 					</view>
 					<view class="item">
 						<view class="acea-row row-middle">
 							<text class="iconfont icon-code_1"></text>
-							<input type="password" class="texts" placeholder="填写登录密码" maxlength="18" v-model="password"
+							<input type="password" class="texts" :placeholder="$t('login.passwordPlaceholder')" maxlength="18" v-model="password"
 								required />
 						</view>
 					</view>
@@ -28,13 +28,13 @@
 				<view class="item">
 					<view class="acea-row row-middle">
 						<text class="iconfont icon-phone_"></text>
-						<input type="number" class="texts" placeholder="输入手机号码" v-model="phone" maxlength="11" />
+						<input type="number" class="texts" :placeholder="$t('login.phonePlaceholder')" v-model="phone" maxlength="11" />
 					</view>
 				</view>
 				<view class="item">
 					<view class="acea-row row-middle">
 						<text class="iconfont icon-code_1"></text>
-						<input type="number" placeholder="填写验证码" class="codeIput" v-model="captcha" maxlength="6" />
+						<input type="number" :placeholder="$t('login.codePlaceholder')" class="codeIput" v-model="captcha" maxlength="6" />
 						<button class="code main_color" :disabled="disabled" :class="disabled === true ? 'on' : ''"
 							@click="code">
 							{{ text }}
@@ -44,7 +44,7 @@
 				<view class="item" v-if="isShowCode">
 					<view class="acea-row row-middle">
 						<text class="iconfont icon-code_1"></text>
-						<input type="number" placeholder="填写验证码" class="codeIput" v-model="codeVal" maxlength="6" />
+						<input type="number" :placeholder="$t('login.codePlaceholder')" class="codeIput" v-model="codeVal" maxlength="6" />
 						<view class="code" @click="again"><img :src="codeUrl" /></view>
 					</view>
 				</view>
@@ -52,23 +52,23 @@
 			<view class="protocol acea-row row-between-wrapper">
 				<checkbox-group class="checkgroup acea-row" @change='isAgree=!isAgree' style="align-items: end;">
 					<checkbox class="checkbox" :checked="isAgree ? true : false" />
-					<text class="protocol_text">我已阅读并同意<text @click="userAgree('userinfo')" class="font_pro">《用户协议》</text>与<text
-							@click="userAgree('userprivacyinfo')" class="font_pro">《隐私协议》</text></text>
+					<text class="protocol_text">{{$t('login.agreePrefix')}}<text @click="userAgree('userinfo')" class="font_pro">{{$t('login.userAgreement')}}</text>{{$t('login.and')}}<text
+							@click="userAgree('userprivacyinfo')" class="font_pro">{{$t('login.privacy')}}</text></text>
 				</checkbox-group>
 			</view>
-			<view class="logon bg_color" @click="loginMobile" v-if="current !== 0">登录</view>
-			<view class="logon bg_color" @click="submit" v-if="current === 0">登录</view>
+			<view class="logon bg_color" @click="loginMobile" v-if="current !== 0">{{$t('login.submit')}}</view>
+			<view class="logon bg_color" @click="submit" v-if="current === 0">{{$t('login.submit')}}</view>
 			<!-- #ifndef APP-PLUS -->
 			<view class="tips">
-				<view v-if="current==0" @click="current = 1">快速登录</view>
-				<view v-if="current==1" @click="current = 0">账号登录</view>
+				<view v-if="current==0" @click="current = 1">{{$t('login.quick')}}</view>
+				<view v-if="current==1" @click="current = 0">{{$t('login.account')}}</view>
 			</view>
 			<!-- #endif -->
 			<!-- #ifdef APP-PLUS -->
 			<view class="appLogin" v-if="!appLoginStatus && !appleLoginStatus">
 				<view class="hds">
 					<span class="line"></span>
-					<p>其他方式登录</p>
+					<p>{{$t('login.other')}}</p>
 					<span class="line"></span>
 				</view>
 				<view class="btn-wrapper">
@@ -90,7 +90,7 @@
 		</view>
 		<view class="bottom"></view>
 
-		<Verify @success="handlerOnVerSuccess" :captchaType="'clickWord'" :imgSize="{ width: '330px', height: '155px' }"
+		<Verify @success="handlerOnVerSuccess" :captchaType="'blockPuzzle'" :imgSize="{ width: '330px', height: '155px' }"
 			ref="verify"></Verify>
 	</view>
 </template>
@@ -201,10 +201,10 @@
 				this.phone = ''
 				this.captcha = ''
 				if (!this.isAgree) return this.$util.Tips({
-					title: '请勾选用户隐私协议'
+					title: this.$t('请勾选用户隐私协议')
 				});
 				uni.showLoading({
-					title: '登录中'
+					title: this.$t('登录中')
 				})
 				uni.login({
 					provider: 'apple',
@@ -220,7 +220,7 @@
 							fail() {
 								uni.hideLoading();
 								uni.showToast({
-									title: '获取用户信息失败',
+									title: this.$t('获取用户信息失败'),
 									icon: 'none',
 									duration: 2000
 								})
@@ -255,7 +255,7 @@
 				}).catch(error => {
 					uni.hideLoading();
 					uni.showModal({
-						title: '提示',
+						title: this.$t('提示'),
 						content: `错误信息${error}`,
 						success: function(res) {
 							if (res.confirm) {
@@ -273,10 +273,10 @@
 				this.captcha = ''
 				let self = this
 				if (!this.isAgree) return this.$util.Tips({
-					title: '请勾选用户隐私协议'
+					title: this.$t('请勾选用户隐私协议')
 				});
 				uni.showLoading({
-					title: '登录中'
+					title: this.$t('登录中')
 				})
 				uni.login({
 					provider: 'weixin',
@@ -291,7 +291,7 @@
 					fail() {
 						uni.hideLoading()
 						uni.showToast({
-							title: '登录失败',
+							title: this.$t('登录失败'),
 							icon: 'none',
 							duration: 2000
 						})
@@ -346,19 +346,19 @@
 			loginMobile: Debounce(function() {
 				let that = this;
 				if (!that.phone) return that.$util.Tips({
-					title: '请填写手机号码'
+					title: this.$t('请填写手机号码')
 				});
 				if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(that.phone)) return that.$util.Tips({
-					title: '请输入正确的手机号码'
+					title: this.$t('请输入正确的手机号码')
 				});
 				if (!that.captcha) return that.$util.Tips({
-					title: '请填写验证码'
+					title: this.$t('请填写验证码')
 				});
 				if (!/^[\w\d]+$/i.test(that.captcha)) return that.$util.Tips({
-					title: '请输入正确的验证码'
+					title: this.$t('请输入正确的验证码')
 				});
 				if (!that.isAgree) return that.$util.Tips({
-					title: '请勾选用户隐私协议'
+					title: this.$t('请勾选用户隐私协议')
 				});
 				loginMobile({
 						phone: that.phone,
@@ -387,25 +387,25 @@
 			async register() {
 				let that = this;
 				if (!that.phone) return that.$util.Tips({
-					title: '请填写手机号码'
+					title: this.$t('请填写手机号码')
 				});
 				if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(that.phone)) return that.$util.Tips({
-					title: '请输入正确的手机号码'
+					title: this.$t('请输入正确的手机号码')
 				});
 				if (!this.isAgree) return this.$util.Tips({
-					title: '请勾选用户隐私协议'
+					title: this.$t('请勾选用户隐私协议')
 				});
 				if (!that.captcha) return that.$util.Tips({
-					title: '请填写验证码'
+					title: this.$t('请填写验证码')
 				});
 				if (!/^[\w\d]+$/i.test(that.captcha)) return that.$util.Tips({
-					title: '请输入正确的验证码'
+					title: this.$t('请输入正确的验证码')
 				});
 				if (!that.password) return that.$util.Tips({
-					title: '请填写密码'
+					title: this.$t('请填写密码')
 				});
 				if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/i.test(that.password)) return that.$util.Tips({
-					title: '您输入的密码过于简单'
+					title: this.$t('您输入的密码过于简单')
 				});
 				register({
 						phone: that.phone,
@@ -434,13 +434,13 @@
 			codeSend() {
 				let that = this;
 				if (!that.phone) return that.$util.Tips({
-					title: '请填写手机号码'
+					title: this.$t('请填写手机号码')
 				});
 				if (!this.isAgree) return this.$util.Tips({
-					title: '请勾选用户隐私协议'
+					title: this.$t('请勾选用户隐私协议')
 				});
 				if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(that.phone)) return that.$util.Tips({
-					title: '请输入正确的手机号码'
+					title: this.$t('请输入正确的手机号码')
 				});
 				registerVerify(that.phone)
 					.then(res => {
@@ -458,13 +458,13 @@
 			code: Debounce(function() {
 				let that = this;
 				if (!that.phone) return that.$util.Tips({
-					title: '请填写手机号码'
+					title: this.$t('请填写手机号码')
 				});
 				if (!this.isAgree) return this.$util.Tips({
-					title: '请勾选用户隐私协议'
+					title: this.$t('请勾选用户隐私协议')
 				});
 				if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(that.phone)) return that.$util.Tips({
-					title: '请输入正确的手机号码'
+					title: this.$t('请输入正确的手机号码')
 				});
 				that.$refs.verify.show();
 			}),
@@ -474,19 +474,19 @@
 			submit: Debounce(function() {
 				let that = this;
 				if (!that.phone) return that.$util.Tips({
-					title: '请填写账号'
+					title: this.$t('请填写账号')
 				});
 				if (!/^[\w\d]{5,16}$/i.test(that.phone)) return that.$util.Tips({
-					title: '请输入正确的账号'
+					title: this.$t('请输入正确的账号')
 				});
 				if (!that.password) return that.$util.Tips({
-					title: '请填写密码'
+					title: this.$t('请填写密码')
 				});
 				if (!that.isAgree) return that.$util.Tips({
-					title: '请勾选用户隐私协议'
+					title: this.$t('请勾选用户隐私协议')
 				});
 				uni.showLoading({
-					title: '正在登录中'
+					title: this.$t('正在登录中')
 				});
 				loginH5({
 						phone: that.phone,

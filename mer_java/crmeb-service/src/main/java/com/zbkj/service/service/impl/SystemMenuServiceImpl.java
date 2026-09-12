@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,6 +20,7 @@ import com.zbkj.common.request.SystemMenuSearchRequest;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.SystemConfigResultCode;
 import com.zbkj.common.utils.RedisUtil;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.common.vo.MenuCheckTree;
 import com.zbkj.common.vo.MenuCheckVo;
 import com.zbkj.service.dao.SystemMenuDao;
@@ -29,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -120,11 +124,7 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuDao, SystemMenu
     @Override
     public List<MenuCheckVo> getMenuCacheList() {
         List<SystemMenu> menuList = getCacheList(RoleEnum.MERCHANT_ADMIN.getValue());
-        List<MenuCheckVo> voList = menuList.stream().map(e -> {
-            MenuCheckVo menuCheckVo = new MenuCheckVo();
-            BeanUtils.copyProperties(e, menuCheckVo);
-            return menuCheckVo;
-        }).collect(Collectors.toList());
+        List<MenuCheckVo> voList = menuList.stream().map(this::toMenuCheckVo).collect(Collectors.toList());
         MenuCheckTree menuTree = new MenuCheckTree(voList);
         return menuTree.buildTree();
     }
@@ -314,11 +314,7 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuDao, SystemMenu
     @Override
     public List<MenuCheckVo> getPlatformMenuCacheTree() {
         List<SystemMenu> menuList = getCacheList(RoleEnum.PLATFORM_ADMIN.getValue());
-        List<MenuCheckVo> voList = menuList.stream().map(e -> {
-            MenuCheckVo menuCheckVo = new MenuCheckVo();
-            BeanUtils.copyProperties(e, menuCheckVo);
-            return menuCheckVo;
-        }).collect(Collectors.toList());
+        List<MenuCheckVo> voList = menuList.stream().map(this::toMenuCheckVo).collect(Collectors.toList());
         MenuCheckTree menuTree = new MenuCheckTree(voList);
         return menuTree.buildTree();
     }
@@ -371,6 +367,10 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuDao, SystemMenu
         }
         SystemMenu systemMenu = new SystemMenu();
         BeanUtils.copyProperties(request, systemMenu);
+        // 未传多语言名称字段(null)时保留原值；显式传空字符串则清空多语言名称
+        if (ObjectUtil.isNull(request.getNameJson())) {
+            systemMenu.setNameJson(oldMenu.getNameJson());
+        }
         boolean update = updateById(systemMenu);
         if (update) {
             if (type.equals(RoleEnum.PLATFORM_ADMIN.getValue())) {
@@ -503,7 +503,7 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuDao, SystemMenu
         LambdaQueryWrapper<SystemMenu> lqw = Wrappers.lambdaQuery();
         if (StrUtil.isNotBlank(request.getName())) {
             String decode = URLUtil.decode(request.getName());
-            lqw.like(SystemMenu::getName, decode);
+            lqw.and(i -> i.like(SystemMenu::getName, decode).or().like(SystemMenu::getNameJson, decode));
         }
         if (StrUtil.isNotBlank(request.getMenuType())) {
             lqw.eq(SystemMenu::getMenuType, request.getMenuType());
@@ -531,6 +531,43 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuDao, SystemMenu
         List<SystemMenu> systemMenuList = dao.selectList(lqw);
         redisUtil.set(redisKey, systemMenuList);
         return systemMenuList;
+    }
+
+    @Override
+    public String resolveDisplayName(SystemMenu menu) {
+        if (ObjectUtil.isNull(menu)) {
+            return "";
+        }
+        String language = getRequestLanguage();
+        if (StrUtil.isBlank(language) || "zh-cn".equals(language) || StrUtil.isBlank(menu.getNameJson())) {
+            return menu.getName();
+        }
+        try {
+            JSONObject jsonObject = JSON.parseObject(menu.getNameJson());
+            String localized = jsonObject.getString(language);
+            if (StrUtil.isNotBlank(localized)) {
+                return localized;
+            }
+        } catch (Exception ignored) {
+            // 解析失败时保留默认名称
+        }
+        return menu.getName();
+    }
+
+    private MenuCheckVo toMenuCheckVo(SystemMenu menu) {
+        MenuCheckVo menuCheckVo = new MenuCheckVo();
+        BeanUtils.copyProperties(menu, menuCheckVo);
+        menuCheckVo.setName(resolveDisplayName(menu));
+        return menuCheckVo;
+    }
+
+    private String getRequestLanguage() {
+        HttpServletRequest request = RequestUtil.getRequest();
+        String language = null;
+        if (request != null) {
+            language = request.getHeader("lang");
+        }
+        return StrUtil.isBlank(language) ? "zh-cn" : language;
     }
 }
 

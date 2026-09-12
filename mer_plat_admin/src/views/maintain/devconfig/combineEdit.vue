@@ -2,16 +2,16 @@
   <div>
     <el-form ref="selfForm" :model="selfForm" label-width="120px">
       <el-form-item
-        label="排序"
+        :label="$t('product.sort')"
         prop="sort"
-        :rules="[{ required: true, message: '排序不能为空', trigger: ['change'] }]"
+        :rules="[{ required: true, message: $t('maintain.sortRequired'), trigger: ['change'] }]"
       >
         <el-input-number v-model.trim="selfForm.sort" :min="1" />
       </el-form-item>
       <el-form-item
-        label="状态"
+        :label="$t('common.status')"
         prop="status"
-        :rules="[{ required: true, message: '正确操作状态', trigger: ['change'] }]"
+        :rules="[{ required: true, message: $t('maintain.correctOperateStatus'), trigger: ['change'] }]"
       >
         <el-switch v-model="selfForm.status" />
       </el-form-item>
@@ -89,14 +89,14 @@ export default {
     handlerSave(formValue) {
       const _pram = this.buildFormPram(formValue);
       systemGroupDataApi.groupDataSave(_pram).then((data) => {
-        this.$message.success('添加数据成功');
+        this.$message.success(this.$t('maintain.addDataSuccess'));
         this.$emit('hideDialog');
       });
     },
     handlerEdit(formValue) {
       const _pram = this.buildFormPram(formValue);
       systemGroupDataApi.groupDataEdit(_pram, this.editData.id).then((data) => {
-        this.$message.success('编辑数据成功');
+        this.$message.success(this.$t('maintain.editDataSuccess'));
         this.$emit('hideDialog');
       });
     },

@@ -9,7 +9,7 @@
 			<view class="icon" @click="home" v-else>
 				<image src="../static/images/home.png"></image>
 			</view>
-			账户登录
+			{{$t('账户登录')}}
 		</view>
 		<!-- #endif -->
 		<view class="wechat_login">
@@ -20,16 +20,16 @@
 			<view class="btn-wrapper">
 				<!-- #ifdef H5 -->
 				<button hover-class="none" @click="wechatLogin" class="bg-green btn1"><text
-						class='iconfont icon-weixin2'></text>立即登录</button>
+						class='iconfont icon-weixin2'></text>{{$t('立即登录')}}</button>
 					<!-- #endif -->
 				<!-- #ifdef MP -->
-				<button v-if="wxLogin" hover-class="none" @click="getUserProfile" class="btn1 bg-color">立即登录</button>
+				<button v-if="wxLogin" hover-class="none" @click="getUserProfile" class="btn1 bg-color">{{$t('立即登录')}}</button>
 				<view v-else>
 					<button v-if="routinePhoneVerification == 1 || routinePhoneVerification.length===3"
 						hover-class="none" @click="onUserPhone" class="btn1 bg-color"><text
-							class='iconfont'></text>手机号一键登录</button>
+							class='iconfont'></text>{{$t('手机号一键登录')}}</button>
 					<button v-if="routinePhoneVerification == 2 || routinePhoneVerification.length===3"
-						hover-class="none" @click="onUserPhone('isPhone')" class="btn2">手动绑定手机号</button>
+						hover-class="none" @click="onUserPhone('isPhone')" class="btn2">{{$t('手动绑定手机号')}}</button>
 				</view>
 				<!-- #endif -->
 			</view>
@@ -183,7 +183,7 @@
 				if (data.isStatus) {
 					this.isPhoneBox = false
 					this.$util.Tips({
-						title: '登录成功',
+						title: this.$t('登录成功'),
 						icon: 'success'
 					}, {
 						tab: 3
@@ -211,7 +211,7 @@
 				if(!this.$Cache.get('wechatQRcode')) Routine.getQrcode()
 				// #endif
 				this.$util.Tips({
-					title: '登录成功',
+					title: this.$t('登录成功'),
 					icon: 'success'
 				}, {
 					tab: 3
@@ -331,7 +331,7 @@
 					}
 					this.isUp = false
 					uni.showToast({
-						title: '登录成功',
+						title: this.$t('登录成功'),
 						icon: 'none'
 					})
 					setTimeout(res => {

@@ -1,16 +1,16 @@
 <template>
 	<view :data-theme="theme">
 		<view class="address-window" :class="display==true?'on':''">
-			<view class='title'>请选择所在地区<text class='iconfont icon-guanbi' @tap='close'></text></view>
+			<view class='title'>{{$t('请选择所在地区')}}<text class='iconfont icon-guanbi' @tap='close'></text></view>
 			<view class="address-count">
 				<view class="address-selected">
 					<view v-for="(item,index) in selectedArr" :key="index" class="selected-list" :class="{active:index === selectedIndex}" @click="change(item, index)">
-						{{item.regionName?item.regionName:'请选择'}}
+						{{item.regionName?item.regionName:$t('请选择')}}
 						<text class="iconfont icon-xiangyou"></text>
 					</view>
 					<view class="selected-list" :class="{active:-1 === selectedIndex}"  v-if="showMore" @click="change(-1, -1)">
 						<text class="iconfont icon-xiangyou"></text>
-						请选择
+						{{$t('请选择')}}
 					</view>
 				</view>
 				<scroll-view scroll-y="true" :scroll-top="scrollTop" class="address-list" @scroll="scroll">

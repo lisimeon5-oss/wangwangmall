@@ -41,6 +41,10 @@ public class CommunityCategory implements Serializable {
     @TableField("`name`")
     private String name;
 
+    @ApiModelProperty("多语言分类名称(JSON)")
+    @TableField("name_json")
+    private String nameJson;
+
     @ApiModelProperty("是否显示：1-显示，0-不显示")
     @TableField("is_show")
     private Integer isShow;

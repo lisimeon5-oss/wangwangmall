@@ -32,6 +32,8 @@ import com.zbkj.common.response.CartPriceResponse;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.ProductResultCode;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
+import com.zbkj.common.utils.ProductSpecI18nUtil;
 import com.zbkj.common.utils.RedisUtil;
 import com.zbkj.service.dao.CartDao;
 import com.zbkj.service.service.*;
@@ -86,6 +88,8 @@ public class CartServiceImpl extends ServiceImpl<CartDao, Cart> implements CartS
     private CouponUserService couponUserService;
     @Autowired
     private ProductCategoryService productCategoryService;
+    @Autowired
+    private ProductAttributeService productAttributeService;
 
     /**
      * 列表
@@ -111,15 +115,17 @@ public class CartServiceImpl extends ServiceImpl<CartDao, Cart> implements CartS
         List<CartMerchantResponse> responseList = CollUtil.newArrayList();
         merIdList.forEach(merId -> {
             CartMerchantResponse merchantResponse = new CartMerchantResponse();
+            Merchant merchant = merchantMap.get(merId);
             merchantResponse.setMerId(merId);
-            merchantResponse.setMerName(merchantMap.get(merId).getName());
-            merchantResponse.setMerIsSelf(merchantMap.get(merId).getIsSelf());
+            merchantResponse.setMerName(I18nJsonUtil.resolveByRequest(merchant.getName(), merchant.getNameJson()));
+            merchantResponse.setMerIsSelf(merchant.getIsSelf());
             List<Cart> merCartList = cartList.stream().filter(e -> e.getMerId().equals(merId)).collect(Collectors.toList());
             List<CartInfoResponse> infoResponseList = merCartList.stream().map(storeCart -> {
                 CartInfoResponse cartInfoResponse = new CartInfoResponse();
                 BeanUtils.copyProperties(storeCart, cartInfoResponse);
                 // 获取商品信息
                 Product product = productService.getCartByProId(storeCart.getProductId());
+                I18nJsonUtil.applyProductDisplay(product);
                 cartInfoResponse.setImage(product.getImage());
                 cartInfoResponse.setProName(product.getName());
                 cartInfoResponse.setDeliveryMethod(product.getDeliveryMethod());
@@ -138,7 +144,8 @@ public class CartServiceImpl extends ServiceImpl<CartDao, Cart> implements CartS
                 if (StrUtil.isNotBlank(attrValue.getImage())) {
                     cartInfoResponse.setImage(attrValue.getImage());
                 }
-                cartInfoResponse.setSku(attrValue.getSku());
+                cartInfoResponse.setSku(ProductSpecI18nUtil.localizeSku(attrValue.getSku(),
+                        productAttributeService.findListWithOptionsByProductId(product.getId())));
                 cartInfoResponse.setPrice(attrValue.getPrice());
                 cartInfoResponse.setAttrId(attrValue.getId());
                 cartInfoResponse.setAttrStatus(attrValue.getStock() > 0);

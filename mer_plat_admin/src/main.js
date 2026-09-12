@@ -20,7 +20,23 @@ import Element from 'element-ui';
 import './theme/element-variables.scss';
 import '@/styles/index.scss'; // global css
 import '@/assets/fonts/font.css'; // font css
-Vue.use(Element, { size: 'small' });
+import i18n from './i18n'; // 多语言
+import { resolveFormActiveLang } from '@/utils/localizedName';
+Vue.mixin({
+  watch: {
+    '$i18n.locale'() {
+      if (!this.langOptions || this.activeLang === undefined) return;
+      this.activeLang = resolveFormActiveLang(this);
+    },
+  },
+});
+Vue.use(Element, {
+  size: 'small',
+  i18n: (key, value) => {
+    const translated = i18n.t(key, value);
+    return translated !== key ? translated : null;
+  },
+});
 // 懒加载
 import VueLazyload from 'vue-lazyload';
 import VueAwesomeSwiper from 'vue-awesome-swiper';
@@ -179,5 +195,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: (h) => h(App),
 });

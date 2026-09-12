@@ -2,29 +2,29 @@
   <el-dialog
     :visible.sync="modals"
     :close-on-click-modal="false"
-    :title="secondType !== OrderSecondTypeEnum.Fictitious ? '订单发送货' : '虚拟商品发货'"
+    :title="secondType !== OrderSecondTypeEnum.Fictitious ? $t('order.shippingDialog') : $t('order.virtualGoodsShipping')"
     class="order_box"
     :before-close="handleClose"
     width="900px"
   >
     <el-form v-if="modals" ref="formItem" :model="formItem" label-width="95px" @submit.native.prevent :rules="rules">
-      <el-form-item v-show="secondType !== OrderSecondTypeEnum.Fictitious" label="配送方式：" prop="deliveryType">
+      <el-form-item v-show="secondType !== OrderSecondTypeEnum.Fictitious" :label="$t('order.deliveryMethod')" prop="deliveryType">
         <el-radio-group v-model="formItem.deliveryType" @change="changeRadio(formItem.deliveryType)" v-removeAriaHidden>
-          <el-radio label="express">快递配送</el-radio>
-          <el-radio label="noNeed">无需发货</el-radio>
-          <el-radio label="merchant">商家送货</el-radio>
+          <el-radio label="express">{{ $t('order.expressDelivery') }}</el-radio>
+          <el-radio label="noNeed">{{ $t('order.noShippingRequired') }}</el-radio>
+          <el-radio label="merchant">{{ $t('order.merchantDeliveryOption') }}</el-radio>
         </el-radio-group>
       </el-form-item>
       <SendFrom :formItem="formItem" :isShowBtn="true"></SendFrom>
-      <el-form-item v-show="secondType !== OrderSecondTypeEnum.Fictitious" label="分单发货：" prop="isSplit">
+      <el-form-item v-show="secondType !== OrderSecondTypeEnum.Fictitious" :label="$t('order.splitShipmentLabel')" prop="isSplit">
         <el-switch
           v-model="formItem.isSplit"
           :active-value="true"
           :inactive-value="false"
-          active-text="开启"
-          inactive-text="关闭"
+          :active-text="$t('common.open')"
+          :inactive-text="$t('common.close')"
         />
-        <p v-show="formItem.isSplit" class="from-tips">可选择表格中的商品单独发货，请谨慎操作！</p>
+        <p v-show="formItem.isSplit" class="from-tips">{{ $t('order.splitShipmentTip') }}</p>
       </el-form-item>
       <template v-if="formItem.isSplit">
         <el-table
@@ -42,7 +42,7 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" :selectable="selectable" :reserve-selection="true" min-width="50" />
-          <el-table-column label="商品信息" width="200">
+          <el-table-column :label="$t('order.productInfo')" width="200">
             <template slot-scope="scope">
               <div class="acea-row" style="align-items: center">
                 <div class="demo-image__preview line-heightOne refundImg">
@@ -52,19 +52,19 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="规格" min-width="120">
+          <el-table-column :label="$t('order.spec')" min-width="120">
             <template slot-scope="scope">
               <span class="priceBox">{{ scope.row.sku }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="总数（件）" min-width="80">
+          <el-table-column :label="$t('order.totalQuantity')" min-width="80">
             <template slot-scope="scope">
               <span class="priceBox">{{ scope.row.payNum }}</span>
-              <div class="priceBox textE93323">已发{{ scope.row.deliveryNum }}</div>
-              <div class="priceBox textE93323">已退款{{ scope.row.refundNum }}</div>
+              <div class="priceBox textE93323">{{ $t('order.shippedCount') }}{{ scope.row.deliveryNum }}</div>
+              <div class="priceBox textE93323">{{ $t('order.refunded') }}{{ scope.row.refundNum }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="发货数量（件）" min-width="120">
+          <el-table-column :label="$t('order.shipmentQuantity')" min-width="120">
             <template slot-scope="scope">
               <el-input-number
                 :disabled="scope.row.deliveryNum === scope.row.payNum"
@@ -85,8 +85,8 @@
       </template>
     </el-form>
     <div slot="footer" class="dialog-btn-top">
-      <el-button @click="cancel('formItem')">取消</el-button>
-      <el-button type="primary" @click="putSend('formItem')">提交</el-button>
+      <el-button @click="cancel('formItem')">{{ $t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="putSend('formItem')">{{ $t('common.submit') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -107,7 +107,7 @@ import { checkPermi } from '@/utils/permission'; // 权限判断函数
 import { Debounce } from '@/utils/validate';
 import SendFrom from './components/sendFrom';
 import { useLogistics } from '@/hooks/use-order';
-import { postRules } from '@/views/order/default';
+import { getPostRules } from '@/views/order/default';
 import { OrderSecondTypeEnum } from '@/enums/productEnums';
 const defaultObj = {
   deliveryType: 'express',
@@ -176,9 +176,14 @@ export default {
       express: [],
       exportTempList: [],
       tempImg: '',
-      rules: postRules,
       multipleSelection: [],
     };
+  },
+  computed: {
+    rules() {
+      this.$i18n.locale;
+      return getPostRules(this);
+    },
   },
   mounted() {
     this.getList();
@@ -240,7 +245,7 @@ export default {
         data = { ...this.formItem };
         delete data.detailList;
       } else {
-        if (!this.formItem.detailList.length) return this.$message.warning('请选择分单发货商品');
+        if (!this.formItem.detailList.length) return this.$message.warning(this.$t('order.selectSplitShipmentProducts'));
         let flag = false;
         this.formItem.detailList.map((item) => {
           if (!item.num) {
@@ -248,38 +253,38 @@ export default {
           }
         });
         if (flag) {
-          this.$message.warning('请填写发货数量');
+          this.$message.warning(this.$t('order.enterShipmentQuantity'));
           return;
         }
         data = this.formItem;
       }
       if (this.formItem.expressRecordType == '2') {
         if (!this.formItem.toAddr) {
-          this.$message.warning('请填写寄件人地址');
+          this.$message.warning(this.$t('order.pleaseEnterSenderAddress'));
           return;
         }
         if (!this.formItem.toTel) {
-          this.$message.warning('请填写寄件人电话');
+          this.$message.warning(this.$t('order.pleaseEnterSenderPhone'));
           return;
         }
         if (!this.formItem.toName) {
-          this.$message.warning('请填写寄件人姓名');
+          this.$message.warning(this.$t('order.pleaseEnterSenderName'));
           return;
         }
         if (!this.formItem.expressTempId) {
-          this.$message.warning('请选择电子面单');
+          this.$message.warning(this.$t('order.pleaseSelectElectronicWaybill'));
           return;
         }
       }
       this.$refs[name].validate((valid) => {
         if (valid) {
           orderSendApi(data).then((async) => {
-            this.$message.success('发货成功');
+            this.$message.success(this.$t('order.shippingSuccess'));
             this.cancel();
             this.$emit('submitFail');
           });
         } else {
-          this.$message.error('请填写信息');
+          this.$message.error(this.$t('order.enterInformation'));
         }
       });
     }),

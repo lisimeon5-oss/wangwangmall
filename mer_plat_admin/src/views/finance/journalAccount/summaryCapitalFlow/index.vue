@@ -9,7 +9,7 @@
     >
       <div class="padding-add">
         <el-form size="small" inline @submit.native.prevent>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('product.timeSelectLabel')">
             <el-date-picker
               v-model="timeVal"
               value-format="yyyy-MM-dd"
@@ -17,13 +17,13 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               class="selWidth"
               @change="onchangeTime"
             />
           </el-form-item>
           <el-form-item>
-            <el-button size="small" type="primary" @click="getList(1)">查询</el-button>
+            <el-button size="small" type="primary" @click="getList(1)">{{ $t('common.query') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -31,19 +31,19 @@
     <el-card class="box-card mt14" shadow="never" :bordered="false">
       <el-table v-loading="listLoading" :data="tableData.data" style="width: 100%" size="small">
         <el-table-column prop="id" label="ID" min-width="60" />
-        <el-table-column prop="incomeExpenditure" label="当日收支（元）" min-width="100"></el-table-column>
-        <el-table-column prop="incomeAmount" label="平台收入金额（元）" min-width="100"></el-table-column>
-        <el-table-column prop="payoutAmount" label="平台支出金额（元）" min-width="100"></el-table-column>
-        <el-table-column prop="rechargeAmount" label="会员充值金额（元）" min-width="100"></el-table-column>
-        <el-table-column prop="dataDate" label="日期" min-width="100" :show-overflow-tooltip="true" />
+        <el-table-column prop="incomeExpenditure" :label="$t('finance.dailyIncomeExpenseYuan')" min-width="100"></el-table-column>
+        <el-table-column prop="incomeAmount" :label="$t('finance.platformIncomeAmountYuan')" min-width="100"></el-table-column>
+        <el-table-column prop="payoutAmount" :label="$t('finance.platformExpenseAmountYuan')" min-width="100"></el-table-column>
+        <el-table-column prop="rechargeAmount" :label="$t('finance.memberRechargeAmountYuan')" min-width="100"></el-table-column>
+        <el-table-column prop="dataDate" :label="$t('finance.dateCol')" min-width="100" :show-overflow-tooltip="true" />
         <el-table-column
-          label="操作"
+          :label="$t('common.operate')"
           width="70"
           fixed="right"
           v-hasPermi="['platform:finance:summary:financial:statements']"
         >
           <template slot-scope="scope">
-            <a @click="onDetails(scope.row)">详情</a>
+            <a @click="onDetails(scope.row)">{{ $t('common.detail') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -60,7 +60,7 @@
         />
       </div>
     </el-card>
-    <el-dialog title="财务流水汇总" :visible.sync="dialogVisible" width="1000px" :before-close="handleClose" center>
+    <el-dialog :title="$t('finance.financialFlowSummary')" :visible.sync="dialogVisible" width="1000px" :before-close="handleClose" center>
       <el-row align="middle" class="ivu-mt mt20">
         <el-col :span="3">
           <el-menu default-active="0" class="el-menu-vertical-demo">
@@ -72,8 +72,8 @@
         <el-col :span="21">
           <el-col :span="10">
             <div class="grid-content">
-              <span class="card_title">平台收入金额</span>
-              <span class="card_title_price">￥{{ accountDetails.incomeAmount }}</span>
+              <span class="card_title">{{ $t('finance.platformIncomeAmount') }}</span>
+              <span class="card_title_price">฿{{ accountDetails.incomeAmount }}</span>
               <div class="list">
                 <el-card
                   class="mb10"
@@ -82,33 +82,33 @@
                   :bordered="false"
                 >
                   <el-row class="item mb20">
-                    <el-col :span="13" class="name">会员充值</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.memberRecharge') }}</el-col>
                     <el-col :span="11" class="cost mb10">
-                      <span class="cost_price">￥{{ accountDetails.rechargeAmount }}</span>
+                      <span class="cost_price">฿{{ accountDetails.rechargeAmount }}</span>
                     </el-col>
                     <el-col :span="13" class="name">&nbsp;&nbsp;&nbsp;</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_num">{{ accountDetails.rechargeNum }}笔</span>
+                      <span class="cost_num">{{ accountDetails.rechargeNum }}{{ $t('finance.unitCount') }}</span>
                     </el-col>
                   </el-row>
                   <el-row class="item mb20">
-                    <el-col :span="13" class="name">微信支付</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.wechatPay') }}</el-col>
                     <el-col :span="11" class="cost mb10">
-                      <span class="cost_price">￥{{ accountDetails.wechatPayAmount }}</span>
+                      <span class="cost_price">฿{{ accountDetails.wechatPayAmount }}</span>
                     </el-col>
                     <el-col :span="13" class="name">&nbsp;&nbsp;&nbsp;</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_num">{{ accountDetails.wechatPayNum }}笔</span>
+                      <span class="cost_num">{{ accountDetails.wechatPayNum }}{{ $t('finance.unitCount') }}</span>
                     </el-col>
                   </el-row>
                   <el-row class="item">
-                    <el-col :span="13" class="name">支付宝支付</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.alipayPay') }}</el-col>
                     <el-col :span="11" class="cost mb10">
-                      <span class="cost_price">￥{{ accountDetails.aliPayAmount }}</span>
+                      <span class="cost_price">฿{{ accountDetails.aliPayAmount }}</span>
                     </el-col>
                     <el-col :span="13" class="name">&nbsp;&nbsp;&nbsp;</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_num">{{ accountDetails.aliPayNum }}笔</span>
+                      <span class="cost_num">{{ accountDetails.aliPayNum }}{{ $t('finance.unitCount') }}</span>
                     </el-col>
                   </el-row>
                 </el-card>
@@ -118,38 +118,38 @@
           </el-col>
           <el-col :span="10">
             <div class="grid-content">
-              <span class="card_title">平台支出金额</span>
-              <span class="card_title_price">￥{{ accountDetails.payoutAmount }}</span>
+              <span class="card_title">{{ $t('finance.platformExpenseAmount') }}</span>
+              <span class="card_title_price">฿{{ accountDetails.payoutAmount }}</span>
               <div class="list">
                 <el-card body-style="background-color: #F9F9F9;padding: 20px 15px;" shadow="never" :bordered="false">
                   <el-row class="item mb20">
-                    <el-col :span="13" class="name">商户分账结算</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.merchantShareSettlement') }}</el-col>
                     <el-col :span="11" class="cost mb10">
-                      <span class="cost_price">￥{{ accountDetails.merchantSplitSettlement }}</span>
+                      <span class="cost_price">฿{{ accountDetails.merchantSplitSettlement }}</span>
                     </el-col>
                     <el-col :span="13" class="name">&nbsp;&nbsp;&nbsp;</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_num">{{ accountDetails.merchantSplitSettlementNum }}笔</span>
+                      <span class="cost_num">{{ accountDetails.merchantSplitSettlementNum }}{{ $t('finance.unitCount') }}</span>
                     </el-col>
                   </el-row>
                   <el-row class="item mb20">
-                    <el-col :span="13" class="name">佣金提现结算</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.commissionWithdrawSettlement') }}</el-col>
                     <el-col :span="11" class="cost mb10">
-                      <span class="cost_price">￥{{ accountDetails.brokerageSettlement }}</span>
+                      <span class="cost_price">฿{{ accountDetails.brokerageSettlement }}</span>
                     </el-col>
                     <el-col :span="13" class="name">&nbsp;&nbsp;&nbsp;</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_num">{{ accountDetails.brokerageSettlementNum }}笔</span>
+                      <span class="cost_num">{{ accountDetails.brokerageSettlementNum }}{{ $t('finance.unitCount') }}</span>
                     </el-col>
                   </el-row>
                   <el-row class="item">
-                    <el-col :span="13" class="name">订单退款</el-col>
+                    <el-col :span="13" class="name">{{ $t('finance.orderRefund') }}</el-col>
                     <el-col :span="11" class="cost mb10">
-                      <span class="cost_price">￥{{ accountDetails.orderRefundAmount }}</span>
+                      <span class="cost_price">฿{{ accountDetails.orderRefundAmount }}</span>
                     </el-col>
                     <el-col :span="13" class="name">&nbsp;&nbsp;&nbsp;</el-col>
                     <el-col :span="11" class="cost">
-                      <span class="cost_num">{{ accountDetails.orderRefundNum }}笔</span>
+                      <span class="cost_num">{{ accountDetails.orderRefundNum }}{{ $t('finance.unitCount') }}</span>
                     </el-col>
                   </el-row>
                 </el-card>
@@ -159,14 +159,14 @@
           </el-col>
           <el-col :span="4">
             <div class="grid-content center">
-              <div class="card_title mb20">当日收支</div>
-              <div class="color_gray">￥{{ accountDetails.incomeExpenditure }}</div>
+              <div class="card_title mb20">{{ $t('finance.dailyIncomeExpense') }}</div>
+              <div class="color_gray">฿{{ accountDetails.incomeExpenditure }}</div>
             </div>
           </el-col>
         </el-col>
       </el-row>
       <span slot="footer">
-        <el-button type="primary" size="small" @click="dialogVisible = false">我知道了</el-button>
+        <el-button type="primary" size="small" @click="dialogVisible = false">{{ $t('finance.iKnow') }}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -264,7 +264,7 @@ export default {
     handleDelete(id, idx) {
       this.$modalSure().then(() => {
         storeApi.brandDeleteApi(id).then((res) => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           this.$store.commit('merchant/SET_MerchantClassify', []);
           handleDeleteTable(this.tableData.data.length, this.tableFrom);
           this.getList();
@@ -273,7 +273,7 @@ export default {
     },
     onchangeIsShow(row) {
       activityApi.activitySwitchApi(row.id).then((res) => {
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('product.operateSuccess'));
         this.getList();
       });
     },

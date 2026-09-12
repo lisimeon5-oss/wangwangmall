@@ -21,4 +21,9 @@ public interface ProductAttributeService extends IService<ProductAttribute> {
      * 获取商品的规格列表
      */
     List<ProductAttribute> findListByProductId(Integer proId);
+
+    /**
+     * 规格 + 规格值（含 optionNameJson），供后台按语言展示 SKU
+     */
+    List<ProductAttribute> findListWithOptionsByProductId(Integer proId);
 }

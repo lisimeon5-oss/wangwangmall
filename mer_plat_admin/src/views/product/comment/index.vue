@@ -9,7 +9,7 @@
     >
       <div class="padding-add">
         <el-form :inline="true" label-position="right" @submit.native.prevent>
-          <el-form-item label="时间选择：">
+          <el-form-item :label="$t('product.timeSelectLabel')">
             <el-date-picker
               @change="onchangeTime"
               v-model="timeVal"
@@ -18,42 +18,42 @@
               size="small"
               type="daterange"
               placement="bottom-end"
-              placeholder="自定义时间"
+              :placeholder="$t('product.customTime')"
               style="width: 260px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="评价状态：">
+          <el-form-item :label="$t('product.replyStatusLabel')">
             <el-select
               v-model="tableFrom.isReply"
-              placeholder="请选择评价状态"
+              :placeholder="$t('product.pleaseSelectReplyStatus')"
               @change="handleSeachList"
               size="small"
               class="selWidth"
               clearable
             >
-              <el-option label="已回复" value="1"></el-option>
-              <el-option label="未回复" value="0"></el-option>
+              <el-option :label="$t('product.replied')" value="1"></el-option>
+              <el-option :label="$t('product.notReplied')" value="0"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="商品搜索：">
+          <el-form-item :label="$t('product.productSearchLabel')">
             <el-input
               v-model.trim="productSearch"
-              placeholder="请输入商品名称"
+              :placeholder="$t('product.pleaseEnterProductName')"
               class="selWidth"
               size="small"
               clearable
               @keyup.enter.native="handleSeachList"
             />
           </el-form-item>
-          <el-form-item label="用户搜索：" label-for="nickname">
+          <el-form-item :label="$t('product.userSearchLabel')" label-for="nickname">
             <UserSearchInput v-model="tableFrom" />
           </el-form-item>
-          <el-form-item label="商户名称：" v-hasPermi="['platform:merchant:page:list']">
+          <el-form-item :label="$t('product.merchantNameLabel')" v-hasPermi="['platform:merchant:page:list']">
             <merchant-name @getMerId="getMerId" :merIdChecked="tableFrom.merId"></merchant-name>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="handleSeachList" size="small">查询</el-button>
-            <el-button @click="reset" size="small">重置</el-button>
+            <el-button type="primary" @click="handleSeachList" size="small">{{ $t('product.query') }}</el-button>
+            <el-button @click="reset" size="small">{{ $t('product.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -61,7 +61,7 @@
     <el-card class="box-card mt16" shadow="never" :bordered="false">
       <el-table :data="tableData.data" size="small">
         <el-table-column prop="id" label="ID" width="50" />
-        <el-table-column label="商品信息" prop="productImage" min-width="300" :show-overflow-tooltip="true">
+        <el-table-column :label="$t('product.productInfo')" prop="productImage" min-width="300" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <div class="demo-image__preview acea-row row-middle line-heightOne" v-if="scope.row.productName">
               <el-image :src="scope.row.productImage" :preview-src-list="[scope.row.productImage]" class="mr10" />
@@ -69,25 +69,25 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="merName" label="商户名称" min-width="130" :show-overflow-tooltip="true" />
-        <el-table-column label="用户昵称" min-width="130" :show-overflow-tooltip="true">
+        <el-table-column prop="merName" :label="$t('product.merchantName')" min-width="130" :show-overflow-tooltip="true" />
+        <el-table-column :label="$t('product.userNickname')" min-width="130" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span :class="scope.row.isLogoff == true ? 'red' : ''">{{ scope.row.nickname }}</span>
             <span :class="scope.row.isLogoff == true ? 'red' : ''" v-if="scope.row.isLogoff == true">|</span>
-            <span v-if="scope.row.isLogoff == true" class="red">(已注销)</span>
+            <span v-if="scope.row.isLogoff == true" class="red">({{ $t('product.loggedOff') }})</span>
           </template>
         </el-table-column>
-        <el-table-column prop="star" label="评价星级" min-width="90" />
-        <el-table-column prop="comment" label="评价内容" min-width="210" :show-overflow-tooltip="true" />
-        <el-table-column prop="merchantReplyContent" label="回复内容" min-width="250" :show-overflow-tooltip="true" />
-        <el-table-column label="评价时间" min-width="150">
+        <el-table-column prop="star" :label="$t('product.starRating')" min-width="90" />
+        <el-table-column prop="comment" :label="$t('product.commentContent')" min-width="210" :show-overflow-tooltip="true" />
+        <el-table-column prop="merchantReplyContent" :label="$t('product.replyContent')" min-width="250" :show-overflow-tooltip="true" />
+        <el-table-column :label="$t('product.commentTime')" min-width="150">
           <template slot-scope="scope">
             <span> {{ scope.row.createTime || '-' }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="70" fixed="right">
+        <el-table-column :label="$t('product.operate')" width="70" fixed="right">
           <template slot-scope="scope">
-            <a @click="handleDelete(scope.row.id, scope.$index)" v-hasPermi="['platform:product:reply:delete']">删除</a>
+            <a @click="handleDelete(scope.row.id, scope.$index)" v-hasPermi="['platform:product:reply:delete']">{{ $t('product.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -227,7 +227,7 @@ export default {
     handleDelete(id, idx) {
       this.$modalSure().then(() => {
         replyDeleteApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableFrom);
           this.getList();
         });

@@ -20,6 +20,7 @@ import com.zbkj.common.request.PageParamRequest;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.SystemConfigResultCode;
 import com.zbkj.common.utils.CrmebUtil;
+import com.zbkj.common.utils.I18nJsonUtil;
 import com.zbkj.common.utils.SecurityUtil;
 import com.zbkj.common.vo.CategoryTreeVo;
 import com.zbkj.service.dao.CategoryDao;
@@ -85,7 +86,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, Category> impl
         }
         if (StrUtil.isNotBlank(request.getName())) {
             String decode = URLUtil.decode(request.getName());
-            lqw.like(Category::getName, decode);
+            lqw.and(w -> w.like(Category::getName, decode).or().like(Category::getNameJson, decode));
         }
         lqw.eq(Category::getOwner, systemRoleService.getOwnerByCurrentAdmin());
         lqw.orderByDesc(Category::getSort).orderByDesc(Category::getId);
@@ -130,7 +131,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, Category> impl
         if (!oldCategory.getOwner().equals(ownerId)) {
             throw new CrmebException(SystemConfigResultCode.CATEGORY_NOT_EXIST);
         }
-        if (!oldCategory.getName().equals(request.getName())) {
+        I18nJsonUtil.fillNameAndJson(request::setName, request::setNameJson, request.getName(), request.getNameJson());
+        if (!I18nJsonUtil.hasAnyText(request.getNameJson())) {
+            throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "多语言分类名称不能为空");
+        }
+        if (StrUtil.isNotBlank(request.getName()) && !StrUtil.equals(oldCategory.getName(), request.getName())) {
             if (checkName(request.getName(), request.getType(), ownerId, oldCategory.getId())) {
                 throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "分类名称重复");
             }
@@ -239,7 +244,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, Category> impl
             lqw.eq(Category::getStatus, status);
         }
         if (StrUtil.isNotBlank(name)) { // 根据名称模糊搜索
-            lqw.like(Category::getName, name);
+            lqw.and(w -> w.like(Category::getName, name).or().like(Category::getNameJson, name));
         }
         lqw.eq(Category::getOwner, systemRoleService.getOwnerByCurrentAdmin());
         lqw.orderByDesc(Category::getSort);
@@ -309,13 +314,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, Category> impl
         return dao.deleteById(id);
     }
 
-    /**
-     * 检测分类名称是否存在
-     *
-     * @param name String 分类名
-     * @param type int 类型
-     * @return int
-     */
     private Boolean checkName(String name, Integer type, Integer owner, Integer id) {
         LambdaQueryWrapper<Category> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Category::getName, name);
@@ -349,8 +347,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, Category> impl
     @Override
     public Boolean create(CategoryRequest categoryRequest) {
         Integer ownerId = systemRoleService.getOwnerByCurrentAdmin();
+        I18nJsonUtil.fillNameAndJson(categoryRequest::setName, categoryRequest::setNameJson,
+                categoryRequest.getName(), categoryRequest.getNameJson());
+        if (!I18nJsonUtil.hasAnyText(categoryRequest.getNameJson())) {
+            throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "多语言分类名称不能为空");
+        }
         //检测标题是否存在
-        if (checkName(categoryRequest.getName(), categoryRequest.getType(), ownerId, 0)) {
+        if (StrUtil.isNotBlank(categoryRequest.getName())
+                && checkName(categoryRequest.getName(), categoryRequest.getType(), ownerId, 0)) {
             throw new CrmebException(CommonResultCode.VALIDATE_FAILED, "此分类已存在");
         }
         Category category = new Category();

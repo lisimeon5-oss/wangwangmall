@@ -3,9 +3,9 @@
     <el-card class="box-card" shadow="never" :bordered="false">
       <div v-if="!isDisabled" slot="header" class="clearfix">
         <el-steps :active="currentTab" align-center finish-status="success">
-          <el-step title="选择视频号商品" />
-          <el-step title="填写基础信息" />
-          <el-step title="修改商品详情" />
+          <el-step :title="$t('videoChannel.selectVideoChannelProduct')" />
+          <el-step :title="$t('videoChannel.fillBasicInfo')" />
+          <el-step :title="$t('videoChannel.modifyProductDetail')" />
         </el-steps>
       </div>
       <el-form
@@ -19,7 +19,7 @@
       >
         <!-- 视频号商品-->
         <div v-show="currentTab === 0">
-          <el-form-item label="选择商品：" prop="image">
+          <el-form-item :label="$t('systemSetting.selectProductLabel')" prop="image">
             <div class="upLoadPicBox" @click="changeGood" v-hasPermi="['merchant:pay:component:product:draft:update']">
               <div v-if="formValidate.image" class="pictrue"><img :src="formValidate.image" /></div>
               <div v-else class="upLoad">
@@ -32,7 +32,7 @@
         <div v-show="currentTab === 1">
           <el-row :gutter="24">
             <el-col :span="24">
-              <el-form-item label="商品轮播图：" prop="images">
+              <el-form-item :label="$t('videoChannel.productCarouselLabel')" prop="images">
                 <div class="acea-row">
                   <template v-if="!isDisabled">
                     <div
@@ -67,36 +67,41 @@
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="商品标题：" prop="title">
+              <el-form-item :label="$t('videoChannel.productTitleLabel')" prop="title">
                 <el-input
                   :disabled="isDisabled"
                   v-model="formValidate.title"
                   maxlength="249"
-                  placeholder="请输入商品名称"
+                  :placeholder="$t('product.pleaseEnterProductName')"
                 />
               </el-form-item>
             </el-col>
             <el-col v-bind="grid2">
-              <el-form-item label="单位：" prop="unitName">
+              <el-form-item :label="$t('videoChannel.unitLabel')" prop="unitName">
                 <el-input
                   :disabled="isDisabled"
                   v-model="formValidate.unitName"
-                  placeholder="请输入单位"
+                  :placeholder="$t('videoChannel.pleaseEnterUnit')"
                   class="selWidth"
                 />
               </el-form-item>
             </el-col>
             <el-col v-bind="grid2">
-              <el-form-item label="运费模板：" prop="tempId">
+              <el-form-item :label="$t('videoChannel.freightTemplateLabel')" prop="tempId">
                 <div class="acea-row">
-                  <el-select :disabled="isDisabled" v-model="formValidate.tempId" placeholder="请选择" class="selWidth">
-                    <el-option v-for="item in shippingList" :key="item.id" :label="item.name" :value="item.id" />
+                  <el-select :disabled="isDisabled" v-model="formValidate.tempId" :placeholder="$t('common.pleaseSelect')" class="selWidth">
+                    <el-option
+                      v-for="item in shippingList"
+                      :key="item.id"
+                      :label="getLocalizedName(item, getUiLocale()) || item.name"
+                      :value="item.id"
+                    />
                   </el-select>
                 </div>
               </el-form-item>
             </el-col>
             <el-col v-bind="grid2">
-              <el-form-item label="微信商品类目：" prop="thirdCatIdList">
+              <el-form-item :label="$t('videoChannel.wechatProductCategoryLabel')" prop="thirdCatIdList">
                 <div class="selWidth thirdCatIdList" @click="handleChanges"></div>
                 <el-cascader
                   :disabled="isDisabled"
@@ -110,12 +115,12 @@
               </el-form-item>
             </el-col>
             <el-col v-bind="grid2">
-              <el-form-item label="商品品牌：">
+              <el-form-item :label="$t('videoChannel.productBrandLabel')">
                 <el-select
                   class="selWidth"
                   :disabled="isDisabled"
                   v-model="formValidate.brandId"
-                  placeholder="请选择"
+                  :placeholder="$t('common.pleaseSelect')"
                   clearable
                 >
                   <el-option v-for="item in brandIdList" :key="item.value" :label="item.label" :value="item.value">
@@ -124,7 +129,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="24" v-if="productQualificationType > 0">
-              <el-form-item label="商品资质图：">
+              <el-form-item :label="$t('videoChannel.productQualificationImageLabel')">
                 <div class="acea-row">
                   <template v-if="!isDisabled">
                     <div
@@ -158,15 +163,15 @@
                   </div>
                 </div>
                 <div class="textE93323">
-                  资质类型说明：{{ productQualification }}。{{
-                    productQualificationType === 1 ? '必填项！' : '选填项！'
+                  {{ $t('videoChannel.qualificationTypeDescLabel') }}{{ productQualification }}。{{
+                    productQualificationType === 1 ? $t('videoChannel.requiredItem') : $t('videoChannel.optionalItem')
                   }}
                 </div>
               </el-form-item>
             </el-col>
             <!-- 规格表格-->
             <el-col :span="24">
-              <el-form-item label="商品属性：" class="labeltop" required>
+              <el-form-item :label="$t('videoChannel.productAttributeLabel')" class="labeltop" required>
                 <el-table
                   ref="multipleTable"
                   :data="ManyAttrValue"
@@ -188,7 +193,7 @@
                       </template>
                     </el-table-column>
                   </template>
-                  <el-table-column label="图片" min-width="80">
+                  <el-table-column :label="$t('product.image')" min-width="80">
                     <template slot-scope="scope">
                       <div class="upLoadPicBox" @click="modalPicTap('1', 'duo', scope.$index)">
                         <div v-if="scope.row.image" class="pictrue tabPic"><img :src="scope.row.image" /></div>
@@ -201,14 +206,14 @@
                   <el-table-column
                     v-for="(item, iii) in attrValue"
                     :key="iii"
-                    :label="formThead[iii].title"
+                    :label="$t(formThead[iii].title)"
                     min-width="140"
                   >
                     <template slot-scope="scope">
                       <el-input-number
                         size="small"
                         :disabled="isDisabled"
-                        v-if="formThead[iii].title === '商品价'"
+                        v-if="formThead[iii].key === 'price'"
                         v-model="scope.row[iii]"
                         :min="0"
                         :precision="2"
@@ -226,14 +231,14 @@
         </div>
         <!-- 商品详情-->
         <div v-show="currentTab === 2 && !isDisabled">
-          <el-form-item label="商品详情：">
+          <el-form-item :label="$t('videoChannel.productDetailLabel')">
             <Tinymce v-model="formValidate.descInfo"></Tinymce>
           </el-form-item>
         </div>
         <el-row v-show="currentTab === 2 && isDisabled">
           <el-col :span="24">
-            <el-form-item label="商品详情：">
-              <span v-html="formValidate.descInfo || '无'"></span>
+            <el-form-item :label="$t('videoChannel.productDetailLabel')">
+              <span v-html="formValidate.descInfo || $t('finance.none')"></span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -244,7 +249,7 @@
             class="submission priamry_border"
             size="small"
             @click="handleSubmitUp"
-            >上一步</el-button
+            >{{ $t('product.previousStep') }}</el-button
           >
           <el-button
             v-show="currentTab === 0"
@@ -252,7 +257,7 @@
             class="submission"
             size="small"
             @click="handleSubmitNest1('formValidate')"
-            >下一步</el-button
+            >{{ $t('product.nextStep') }}</el-button
           >
           <el-button
             v-show="currentTab === 1"
@@ -260,7 +265,7 @@
             class="submission"
             size="small"
             @click="handleSubmitNest2('formValidate')"
-            >下一步</el-button
+            >{{ $t('product.nextStep') }}</el-button
           >
           <el-button
             v-show="(currentTab === 2 || $route.params.id) && !isDisabled"
@@ -270,14 +275,14 @@
             size="small"
             @click="handleSubmit('formValidate')"
             v-hasPermi="['merchant:pay:component:product:draft:update', 'merchant:pay:component:product:draft:add']"
-            >提交</el-button
+            >{{ $t('common.submit') }}</el-button
           >
         </el-form-item>
       </el-form>
     </el-card>
 
     <el-dialog
-      title="微信商品类目"
+      :title="$t('videoChannel.wechatProductCategory')"
       :visible.sync="dialogVisible"
       width="900px"
       class="modalBox"
@@ -297,8 +302,8 @@
         @change="handleChangesModel"
       ></el-cascader-panel>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button @click="dialogVisible = false">{{ $t('videoChannel.cancelSpaced') }}</el-button>
+        <el-button type="primary" @click="dialogVisible = false">{{ $t('finance.confirmSpaced') }}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -318,14 +323,7 @@
 import Tinymce from '@/components/Tinymce/index';
 import { productDetailApi } from '@/api/product';
 import { shippingTemplatesList } from '@/api/logistics';
-import {
-  draftUpdateApi,
-  draftInfoApi,
-  catListApi,
-  videoAddApi,
-  shopImgUploadApi,
-  draftBrandlistApi,
-} from '@/api/marketing';
+import { getLocalizedName, getUiLocale } from '@/utils/localizedName';
 //import CreatTemplates from '@/views/systemSetting/logistics/shippingTemplates/creatTemplates';
 import { Debounce } from '@/utils/validate';
 const defaultObj = {
@@ -362,25 +360,26 @@ const defaultObj = {
 };
 const objTitle = {
   price: {
-    title: '商品价',
+    title: 'videoChannel.productPrice',
+    key: 'price',
   },
   cost: {
-    title: '成本价',
+    title: 'videoChannel.costPrice',
   },
   otPrice: {
-    title: '划线价',
+    title: 'videoChannel.strikethroughPrice',
   },
   stock: {
-    title: '库存',
+    title: 'product.stock',
   },
   barCode: {
-    title: '商品编码',
+    title: 'product.barcode',
   },
   weight: {
-    title: '重量（KG）',
+    title: 'videoChannel.weight',
   },
   volume: {
-    title: '体积(m³)',
+    title: 'videoChannel.volume',
   },
 };
 export default {
@@ -425,15 +424,15 @@ export default {
       fullscreenLoading: false,
       shippingList: [], // 运费模板
       ruleValidate: {
-        primaryProductId: [{ required: true, message: '请选择商品', trigger: 'change' }],
-        title: [{ required: true, message: '请输入商品标题', trigger: 'blur' }],
-        attrValue: [{ required: true, message: '请选择商品属相', trigger: 'change', type: 'array', min: '1' }],
-        ficti: [{ required: true, message: '请输入已售数量', trigger: 'blur' }],
-        unitName: [{ required: true, message: '请输入单位', trigger: 'blur' }],
-        tempId: [{ required: true, message: '请选择运费模板', trigger: 'change' }],
-        images: [{ required: true, message: '请上传商品轮播图', type: 'array', trigger: 'change' }],
-        specType: [{ required: true, message: '请选择商品规格', trigger: 'change' }],
-        thirdCatIdList: [{ required: true, message: '请选择商品类目', trigger: 'change' }],
+        primaryProductId: [{ required: true, message: this.$t('videoChannel.pleaseSelectProduct'), trigger: 'change' }],
+        title: [{ required: true, message: this.$t('videoChannel.pleaseEnterProductTitle'), trigger: 'blur' }],
+        attrValue: [{ required: true, message: this.$t('videoChannel.pleaseSelectProductAttribute'), trigger: 'change', type: 'array', min: '1' }],
+        ficti: [{ required: true, message: this.$t('videoChannel.pleaseEnterSoldCount'), trigger: 'blur' }],
+        unitName: [{ required: true, message: this.$t('videoChannel.pleaseEnterUnit'), trigger: 'blur' }],
+        tempId: [{ required: true, message: this.$t('marketing.pleaseSelectFreightTemplate'), trigger: 'change' }],
+        images: [{ required: true, message: this.$t('marketing.pleaseUploadProductCarousel'), type: 'array', trigger: 'change' }],
+        specType: [{ required: true, message: this.$t('marketing.pleaseSelectProductSpec'), trigger: 'change' }],
+        thirdCatIdList: [{ required: true, message: this.$t('videoChannel.pleaseSelectProductCategory'), trigger: 'change' }],
       },
       manyTabDate: {},
       manyTabTit: {},
@@ -474,6 +473,10 @@ export default {
     this.brandIdList = JSON.parse(sessionStorage.getItem('draftBrand'));
   },
   methods: {
+    getLocalizedName,
+    getUiLocale() {
+      return getUiLocale(this);
+    },
     handleChangesModel(e) {
       const obj = this.$refs['demoCascader'].getCheckedNodes();
       this.productQualificationType = obj.length > 0 ? obj[0].data.productQualificationType : 0;
@@ -527,7 +530,7 @@ export default {
     modalPicTap(tit, num, i) {
       const _this = this;
       if (_this.isDisabled) return;
-      if (tit === '3') return this.$message.warning('正在建造');
+      if (tit === '3') return this.$message.warning(this.$t('videoChannel.underConstruction'));
       this.fullscreenLoading = true;
       // productDetailApi(id).then(async res => {
       this.$modalUpload(
@@ -539,7 +542,7 @@ export default {
           }
           if (tit === '2' && !num) {
             if (img.length > 5 || img.length + _this.formValidate.images.length > 5)
-              return this.$message.warning('最多选择5张图片！');
+              return this.$message.warning(this.$t('videoChannel.maxFiveImages'));
             let result = await _this.getShopImgUpload(img, []);
             result.map((item) => {
               _this.formValidate.images.push(item.img);
@@ -553,7 +556,7 @@ export default {
           }
           if (tit === '3') {
             if (img.length > 5 || img.length + _this.formValidate.qualificationPicsList.length > 5)
-              return this.$message.warning('最多选择5张图片！');
+              return this.$message.warning(this.$t('videoChannel.maxFiveImages'));
             let result = await _this.getShopImgUpload(img, []);
             result.map((item) => {
               _this.formValidate.qualificationPicsList.push(item.img);
@@ -574,7 +577,7 @@ export default {
     },
     handleSubmitNest1() {
       if (!this.formValidate.image) {
-        return this.$message.warning('请选择商品！');
+        return this.$message.warning(this.$t('videoChannel.pleaseSelectProductExcl'));
       } else {
         this.currentTab++;
         if (!this.$route.params.id) this.getProdect(this.primaryProductId);
@@ -778,9 +781,9 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.formValidate.specType && this.multipleSelection.length === 0)
-            return this.$message.warning('请填选择至少一个商品属性！');
+            return this.$message.warning(this.$t('videoChannel.pleaseSelectAtLeastOneAttribute'));
           if (this.productQualificationType === 1 && this.formValidate.qualificationPicsList.length === 0)
-            return this.$message.warning('该类目必须上传商品资质图片，请上传！');
+            return this.$message.warning(this.$t('videoChannel.qualificationImageRequired'));
           this.currentTab++;
         } else {
           return false;
@@ -812,7 +815,7 @@ export default {
             ? draftUpdateApi(this.formValidate)
                 .then(async () => {
                   this.fullscreenLoading = false;
-                  this.$message.success('编辑成功');
+                  this.$message.success(this.$t('product.editSuccess'));
                   this.$router.push({
                     path: '/videoChannel/draftList',
                   });
@@ -828,7 +831,7 @@ export default {
             : videoAddApi(this.formValidate)
                 .then(async (res) => {
                   this.fullscreenLoading = false;
-                  this.$message.success('新增成功');
+                  this.$message.success(this.$t('product.addSuccess'));
                   this.$router.push({
                     path: '/videoChannel/draftList',
                   });
@@ -849,7 +852,7 @@ export default {
             !this.formValidate.image ||
             !this.formValidate.images
           ) {
-            this.$message.warning('请填写完整商品信息！');
+            this.$message.warning(this.$t('marketing.pleaseFillCompleteProduct'));
           }
         }
       });
@@ -860,7 +863,7 @@ export default {
       if (this.currentTab-- < 0) this.currentTab = 0;
     },
     setTagsViewTitle() {
-      const title = this.isDisabled ? '查看视频号商品' : '编辑视频号商品';
+      const title = this.isDisabled ? this.$t('videoChannel.viewVideoChannelProduct') : this.$t('videoChannel.editVideoChannelProduct');
       const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.$route.params.id}` });
       this.$store.dispatch('tagsView/updateVisitedView', route);
     },

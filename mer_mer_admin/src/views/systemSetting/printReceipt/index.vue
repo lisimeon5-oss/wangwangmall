@@ -6,41 +6,41 @@
         type="primary"
         size="small"
         @click="handleAddPrintReceipt()"
-        >添加</el-button
+        >{{ $t('common.add') }}</el-button
       >
       <el-table v-loading="tableDataPram.loading" :data="tableData.list" class="mt20" size="small">
         <el-table-column prop="id" label="ID" min-width="60" />
-        <el-table-column label="名称" min-width="180" prop="printName" />
-        <el-table-column label="打印机类型" prop="printType">
+        <el-table-column :label="$t('common.name')" min-width="180" prop="printName" />
+        <el-table-column :label="$t('systemSetting.printerType')" prop="printType">
           <template slot-scope="{ row }">
-            <p>{{ row.printType | printTypeFilter }}</p>
+            <p>{{ formatPrintType(row.printType) }}</p>
           </template>
         </el-table-column>
-        <el-table-column label="当前打印机编号" min-width="180">
+        <el-table-column :label="$t('systemSetting.currentPrinterNumber')" min-width="180">
           <template slot-scope="{ row }">
             <p v-if="row.printType === 0">{{ row.printYlyMerchineNo }}</p>
             <p v-else-if="row.printType === 1">{{ row.printFeSn }}</p>
           </template>
         </el-table-column>
-        <el-table-column label="更新时间" min-width="150" prop="updateTime" />
-        <el-table-column label="状态" min-width="150">
+        <el-table-column :label="$t('maintain.updateTime')" min-width="150" prop="updateTime" />
+        <el-table-column :label="$t('common.status')" min-width="150">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['merchant:admin:print:update:status'])"
               v-model="scope.row.status"
               :active-value="1"
-              active-text="启用"
+              :active-text="$t('common.enable')"
               :inactive-value="0"
-              inactive-text="停用"
+              :inactive-text="$t('common.disable')"
               @change="handleOnchangeIsShow(scope.row)"
             />
           </template>
         </el-table-column>
-        <el-table-column prop="address" fixed="right" width="100" label="操作">
+        <el-table-column prop="address" fixed="right" width="100" :label="$t('common.operate')">
           <template slot-scope="scope">
-            <a @click="bindEdit(scope.row)" v-hasPermi="['merchant:admin:print:edit']">修改</a>
+            <a @click="bindEdit(scope.row)" v-hasPermi="['merchant:admin:print:edit']">{{ $t('common.edit') }}</a>
             <el-divider direction="vertical"></el-divider>
-            <a @click="bindDelete(scope.row)" v-hasPermi="['merchant:admin:print:delete']">删除</a>
+            <a @click="bindDelete(scope.row)" v-hasPermi="['merchant:admin:print:delete']">{{ $t('common.delete') }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -60,7 +60,7 @@
 
     <el-dialog
       :visible.sync="editPrintReceiptConfig.dialogVisible"
-      :title="(editPrintReceiptConfig.edit ? '编辑' : '新增') + '小票打印配置'"
+      :title="editPrintReceiptConfig.edit ? $t('systemSetting.editReceiptPrintConfig') : $t('systemSetting.addReceiptPrintConfig')"
       class="dialog-bottom"
     >
       <edit-print-receipt
@@ -90,15 +90,6 @@ import { checkPermi } from '@/utils/permission'; // 权限判断函数
 import editPrintReceipt from './editPrintReceipt.vue';
 export default {
   name: 'printReceipt',
-  filters: {
-    printTypeFilter(status) {
-      const statusMap = {
-        0: '易联云',
-        1: '飞蛾云',
-      };
-      return statusMap[status];
-    },
-  },
   components: { editPrintReceipt },
   data() {
     return {
@@ -123,6 +114,9 @@ export default {
   },
   methods: {
     checkPermi,
+    formatPrintType(type) {
+      return type === 0 ? this.$t('systemSetting.yilianyun') : this.$t('systemSetting.feieyun');
+    },
     closeDialog() {
       this.editPrintReceiptConfig.dialogVisible = false;
     },
@@ -156,12 +150,12 @@ export default {
     },
     // 删除
     bindDelete(param) {
-      this.$modalSure('删除当前数据?').then(() => {
+      this.$modalSure(this.$t('systemSetting.confirmDeleteCurrentData')).then(() => {
         if (this.tableData.list.length === 1) {
           this.tableDataPram.page = this.tableDataPram.page - 1;
         }
         systemSetting.merchantPrintDelete(param.id).then((data) => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('common.deleteSuccess'));
           this.getList();
         });
       });
@@ -171,7 +165,7 @@ export default {
     },
     handleOnchangeIsShow(row) {
       systemSetting.merchantPrintStatus(row).then((data) => {
-        this.$message.success('更新状态成功');
+        this.$message.success(this.$t('user.updateStatusSuccess'));
         this.getDataList();
       });
     },

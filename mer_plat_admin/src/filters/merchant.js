@@ -10,6 +10,7 @@
 
 //商户过滤器
 import store from '@/store';
+import i18n from '@/i18n';
 
 /**
  * 商户分类
@@ -48,8 +49,8 @@ export function merchantTypeFilter(status) {
  */
 export function merCreateTypeFilter(status) {
   const statusMap = {
-    admin: '管理员创建',
-    apply: '商户入驻申请',
+    admin: i18n.t('merchant.adminCreated'),
+    apply: i18n.t('merchant.merchantApply'),
   };
   return statusMap[status];
 }
@@ -59,8 +60,8 @@ export function merCreateTypeFilter(status) {
  */
 export function selfTypeFilter(status) {
   const statusMap = {
-    true: '自营',
-    false: '非自营',
+    true: i18n.t('merchant.selfOperated'),
+    false: i18n.t('merchant.notSelfOperated'),
   };
   return statusMap[status];
 }

@@ -16,7 +16,7 @@
 		<view :hidden="!categoryLoading" class="acea-row row-center-wrapper loadingicon">
 			<text class="iconfont icon-jiazai loading"></text>
 		</view>
-		<emptyPage v-if="category.length == 0 && !categoryLoading" mTop="35%" title="暂无商品分类~"
+		<emptyPage v-if="category.length == 0 && !categoryLoading" mTop="35%" :title="$t('暂无商品分类~')"
 			:imgSrc="urlDomain+'crmebimage/presets/noSearch.png'"></emptyPage>
 	</view>
 </template>

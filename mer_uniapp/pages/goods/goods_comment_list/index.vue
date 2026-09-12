@@ -4,32 +4,32 @@
 			<view class='evaluate-list'>
 				<view class='generalComment acea-row row-between-wrapper'>
 					<view class='acea-row row-middle font_color'>
-						<view class='evaluate'>评分</view>
+						<view class='evaluate'>{{$t('评分')}}</view>
 						<view class='start'
 							:class="'star'+ (replyData.replyStar)">
 						</view>
 					</view>
-					<view><text class='font_color'>{{replyData.replyChance ? (replyData.replyChance)*100 : 0}}%</text>好评率</view>
+					<view><text class='font_color'>{{replyData.replyChance ? (replyData.replyChance)*100 : 0}}%</text>{{$t('好评率')}}</view>
 				</view>
 				<view class='nav acea-row row-middle'>
-					<view class='item' :class='type==0 ? "bg-color":""' @click='changeType(0)'>全部({{replyData.sumCount || 0}})
+					<view class='item' :class='type==0 ? "bg-color":""' @click='changeType(0)'>{{$t('全部')}}({{replyData.sumCount || 0}})
 					</view>
-					<view class='item' :class='type==1 ? "bg-color":""' @click='changeType(1)'>好评({{replyData.goodCount || 0}})
+					<view class='item' :class='type==1 ? "bg-color":""' @click='changeType(1)'>{{$t('好评')}}({{replyData.goodCount || 0}})
 					</view>
-					<view class='item' :class='type==2 ? "bg-color":""' @click='changeType(2)'>中评({{replyData.inCount || 0}})
+					<view class='item' :class='type==2 ? "bg-color":""' @click='changeType(2)'>{{$t('中评')}}({{replyData.inCount || 0}})
 					</view>
-					<view class='item' :class='type==3 ? "bg-color":""' @click='changeType(3)'>差评({{replyData.poorCount || 0}})
+					<view class='item' :class='type==3 ? "bg-color":""' @click='changeType(3)'>{{$t('差评')}}({{replyData.poorCount || 0}})
 					</view>
 				</view>
 				<userEvaluation :reply="reply"></userEvaluation>
 			</view>
 			<view class='loadingicon acea-row row-center-wrapper'>
-				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{loadTitle}}
+				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{$t(loadTitle)}}
 			</view>
 			<view class='noCommodity' v-if="(type==0 && !replyData.sumCount) || (type==1 && !replyData.goodCount) || (type==2 && !replyData.inCount) || (type==3 && !replyData.poorCount)">
 				<view class='pictrue'>
           <image :src="urlDomain+'crmebimage/presets/noEvaluate.png'"></image>
-					<view class="default_txt">暂无任何评论哦~</view>
+					<view class="default_txt">{{$t('暂无任何评论哦~')}}</view>
 				</view>
 			</view>
 		</view>
@@ -77,7 +77,7 @@
 		onLoad: function(options) {
 			let that = this;
 			if (!options.productId) return that.$util.Tips({
-				title: '缺少参数'
+				title: this.$t('缺少参数')
 			}, {
 				tab: 3,
 				url: 1

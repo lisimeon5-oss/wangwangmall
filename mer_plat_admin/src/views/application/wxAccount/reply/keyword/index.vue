@@ -9,20 +9,20 @@
     >
       <div class="padding-add">
         <el-form size="small" :inline="true" v-hasPermi="['platform:wechat:public:keywords:reply:list']">
-          <el-form-item label="回复类型：">
-            <el-select v-model="tableFrom.type" placeholder="请选择类型" @change="seachList" class="selWidth" clearable>
-              <el-option label="文本消息" value="text"></el-option>
-              <el-option label="图片消息" value="image"></el-option>
-              <el-option label="图文消息" value="news"></el-option>
-              <el-option label="音频消息" value="voice"></el-option>
+          <el-form-item :label="$t('application.replyTypeLabel')">
+            <el-select v-model="tableFrom.type" :placeholder="$t('application.pleaseSelectType')" @change="seachList" class="selWidth" clearable>
+              <el-option :label="$t('application.textMessage')" value="text"></el-option>
+              <el-option :label="$t('common.imageMessage')" value="image"></el-option>
+              <el-option :label="$t('common.newsMessage')" value="news"></el-option>
+              <el-option :label="$t('application.audioMessage')" value="voice"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="回复搜索：">
-            <el-input v-model="keywords" placeholder="请输入关键字" class="selWidth" size="small" clearable> </el-input>
+          <el-form-item :label="$t('application.replySearchLabel')">
+            <el-input v-model="keywords" :placeholder="$t('application.pleaseEnterKeyword')" class="selWidth" size="small" clearable> </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="seachList">搜索</el-button>
-            <el-button size="small" @click="resetQuery">重置</el-button>
+            <el-button type="primary" size="small" @click="seachList">{{ $t('common.search') }}</el-button>
+            <el-button size="small" @click="resetQuery">{{ $t('el.table.resetFilter') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -32,7 +32,7 @@
         v-hasPermi="['platform:wechat:public:keywords:reply:save']"
         :to="{ path: '/operation/application/publicAccount/wxReply/keyword/save' }"
       >
-        <el-button size="small" type="primary">添加关键字</el-button>
+        <el-button size="small" type="primary">{{ $t('application.addKeyword') }}</el-button>
       </router-link>
       <el-table
         v-loading="listLoading"
@@ -43,27 +43,27 @@
         highlight-current-row
       >
         <el-table-column prop="id" label="ID" width="60" />
-        <el-table-column prop="keywords" label="关键字" min-width="150" />
-        <el-table-column label="回复类型" min-width="100">
+        <el-table-column prop="keywords" :label="$t('application.keyword')" min-width="150" />
+        <el-table-column :label="$t('application.replyType')" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.type | keywordStatusFilter }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="是否显示" min-width="100">
+        <el-table-column prop="status" :label="$t('product.isShow')" min-width="100">
           <template slot-scope="scope">
             <el-switch
               v-if="checkPermi(['admin:wechat:keywords:reply:status'])"
               v-model="scope.row.status"
               :active-value="true"
               :inactive-value="false"
-              active-text="显示"
-              inactive-text="隐藏"
+              :active-text="$t('common.show')"
+              :inactive-text="$t('menu.hide')"
               @change="onchangeIsShow(scope.row)"
             />
-            <div v-else>{{ scope.row.status ? '显示' : '隐藏' }}</div>
+            <div v-else>{{ scope.row.status ? $t('common.show') : $t('menu.hide') }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100">
+        <el-table-column :label="$t('common.operate')" width="100">
           <template slot-scope="scope">
             <template
               v-if="
@@ -73,14 +73,14 @@
               "
             >
               <router-link :to="{ path: '/operation/application/publicAccount/wxReply/keyword/save/' + scope.row.id }">
-                <a>编辑</a>
+                <a>{{ $t('common.edit') }}</a>
               </router-link>
               <el-divider direction="vertical"></el-divider>
             </template>
             <a
               @click="handleDelete(scope.row.id, scope.$index)"
               v-hasPermi="['platform:wechat:public:keywords:reply:delete']"
-              >删除</a
+              >{{ $t('common.delete') }}</a
             >
           </template>
         </el-table-column>
@@ -151,7 +151,7 @@ export default {
     onchangeIsShow(row) {
       wechatReplyStatusApi(row.id)
         .then(() => {
-          this.$message.success('修改成功');
+          this.$message.success(this.$t('category.updateSuccess'));
           this.getList(1);
         })
         .catch(() => {
@@ -185,7 +185,7 @@ export default {
     handleDelete(id, idx) {
       this.$modalSure().then(() => {
         wechatReplyDeleteApi(id).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('product.deleteSuccess'));
           handleDeleteTable(this.tableData.data.length, this.tableFrom);
           this.getList();
         });

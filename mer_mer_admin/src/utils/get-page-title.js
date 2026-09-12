@@ -9,11 +9,34 @@
 // +----------------------------------------------------------------------
 
 import defaultSettings from '@/settings';
+import i18n from '@/i18n';
+import { translateText } from '@/utils/i18nText';
 
-const title = window.localStorage.getItem('platSiteName') || 'CRMEB Admin';
+function resolveAppTitle() {
+  let stored = '';
+  try {
+    stored = window.localStorage.getItem('platSiteName') || '';
+  } catch (e) {
+    stored = '';
+  }
+  if (stored === 'CRMEBMer' || stored === 'CRMEB Admin') {
+    stored = '';
+  }
+  if (stored) {
+    return translateText(stored) || stored;
+  }
+  const fallback = (defaultSettings && defaultSettings.title) || 'Mer';
+  return translateText(fallback) || fallback;
+}
 
 export default function getPageTitle(pageTitle) {
+  const title = resolveAppTitle();
   if (pageTitle) {
+    if (typeof pageTitle === 'string' && pageTitle.includes('{{') && pageTitle.includes('}}')) {
+      pageTitle = pageTitle.replace(/({{[\s\S]+?}})/, (m) => m.replace(/{{([\s\S]*)}}/, (_, key) => i18n.t(key.trim())));
+    } else if (typeof pageTitle === 'string') {
+      pageTitle = translateText(pageTitle);
+    }
     return `${pageTitle} - ${title}`;
   }
   return `${title}`;

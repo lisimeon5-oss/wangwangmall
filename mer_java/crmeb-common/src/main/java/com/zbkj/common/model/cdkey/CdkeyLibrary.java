@@ -38,8 +38,14 @@ public class CdkeyLibrary implements Serializable {
     @ApiModelProperty(value = "卡密库名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言卡密库名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "备注")
     private String remark;
+
+    @ApiModelProperty(value = "多语言备注(JSON)")
+    private String remarkJson;
 
     @ApiModelProperty(value = "关联商品ID")
     private Integer productId;

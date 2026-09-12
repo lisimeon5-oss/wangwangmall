@@ -30,4 +30,7 @@ public class SystemUserLevelRuleRequest implements Serializable {
 
     @ApiModelProperty(value = "用户等级规则")
     private String rule;
+
+    @ApiModelProperty(value = "多语言用户等级规则(JSON)")
+    private String ruleJson;
 }

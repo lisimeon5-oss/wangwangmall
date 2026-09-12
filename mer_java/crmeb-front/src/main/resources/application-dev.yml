@@ -22,15 +22,15 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/java_mer_trip?characterEncoding=utf-8&useSSL=false&serverTimeZone=GMT+8
-    username: java_mer_trip
-    password: 111111
+    url: "jdbc:mysql://127.0.0.1:3306/mer_mall_lang?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimeZone=GMT+8&sessionVariables=sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'"
+    username: root
+    password: 123456
   redis:
     host: 127.0.0.1 #地址
     port: 6379 #端口
-    password: 111111
+    password:
     timeout: 10000 # 连接超时时间（毫秒）
-    database: 8 #默认数据库
+    database: 9 #默认数据库
     jedis:
       pool:
         max-active: 200 # 连接池最大连接数（使用负值表示没有限制）
@@ -38,3 +38,5 @@ spring:
         max-idle: 10 # 连接池中的最大空闲连接
         min-idle: 0 # 连接池中的最小空闲连接
         time-between-eviction-runs: -1 #逐出扫描的时间间隔(毫秒) 如果为负数,则不运行逐出线程, 默认-1
+    second:
+      database: 13 # 微信accessToken存储库

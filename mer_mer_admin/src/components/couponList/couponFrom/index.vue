@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="优惠劵" :visible.sync="visible" width="944px" :before-close="handleClose" class="dialog-bottom">
+    <el-dialog :title="$t('product.couponDialogTitle')" :visible.sync="visible" width="944px" :before-close="handleClose" class="dialog-bottom">
       <coupon-list
         v-if="visible"
         :handle="handle"

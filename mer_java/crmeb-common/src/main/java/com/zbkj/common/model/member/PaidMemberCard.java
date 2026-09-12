@@ -37,8 +37,14 @@ public class PaidMemberCard implements Serializable {
     @ApiModelProperty(value = "会员卡名称")
     private String name;
 
+    @ApiModelProperty(value = "多语言会员卡名称(JSON)")
+    private String nameJson;
+
     @ApiModelProperty(value = "卡片标签")
     private String label;
+
+    @ApiModelProperty(value = "多语言卡片标签(JSON)")
+    private String labelJson;
 
     @ApiModelProperty(value = "0-试用，1-期限，2-永久")
     private Integer type;

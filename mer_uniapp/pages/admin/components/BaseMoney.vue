@@ -3,7 +3,7 @@
 		:style="{color:color}"
 		class="base-money semiBold">
 		<text v-show="preFix" class="preFix" :style="{'font-size': preFixSize + 'rpx','color':textColor}">{{preFix}}</text>
-		<text class="symbol" :style="{'font-size': symbolSize +'rpx'}">￥</text><text class="integer"
+		<text class="symbol" :style="{'font-size': symbolSize +'rpx'}">฿</text><text class="integer"
 			:style="{'font-size': integerSize +'rpx'}">{{ integer }}</text>
 		<text v-if="digits && showDigits" class="decimal semiBold"
 			:style="{'font-size': decimalSize +'rpx'}">.{{ decimal }}</text>

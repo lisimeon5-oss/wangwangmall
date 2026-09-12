@@ -27,10 +27,10 @@
             <span class="msg">7/29 10:00</span>
           </div>
           <div class="label bggary" v-if="item.type == 0">
-            <span class="iconfont iconyijieshu" style="margin-right: 5px"></span>回放
+            <span class="iconfont iconyijieshu" style="margin-right: 5px"></span>{{ $t('marketing.replay') }}
           </div>
           <div class="label bgred" v-if="item.type == 2">
-            <span class="iconfont iconzhibozhong" style="margin-right: 5px"></span>直播中
+            <span class="iconfont iconzhibozhong" style="margin-right: 5px"></span>{{ $t('product.liveStreaming') }}
           </div>
         </div>
       </div>
@@ -51,10 +51,10 @@
             <span class="msg">7/29 10:00</span>
           </div>
           <div class="label bggary" v-if="item.type == 0">
-            <span class="iconfont-diy iconyijieshu" style="margin-right: 5px"></span>回放
+            <span class="iconfont-diy iconyijieshu" style="margin-right: 5px"></span>{{ $t('marketing.replay') }}
           </div>
           <div class="label bgred" v-if="item.type == 2">
-            <span class="iconfont-diy iconzhibozhong" style="margin-right: 5px"></span>直播中
+            <span class="iconfont-diy iconzhibozhong" style="margin-right: 5px"></span>{{ $t('product.liveStreaming') }}
           </div>
         </div>
         <div class="info">
@@ -67,7 +67,7 @@
               <div class="goods-item" v-for="(goods, index) in item.goods" :key="index">
                 <div class="empty-box">
                 </div>
-                <span>￥{{ goods.price }}</span>
+                <span>฿{{ goods.price }}</span>
               </div>
             </template>
             <template v-else>
@@ -89,10 +89,10 @@
             <span class="msg">7/29 10:00</span>
           </div>
           <div class="label bggary" v-if="item.type == 0">
-            <span class="iconfont-diy iconyijieshu" style="margin-right: 5px"></span>回放
+            <span class="iconfont-diy iconyijieshu" style="margin-right: 5px"></span>{{ $t('marketing.replay') }}
           </div>
           <div class="label bgred" v-if="item.type == 2">
-            <span class="iconfont-diy iconzhibozhong" style="margin-right: 5px"></span>直播中
+            <span class="iconfont-diy iconzhibozhong" style="margin-right: 5px"></span>{{ $t('product.liveStreaming') }}
           </div>
         </div>
         <div class="info">
@@ -117,9 +117,10 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState, mapGetters } from 'vuex';
+import { diyCname } from '@/utils/diyCname';
 export default {
   name: 'wechat_live',
-  cname: '小程序直播',
+  ...diyCname('pagediy.wechatLive'),
   configName: 'c_wechat_live',
   type: 1, // 0 基础组件 1 营销组件 2工具组件
   defaultName: 'liveBroadcast', // 外面匹配名称
@@ -200,17 +201,17 @@ export default {
           url: localStorage.getItem('mediaDomain') + '/crmebimage/presets/zhibo.png',
         },
         titleConfig: {
-          tabTitle: '标题设置',
-          title: '标题内容',
+          tabTitle: this.$t('pagediy.titleSettings'),
+          title: this.$t('pagediy.titleContent'),
           val: '精彩抢先看',
-          place: '请输入标题',
+          place: this.$t('pagediy.pleaseEnterTitle'),
           isShow: 1,
           max: 10,
         },
         linkConfig: {
-          title: '更多链接',
+          title: this.$t('pagediy.moreLink'),
           val: '/pages/activity/liveBroadcast/index',
-          place: '请选择链接',
+          place: this.$t('application.pleaseSelectLink'),
           isShow: 1,
           max: 100,
         },
@@ -222,7 +223,7 @@ export default {
         //   isShow: 1,
         // },
         titleColor: {
-          title: '标题颜色',
+          title: this.$t('pagediy.titleColor'),
           color: [
             {
               item: '#999999',
@@ -235,7 +236,7 @@ export default {
           ],
         },
         moreColor: {
-          title: '更多按钮颜色',
+          title: this.$t('pagediy.moreButtonColor'),
           color: [
             {
               item: '#282828',
@@ -270,17 +271,17 @@ export default {
         },
         tabConfig: {
           title: '展示样式',
-          tabTitle: '布局设置',
+          tabTitle: this.$t('pagediy.layoutSettings'),
           name: 'listStyle',
           tabVal: 0,
           isShow: 1,
           list: [
             {
-              val: '单行',
+              val: this.$t('pagediy.singleRow'),
               icon: 'icon-yangshiyi',
             },
             {
-              val: '多行',
+              val: this.$t('pagediy.multiRow'),
               icon: 'icon-yangshisan',
             },
             {
@@ -291,7 +292,7 @@ export default {
         },
         bgStyle: {
           tabTitle: '圆角设置',
-          title: '背景圆角',
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
@@ -306,8 +307,8 @@ export default {
         },
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
@@ -319,7 +320,7 @@ export default {
           min: 0,
         },
         contentConfig: {
-          title: '内容间距',
+          title: this.$t('pagediy.contentSpacing'),
           val: 10,
           min: 0,
           max: 30,
@@ -339,7 +340,7 @@ export default {
       },
       live: [
         {
-          title: '直播中',
+          title: this.$t('product.liveStreaming'),
           name: 'playBg',
           type: 2,
           color: '',
@@ -347,7 +348,7 @@ export default {
           goods: [],
         },
         {
-          title: '回放',
+          title: this.$t('marketing.replay'),
           name: 'endBg',
           type: 0,
           color: '',
@@ -363,7 +364,7 @@ export default {
           goods: [],
         },
         {
-          title: '直播中',
+          title: this.$t('product.liveStreaming'),
           name: 'playBg',
           type: 2,
           color: '',

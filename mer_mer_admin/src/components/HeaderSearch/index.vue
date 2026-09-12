@@ -8,7 +8,7 @@
       filterable
       default-first-option
       remote
-      placeholder="搜索菜单"
+      :placeholder="translateText('搜索菜单')"
       class="header-search-select"
       @change="change"
     >

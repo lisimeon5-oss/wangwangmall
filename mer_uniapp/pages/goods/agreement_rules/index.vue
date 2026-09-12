@@ -3,7 +3,7 @@
 		<view class='personal-data borderPad'>
 			<view class='list borRadius14' v-for="(item,index) in tabList" :key="index" @click="goMultiple(item.info)">
 				<view class='item acea-row row-between-wrapper'>
-					<view>{{item.title}}</view>
+					<view>{{$t(item.title)}}</view>
 					<text class='iconfont icon-xiangyou'></text>
 				</view>
 			</view>

@@ -2,17 +2,17 @@
   <div class="divBox relative">
     <el-card class="box-card" shadow="never" :bordered="false">
       <el-tabs v-model="tableFrom.type" @tab-click="onChangeType" class="mb20">
-        <el-tab-pane label="短信" name="sms"></el-tab-pane>
-        <el-tab-pane label="商品采集" name="copy"></el-tab-pane>
-        <el-tab-pane label="物流查询" name="expr_query"></el-tab-pane>
+        <el-tab-pane :label="$t('common.sms')" name="sms"></el-tab-pane>
+        <el-tab-pane :label="$t('common.productCollection')" name="copy"></el-tab-pane>
+        <el-tab-pane :label="$t('common.logisticsQuery')" name="expr_query"></el-tab-pane>
       </el-tabs>
       <router-link :to="{ path: '/operation/onePass/index' }">
-        <el-button class="link_abs" size="mini" icon="el-icon-arrow-left">返回</el-button>
+        <el-button class="link_abs" size="mini" icon="el-icon-arrow-left">{{ $t('common.back') }}</el-button>
       </router-link>
       <el-row v-loading="fullscreenLoading" :gutter="16">
         <el-col :span="24" class="ivu-text-left mb20">
           <el-col :xs="12" :sm="6" :md="4" :lg="2" class="mr20">
-            <span class="ivu-text-right ivu-block">短信账户名称：</span>
+            <span class="ivu-text-right ivu-block">{{ $t('onePass.smsAccountNameLabel') }}</span>
           </el-col>
           <el-col :xs="11" :sm="13" :md="19" :lg="20">
             <span>{{ account }}</span>
@@ -20,7 +20,7 @@
         </el-col>
         <el-col :span="24" class="ivu-text-left mb20">
           <el-col :xs="12" :sm="6" :md="4" :lg="2" class="mr20">
-            <span class="ivu-text-right ivu-block">当前剩余条数：</span>
+            <span class="ivu-text-right ivu-block">{{ $t('onePass.currentRemainingLabel') }}</span>
           </el-col>
           <el-col :xs="11" :sm="13" :md="19" :lg="20">
             <span>{{ numbers }}</span>
@@ -28,7 +28,7 @@
         </el-col>
         <el-col :span="24" class="ivu-text-left mb20">
           <el-col :xs="12" :sm="6" :md="4" :lg="2" class="mr20">
-            <span class="ivu-text-right ivu-block">选择套餐：</span>
+            <span class="ivu-text-right ivu-block">{{ $t('onePass.selectPackageLabel') }}</span>
           </el-col>
           <el-col :xs="11" :sm="13" :md="19" :lg="20">
             <el-row :gutter="20">
@@ -39,10 +39,10 @@
                   @click="check(item, index)"
                 >
                   <div class="list-goods-list-item-title" :class="{ active: index === current }">
-                    ¥ <i>{{ item.price }}</i>
+                    ฿ <i>{{ item.price }}</i>
                   </div>
                   <div class="list-goods-list-item-price" :class="{ active: index === current }">
-                    <span>{{ tableFrom.type | onePassTypeFilter }}条数: {{ item.num }}</span>
+                    <span>{{ tableFrom.type | onePassTypeFilter }}{{ $t('onePass.countLabel') }}: {{ item.num }}</span>
                   </div>
                 </div>
               </el-col>
@@ -51,7 +51,7 @@
         </el-col>
         <el-col v-if="checkList" :span="24" class="ivu-text-left mb20">
           <el-col :xs="12" :sm="6" :md="4" :lg="2" class="mr20">
-            <span class="ivu-text-right ivu-block">充值条数：</span>
+            <span class="ivu-text-right ivu-block">{{ $t('onePass.rechargeCountLabel') }}</span>
           </el-col>
           <el-col :xs="11" :sm="13" :md="19" :lg="20">
             <span>{{ checkList.num }}</span>
@@ -59,19 +59,19 @@
         </el-col>
         <el-col v-if="checkList" :span="24" class="ivu-text-left mb20">
           <el-col :xs="12" :sm="6" :md="4" :lg="2" class="mr20">
-            <span class="ivu-text-right ivu-block">支付金额：</span>
+            <span class="ivu-text-right ivu-block">{{ $t('onePass.paymentAmountLabel') }}</span>
           </el-col>
           <el-col :xs="11" :sm="13" :md="19" :lg="20">
-            <span class="list-goods-list-item-number">￥{{ checkList.price }}</span>
+            <span class="list-goods-list-item-number">฿{{ checkList.price }}</span>
           </el-col>
         </el-col>
         <el-col :span="24" class="ivu-text-left mb20" v-if="code">
           <el-col :xs="12" :sm="6" :md="4" :lg="2" class="mr20">
-            <span class="ivu-text-right ivu-block">付款方式：</span>
+            <span class="ivu-text-right ivu-block">{{ $t('onePass.paymentMethodLabel') }}</span>
           </el-col>
           <el-col :xs="11" :sm="13" :md="19" :lg="20">
             <span class="list-goods-list-item-pay"
-              >微信支付<i v-if="code.invalid">{{ '  （ 支付码过期时间：' + code.invalid + ' ）' }}</i></span
+              >{{ $t('finance.wechatPay') }}<i v-if="code.invalid">{{ '（' + $t('onePass.paymentCodeExpiryLabel') + code.invalid + ' ）' }}</i></span
             >
           </el-col>
         </el-col>
@@ -150,7 +150,7 @@ export default {
         .then(async (res) => {
           const data = res;
           if (!data.isLogin) {
-            this.$message.warning('请先登录');
+            this.$message.warning(this.$t('onePass.pleaseLoginFirst'));
             this.$router.push('/operation/onePass/index?url=' + this.$route.path);
           } else {
             this.getNumber();

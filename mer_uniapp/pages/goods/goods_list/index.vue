@@ -7,7 +7,7 @@
 				<!-- #endif -->
 				<view :class="tabIndex !== 2?'searchIpt':''" class='input acea-row row-middle'><text
 						class='iconfont icon-sousuo mr20'></text>
-					<input :placeholder="tabIndex===1?'搜索商品名称':'搜索店铺名称'" placeholder-class='placeholder'
+					<input :placeholder="tabIndex===1? $t('搜索商品名称') : $t('搜索店铺名称')" placeholder-class='placeholder'
 						confirm-type='search' name="search" v-model="keyword" @confirm="searchSubmit"
 						maxlength="20"></input>
 				</view>
@@ -15,22 +15,22 @@
 			</view>
 			<view class="nav-wrapper mr-20px" v-if="merId===0 && cid === 0">
 				<view class="tab-bar" :class="{'merTab':tabIndex===2}">
-					<view class="tab-item" :class="{on:tabIndex===1}" @click="changetab(1)">商品</view>
-					<view class="tab-item" :class="{on:tabIndex===2}" @click="changetab(2)">店铺</view>
+					<view class="tab-item" :class="{on:tabIndex===1}" @click="changetab(1)">{{$t('商品')}}</view>
+					<view class="tab-item" :class="{on:tabIndex===2}" @click="changetab(2)">{{$t('店铺')}}</view>
 				</view>
 			</view>
 			<view v-if="tabIndex===1" class='nav acea-row row-middle' :class="(merId > 0 || cid > 0) ? 'mer-nav' : ''">
 				<view class='item' :class='title ? "font_color":""' @click='set_where(1,tabIndex)'>
-					{{title ? title:'默认'}}
+					{{title ? title:$t('默认')}}
 				</view>
 				<view class='item' @click='set_where(2,tabIndex)'>
-					价格
+					{{$t('价格')}}
 					<image v-if="price==1" :src='upPng'></image>
 					<image v-else-if="price==2" :src='downPng'></image>
 					<image v-else :src="urlDomain+'crmebimage/presets/horn.png'"></image>
 				</view>
 				<view class='item-c item' @click='set_where(3,tabIndex)'>
-					销量
+					{{$t('销量')}}
 					<image v-if="stock==1" :src='upPng'></image>
 					<image v-else-if="stock==2" :src='downPng'></image>
 					<image v-else :src="urlDomain+'crmebimage/presets/horn.png'"></image>
@@ -47,18 +47,18 @@
 						<view class='item' :class='is_switch==true?"":"on"' hover-class='none'
 							v-for="(item,index) in productList" :key="index" @click="godDetail(item)">
 							<view class='pictrue' :class='is_switch==true?"":"on"'>
-								<view v-show="item.stock===0" class="sellOut">已售罄</view>
+								<view v-show="item.stock===0" class="sellOut">{{$t('已售罄')}}</view>
 								<easy-loadimage :image-src="item.image" :class='is_switch==true?"":"on"'>
 								</easy-loadimage>
 								<span class="pictrue_log_class"
 									:class="is_switch === true ? 'pictrue_log_big' : 'pictrue_log'"
-									v-if="item.activityH5 && item.activityH5.type === '1'">秒杀</span>
+									v-if="item.activityH5 && item.activityH5.type === '1'">{{$t('秒杀')}}</span>
 								<span class="pictrue_log_class"
 									:class="is_switch === true ? 'pictrue_log_big' : 'pictrue_log'"
-									v-if="item.activityH5 && item.activityH5.type === '2'">砍价</span>
+									v-if="item.activityH5 && item.activityH5.type === '2'">{{$t('砍价')}}</span>
 								<span class="pictrue_log_class"
 									:class="is_switch === true ? 'pictrue_log_big' : 'pictrue_log'"
-									v-if="item.activityH5 && item.activityH5.type === '3'">拼团</span>
+									v-if="item.activityH5 && item.activityH5.type === '3'">{{$t('拼团')}}</span>
 							</view>
 							<view class='text' :class='is_switch==true?"":"on"'>
 								<view class='name box-line2 mb-10'>
@@ -75,12 +75,12 @@
 										class="mr10 tagSolid">{{items.tagName}}</text>
 								</view>
 								<view class='vip acea-row row-between-wrapper mt-10 mb-10' :class='is_switch==true?"":"on"'>
-									<view>已售{{item.sales}}{{item.unitName}}</view>
+									<view>{{$t('已售')}}{{item.sales}}{{$t(item.unitName || '')}}</view>
 								</view>
 								<view v-if="item.merName" class="company" @click.stop="goStore(item.merId)">
 									<text class='name line1'>{{item.merName}}</text>
 									<view class="flex">
-										进店
+										{{$t('进店')}}
 										<text class="iconfont icon-xiangyou"></text>
 									</view>
 								</view>
@@ -98,7 +98,7 @@
 				</view>
 				<view class='loadingicon acea-row row-center-wrapper'>
 					<text class='loading iconfont icon-jiazai'
-						:hidden='loading==false'></text>{{productList.length>0?loadTitle:''}}
+						:hidden='loading==false'></text>{{productList.length>0?$t(loadTitle):''}}
 				</view>
 			</view>
 			<view class="merList" v-if="tabIndex == 2">
@@ -117,7 +117,7 @@
 			<view class='pictrue'>
 				<image :src="urlDomain+'crmebimage/presets/noSearch.png'"></image>
 			</view>
-			<text class="text-ccc">{{tabIndex===1?'暂无商品~':'暂无店铺~'}}</text>
+			<text class="text-ccc">{{tabIndex===1? $t('暂无商品~') : $t('暂无店铺~')}}</text>
 			<recommend v-if="!merId" ref="recommendIndex" class="mt-40"></recommend>
 		</view>
 
@@ -586,7 +586,7 @@
 	}
 
 	.merBox {
-		/deep/.tui-drawer-container {
+		::v-deep .tui-drawer-container {
 			width: 635rpx;
 		}
 	}
@@ -832,7 +832,7 @@
 		// width: 100%;
 	}
 
-	.productList .list .item .pictrue /deep/.easy-loadimage {
+	.productList .list .item .pictrue ::v-deep .easy-loadimage {
 		width: 240rpx;
 		height: 240rpx;
 		border-radius: 14rpx;

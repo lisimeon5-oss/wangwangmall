@@ -2,6 +2,9 @@ package com.zbkj.service.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,9 +18,12 @@ import com.zbkj.common.request.merchant.MerchantCategoryRequest;
 import com.zbkj.common.request.PageParamRequest;
 import com.zbkj.common.result.CommonResultCode;
 import com.zbkj.common.result.MerchantResultCode;
+import com.zbkj.common.utils.RequestUtil;
 import com.zbkj.service.dao.MerchantCategoryDao;
 import com.zbkj.service.service.MerchantCategoryService;
 import com.zbkj.service.service.MerchantService;
+
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -96,6 +102,9 @@ public class MerchantCategoryServiceImpl extends ServiceImpl<MerchantCategoryDao
         }
         category.setName(request.getName());
         category.setHandlingFee(request.getHandlingFee());
+        if (ObjectUtil.isNotNull(request.getNameJson())) {
+            category.setNameJson(request.getNameJson());
+        }
         return dao.updateById(category) > 0;
     }
 
@@ -121,7 +130,7 @@ public class MerchantCategoryServiceImpl extends ServiceImpl<MerchantCategoryDao
     @Override
     public List<MerchantCategory> allList() {
         LambdaQueryWrapper<MerchantCategory> lqw = Wrappers.lambdaQuery();
-        lqw.select(MerchantCategory::getId, MerchantCategory::getName, MerchantCategory::getHandlingFee);
+        lqw.select(MerchantCategory::getId, MerchantCategory::getName, MerchantCategory::getNameJson, MerchantCategory::getHandlingFee);
         lqw.eq(MerchantCategory::getIsDel, false);
         lqw.orderByDesc(MerchantCategory::getId);
         return dao.selectList(lqw);
@@ -146,6 +155,9 @@ public class MerchantCategoryServiceImpl extends ServiceImpl<MerchantCategoryDao
      * @param name 分类名称
      */
     private Boolean checkName(String name) {
+        if (StrUtil.isBlank(name)) {
+            return Boolean.FALSE;
+        }
         LambdaQueryWrapper<MerchantCategory> lqw = Wrappers.lambdaQuery();
         lqw.select(MerchantCategory::getId);
         lqw.eq(MerchantCategory::getName, name);
@@ -167,6 +179,40 @@ public class MerchantCategoryServiceImpl extends ServiceImpl<MerchantCategoryDao
             throw new CrmebException(MerchantResultCode.MERCHANT_CATEGORY_NOT_EXIST);
         }
         return category;
+    }
+
+    @Override
+    public String resolveDisplayName(MerchantCategory category) {
+        if (ObjectUtil.isNull(category)) {
+            return "";
+        }
+        return resolveLocalizedName(category.getName(), category.getNameJson());
+    }
+
+    private String getRequestLanguage() {
+        HttpServletRequest request = RequestUtil.getRequest();
+        String language = null;
+        if (request != null) {
+            language = request.getHeader("lang");
+        }
+        return StrUtil.isBlank(language) ? "zh-cn" : language;
+    }
+
+    private String resolveLocalizedName(String name, String nameJson) {
+        String language = getRequestLanguage();
+        if (StrUtil.isBlank(language) || "zh-cn".equals(language) || StrUtil.isBlank(nameJson)) {
+            return name;
+        }
+        try {
+            JSONObject jsonObject = JSON.parseObject(nameJson);
+            String localized = jsonObject.getString(language);
+            if (StrUtil.isNotBlank(localized)) {
+                return localized;
+            }
+        } catch (Exception ignored) {
+            // 解析失败时保留默认名称
+        }
+        return name;
     }
 }
 

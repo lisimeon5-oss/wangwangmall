@@ -33,7 +33,7 @@
 									<swiper-item catchtouchmove='catchTouchMove'>
 										<view class='acea-row row-between-wrapper'>
 											<view class='text'>
-												<view class='newsTitle line1'><text class="iconfont icon-ic_search"></text><text class="ml-6">{{item.val}}</text></view>
+												<view class='newsTitle line1'><text class="iconfont icon-ic_search"></text><text class="ml-6">{{hotWordText(item)}}</text></view>
 											</view>
 										</view>
 									</swiper-item>
@@ -68,6 +68,7 @@
 	// +----------------------------------------------------------------------
 	let statusBarHeight = uni.getSystemInfoSync().statusBarHeight;
 	let app = getApp();
+	import { getLocalizedDiyVal } from '@/utils/localizedName';
 	export default {
 		name: 'headerSerch',
 		props: {
@@ -168,7 +169,7 @@
 			},
 			//搜索提示语
 			placeWords() {
-				return this.dataConfig.placeWords.val;
+				return getLocalizedDiyVal(this.dataConfig.placeWords, this.i18nLocale);
 			}
 		},
 		mounted() {
@@ -207,6 +208,9 @@
 			// #endif
 		},
 		methods: {
+			hotWordText(item) {
+				return getLocalizedDiyVal(item, this.i18nLocale);
+			},
 			// 后退
 			returns: function() {
 				uni.navigateBack();
@@ -217,7 +221,7 @@
 					source
 				} = e.detail;
 				if (source === 'autoplay' || source === 'touch') {
-					this.searchVal = this.hotWords[e.detail.current]['val'];
+					this.searchVal = this.hotWordText(this.hotWords[e.detail.current]);
 				}
 			},
 			toBack(){

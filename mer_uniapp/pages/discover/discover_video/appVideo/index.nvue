@@ -144,7 +144,7 @@
 													<text class="names line1">{{goods.productName}}</text>
 													<text v-if="goods.isPay===1" class="buy">作者买过</text>
 													<view class="product-price">
-														<view class="price"><text class="sm">¥</text><text
+														<view class="price"><text class="sm">฿</text><text
 																class="money">{{goods.price}}</text></view>
 														<text class="buy-btn">购买</text>
 													</view>

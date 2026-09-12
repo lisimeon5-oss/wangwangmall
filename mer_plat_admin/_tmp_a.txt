@@ -1,0 +1,58 @@
+===== index.vue (143-200) =====
+143:              <span style="padding-right: 5px">操作</span>
+144:              <i class="el-icon-setting" @click="handleAddItem"></i>
+145:            </p>
+146:          </template>
+147:          <template slot-scope="scope">
+148:            <a v-if="scope.row.groupBuyRecordStatus != 0" @click="onOrderDetails(scope.row.orderNo)"> 详情</a>
+149:          </template>
+150:        </el-table-column>
+151:      </el-table>
+152:      <div class="block">
+153:        <el-pagination
+154:          background
+155:          :page-sizes="[20, 40, 60, 80]"
+156:          :page-size="tableFrom.limit"
+157:          :current-page="tableFrom.page"
+158:          layout="total, sizes, prev, pager, next, jumper"
+159:          :total="tableData.total"
+160:          @size-change="handleSizeChange"
+161:          @current-change="pageChange"
+162:        />
+163:      </div>
+164:    </el-card>
+165:    <div class="card_abs" v-show="card_select_show">
+166:      <template>
+167:        <div class="cell_ht">
+168:          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+169:            >全选</el-checkbox
+170:          >
+171:          <el-button type="text" @click="checkSave()">保存</el-button>
+172:        </div>
+173:        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+174:          <el-checkbox v-for="item in columnData" :label="item" :key="item" class="check_cell">{{ item }}</el-checkbox>
+175:        </el-checkbox-group>
+176:      </template>
+177:    </div>
+178:
+179:    <!--详情-->
+180:    <details-from ref="orderDetail" :orderNo="orderNo" />
+181:  </div>
+182:</template>
+183:
+184:<script>
+185:// +---------------------------------------------------------------------
+186:// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+187:// +---------------------------------------------------------------------
+188:// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+189:// +---------------------------------------------------------------------
+190:// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+191:// +---------------------------------------------------------------------
+192:// | Author: CRMEB Team <admin@crmeb.com>
+193:// +---------------------------------------------------------------------
+194:import { orderStatusNumApi, orderListApi, orderExcelApi } from '@/api/order';
+195:import detailsFrom from '@/components/OrderDetail';
+196:import merchantName from '@/components/merchantName';
+197:import { isWriteOff } from '@/utils';
+198:import { checkPermi } from '@/utils/permission'; // 权限判断函数
+199:export default {

@@ -3,7 +3,7 @@
     <el-drawer
       v-if="dialogVisible"
       :visible.sync="dialogVisible"
-      :title="isAtud ? '商品审核' : '商品详情'"
+      :title="isAtud ? $t('product.auditTitle') : $t('videoChannel.productDetail')"
       :direction="direction"
       custom-class="demo-drawer"
       size="1000px"
@@ -15,8 +15,8 @@
         <div class="divBox" v-if="formValidate">
           <div slot="header" class="clearfix">
             <el-tabs v-model="currentTab">
-              <el-tab-pane label="商品信息" name="0"></el-tab-pane>
-              <el-tab-pane label="商品详情" name="1"></el-tab-pane>
+              <el-tab-pane :label="$t('product.productInfo')" name="0"></el-tab-pane>
+              <el-tab-pane :label="$t('videoChannel.productDetail')" name="1"></el-tab-pane>
             </el-tabs>
           </div>
           <el-form
@@ -30,12 +30,12 @@
             <el-row v-show="currentTab === '0'" :gutter="24">
               <!-- 商品信息-->
               <el-col :span="24">
-                <el-form-item label="商品名称：" prop="title">
+                <el-form-item :label="$t('videoChannel.productNameLabel')" prop="title">
                   <span class="spfont">{{ formValidate.title }}</span>
                 </el-form-item>
               </el-col>
               <!--<el-col v-bind="grid2">-->
-              <!--<el-form-item label="商品分类：">-->
+              <!--<el-form-item :label="$t('product.productCategoryLabel')">-->
               <!--<el-cascader-->
               <!--v-model="formValidate.categoryId"-->
               <!--:options="merPlatProductClassify"-->
@@ -47,7 +47,7 @@
               <!--</el-form-item>-->
               <!--</el-col>-->
               <!--<el-col v-bind="grid2">-->
-              <!--<el-form-item label="品牌：" prop="brandId">-->
+              <!--<el-form-item :label="$t('videoChannel.brandLabel')" prop="brandId">-->
               <!--<el-select-->
               <!--class="selWidth"-->
               <!--filterable-->
@@ -63,29 +63,29 @@
               <!--</el-form-item>-->
               <!--</el-col>-->
               <!--<el-col v-bind="grid2">-->
-              <!--<el-form-item label="商品关键字：" prop="keyword">-->
+              <!--<el-form-item :label="$t('videoChannel.productKeywordLabel')" prop="keyword">-->
               <!--<span class="spfont">{{ formValidate.keyword }}</span>-->
               <!--</el-form-item>-->
               <!--</el-col>-->
               <el-col v-bind="grid2">
-                <el-form-item label="单位：" prop="unitName">
-                  <el-input v-model="formValidate.unitName" placeholder="请输入单位" :readonly="isDisabled" />
+                <el-form-item :label="$t('videoChannel.unitLabel')" prop="unitName">
+                  <el-input v-model="formValidate.unitName" :placeholder="$t('videoChannel.pleaseEnterUnit')" :readonly="isDisabled" />
                 </el-form-item>
               </el-col>
               <!--<el-col v-bind="grid2">-->
-              <!--<el-form-item label="商品简介：" prop="storeInfo">-->
+              <!--<el-form-item :label="$t('videoChannel.productIntroLabel')" prop="storeInfo">-->
               <!--<span class="spfont">{{ formValidate.storeInfo }}</span>-->
               <!--</el-form-item>-->
               <!--</el-col>-->
               <el-col v-bind="grid2">
-                <el-form-item label="微信商品类目：" prop="thirdCatIdList">
+                <el-form-item :label="$t('videoChannel.wechatProductCategoryLabel')" prop="thirdCatIdList">
                   <span v-for="(item, i) in formValidate.thirdCatIdList">
                     {{ item }} <span v-show="i < formValidate.thirdCatIdList.length - 1">/</span>
                   </span>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="商品轮播图：">
+                <el-form-item :label="$t('videoChannel.productCarouselLabel')">
                   <div class="acea-row">
                     <div v-for="(item, index) in formValidate.images" :key="index" class="pictrue">
                       <img :src="item" />
@@ -94,7 +94,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="24" v-if="productQualificationType > 0">
-                <el-form-item label="商品资质图：">
+                <el-form-item :label="$t('videoChannel.productQualificationImageLabel')">
                   <div class="acea-row">
                     <div
                       v-for="(item, index) in formValidate.qualificationPicsList"
@@ -120,15 +120,15 @@
                     </div>
                   </div>
                   <div class="textE93323">
-                    资质类型说明：{{ productQualification }}。{{
-                      productQualificationType === 1 ? '必填项！' : '选填项！'
+                    {{ $t('videoChannel.qualificationTypeDescLabel') }}{{ productQualification }}。{{
+                      productQualificationType === 1 ? $t('videoChannel.requiredItem') : $t('videoChannel.optionalItem')
                     }}
                   </div>
                 </el-form-item>
               </el-col>
               <el-col v-bind="grid2">
-                <el-form-item label="商品规格：" props="specType">
-                  <span class="spfont">{{ formValidate.specType ? '多规格' : '单规格' }}</span>
+                <el-form-item :label="$t('videoChannel.productSpecLabel')" props="specType">
+                  <span class="spfont">{{ formValidate.specType ? $t('product.multiSpec') : $t('product.singleSpec') }}</span>
                 </el-form-item>
               </el-col>
               <el-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24" class="mt10">
@@ -141,7 +141,7 @@
                         </template>
                       </el-table-column>
                     </template>
-                    <el-table-column label="图片" width="60">
+                    <el-table-column :label="$t('content.image')" width="60">
                       <template slot-scope="scope">
                         <div class="upLoadPicBox">
                           <div v-if="scope.row.image" class="pictrue tabPic"><img :src="scope.row.image" /></div>
@@ -163,7 +163,7 @@
             <!-- 商品详情-->
             <el-row v-show="currentTab === '1' && !isDisabled">
               <el-col :span="24">
-                <el-form-item label="商品详情：">
+                <el-form-item :label="$t('videoChannel.productDetailLabel')">
                   <div class="contentPic" v-html="formValidate.content" />
                   <!--<Tinymce v-model=".content"></Tinymce>-->
                 </el-form-item>
@@ -171,8 +171,8 @@
             </el-row>
             <el-row v-show="currentTab === '1' && isDisabled">
               <el-col :span="24">
-                <el-form-item label="商品详情：">
-                  <span v-html="formValidate.descInfo || '无'"></span>
+                <el-form-item :label="$t('videoChannel.productDetailLabel')">
+                  <span v-html="formValidate.descInfo || $t('finance.none')"></span>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -181,19 +181,19 @@
       </div>
       <div v-if="isAtud" class="from-foot-btn btn-shadow">
         <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px" class="demo-ruleForm">
-          <el-form-item label="审核状态" prop="platformEditStatus">
+          <el-form-item :label="$t('product.auditStatus')" prop="platformEditStatus">
             <el-radio-group v-model="ruleForm.platformEditStatus">
-              <el-radio :label="4">通过</el-radio>
-              <el-radio :label="3">拒绝</el-radio>
+              <el-radio :label="4">{{ $t('product.pass') }}</el-radio>
+              <el-radio :label="3">{{ $t('product.reject') }}</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item v-if="ruleForm.platformEditStatus === 3" label="原因" prop="platformStatusReason">
-            <el-input v-model="ruleForm.platformStatusReason" type="textarea" placeholder="请输入原因" />
+          <el-form-item v-if="ruleForm.platformEditStatus === 3" :label="$t('product.reason')" prop="platformStatusReason">
+            <el-input v-model="ruleForm.platformStatusReason" type="textarea" :placeholder="$t('product.pleaseEnterReason')" />
           </el-form-item>
           <el-form-item>
-            <el-button @click="close">取 消</el-button>
+            <el-button @click="close">{{ $t('videoChannel.cancelSpaced') }}</el-button>
             <el-button type="primary" @click="onSubmit('ruleForm')">{{
-              loadingBtn ? '提交中 ...' : '确 定'
+              loadingBtn ? $t('finance.submitting') : $t('finance.confirmSpaced')
             }}</el-button>
           </el-form-item>
         </el-form>
@@ -216,6 +216,7 @@ import Tinymce from '@/components/Tinymce/index';
 import { draftInfoApi, draftProductReviewApi } from '@/api/videoChannel';
 import { Debounce } from '@/utils/validate';
 import { mapGetters } from 'vuex';
+import i18n from '@/i18n';
 const defaultObj = {
   image: '',
   sliderImages: [],
@@ -257,26 +258,28 @@ const defaultObj = {
   guaranteeIdsList: [],
   brandId: '',
 };
-const objTitle = {
-  price: {
-    title: '售价',
-  },
-  cost: {
-    title: '成本价',
-  },
-  otPrice: {
-    title: '划线价',
-  },
-  stock: {
-    title: '库存',
-  },
-  weight: {
-    title: '重量（KG）',
-  },
-  volume: {
-    title: '体积(m³)',
-  },
-};
+function buildObjTitle() {
+  return {
+    price: {
+      title: i18n.t('user.salePricePlaceholder'),
+    },
+    cost: {
+      title: i18n.t('videoChannel.costPrice'),
+    },
+    otPrice: {
+      title: i18n.t('videoChannel.strikethroughPrice'),
+    },
+    stock: {
+      title: i18n.t('product.stock'),
+    },
+    weight: {
+      title: i18n.t('videoChannel.weight'),
+    },
+    volume: {
+      title: i18n.t('videoChannel.volume'),
+    },
+  };
+}
 export default {
   name: 'ProductProductAdd',
   props: {
@@ -293,8 +296,8 @@ export default {
   data() {
     return {
       rules: {
-        platformEditStatus: [{ required: true, message: '请选择审核状态', trigger: 'change' }],
-        platformStatusReason: [{ required: true, message: '请填写拒绝原因', trigger: 'blur' }],
+        platformEditStatus: [{ required: true, message: this.$t('product.pleaseSelectAuditStatus'), trigger: 'change' }],
+        platformStatusReason: [{ required: true, message: this.$t('product.pleaseEnterRejectReason'), trigger: 'blur' }],
       },
       isAppend: true,
       proId: 0,
@@ -322,9 +325,9 @@ export default {
       },
       checkboxGroup: [],
       recommend: [
-        { name: '可能喜欢', value: 'isGood', type: '5' },
-        { name: '热卖商品', value: 'isHot', type: '2' },
-        { name: '主打商品', value: 'isBest', type: '1' },
+        { name: this.$t('videoChannel.mayLike'), value: 'isGood', type: '5' },
+        { name: this.$t('videoChannel.hotProducts'), value: 'isHot', type: '2' },
+        { name: this.$t('videoChannel.featuredProduct'), value: 'isBest', type: '1' },
       ],
       tabs: [],
       fullscreenLoading: false,
@@ -335,7 +338,7 @@ export default {
       ruleList: [],
       merCateList: [], // 商户分类筛选
       shippingList: [], // 运费模板
-      formThead: Object.assign({}, objTitle),
+      formThead: Object.assign({}, buildObjTitle()),
       formValidate: Object.assign({}, defaultObj),
       formDynamics: {
         ruleName: '',
@@ -447,7 +450,7 @@ export default {
           this.ruleForm.draftProductId = this.productId;
           draftProductReviewApi(this.ruleForm)
             .then((res) => {
-              this.$message.success('操作成功');
+              this.$message.success(this.$t('product.operateSuccess'));
               this.dialogVisible = false;
               this.currentTab = '0';
               this.ruleForm.platformStatusReason = '';
@@ -476,7 +479,7 @@ export default {
       return data;
     },
     setTagsViewTitle() {
-      const title = this.isDisabled ? '商品详情' : '编辑商品';
+      const title = this.isDisabled ? this.$t('videoChannel.productDetail') : this.$t('product.editProduct');
       const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.$route.params.id}` });
       this.$store.dispatch('tagsView/updateVisitedView', route);
     },

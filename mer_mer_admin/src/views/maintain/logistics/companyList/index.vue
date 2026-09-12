@@ -4,18 +4,18 @@
       <div slot="header" class="clearfix"></div>
       <el-table v-loading="loading" :data="tableData">
         <el-table-column prop="id" label="ID" min-width="180" />
-        <el-table-column label="物流公司名称" min-width="150" prop="name" />
-        <el-table-column min-width="200" label="编码" prop="code" />
-        <el-table-column min-width="100" label="排序" prop="sort" sortable />
-        <el-table-column label="是否显示" min-width="100">
+        <el-table-column :label="$t('maintain.logisticsCompanyName')" min-width="150" prop="name" />
+        <el-table-column min-width="200" :label="$t('maintain.code')" prop="code" />
+        <el-table-column min-width="100" :label="$t('product.sort')" prop="sort" sortable />
+        <el-table-column :label="$t('product.isShow')" min-width="100">
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.isShow"
               class="demo"
               :active-value="true"
               :inactive-value="false"
-              active-text="开启"
-              inactive-text="关闭"
+              :active-text="$t('common.open')"
+              :inactive-text="$t('common.close')"
               :disabled="true"
               v-if="checkPermi(['admin:express:update:show'])"
             />

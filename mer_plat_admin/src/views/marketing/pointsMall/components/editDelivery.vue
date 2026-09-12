@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="修改配送信息"
+    :title="$t('marketing.modifyDeliveryInfo')"
     :visible.sync="dvisible"
     width="540px"
     :before-close="handleClose"
@@ -16,9 +16,9 @@
         type="primary"
         @click="handleSubmit('formItem')"
         v-hasPermi="['platform:integral:order:invoice:update']"
-        >提交</el-button
+        >{{ $t('common.submit') }}</el-button
       >
-      <el-button size="mini" @click="handleClose">取消</el-button>
+      <el-button size="mini" @click="handleClose">{{ $t('el.messagebox.cancel') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -97,7 +97,7 @@ export default {
           };
           orderInvoiceUpdateApi(data)
             .then((res) => {
-              this.$message.success('修改发货单配送信息成功');
+              this.$message.success(this.$t('marketing.modifyDeliveryInfoSuccess'));
               this.handleSubmitSuccess();
             })
             .catch((res) => {

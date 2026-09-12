@@ -49,15 +49,15 @@
 						class="video-status" :style="'top: '+ statusTop +'px;'">
 						<view v-if="list.auditStatus == 2 || list.auditStatus == 3" class="status-title">
 							<text class="iconfont icon-tishi"></text>
-							<text class="title">{{list.auditStatus == 2 ? '审核未通过' : '平台关闭'}}，内容仅自己可见</text>
+							<text class="title">{{list.auditStatus == 2 ? $t('审核未通过') : $t('平台关闭')}}，{{$t('内容仅自己可见')}}</text>
 						</view>
 						<view v-else class="status-title">
 							<text class="iconfont icon-shijian"></text>
-							<text class="title">正在审核，内容仅自己可见</text>
+							<text class="title">{{$t('正在审核，内容仅自己可见')}}</text>
 						</view>
 						<view class="status_info">
 							<text
-								class="refusal">{{(list.auditStatus == 2 || list.auditStatus == 3) ? list.refusal : '发布的内容审核通过后，将在首页展示！'}}</text>
+								class="refusal">{{(list.auditStatus == 2 || list.auditStatus == 3) ? list.refusal : $t('发布的内容审核通过后，将在首页展示！')}}</text>
 						</view>
 					</view>
 					<view v-if="isShowCent" class="userInfo">
@@ -77,19 +77,19 @@
 							:class="{'likeNumActive':list.userIsLike}">
 							<text class="iconfont icon-shipindianzan-yidian"
 								:class="{'likeNumActive':list.userIsLike}"></text>
-							<text class="info-text">{{list.likeNum > 0 ? list.likeNum : '点赞'}}</text>
+							<text class="info-text">{{list.likeNum > 0 ? list.likeNum : $t('点赞')}}</text>
 						</view>
 						<!-- 3.评论 -->
 						<view v-if="list.platReplySwitch" class="comment flex-column" @click="toComment(list)"
 							style="margin-top: 18px;">
 							<text class="iconfont icon-pinglun2"></text>
-							<text class="info-text">{{list.replyNum>0 ? list.replyNum : '评论'}}</text>
+							<text class="info-text">{{list.replyNum>0 ? list.replyNum : $t('评论')}}</text>
 						</view>
 						<!-- 4.分享 小程序端，审核通过之后-->
 						<view v-if="list.auditStatus == 1" @click="listenerActionSheet" class="flex-column"
 							style="margin-top: 17px;">
 							<text class="iconfont icon-fenxiang3"></text>
-							<text class="info-text">分享</text>
+							<text class="info-text">{{$t('分享')}}</text>
 						</view>
 						<!-- 5.自己的视频 -->
 						<view v-if="list.authorId == uid" style="margin-top: 17px;">
@@ -103,16 +103,16 @@
 									<navigator hover-class="none"
 										:url="'/pages/discover/discover_release/index?noteId='+list.id" class="items">
 										<text class="iconfont icon-bianji"></text>
-										<text>编辑</text>
+										<text>{{$t('编辑')}}</text>
 									</navigator>
 									<view class="items" @click.stop="deleteTopic(list)">
 										<text class="iconfont icon-shanchu3"></text>
-										<text>删除</text>
+										<text>{{$t('删除')}}</text>
 									</view>
 									<view disabled="true" class="items" @click.stop="replySwitch(list)">
 										<text class="iconfont"
 											:class="list.replyStatus ==1 ? 'icon-jinzhipinglun' : 'icon-yunxupinglun'"></text>
-										<text>{{list.replyStatus ==1 ? '禁止评论' : '开启评论'}}</text>
+										<text>{{list.replyStatus ==1 ? $t('禁止评论') : $t('开启评论')}}</text>
 									</view>
 								</view>
 							</view>
@@ -144,7 +144,7 @@
 						</view>
 						<view class="words mb20" :style="'width: '+ (windowWidth - 120) +'px;'">
 							<BaseTextMore v-if="list.content" :content="list.content" fontColor="rgba(255,255,255,0.9)"
-								actionFontColor="#fff" :font-size="28" :rows="2" expand-text="展开" collapse-text="收起">
+								actionFontColor="#fff" :font-size="28" :rows="2" :expand-text="$t('展开')" :collapse-text="$t('收起')">
 							</BaseTextMore>
 							<view class="topicList acea-row" v-if="list.topicList && list.topicList.length">
 								<view @click="goTopic(item.id)" v-for="item in list.topicList" :key="item.id">
@@ -164,11 +164,11 @@
 										<view class="product-text">
 											<view style="height: 68rpx;">
 												<view class="name line1">{{goods.productName}}</view>
-												<view v-if="goods.isPay===1" class="buy">作者买过</view>
+												<view v-if="goods.isPay===1" class="buy">{{$t('作者买过')}}</view>
 											</view>
 											<view class="product-price">
-												<view class="price">¥<text>{{goods.price}}</text></view>
-												<view class="buy-btn">购买</view>
+												<view class="price">฿<text>{{goods.price}}</text></view>
+												<view class="buy-btn">{{$t('购买')}}</view>
 											</view>
 										</view>
 									</view>
@@ -203,19 +203,19 @@
 			<button class="item" :class="weixinStatus ? 'item3' : ''" hover-class='none' v-if="weixinStatus === true"
 				@click="H5ShareBox = true">
 				<view class="iconfont icon-weixin3"></view>
-				<view class="">发送给朋友</view>
+				<view class="">{{$t('发送给朋友')}}</view>
 			</button>
 			<!-- #endif -->
 			<!-- #ifdef MP -->
 			<button class="item" :class="weixinStatus ? 'item3' : ''" open-type="share" hover-class='none'
 				@click="goFriend">
 				<view class="iconfont icon-weixin3"></view>
-				<view class="">发送给朋友</view>
+				<view class="">{{$t('发送给朋友')}}</view>
 			</button>
 			<!-- #endif -->
 			<button class="item" :class="weixinStatus ? 'item3' : ''" hover-class='none' @click="goPoster">
 				<view class="iconfont icon-haibao"></view>
-				<view class="">生成海报</view>
+				<view class="">{{$t('生成海报')}}</view>
 			</button>
 		</view>
 		<view class="mask" v-if="posters" @click="listenerActionClose"></view>
@@ -225,7 +225,7 @@
 			<image src='../../static/images/poster-close.png' class='close' @click="posterImageClose"></image>
 			<image :src='posterImage' class="image"></image>
 			<!-- #ifndef H5 -->
-			<view class="keep" @click="savePosterPath">保存到相册</view>
+			<view class="keep" @click="savePosterPath">{{$t('保存到相册')}}</view>
 			<!-- #endif -->
 		</view>
 		<view class="canvas" v-if="canvasStatus">
@@ -307,7 +307,7 @@
 				proList: [], //商品列表
 				popupShow: false, //商品弹窗
 				sysHeight: sysHeight,
-				navTitle: '短视频',
+				navTitle: '',
 				noteId: 0,
 				windowWidth: 0,
 				windowHeight: 0,
@@ -404,7 +404,7 @@
 		onReady() {
 			//新的标题
 			uni.setNavigationBarTitle({
-				title: '短视频'
+				title: this.$t('短视频')
 			})
 			//标题蓝颜色
 			uni.setNavigationBarColor({
@@ -478,13 +478,13 @@
 										success: function(res) {
 											that.posterImageClose();
 											that.$util.Tips({
-												title: '保存成功',
+												title: this.$t('保存成功'),
 												icon: 'success'
 											});
 										},
 										fail: function(res) {
 											that.$util.Tips({
-												title: '保存失败'
+												title: this.$t('保存失败')
 											});
 										}
 									})
@@ -496,13 +496,13 @@
 								success: function(res) {
 									that.posterImageClose();
 									that.$util.Tips({
-										title: '保存成功',
+										title: this.$t('保存成功'),
 										icon: 'success'
 									});
 								},
 								fail: function(res) {
 									that.$util.Tips({
-										title: '保存失败'
+										title: this.$t('保存失败')
 									});
 								},
 							})
@@ -581,7 +581,7 @@
 					complete: () => {},
 					fail: res => {
 						this.$util.Tips({
-							title: '海报二维码生成失败！'
+							title: this.$t('海报二维码生成失败！')
 						});
 					}
 				})
@@ -605,7 +605,7 @@
 				}
 				let arr2
 				uni.showLoading({
-					title: '海报生成中',
+					title: this.$t('海报生成中'),
 					mask: true
 				});
 				that.posters = false;
@@ -654,12 +654,12 @@
 			deleteTopic(item) {
 				let that = this;
 				uni.showModal({
-					content: '确定要删除该内容么？',
+					content: this.$t('确定要删除该内容么？'),
 					success: function(res) {
 						if (res.confirm) {
 							noteDelApi(item.id).then(res => {
 								that.$util.Tips({
-									title: '删除成功'
+									title: this.$t('删除成功')
 								});
 								setTimeout(function() {
 									uni.redirectTo({
@@ -683,19 +683,19 @@
 			replySwitch(item) {
 				if (!item.platReplySwitch && item.replyStatus === 3) {
 					this.$util.Tips({
-						title: '平台设置不可评论'
+						title: this.$t('平台设置不可评论')
 					});
 				} else {
 					noteReplySwitchApi(item.id).then(res => {
 						if (item.replyStatus === 1) {
 							this.$set(item, 'replyStatus', 2)
 							this.$util.Tips({
-								title: '禁止成功'
+								title: this.$t('禁止成功')
 							});
 						} else {
 							this.$set(item, 'replyStatus', 1)
 							this.$util.Tips({
-								title: '开启成功'
+								title: this.$t('开启成功')
 							});
 						}
 					}).catch(err => {
@@ -826,7 +826,7 @@
 			},
 			dealVoice() {
 				uni.showToast({
-					title: '处理声音',
+					title: this.$t('处理声音'),
 					icon: 'none'
 				})
 			},
@@ -958,7 +958,7 @@
 			},
 			share() {
 				uni.showToast({
-					title: '分享',
+					title: this.$t('分享'),
 					icon: 'none'
 				})
 			},
@@ -970,7 +970,7 @@
 			toComment(itme) {
 				this.noteDetail = itme;
 				uni.showToast({
-					title: '加载中...',
+					title: this.$t('加载中...'),
 					icon: 'none',
 					position: 'bottom',
 					duration: 300
@@ -1417,8 +1417,8 @@
 			margin-right: 30rpx;
 		}
 
-		/deep/uni-swiper,
-		/deep/swiper {
+		::v-deep uni-swiper,
+		::v-deep swiper {
 			display: block;
 			width: 500rpx !important;
 			height: 136rpx !important;

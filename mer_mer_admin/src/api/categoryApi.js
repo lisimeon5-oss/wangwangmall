@@ -18,6 +18,7 @@ export function addCategroy(pram) {
   const data = {
     extra: pram.extra,
     name: pram.name,
+    nameJson: pram.nameJson,
     pid: pram.pid,
     sort: pram.sort,
     status: pram.status,
@@ -100,6 +101,7 @@ export function updateCategroy(pram) {
   const data = {
     extra: pram.extra,
     name: pram.name,
+    nameJson: pram.nameJson,
     pid: pram.pid,
     sort: pram.sort,
     status: pram.status,
@@ -111,7 +113,7 @@ export function updateCategroy(pram) {
   return request({
     url: `/admin/merchant/category/update/${pram.id}`,
     method: 'POST',
-    params: data,
+    data: data,
   });
 }
 

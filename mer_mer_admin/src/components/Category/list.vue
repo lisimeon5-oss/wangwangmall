@@ -18,10 +18,9 @@
           <el-button
             size="small"
             type="primary"
-            @click="handleAddMenu({ id: 0, name: '顶层目录' })"
+            @click="handleAddMenu({ id: 0, name: $t('category.topLevelDirectory') })"
             v-hasPermi="['merchant:product:category:add']"
-            >新增{{ biztype.name }}</el-button
-          >
+            >{{ $t('category.addProductCategory') }}</el-button>
           <el-table
             :data="dataList"
             size="small"
@@ -31,11 +30,11 @@
             row-key="id"
             :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           >
-            <el-table-column prop="name" label="名称" min-width="200">
-              <template slot-scope="scope"> {{ scope.row.name }} | {{ scope.row.id }} </template>
+            <el-table-column prop="name" :label="$t('category.name')" min-width="200">
+              <template slot-scope="scope"> {{ getLocalizedName(scope.row) }} | {{ scope.row.id }} </template>
             </el-table-column>
             <template v-if="!selectModel">
-              <el-table-column label="分类图标" min-width="80">
+              <el-table-column :label="$t('category.categoryIcon')" min-width="80">
                 <template slot-scope="scope">
                   <div class="demo-image__preview line-heightOne">
                     <el-image :src="scope.row.icon" :preview-src-list="[scope.row.icon]" v-if="scope.row.icon" />
@@ -43,31 +42,31 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="排序" prop="sort" min-width="150" />
-              <el-table-column label="状态" min-width="150">
+              <el-table-column :label="$t('category.sort')" prop="sort" min-width="150" />
+              <el-table-column :label="$t('category.status')" min-width="150">
                 <template slot-scope="scope">
                   <el-switch
                     v-if="checkPermi(['merchant:category:update:status'])"
                     v-model="scope.row.isShow"
                     :active-value="true"
                     :inactive-value="false"
-                    active-text="显示"
-                    inactive-text="隐藏"
+                    :active-text="$t('category.show')"
+                    :inactive-text="$t('category.hide')"
                     @change="onchangeIsShow(scope.row)"
                   />
-                  <div v-else>{{ scope.row.isShow ? '显示' : '隐藏' }}</div>
+                  <div v-else>{{ scope.row.isShow ? $t('category.show') : $t('category.hide') }}</div>
                 </template>
               </el-table-column>
 
-              <el-table-column label="操作" width="180" fixed="right">
+              <el-table-column :label="$t('category.operate')" width="180" fixed="right">
                 <template slot-scope="scope">
                   <template v-if="scope.row.pid === 0 && checkPermi(['merchant:product:category:add'])">
-                    <a @click="handleAddMenu(scope.row)">添加子目录</a>
+                    <a @click="handleAddMenu(scope.row)">{{ $t('category.addSubdirectory') }}</a>
                     <el-divider direction="vertical"></el-divider>
                   </template>
-                  <a @click="handleEditMenu(scope.row)" v-hasPermi="['merchant:product:category:update']">编辑</a>
+                  <a @click="handleEditMenu(scope.row)" v-hasPermi="['merchant:product:category:update']">{{ $t('category.edit') }}</a>
                   <el-divider direction="vertical"></el-divider>
-                  <a @click="handleDelMenu(scope.row)" v-hasPermi="['merchant:product:category:delete']">删除</a>
+                  <a @click="handleDelMenu(scope.row)" v-hasPermi="['merchant:product:category:delete']">{{ $t('category.delete') }}</a>
                 </template>
               </el-table-column>
             </template>
@@ -76,7 +75,7 @@
       </div>
     </template>
     <el-dialog
-      :title="editDialogConfig.isCreate === 0 ? `创建${biztype.name}` : `编辑${biztype.name}`"
+      :title="editDialogConfig.isCreate === 0 ? $t('category.createProductCategory') : $t('category.editProductCategory')"
       :visible.sync="editDialogConfig.visible"
       destroy-on-close
       :close-on-click-modal="false"
@@ -112,6 +111,7 @@ import info from './info';
 import edit from './edit';
 import * as selfUtil from '@/utils/ZBKJIutil.js';
 import { checkPermi } from '@/utils/permission';
+import { getLocalizedName, getUiLocale } from '@/utils/localizedName';
 export default {
   // name: "list"
   components: { info, edit },
@@ -179,11 +179,29 @@ export default {
   mounted() {
     if (checkPermi(['merchant:product:category:list'])) this.handlerGetTreeList();
   },
+  computed: {
+    typeName() {
+      this.$i18n.locale;
+      const names = {
+        1: this.$t('category.typeProduct'),
+        2: this.$t('category.typeArticle'),
+        3: this.$t('category.typeAttachment'),
+        4: this.$t('category.typeSetting'),
+        5: this.$t('category.typeMenu'),
+        6: this.$t('category.typeConfig'),
+        7: this.$t('category.typeSeckill'),
+      };
+      return names[Number(this.biztype && this.biztype.value)] || this.$t('category.typeProduct');
+    },
+  },
   methods: {
-    checkPermi, //权限控制
+    checkPermi,
+    getLocalizedName(row) {
+      return getLocalizedName(row, getUiLocale(this));
+    },
     onchangeIsShow(row) {
       storeApi.productCategoryShowApi(row.id).then(() => {
-        this.$message.success('修改成功');
+        this.$message.success(this.$t('category.updateSuccess'));
         this.handlerGetTreeList();
         this.$store.commit('product/SET_MerProductClassify', []);
       });
@@ -226,11 +244,11 @@ export default {
       }
     },
     handleDelMenu(rowData) {
-      this.$modalSure('删除当前数据?').then(() => {
+      this.$modalSure(this.$t('category.deleteCurrentDataConfirm')).then(() => {
         storeApi.productCategoryDeleteApi(rowData.id).then((res) => {
           this.handlerGetTreeList();
           this.$store.commit('product/SET_MerProductClassify', []);
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('category.deleteSuccess'));
         });
       });
     },

@@ -8,7 +8,7 @@
         v-loading="loading"
         v-if="checkPermi(['platform:system:form:info'])"
       >
-        <el-tab-pane v-for="(tab, index) in treeList" :key="index" :label="tab.name" :name="tab.id.toString()">
+        <el-tab-pane v-for="(tab, index) in treeList" :key="index" :label="i18nName(tab.name)" :name="tab.id.toString()">
           <template>
             <el-tabs
               v-if="tab.child && tab.child.length > 0"
@@ -20,7 +20,7 @@
                 class="mt20"
                 v-for="(tabItem, itemIndex) in tab.child"
                 :key="itemIndex"
-                :label="tabItem.name"
+                :label="i18nName(tabItem.name)"
                 :name="tabItem.extra"
               >
                 <parser
@@ -67,6 +67,7 @@ import Template from '@/views/application/wxAccount/wxTemplate/index';
 import { beautifierConf } from '@/components/FormGenerator/utils';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
 import { Debounce } from '@/utils/validate';
+import { translateText } from '@/utils/i18nText';
 
 export default {
   // name: "index",
@@ -90,6 +91,9 @@ export default {
   },
   methods: {
     checkPermi,
+    i18nName(name) {
+      return translateText(name);
+    },
     handleTabClick(tab) {
       this.formConfChild.render = false;
       if (tab.$children.length && tab.$children[0].panes) {
@@ -126,7 +130,7 @@ export default {
     handleItemTabClick(tab, event) {
       //这里对tabs=tab.name和radio=id做了兼容
       let _id = tab.name ? tab.name : tab;
-      if (!_id) return this.$message.error('表单配置不正确，请关联正确表单后使用');
+      if (!_id) return this.$message.error(this.$t('systemSetting.formConfigError'));
       this.handlerGetLevel2FormConfig(_id);
     },
     handlerGetLevel2FormConfig(id) {
@@ -164,7 +168,7 @@ export default {
       if (checkPermi(['platform:system:config:save:form'])) {
         this.handlerSave(formValue);
       } else {
-        this.$message.warning('暂无操作权限');
+        this.$message.warning(this.$t('user.noPermission'));
       }
     }),
     handlerSave(formValue) {
@@ -177,7 +181,7 @@ export default {
       let _formId = 0;
       _pram.id = this.formConf.id;
       systemConfigApi.configSaveForm(_pram).then((data) => {
-        this.$message.success('添加数据成功');
+        this.$message.success(this.$t('maintain.addDataSuccess'));
       });
     },
     handlerGetTreeList() {
@@ -214,11 +218,16 @@ export default {
       };
       const _fields = [];
       Object.keys(formValue).forEach((key) => {
+        let value = formValue[key];
+        if (value instanceof Array) {
+          value = value.join(',');
+        } else if (value && typeof value === 'object') {
+          value = JSON.stringify(value);
+        }
         _fields.push({
           name: key,
           title: key,
-          //提交数据要求是字符串，如果是数组，转为字符串
-          value: formValue[key] instanceof Array ? formValue[key].join(',') : formValue[key],
+          value,
         });
       });
       _pram.fields = _fields;

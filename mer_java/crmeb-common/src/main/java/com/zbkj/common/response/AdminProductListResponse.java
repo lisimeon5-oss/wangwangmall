@@ -38,6 +38,9 @@ public class AdminProductListResponse implements Serializable {
     @ApiModelProperty(value = "商品名称")
     private String name;
 
+    @ApiModelProperty(value = "商品名称多语言JSON")
+    private String nameJson;
+
     @ApiModelProperty(value = "关键字")
     private String keyword;
 

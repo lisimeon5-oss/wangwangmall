@@ -2,10 +2,17 @@
   <!--底部菜单，此组件只在微页面中使用，并且生效。首页自定义导航在页面设计中配置-->
   <div v-if="configData" class="borderPadding">
     <div class="acea-row">
-      <h4 class="mb10">在此处设置底部菜单，只在微页面中展示，首页设置自定义导航需要在页面设计中设置。</h4>
+      <h4 class="mb10">{{ $t('pagediy.bottomMenuTip') }}</h4>
     </div>
 
-    <p class="tips">图片建议宽度81*81px；鼠标拖拽左侧圆点可调整菜单顺序</p>
+    <p class="tips">{{ $t('pagediy.bottomMenuImageTip') }}</p>
+    <div class="lang-name-switch">
+      <el-radio-group v-model="activeLang" size="mini">
+        <el-radio-button v-for="lang in langOptions" :key="lang.code" :label="lang.code">
+          {{ lang.label }}
+        </el-radio-button>
+      </el-radio-group>
+    </div>
     <draggable class="dragArea list-group" :list="configData.list" group="peoples" handle=".iconfont">
       <div class="box-item" v-for="(item, index) in configData.list" :key="index">
         <div class="left-tool">
@@ -15,32 +22,38 @@
           <div class="img-wrapper mb10">
             <div class="img-item" @click="modalPicTap(index, 'checked')">
               <img :src="item.checked" alt="" v-if="item.checked" />
-              <p class="txt" v-if="item.checked">选中</p>
+              <p class="txt" v-if="item.checked">{{ $t('pagediy.iconSelected') }}</p>
               <div class="img-box" v-else>
                 <div class="upload-box"><i class="el-icon-camera-solid" style="font-size: 30px" /></div>
-                <p class="txt">选中</p>
+                <p class="txt">{{ $t('pagediy.iconSelected') }}</p>
               </div>
             </div>
             <div class="img-item" @click="modalPicTap(index, 'unchecked')">
               <img :src="item.unchecked" alt="" v-if="item.unchecked" />
-              <p class="txt" v-if="item.unchecked">未选中</p>
+              <p class="txt" v-if="item.unchecked">{{ $t('pagediy.iconUnselected') }}</p>
               <div class="img-box" v-else>
                 <div class="upload-box"><i class="el-icon-camera-solid" style="font-size: 30px" /></div>
-                <p class="txt">未选中</p>
+                <p class="txt">{{ $t('pagediy.iconUnselected') }}</p>
               </div>
             </div>
           </div>
           <div class="c_row-item mb10">
-            <el-col class="label" :span="4"> 名称 </el-col>
+            <el-col class="label" :span="4"> {{ $t('pagediy.menuName') }} </el-col>
             <el-col :span="19" class="slider-box">
-              <el-input size="small" v-model="item.name" maxlength="4" placeholder="不超过4个字" />
+              <el-input
+                size="small"
+                :value="getMenuName(item)"
+                :maxlength="nameMaxlength"
+                :placeholder="namePlaceholder"
+                @input="setMenuName(item, $event)"
+              />
             </el-col>
           </div>
           <div class="c_row-item">
-            <el-col class="label" :span="4"> 链接 </el-col>
+            <el-col class="label" :span="4"> {{ $t('pagediy.link') }} </el-col>
             <el-col :span="19" class="slider-box">
               <div @click="getLink(index)">
-                <el-input size="small" icon="ios-arrow-forward" v-model="item.link" readonly placeholder="请选择链接">
+                <el-input size="small" icon="ios-arrow-forward" v-model="item.link" readonly :placeholder="$t('pagediy.pleaseSelectLink')">
                   <el-button slot="append" icon="el-icon-arrow-right"></el-button>
                 </el-input>
               </div>
@@ -58,7 +71,7 @@
       plain
       @click="addMenu"
       v-if="configData.list && configData.list.length < 5"
-      >添加图文菜单</el-button
+      >{{ $t('pagediy.addImageTextMenu') }}</el-button
     >
     <linkaddress ref="linkaddres" @linkUrl="linkUrl"></linkaddress>
   </div>
@@ -76,6 +89,9 @@
 // +---------------------------------------------------------------------
 import vuedraggable from 'vuedraggable';
 import linkaddress from '@/components/linkaddress';
+import { systemLanguageList } from '@/api/systemLanguage';
+import { defaultLangList } from '@/i18n/defaultLangList';
+import { parseLangJsonMap, resolveFormActiveLang } from '@/utils/localizedName';
 export default {
   name: 'c_foot',
   props: {
@@ -118,7 +134,23 @@ export default {
         xs: 12,
       },
       defaults: {},
+      langOptions: defaultLangList.map((i) => ({ code: i.value, label: i.label })),
+      defaultLangCode: 'zh-cn',
+      activeLang: (this.$i18n && this.$i18n.locale) || 'zh-cn',
     };
+  },
+  computed: {
+    activeLangLabel() {
+      const lang = this.langOptions.find((item) => item.code === this.activeLang);
+      return lang ? lang.label : this.activeLang;
+    },
+    namePlaceholder() {
+      if (this.activeLang === this.defaultLangCode) return this.$t('pagediy.max4Chars');
+      return this.$t('pagediy.inputMenuNameInLang', { lang: this.activeLangLabel });
+    },
+    nameMaxlength() {
+      return this.activeLang === this.defaultLangCode ? 4 : 20;
+    },
   },
   watch: {
     configObj: {
@@ -134,8 +166,44 @@ export default {
       this.defaults = this.configObj;
       this.configData = this.configObj[this.configNme];
     });
+    this.getLanguageList();
   },
   methods: {
+    getLanguageList() {
+      systemLanguageList()
+        .then((list) => {
+          if (!list || list.length === 0) {
+            this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          } else {
+            this.langOptions = list.map((item) => ({
+              code: item.code,
+              label: item.name,
+              isDefault: item.isDefault,
+            }));
+            const defaultLang = list.find((item) => item.isDefault);
+            this.defaultLangCode = defaultLang ? defaultLang.code : 'zh-cn';
+          }
+          this.activeLang = resolveFormActiveLang(this);
+        })
+        .catch(() => {
+          this.langOptions = defaultLangList.map((i) => ({ code: i.value, label: i.label }));
+          this.activeLang = resolveFormActiveLang(this);
+        });
+    },
+    getMenuName(item) {
+      if (this.activeLang === this.defaultLangCode) return item.name || '';
+      return parseLangJsonMap(item.nameJson)[this.activeLang] || '';
+    },
+    setMenuName(item, val) {
+      if (this.activeLang === this.defaultLangCode) {
+        this.$set(item, 'name', val);
+        return;
+      }
+      const map = parseLangJsonMap(item.nameJson);
+      if (String(val || '').trim()) map[this.activeLang] = val;
+      else delete map[this.activeLang];
+      this.$set(item, 'nameJson', Object.keys(map).length ? JSON.stringify(map) : '');
+    },
     linkUrl(e) {
       this.configData.list[this.itemIndex].link = e;
     },
@@ -160,26 +228,22 @@ export default {
       let obj = {
         checked: '',
         unchecked: '',
-        name: '自定义',
+        name: this.$t('pagediy.customStyle'),
+        nameJson: '',
         link: '',
       };
       this.configData.list.push(obj);
     },
     deleteMenu(index) {
-      this.$confirm('是否确定删除该菜单?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('pagediy.deleteMenuConfirm'), this.$t('common.tip'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning',
       })
         .then(() => {
           this.configData.list.splice(index, 1);
         })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消',
-          });
-        });
+        .catch(() => {});
     },
   },
 };
@@ -284,5 +348,13 @@ export default {
   margin-top: 20px;
   width: 100%;
   height: 40px;
+}
+.lang-name-switch {
+  width: 100%;
+  margin: 10px 0;
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 </style>

@@ -55,15 +55,18 @@ export default {
       tinymceId: this.id,
       fullscreen: false,
       languageTypeList: {
+        'zh-cn': 'zh_CN',
         en: 'en',
-        zh: 'zh_CN',
+        th: 'th',
+        my: 'my',
       },
     };
   },
   computed: {
     language() {
-      // return this.languageTypeList[this.$product.getters.language]
-      return this.languageTypeList['zh'];
+      // 跟随应用当前语言切换，未匹配到语言包时回退到英文
+      const locale = this.$i18n.locale;
+      return this.languageTypeList[locale] || 'en';
     },
   },
   watch: {
@@ -126,7 +129,7 @@ export default {
         setup(editor) {
           editor.addButton('Upload', {
             icon: 'image',
-            tooltip: '上传图片',
+            tooltip: _this.$t('tinymce.uploadImage'),
             onclick: function () {
               _this.modalPicTap('2');
             },
@@ -153,7 +156,7 @@ export default {
         function (img) {
           if (!img) return;
           let arr = [];
-          if (img.length > 10) return this.$message.warning('最多选择10张图片！');
+          if (img.length > 10) return this.$message.warning(this.translateText('最多选择10张图片！'));
           img.map((item) => {
             arr.push(item.sattDir);
           });

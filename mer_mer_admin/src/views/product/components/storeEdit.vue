@@ -8,7 +8,7 @@
       @submit.native.prevent
       :rules="rules"
     >
-      <el-form-item v-if="!stockEdit" label="商户商品分类：" prop="cateIds">
+      <el-form-item v-if="!stockEdit" :label="$t('product.merchantCategoryLabel')" prop="cateIds">
         <el-cascader
           v-model="formValidate.cateIds"
           :options="merProductClassify"
@@ -18,16 +18,16 @@
           :show-all-levels="false"
         />
       </el-form-item>
-      <el-form-item label="商品规格：" class="labeltop">
+      <el-form-item :label="$t('product.productSpecLabel')" class="labeltop">
         <el-table :data="ManyAttrValue" class="tabNumWidth" size="small">
           <template v-if="manyTabDate">
-            <el-table-column v-for="(item, iii) in manyTabDate" :key="iii" :label="manyTabTit[iii].title">
+            <el-table-column v-for="(item, iii) in manyTabDate" :key="iii" :label="specColumnTitle(iii)" min-width="140">
               <template slot-scope="scope">
-                <span class="priceBox" v-text="scope.row[iii]" />
+                <span class="priceBox">{{ specCellText(iii, scope.row[iii]) }}</span>
               </template>
             </el-table-column>
           </template>
-          <el-table-column label="图片" width="70">
+          <el-table-column :label="$t('product.image')" width="70">
             <template slot-scope="scope">
               <div class="line-heightOne">
                 <div v-if="scope.row.image" class="tabPic line-heightOne"><img :src="scope.row.image" /></div>
@@ -38,7 +38,7 @@
             <template slot-scope="scope">
               <el-input
                 v-if="
-                  (formThead[iii].title === '售价（元）' || (formThead[iii].title === '库存' && productType < 5)) &&
+                  (iii === 'price' || (iii === 'stock' && productType < 5)) &&
                   !stockEdit
                 "
                 v-model.trim="scope.row[iii]"
@@ -47,14 +47,14 @@
                 class="priceBox"
                 @keyup.native="keyupEvent(iii, scope.row[iii], scope.$index)"
               />
-              <span v-else-if="formThead[iii].title === '是否默认' || formThead[iii].title === '是否展示'">{{
-                scope.row[iii] ? '是' : '否'
+              <span v-else-if="iii === 'isDefault' || iii === 'isShow'">{{
+                scope.row[iii] ? $t('product.yes') : $t('product.no')
               }}</span>
               <span v-else>{{ scope.row[iii] || '--' }}</span>
             </template>
           </el-table-column>
           <!--增加库存-->
-          <el-table-column v-if="stockEdit && productType !== 6" label="增加库存" align="right" width="150">
+          <el-table-column v-if="stockEdit && productType !== 6" :label="$t('product.addStock')" align="right" width="150">
             <template slot-scope="scope">
               <el-form-item class="all line-heightOne">
                 <el-input-number v-model.trim="scope.row.stockAdd" :step="1" step-strictly :min="0" class="priceBox" />
@@ -62,34 +62,34 @@
             </template>
           </el-table-column>
           <!--云盘链接设置-->
-          <el-table-column v-if="!stockEdit && productType === 5" label="链接设置" align="right">
+          <el-table-column v-if="!stockEdit && productType === 5" :label="$t('product.linkSettings')" align="right">
             <template slot-scope="scope">
               <el-form-item class="all">
-                <a @click="editVirtually(scope.$index, scope.row)">编辑链接</a>
+                <a @click="editVirtually(scope.$index, scope.row)">{{ $t('product.editLink') }}</a>
               </el-form-item>
             </template>
           </el-table-column>
           <!--管理卡密，卡密库跳转-->
           <el-table-column
             v-if="productType === 6 && checkPermi(['merchant:card:secret:page:list'])"
-            :label="stockEdit ? '补充卡密' : '管理卡密'"
+            :label="stockEdit ? $t('product.supplementCdkey') : $t('product.manageCdkey')"
             align="right"
           >
             <template slot-scope="scope">
               <el-form-item class="all">
-                <a @click="handlerToAddCdkey(scope.row)">补充卡密</a>
+                <a @click="handlerToAddCdkey(scope.row)">{{ $t('product.supplementCdkey') }}</a>
               </el-form-item>
             </template>
           </el-table-column>
           <!--修改卡密库-->
           <el-table-column
             v-if="!stockEdit && productType === 6 && checkPermi(['merchant:card:secret:page:list'])"
-            label="卡密设置"
+            :label="$t('product.cdkeySettings')"
             align="right"
           >
             <template slot-scope="scope">
               <el-form-item class="all">
-                <a @click="handlerEeditCdkey(scope.$index, scope.row)">{{ scope.row.cdkeyLibraryName }}</a>
+                <a @click="handlerEeditCdkey(scope.$index, scope.row)">{{ displayCdkeyLibraryName(scope.row) }}</a>
               </el-form-item>
             </template>
           </el-table-column>
@@ -97,7 +97,7 @@
       </el-form-item>
       <el-form-item v-if="(stockEdit && productType !== 6) || !stockEdit">
         <el-button type="primary" @click="onSubmit('formValidate')">{{
-          loadingBtn ? '提交中 ...' : '确 定'
+          loadingBtn ? $t('product.submitting') : $t('product.confirmSpace')
         }}</el-button>
       </el-form-item>
     </el-form>
@@ -133,6 +133,8 @@
 import { productDetailApi, productStockAddApi, productFreeEditApi } from '@/api/product';
 import { mapGetters } from 'vuex';
 import { checkPermi } from '@/utils/permission'; // 权限判断函数
+import i18n from '@/i18n';
+import { getLocalizedName, getUiLocale, localizeProductSpecName, localizeProductSpecValue, localizeSpecSku } from '@/utils/localizedName';
 import CdkeyLibrary from '@/views/product/components/cdkeyLibrary.vue';
 import addCloudDisk from '@/views/product/components/addCloudDisk.vue';
 import product from '@/mixins/product';
@@ -159,50 +161,50 @@ const defaultObj = {
   attr: [],
   specType: false,
 };
-const objTitle = {
+const objTitle = () => ({
   price: {
-    title: '售价（元）',
+    title: i18n.t('product.salePrice'),
   },
   cost: {
-    title: '成本价（元）',
+    title: i18n.t('product.costPrice'),
   },
   otPrice: {
-    title: '划线价（元）',
+    title: i18n.t('product.strikePrice'),
   },
   vipPrice: {
-    title: '会员价（元）',
+    title: i18n.t('product.memberPrice'),
   },
   stock: {
-    title: '库存',
+    title: i18n.t('product.stock'),
   },
   barCode: {
-    title: '商品编码',
+    title: i18n.t('product.productCode'),
   },
   weight: {
-    title: '重量（KG）',
+    title: i18n.t('product.weightKG'),
   },
   volume: {
-    title: '体积(m³)',
+    title: i18n.t('product.volumeM3'),
   },
   brokerage: {
-    title: '一级返佣(%)',
+    title: i18n.t('product.firstCommission'),
   },
   brokerageTwo: {
-    title: '二级返佣(%)',
+    title: i18n.t('product.secondCommission'),
   },
   isDefault: {
-    title: '是否默认',
+    title: i18n.t('product.isDefault'),
   },
   isShow: {
-    title: '是否展示',
+    title: i18n.t('product.isShow'),
   },
   itemNumber: {
-    title: '商品条码',
+    title: i18n.t('product.productBarcode'),
   },
   stockAdd: {
-    title: '增加库存',
+    title: i18n.t('product.addStock'),
   },
-};
+});
 export default {
   name: 'edit',
   mixins: [product], //此js存放商品的部分函数方法
@@ -240,11 +242,11 @@ export default {
         checkStrictly: true,
       },
       rules: {
-        cateIds: [{ required: true, message: '请选择商户商品分类', trigger: 'change', type: 'array', min: '1' }],
-        stockAdd: [{ required: true, message: '请输入库存', trigger: 'blur' }],
+        cateIds: [{ required: true, message: this.$t('product.selectMerchantCategory'), trigger: 'change', type: 'array', min: '1' }],
+        stockAdd: [{ required: true, message: this.$t('product.enterStock'), trigger: 'blur' }],
       },
       formValidate: Object.assign({}, defaultObj),
-      formThead: Object.assign({}, objTitle),
+      formThead: Object.assign({}, objTitle()),
       isAttr: false,
       ManyAttrValue: [
         {
@@ -270,6 +272,9 @@ export default {
     };
   },
   computed: {
+    uiLocale() {
+      return (this.$i18n && this.$i18n.locale) || getUiLocale(this);
+    },
     ...mapGetters(['merProductClassify']),
     attrValue() {
       const obj = Object.assign({}, defaultObj.attrValue[0]);
@@ -296,13 +301,10 @@ export default {
     },
   },
   watch: {
-    // 'formValidate.attrList': {
-    //   handler: function (val) {
-    //     if (this.formValidate.specType && this.isAttr) this.watCh(val); //重要！！！
-    //   },
-    //   immediate: false,
-    //   deep: true,
-    // },
+    // 切换语言时重新生成规格表单标题，确保售价/成本价等标签跟随语言
+    '$i18n.locale'() {
+      this.formThead = Object.assign({}, objTitle());
+    },
   },
   created() {
     this.tempRoute = Object.assign({}, this.$route);
@@ -315,6 +317,17 @@ export default {
   },
   methods: {
     checkPermi,
+    displayCdkeyLibraryName(row) {
+      return getLocalizedName({ name: row.cdkeyLibraryName, nameJson: row.cdkeyLibraryNameJson }, this.uiLocale);
+    },
+    specColumnTitle(key) {
+      const attr = (this.formValidate.attrList || []).find((item) => item.attributeName === key);
+      return localizeProductSpecName(attr, this.uiLocale) || (this.manyTabTit[key] && this.manyTabTit[key].title) || key;
+    },
+    specCellText(specKey, text) {
+      const attr = (this.formValidate.attrList || []).find((item) => item.attributeName === specKey);
+      return localizeSpecSku(localizeProductSpecValue(attr, text, this.uiLocale), this.$t.bind(this));
+    },
     // 补充卡密
     handlerToAddCdkey(row) {
       const { href } = this.$router.resolve({
@@ -327,6 +340,7 @@ export default {
       this.cdkeyLibraryInfo = {
         id: data.cdkeyId,
         name: data.cdkeyLibraryName,
+        nameJson: data.cdkeyLibraryNameJson,
       };
       this.ManyAttrValue[index].expand = data.expand;
       this.virtuallyIndex = index;
@@ -335,6 +349,7 @@ export default {
     //选择卡密库回调
     handlerChangeCdkeyIdSubSuccess(row) {
       this.ManyAttrValue[this.virtuallyIndex].cdkeyLibraryName = row.name;
+      this.ManyAttrValue[this.virtuallyIndex].cdkeyLibraryNameJson = row.nameJson;
       this.ManyAttrValue[this.virtuallyIndex].cdkeyId = row.id;
     },
     //编辑云盘链接
@@ -374,7 +389,7 @@ export default {
             this.ManyAttrValue.forEach((val, index) => {
               stockAdd = val.stockAdd;
             });
-            if (!stockAdd && stockAdd !== 0) return this.$message.warning('增加库存不能为空');
+            if (!stockAdd && stockAdd !== 0) return this.$message.warning(this.$t('product.addStockRequired'));
             this.ManyAttrValue.forEach((val, index) => {
               data.push({
                 id: val.id,
@@ -386,7 +401,7 @@ export default {
               id: this.productId,
             })
               .then((res) => {
-                this.$message.success('操作成功');
+                this.$message.success(this.$t('product.operateSuccess'));
                 this.$emit('subSuccess');
                 this.loadingBtn = false;
               })
@@ -411,7 +426,7 @@ export default {
               cateId: this.formValidate.cateId,
             })
               .then((res) => {
-                this.$message.success('操作成功');
+                this.$message.success(this.$t('product.operateSuccess'));
                 this.$emit('subSuccess');
                 this.loadingBtn = false;
               })

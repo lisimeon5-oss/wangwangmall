@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
@@ -33,10 +34,13 @@ public class ProductRuleRequest implements Serializable {
     @ApiModelProperty(value = "规则id,修改时必填")
     private Integer id;
 
-    @ApiModelProperty(value = "规格名称", required = true)
-    @NotBlank(message = "规格名称不能为空")
+    @ApiModelProperty(value = "规格名称")
     @Length(max = 32, message = "规格名称长度不能超过32个字符")
     private String ruleName;
+
+    @ApiModelProperty(value = "多语言规格名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言规格名称不能为空")
+    private String ruleNameJson;
 
     @ApiModelProperty(value = "规格值【JSON字符串】 [{\\\"detail\\\": [\\\"string\\\"],\\\"title\\\": \\\"string\\\"}]", required = true)
     @NotBlank(message = "规格值不能为空")

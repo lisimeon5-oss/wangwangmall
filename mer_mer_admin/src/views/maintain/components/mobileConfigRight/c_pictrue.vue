@@ -3,13 +3,13 @@
   <div class="mobile-page borderPadding">
     <div v-if="isUpdate">
       <div class="divider"></div>
-      <div class="title mb10">布局</div>
-      <div class="tip mb20">选定布局区域，在下方添加图片，建议添加比例一致的图片</div>
+      <div class="title mb10">{{ $t('pagediy.layout') }}</div>
+      <div class="tip mb20">{{ $t('pagediy.selectLayoutAddImageTip') }}</div>
       <div class="advert">
         <div v-if="style === 0">
           <div class="advertItem01 acea-row" v-for="(item, index) in configData.picList" :key="index">
             <img :src="item.image" v-if="item.image" />
-            <div class="empty-box" v-else>尺寸不限</div>
+            <div class="empty-box" v-else>{{ $t('pagediy.sizeUnlimited') }}</div>
           </div>
         </div>
         <div v-if="style === 1" class="advertItem02 acea-row">
@@ -22,8 +22,8 @@
             <img :src="item.image" v-if="item.image" />
             <div class="empty-box" v-else>
               <div>
-                <div>宽375像素</div>
-                <div>高度不限</div>
+                <div>{{ $t('pagediy.widthPx', { n: 375 }) }}</div>
+                <div>{{ $t('pagediy.heightUnlimited') }}</div>
               </div>
             </div>
           </div>
@@ -38,8 +38,8 @@
             <img :src="item.image" v-if="item.image" />
             <div class="empty-box" v-else>
               <div>
-                <div>宽250像素</div>
-                <div>高度不限</div>
+                <div>{{ $t('pagediy.widthPx', { n: 250 }) }}</div>
+                <div>{{ $t('pagediy.heightUnlimited') }}</div>
               </div>
             </div>
           </div>
@@ -47,16 +47,16 @@
         <div v-if="style === 3" class="advertItem04 acea-row">
           <div class="item" :class="currentIndex === 0 ? 'on' : ''" @click="currentTab(0, configData)">
             <img :src="configData.picList[0].image" v-if="configData.picList[0].image" />
-            <div class="empty-box" v-else>375*375像素或同比例</div>
+            <div class="empty-box" v-else>{{ $t('pagediy.sizeOrRatio', { w: 375, h: 375 }) }}</div>
           </div>
           <div class="item">
             <div class="pic" :class="currentIndex === 1 ? 'on' : ''" @click="currentTab(1, configData)">
               <img :src="configData.picList[1].image" v-if="configData.picList[1].image" />
-              <div class="empty-box" v-else>375*188像素或同比例</div>
+              <div class="empty-box" v-else>{{ $t('pagediy.sizeOrRatio', { w: 375, h: 188 }) }}</div>
             </div>
             <div class="pic" :class="currentIndex === 2 ? 'on' : ''" @click="currentTab(2, configData)">
               <img :src="configData.picList[2].image" v-if="configData.picList[2].image" />
-              <div class="empty-box" v-else>375*188像素或同比例</div>
+              <div class="empty-box" v-else>{{ $t('pagediy.sizeOrRatio', { w: 375, h: 188 }) }}</div>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
             v-for="(item, index) in configData.picList"
           >
             <img :src="item.image" v-if="item.image" />
-            <div class="empty-box" v-else>宽188像素高度不限</div>
+            <div class="empty-box" v-else>{{ $t('pagediy.widthPxHeightUnlimited', { n: 188 }) }}</div>
           </div>
         </div>
         <div v-if="style === 5" class="advertItem06 acea-row">
@@ -79,7 +79,7 @@
             v-for="(item, index) in configData.picList"
           >
             <img :src="item.image" v-if="item.image" />
-            <div class="empty-box" v-else>375*188像素或同比例</div>
+            <div class="empty-box" v-else>{{ $t('pagediy.sizeOrRatio', { w: 375, h: 188 }) }}</div>
           </div>
         </div>
       </div>

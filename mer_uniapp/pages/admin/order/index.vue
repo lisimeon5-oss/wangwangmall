@@ -1,13 +1,13 @@
 <template>
 	<view class="pos-order-list" ref="container">
 		<!-- #ifdef MP || APP-PLUS -->
-		<NavBar titleText="订单管理" bagColor="#f5f5f5" :iconColor="iconColor" :textColor="iconColor"
+		<NavBar :titleText="$t('订单管理')" bagColor="#f5f5f5" :iconColor="iconColor" :textColor="iconColor"
 			:isScrolling="isScrolling" showBack></NavBar>
 		<!-- #endif -->
 		<view class="searchCon acea-row">
 			<view class="search acea-row row-middle">
 				<text class="iconfont icon-ic_search"></text>
-				<input class="inputs" placeholder='请输入订单号' placeholder-style="font-size:28rpx" placeholder-class='placeholder' confirm-type='search'
+				<input class="inputs" :placeholder="$t('请输入订单号')" placeholder-style="font-size:28rpx" placeholder-class='placeholder' confirm-type='search'
 					name="search" v-model="searchListData.orderNo" @confirm="searchSubmit"></input>
 			</view>
 			<view class="btn" @click="filterShow = true">
@@ -25,36 +25,36 @@
 			<!-- #endif -->
 				<scroll-view scroll-x="true" class="scroll_view">
 					<view class="item" :class="state == 'all' ? 'on' : ''" @click="changeStatus('all')">
-						全部({{headerArr['all']!=undefined?headerArr['all']:0}})
+						{{$t('全部')}}({{headerArr['all']!=undefined?headerArr['all']:0}})
 						<image src="../static/adorn.png" v-if="state == 'all'"></image>
 					</view>
 					<view class="item" :class="state == 'notShipped' ? 'on' : ''" @click="changeStatus('notShipped')">
-						待发货({{headerArr['notShipped']!=undefined?headerArr['notShipped']:0}})
+						{{$t('待发货')}}({{headerArr['notShipped']!=undefined?headerArr['notShipped']:0}})
 						<image src="../static/adorn.png" v-if="state == 'notShipped'"></image>
 					</view>
 					<view class="item" :class="state == 'spike' ? 'on' : ''" @click="changeStatus('spike')">
-						待收货({{headerArr['spike']!=undefined?headerArr['spike']:0}})
+						{{$t('待收货')}}({{headerArr['spike']!=undefined?headerArr['spike']:0}})
 						<image src="../static/adorn.png" v-if="state == 'spike'"></image>
 					</view>
 					<view class="item" :class="state == 'awaitVerification' ? 'on' : ''"
 						@click="changeStatus('awaitVerification')">
-						待核销({{headerArr['verification']!=undefined?headerArr['verification']:0}})
+						{{$t('待核销')}}({{headerArr['verification']!=undefined?headerArr['verification']:0}})
 						<image src="../static/adorn.png" v-if="state == 'awaitVerification'"></image>
 					</view>
 					<view class="item" :class="state == 'receiving' ? 'on' : ''" @click="changeStatus('receiving')">
-						已收货({{headerArr['receiving']!=undefined?headerArr['receiving']:0}})
+						{{$t('已收货')}}({{headerArr['receiving']!=undefined?headerArr['receiving']:0}})
 						<image src="../static/adorn.png" v-if="state == 'receiving'"></image>
 					</view>
 					<view class="item" :class="state == 'complete' ? 'on' : ''" @click="changeStatus('complete')">
-						已完成({{headerArr['complete']!=undefined?headerArr['complete']:0}})
+						{{$t('已完成')}}({{headerArr['complete']!=undefined?headerArr['complete']:0}})
 						<image src="../static/adorn.png" v-if="state == 'complete'"></image>
 					</view>
 					<view class="item" :class="state == 'refunded' ? 'on' : ''" @click="changeStatus('refunded')">
-						已退款({{headerArr['refunded']!=undefined?headerArr['refunded']:0}})
+						{{$t('已退款')}}({{headerArr['refunded']!=undefined?headerArr['refunded']:0}})
 						<image src="../static/adorn.png" v-if="state == 'refunded'"></image>
 					</view>
 					<view class="item" :class="state == 'deleted' ? 'on' : ''" @click="changeStatus('deleted')">
-						已删除({{headerArr['deleted']!=undefined?headerArr['deleted']:0}})
+						{{$t('已删除')}}({{headerArr['deleted']!=undefined?headerArr['deleted']:0}})
 						<image src="../static/adorn.png" v-if="state == 'deleted'"></image>
 					</view>
 				</scroll-view>
@@ -68,13 +68,13 @@
 							</view>
 						</view>
 						<view class="state" v-if="item.refundStatus==3">
-							已退款
+							{{$t('已退款')}}
 						</view>
 						<view class="state" v-else-if="item.groupBuyRecordStatus===99||item.groupBuyRecordStatus===10|| item.status == 9">
 							{{orderStatus[item.status]}}
 						</view>
 						<view class="state" v-else>
-							{{item.groupBuyRecordStatus==0?'拼团中':'拼团失败'}}
+							{{item.groupBuyRecordStatus==0? $t('拼团中') : $t('拼团失败')}}
 						</view>
 					</view>
 					<view class="pos-order-goods">
@@ -103,7 +103,7 @@
 							<view class="money">
 								<baseMoney :money="item.payPrice" symbolSize="20" integerSize="32" decimalSize="20">
 								</baseMoney>
-								<view class="num">共{{ item.totalNum }}件</view>
+								<view class="num">{{$t('共')}}{{ item.totalNum }}{{$t('件')}}</view>
 							</view>
 						</view>
 					</view>
@@ -111,22 +111,22 @@
 						<view class="more">
 						</view>
 						<view class="acea-row row-middle">
-							<view class="bnt" v-if="item.groupBuyRecordStatus==10||item.groupBuyRecordStatus==99"  @click="modify(item, 1)">订单备注</view>
+							<view class="bnt" v-if="item.groupBuyRecordStatus==10||item.groupBuyRecordStatus==99"  @click="modify(item, 1)">{{$t('订单备注')}}</view>
 							<view class="bnt primary" v-if="[1,2].includes(item.status)&&item.refundStatus!=3&&(item.groupBuyRecordStatus==10||item.groupBuyRecordStatus==99)"
-								@click="goDelivery(item)">立即发货
+								@click="goDelivery(item)">{{$t('立即发货')}}
 							</view>
 							<!-- <navigator class="bnt primary" :url="'/pages/admin/logistics/index?orderId='+item.order_id"
-								v-if="item._status == 4 && item.delivery_type == 'express'&&item.refundStatus!=3">发货记录
+								v-if="item._status == 4 && item.delivery_type == 'express'&&item.refundStatus!=3">{{$t('发货记录')}}
 							</navigator> -->
 							<view class="bnt primary" v-if="item.status==3&&item.refundStatus!=3&&item.groupBuyRecordStatus==99" @click="verify(item)">
-								立即核销</view>
+								{{$t('立即核销')}}</view>
 							<view class="bnt primary" v-if="item.status==3&&item.groupBuyRecordStatus==10&&item.refundStatus!=3" @click="verify(item)">
-								立即核销</view>
+								{{$t('立即核销')}}</view>
 						</view>
 					</view>
 				</view>
 			</view>
-			<emptyPage v-else title="暂无订单～" :imgSrc="urlDomain+'crmebimage/presets/noShopper.png'"></emptyPage>
+			<emptyPage v-else :title="$t('暂无订单～')" :imgSrc="urlDomain+'crmebimage/presets/noShopper.png'"></emptyPage>
 			<Loading :loaded="loaded" :loading="loading"></Loading>
 			<PriceChange :change="change" :orderInfo="orderInfo" :isRefund="isRefund"
 				v-on:statusChange="statusChange($event)" v-on:closechange="changeclose($event)"
@@ -142,14 +142,14 @@
 				<view class="search-box">
 					<view class="search acea-row row-middle">
 						<text class="iconfont icon-ic_search"></text>
-						<input class="input" placeholder='请输入要查询的订单' placeholder-style="font-size:28rpx" placeholder-class='placeholder'
+						<input class="input" :placeholder="$t('请输入要查询的订单')" placeholder-style="font-size:28rpx" placeholder-class='placeholder'
 							confirm-type='search' name="search" v-model="searchListData.orderNo"
 							@confirm="searchSubmit"></input>
 					</view>
 				</view>
 				<view class="content">
 					<view class="item">
-						<view class="title">按下单时间</view>
+						<view class="title">{{$t('按下单时间')}}</view>
 						<view class="acea-row list">
 							<view class="cell" v-for="(item, index) in dateList" :key="index"
 								:class="{ on: item.val == dateSelected }" @click="dateChange(item.val)">{{ item.label }}
@@ -157,7 +157,7 @@
 						</view>
 					</view>
 					<view class="item">
-						<view class="title">按订单类型</view>
+						<view class="title">{{$t('按订单类型')}}</view>
 						<view class="acea-row list">
 							<view class="cell" v-for="(item, index) in payList" :key="index"
 								:class="{ on: item.val === searchListData.type }" @click="payChange(item.val)">
@@ -166,18 +166,18 @@
 						</view>
 					</view>
 					<view class="bottom">
-						<view class="no_view" @click="resetBtn">重置</view>
-						<view class="yes_view" @click="submitBtn">确定</view>
+						<view class="no_view" @click="resetBtn">{{$t('重置')}}</view>
+						<view class="yes_view" @click="submitBtn">{{$t('确定')}}</view>
 					</view>
 				</view>
 			</view>
 			<view v-if="confirmShow" class="mask"></view>
 			<view v-if="confirmShow" class="confirm-popup">
-				<view class="title">确认付款</view>
-				<view class="info">确认该订单用户已付款</view>
+				<view class="title">{{$t('确认付款')}}</view>
+				<view class="info">{{$t('确认该订单用户已付款')}}</view>
 				<view class="acea-row btn-box">
-					<view class="btn" @click="confirmShow = false">取消</view>
-					<view class="btn primary" @click="offlinePay">确认</view>
+					<view class="btn" @click="confirmShow = false">{{$t('取消')}}</view>
+					<view class="btn primary" @click="offlinePay">{{$t('确认')}}</view>
 				</view>
 			</view>
 			<view class="footerH"></view>
@@ -342,7 +342,7 @@
 			toDetail(item) {
 				if(item.groupBuyRecordStatus===0){
 					return this.$util.Tips({
-						title: '拼团中无法查看详情'
+						title: this.$t('拼团中无法查看详情')
 					})
 				}else{
 					uni.navigateTo({
@@ -353,7 +353,7 @@
 			//发送货
 			goDelivery(item) {
 				if (item.refundStatus == 1) return this.$util.Tips({
-					title: '请处理售后，再操作',
+					title: this.$t('请处理售后，再操作'),
 				});
 				uni.navigateTo({
 					url: `/pages/admin/order/send?orderNo=${item.orderNo}`
@@ -393,7 +393,7 @@
 			async savePrice(opt) {
 				if (!opt.remark) {
 					return this.$util.Tips({
-						title: '请输入备注'
+						title: this.$t('请输入备注')
 					})
 				} else {
 					this.toMark(this.orderInfo.orderNo, opt.remark)
@@ -407,7 +407,7 @@
 				}).then(res => {
 					res.code == 200 && (this.change = false);
 					return this.$util.Tips({
-						title: '备注成功'
+						title: this.$t('备注成功')
 					})
 				})
 			},

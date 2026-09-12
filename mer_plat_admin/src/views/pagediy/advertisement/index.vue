@@ -3,54 +3,54 @@
     <el-card class="box-card" :body-style="{ padding: '40px 50px' }" shadow="never" :bordered="false">
       <div class="flex">
         <div class="iframe" :bordered="false">
-          <div class="nofonts" v-if="!splashFrom.adList.length">暂无照片，请添加~</div>
+          <div class="nofonts" v-if="!previewAdList.length">{{ $t('pagediy.noSplashAdPhoto') }}</div>
           <swiper :options="swiperOption" class="swiperimg on">
-            <swiper-slide class="swiperimg on" v-for="(item, index) in splashFrom.adList" :key="index + 'a'">
-              <img :src="item.imageUrl" mode="aspectFill" />
+            <swiper-slide class="swiperimg on" v-for="(item, index) in previewAdList" :key="index + 'a'">
+              <img :src="previewAdImage(item)" mode="aspectFill" />
             </swiper-slide>
           </swiper>
         </div>
         <div class="content">
           <div class="ml20">
             <div class="right-box">
-              <div class="title-bar-line">开屏广告设置</div>
-              <div class="from-tips">建议尺寸：750 * 1334px，拖拽图片可调整图片顺序哦，最多添加五张</div>
+              <div class="title-bar-line">{{ $t('pagediy.splashAdSettings') }}</div>
+              <div class="from-tips">{{ $t('pagediy.splashAdImageTip') }}</div>
               <div class="list-box mt20">
                 <el-form :model="splashFrom">
-                  <el-form-item label="开屏广告:">
+                  <el-form-item :label="$t('pagediy.splashAdLabel')">
                     <el-switch
                       v-model="splashFrom.splashAdSwitch"
                       :active-value="1"
                       :inactive-value="0"
                       :width="55"
-                      active-text="开启"
-                      inactive-text="关闭"
+                      :active-text="$t('common.open')"
+                      :inactive-text="$t('common.close')"
                     />
                   </el-form-item>
-                  <el-form-item label="广告时间:">
+                  <el-form-item :label="$t('pagediy.adTimeLabel')">
                     <el-input-number
                       v-model.number="splashFrom.splashAdShowTime"
                       type="number"
                       size="small"
                       :min="1"
-                      placeholder="请输入开屏广告时间"
+                      :placeholder="$t('pagediy.pleaseEnterSplashAdTime')"
                       style="width: 150px"
                     ></el-input-number
-                    >（单位：秒）
-                    <div class="from-tips">广告N秒之后进行自动关闭（按照广告时间进行倒计时展示）。</div>
+                    >{{ $t('pagediy.unitSeconds') }}
+                    <div class="from-tips">{{ $t('pagediy.adAutoCloseTip') }}</div>
                   </el-form-item>
-                  <el-form-item label="展示间隔:">
+                  <el-form-item :label="$t('pagediy.displayIntervalLabel')">
                     <el-input-number
                       v-model.number="splashFrom.splashAdShowInterval"
                       type="number"
                       size="small"
                       :min="0"
-                      placeholder="请输入广告间隔时间"
+                      :placeholder="$t('pagediy.pleaseEnterAdInterval')"
                       style="width: 150px"
                     ></el-input-number
-                    >（单位：小时）
+                    >{{ $t('pagediy.unitHours') }}
                     <div class="from-tips">
-                      在设置的时间内，重复打开商城，只展示一次开屏广告。设置0代表每次进入商城均会出现开屏广告。
+                      {{ $t('pagediy.splashAdIntervalTip') }}
                     </div>
                   </el-form-item>
                 </el-form>
@@ -62,7 +62,7 @@
                   type="primary"
                   v-hasPermi="['platform:page:layout:splash:ad:save']"
                   v-debounceClick="handleAdvertisementSave"
-                  >{{ loadingBtn ? '提交中 ...' : '保存' }}</el-button
+                  >{{ loadingBtn ? $t('finance.submitting') : $t('common.save') }}</el-button
                 >
               </div>
             </div>
@@ -87,6 +87,7 @@ import FromList from '@/components/FromList';
 import { splashGetApi, splashSaveApi } from '@/api/devise';
 import { checkPermi } from '@/utils/permission';
 import { advertisementDefault } from '@/views/pagediy/advertisement/default';
+import { getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'index',
   components: { FromList },
@@ -122,10 +123,18 @@ export default {
       loadingBtn: false,
     };
   },
+  computed: {
+    previewAdList() {
+      return (this.advertisementConfig && this.advertisementConfig.list) || [];
+    },
+  },
   mounted() {
     if (checkPermi(['platform:page:layout:splash:ad:get'])) this.getAdvertisement();
   },
   methods: {
+    previewAdImage(item) {
+      return getLocalizedText(item && item.imageUrl, item && item.imageUrlJson, getUiLocale(this));
+    },
     // 开屏广告新增
     handleAdvertisementSave() {
       this.advertisementConfig.list.map((item, index) => {
@@ -138,7 +147,7 @@ export default {
       this.loadingBtn = true;
       splashSaveApi(data)
         .then((res) => {
-          this.$message.success('保存成功');
+          this.$message.success(this.$t('user.saveSuccess'));
           this.loadingBtn = false;
           this.getAdvertisement();
         })
@@ -150,7 +159,7 @@ export default {
     getAdvertisement() {
       splashGetApi().then((res) => {
         this.splashFrom = res;
-        this.advertisementConfig.list = res.adList;
+        this.advertisementConfig.list = res.adList || [];
       });
     },
   },

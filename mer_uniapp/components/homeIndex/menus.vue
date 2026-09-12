@@ -15,7 +15,7 @@
 										<easy-loadimage :image-src="itemn.img" :radius="dataConfig.contentStyle.val">
 										</easy-loadimage>
 									</view>
-									<view class="menu-txt">{{ itemn.info[0].value }}</view>
+									<view class="menu-txt">{{ diyInfoTitle(itemn) }}</view>
 								</view>
 							</view>
 						</swiper-item>
@@ -35,7 +35,7 @@
 							<easy-loadimage :image-src="item.img" :radius="dataConfig.contentStyle.val">
 							</easy-loadimage>
 						</view>
-						<view class="menu-txt">{{ item.info[0].value }}</view>
+						<view class="menu-txt">{{ diyInfoTitle(item) }}</view>
 					</view>
 				</block>
 			</scroll-view>
@@ -54,6 +54,7 @@
 	// | Author: CRMEB Team <admin@crmeb.com>
 	// +----------------------------------------------------------------------
 	import easyLoadimage from '@/components/base/easy-loadimage.vue';
+	import { diyInfoTitle } from '@/utils/localizedName.js';
 	export default {
 		name: 'menus',
 		props: {
@@ -163,6 +164,7 @@
 			})
 		},
 		methods: {
+			diyInfoTitle,
 			bannerfun(e) {
 				this.active = e.detail.current;
 			},

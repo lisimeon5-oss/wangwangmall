@@ -4,8 +4,8 @@
       <template v-if="style === 0">
         <div class="advertItem01 acea-row" v-for="(item, index) in picList" :key="index">
           <img
-            :src="item.image"
-            v-if="item.image"
+            :src="cubeImg(item)"
+            v-if="cubeImg(item)"
             :class="item.radioVal === '0' ? 'stretch' : item.radioVal === '1' ? 'scale' : 'fill'"
             class="img-style"
             :style="radiusStyle"
@@ -19,8 +19,8 @@
       <div class="advertItem02 acea-row" v-if="style === 1" :style="gapStyle">
         <div class="item" v-for="(item, index) in picList" :key="index" :style="spaceStyleTwo">
           <img
-            :src="item.image"
-            v-if="item.image"
+            :src="cubeImg(item)"
+            v-if="cubeImg(item)"
             :class="item.radioVal === '0' ? 'stretch' : item.radioVal === '1' ? 'scale' : 'fill'"
             class="img-style"
             :style="radiusStyle"
@@ -33,8 +33,8 @@
       <div class="advertItem02 advertItem03 acea-row" v-if="style === 2" :style="gapStyle">
         <div class="item" v-for="(item, index) in picList" :key="index" :style="spaceStyleThree">
           <img
-            :src="item.image"
-            v-if="item.image"
+            :src="cubeImg(item)"
+            v-if="cubeImg(item)"
             :class="item.radioVal === '0' ? 'stretch' : item.radioVal === '1' ? 'scale' : 'fill'"
             class="img-style"
             :style="radiusStyle"
@@ -47,8 +47,8 @@
       <div class="advertItem04 acea-row" v-if="style === 3" :style="gapStyle">
         <div class="item" :style="spaceStyleTwo">
           <img
-            :src="picList.length > 0 && picList[0].image"
-            v-if="picList.length > 0 && picList[0].image"
+            :src="picList.length > 0 && cubeImg(picList[0])"
+            v-if="picList.length > 0 && cubeImg(picList[0])"
             :class="picList[0].radioVal === '0' ? 'stretch' : picList[0].radioVal === '1' ? 'scale' : 'fill'"
             class="img-style img-left"
             :style="radiusStyle"
@@ -60,8 +60,8 @@
         <div class="item pic-four" :style="spaceStyleFour">
           <div class="pic">
             <img
-              :src="picList.length > 1 && picList[1].image"
-              v-if="picList.length > 1 && picList[1].image"
+              :src="picList.length > 1 && cubeImg(picList[1])"
+              v-if="picList.length > 1 && cubeImg(picList[1])"
               :class="picList[1].radioVal === '0' ? 'stretch' : picList[1].radioVal === '1' ? 'scale' : 'fill'"
               class="img-style"
               :style="radiusStyle"
@@ -72,8 +72,8 @@
           </div>
           <div class="pic">
             <img
-              :src="picList.length > 2 && picList[2].image"
-              v-if="picList.length > 2 && picList[2].image"
+              :src="picList.length > 2 && cubeImg(picList[2])"
+              v-if="picList.length > 2 && cubeImg(picList[2])"
               :class="picList[2].radioVal === '0' ? 'stretch' : picList[2].radioVal === '1' ? 'scale' : 'fill'"
               class="img-style"
               :style="radiusStyle"
@@ -87,8 +87,8 @@
       <div class="advertItem02 advertItem05 acea-row" v-if="style === 4" :style="gapStyle">
         <div class="item" v-for="(item, index) in picList" :key="index" :style="spaceStyleFive">
           <img
-            :src="item.image"
-            v-if="item.image"
+            :src="cubeImg(item)"
+            v-if="cubeImg(item)"
             :class="item.radioVal === '0' ? 'stretch' : item.radioVal === '1' ? 'scale' : 'fill'"
             class="img-style"
             :style="radiusStyle"
@@ -101,8 +101,8 @@
       <div class="advertItem06 acea-row" v-if="style === 5" :style="gapStyle">
         <div class="item" v-for="(item, index) in picList" :key="index" :style="spaceStyleTwo">
           <img
-            :src="item.image"
-            v-if="item.image"
+            :src="cubeImg(item)"
+            v-if="cubeImg(item)"
             :class="item.radioVal === '0' ? 'stretch' : item.radioVal === '1' ? 'scale' : 'fill'"
             class="img-style"
             :style="radiusStyle"
@@ -127,9 +127,11 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 import { mapState } from 'vuex';
+import { diyCname } from '@/utils/diyCname';
+import { getLocalizedText, getUiLocale } from '@/utils/localizedName';
 export default {
   name: 'picture_cube',
-  cname: '图片魔方',
+  ...diyCname('pagediy.pictureCube'),
   configName: 'c_picture_cube',
   icon: 't-icon-zujian-tupianmofang',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -212,42 +214,42 @@ export default {
         timestamp: this.num,
         setUp: {
           tabVal: 0,
-          cname: '图片魔方',
+          cname: this.$t('pagediy.pictureCube'),
         },
         tabConfig: {
           name: 'pictureCure',
-          title: '选择样式',
-          tabTitle: '内容设置',
+          title: this.$t('pagediy.selectAppearance'),
+          tabTitle: this.$t('pagediy.contentSettings'),
           isShow: 1,
           tabVal: 0,
           list: [
             {
-              val: '样式一',
+              val: this.$t('pagediy.styleOne'),
               icon: 'icon-tupian-yangshiyi',
               count: 1,
             },
             {
-              val: '样式二',
+              val: this.$t('pagediy.styleTwo'),
               icon: 'icon-tupian-yangshier',
               count: 2,
             },
             {
-              val: '样式三',
+              val: this.$t('pagediy.styleThree'),
               icon: 'icon-tupian-yangshisan',
               count: 3,
             },
             {
-              val: '样式四',
+              val: this.$t('pagediy.styleFour'),
               icon: 'icon-tupian-yangshisi',
               count: 3,
             },
             {
-              val: '样式五',
+              val: this.$t('pagediy.styleFive'),
               icon: 'icon-tupian-yangshiwu',
               count: 4,
             },
             {
-              val: '样式六',
+              val: this.$t('pagediy.styleSix'),
               icon: 'icon-tupian-yangshiliu',
               count: 4,
             },
@@ -258,6 +260,7 @@ export default {
           picList: [
             {
               image: '',
+              imageJson: '',
               link: '',
               radioVal: '0',
             },
@@ -274,10 +277,11 @@ export default {
           list: [
             {
               img: '',
+              imgJson: '',
               info: [
                 {
-                  title: '链接',
-                  tips: '请输入链接',
+                  title: this.$t('pagediy.link'),
+                  tips: this.$t('pagediy.pleaseEnterLink'),
                   value: '',
                   max: 100,
                   radioVal: '0',
@@ -287,8 +291,8 @@ export default {
           ],
         },
         bgColor: {
-          title: '背景颜色',
-          tabTitle: '颜色设置',
+          title: this.$t('pagediy.backgroundColor'),
+          tabTitle: this.$t('pagediy.colorSettings'),
           default: [
             {
               item: '#FFFFFF',
@@ -307,16 +311,16 @@ export default {
           ],
         },
         bgStyle: {
-          tabTitle: '圆角设置',
-          title: '背景圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.backgroundCircle'),
           name: 'bgStyle',
           val: 0,
           min: 0,
           max: 30,
         },
         contantStyle: {
-          tabTitle: '圆角设置',
-          title: '内容圆角',
+          tabTitle: this.$t('pagediy.radiusSettings'),
+          title: this.$t('pagediy.contentRadius'),
           name: 'contantStyle',
           val: 0,
           min: 0,
@@ -324,7 +328,7 @@ export default {
         },
         // 左右间距
         lrConfig: {
-          title: '左右边距',
+          title: this.$t('pagediy.leftRightMargin'),
           val: 12,
           min: 0,
           max: 40,
@@ -332,25 +336,25 @@ export default {
         // 页面间距
         // 上间距
         upConfig: {
-          tabTitle: '边距设置',
-          title: '上边距',
+          tabTitle: this.$t('pagediy.marginSettings'),
+          title: this.$t('pagediy.topMargin'),
           val: 10,
           min: 0,
           max: 100,
         },
         // 下间距
         downConfig: {
-          title: '下边距',
+          title: this.$t('pagediy.bottomMargin'),
           val: 10,
           min: 0,
         },
         mbConfig: {
-          title: '页面间距',
+          title: this.$t('pagediy.pageSpacing'),
           val: 10,
           min: 0,
         },
         spaceConfig: {
-          title: '内容间距',
+          title: this.$t('pagediy.contentSpacing'),
           val: 0,
           min: 0,
           max: 20,
@@ -371,6 +375,10 @@ export default {
     });
   },
   methods: {
+    cubeImg(item) {
+      if (!item) return '';
+      return getLocalizedText(item.image, item.imageJson, getUiLocale(this));
+    },
     setConfig(data) {
       if (!data) return;
       if (data) {

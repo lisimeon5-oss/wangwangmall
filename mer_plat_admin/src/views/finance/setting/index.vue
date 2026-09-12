@@ -55,14 +55,14 @@ export default {
       if (checkPermi(['platform:finance:merchant:closing:config:edit'])) {
         closingEditApi(formValue)
           .then((res) => {
-            this.$message.success('操作成功');
+            this.$message.success(this.$t('product.operateSuccess'));
             this.getConfigInfo();
           })
           .catch(() => {
             this.loading = false;
           });
       } else {
-        this.$message.warning('暂无操作权限');
+        this.$message.warning(this.$t('user.noPermission'));
       }
     }),
     // 获取转账配置信息

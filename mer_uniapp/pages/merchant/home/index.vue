@@ -12,7 +12,7 @@
 			</view>
 			<view class="item" @click="handleCustomer">
 				<view class="iconfont icon-kefu_o"></view>
-				<view>联系客服</view>
+				<view>{{$t('联系客服')}}</view>
 			</view>
 		</view>
 	</view>

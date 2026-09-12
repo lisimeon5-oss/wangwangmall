@@ -4,36 +4,36 @@
 		<view class="control-wrapper">
 			<view class="content-box">
 				<view class="acea-row row-between">
-					<view class="title">店铺类型</view>
-					<view class="btns" v-if="!isShow && merchantType.length>9" @click="isShow = true">展开全部<text class="iconfont icon-xiangxia"></text></view>
-					<view class="btns" v-if="isShow && merchantType.length>9"  @click="isShow = false">收起<text class="iconfont icon-xiangshang"></text></view>
+					<view class="title">{{$t('店铺类型')}}</view>
+					<view class="btns" v-if="!isShow && merchantType.length>9" @click="isShow = true">{{$t('展开全部')}}<text class="iconfont icon-xiangxia"></text></view>
+					<view class="btns" v-if="isShow && merchantType.length>9"  @click="isShow = false">{{$t('收起')}}<text class="iconfont icon-xiangshang"></text></view>
 				</view>
 				<view class="brand-wrapper">
 					<scroll-view :style="{'height':isShow?'100%':'250rpx'}" :scroll-y="isShow">
 						<view class="wrapper">
 							<view class="item line1" v-for="(item,index) in merchantType" :key="index" :class="activeIndex === index ? 'on' : ' '" @tap="bindChenck1(index)">
-								{{item.name}}
+								{{$t(item.name)}}
 							</view>
 						</view>
 					</scroll-view>
 				</view>
 				<view class="acea-row row-between">
-					<view class="title">商户分类</view>
-					<view class="btns" v-if="!isShowCate && merchantClassify.length>8" @click="isShowCate = true">展开全部<text class="iconfont icon-xiangxia"></text></view>
-					<view class="btns" v-if="isShowCate && merchantClassify.length>8"  @click="isShowCate = false">收起<text class="iconfont icon-xiangshang"></text></view>
+					<view class="title">{{$t('商户分类')}}</view>
+					<view class="btns" v-if="!isShowCate && merchantClassify.length>8" @click="isShowCate = true">{{$t('展开全部')}}<text class="iconfont icon-xiangxia"></text></view>
+					<view class="btns" v-if="isShowCate && merchantClassify.length>8"  @click="isShowCate = false">{{$t('收起')}}<text class="iconfont icon-xiangshang"></text></view>
 				</view>
 				<view class="brand-wrapper">
 					<scroll-view :style="{'height':isShowCate?'100%':'250rpx'}" :scroll-y="isShowCate">
 						<view class="wrapper">
 							<view class="item line1" v-for="(item,index) in merchantClassify" :key="index" :class="activeIndex2 === index ? 'on' : ' '" @tap="bindChenck2(index)">
-								{{item.name}}
+								{{$t(item.name)}}
 							</view>
 						</view>
 					</scroll-view>
 				</view>
 				<view class="foot-btn">
-					<view class="btn-item" @click="reset">重置</view>
-					<view class="btn-item confirm" @click="confirm">确定</view>
+					<view class="btn-item" @click="reset">{{$t('重置')}}</view>
+					<view class="btn-item confirm" @click="confirm">{{$t('确定')}}</view>
 				</view>
 			</view>
 		</view>

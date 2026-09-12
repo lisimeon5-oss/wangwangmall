@@ -56,15 +56,26 @@ export default {
       tinymceId: this.id,
       fullscreen: false,
       languageTypeList: {
+        'zh-cn': 'zh_CN',
         en: 'en',
-        zh: 'zh_CN',
+        th: 'th',
+        my: 'my',
       },
     };
   },
   computed: {
+    currentLocale() {
+      return (
+        (this.$store &&
+          this.$store.state.themeConfig &&
+          this.$store.state.themeConfig.themeConfig &&
+          this.$store.state.themeConfig.themeConfig.globalI18n) ||
+        (this.$i18n && this.$i18n.locale) ||
+        'zh-cn'
+      );
+    },
     language() {
-      // return this.languageTypeList[this.$product.getters.language]
-      return this.languageTypeList['zh'];
+      return this.languageTypeList[this.currentLocale] || 'en';
     },
   },
   watch: {
@@ -93,8 +104,13 @@ export default {
   methods: {
     initTinymce() {
       const _this = this;
-      window.tinymce.init({
-        language: this.language,
+      const lang = this.language;
+      const i18nApi = window.tinymce && window.tinymce.util && window.tinymce.util.I18n;
+      if (i18nApi && typeof i18nApi.setCode === 'function') {
+        i18nApi.setCode(lang);
+      }
+      const initConfig = {
+        language: lang,
         selector: `#${this.tinymceId}`,
         height: this.height,
         body_class: 'panel-body ',
@@ -127,7 +143,7 @@ export default {
         setup(editor) {
           editor.addButton('Upload', {
             icon: 'image',
-            tooltip: '上传图片',
+            tooltip: _this.$t('tinymce.uploadImage'),
             onclick: function () {
               _this.modalPicTap(true)
             },
@@ -146,7 +162,11 @@ export default {
             succFun(res.url);
           } catch (e) {}
         },
-      });
+      };
+      if (lang && lang !== 'en') {
+        initConfig.language_url = `${process.env.BASE_URL || '/'}static/tinymce4.7.5/langs/${lang}.js`;
+      }
+      window.tinymce.init(initConfig);
     },
     modalPicTap(multiple) {
       const _this = this;
@@ -154,7 +174,7 @@ export default {
         function (img) {
           if (!img) return;
           let arr = [];
-          if (img.length > 10) return this.$message.warning('最多选择10张图片！');
+          if (img.length > 10) return this.$message.warning(_this.$t('tinymce.maxSelectImages'));
           img.map((item) => {
             arr.push(item.sattDir);
           });

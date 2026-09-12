@@ -2,24 +2,24 @@
   <el-dialog
     :visible.sync="modals"
     :close-on-click-modal="false"
-    title="发货"
+    :title="$t('marketing.ship')"
     class="order_box"
     :before-close="handleClose"
     width="700px"
   >
     <el-form v-if="modals" ref="formItem" :model="formItem" label-width="75px" @submit.native.prevent :rules="rules">
-      <el-form-item label="发货类型：" prop="deliveryType">
+      <el-form-item :label="$t('marketing.shipTypeLabel')" prop="deliveryType">
         <el-radio-group v-model="formItem.deliveryType" @change="changeRadio(formItem.deliveryType)">
-          <el-radio label="express">快递配送</el-radio>
-          <el-radio label="noNeed">无需发货</el-radio>
-          <el-radio label="merchant">商家配送</el-radio>
+          <el-radio label="express">{{ $t('marketing.expressDeliveryRadio') }}</el-radio>
+          <el-radio label="noNeed">{{ $t('marketing.noNeedShip') }}</el-radio>
+          <el-radio label="merchant">{{ $t('order.merchantDelivery') }}</el-radio>
         </el-radio-group>
       </el-form-item>
       <SendFrom :formItem="formItem" :isShowBtn="true"></SendFrom>
     </el-form>
     <div slot="footer" class="dialog-btn-top">
-      <el-button @click="cancel('formItem')">取消</el-button>
-      <el-button type="primary" @click="putSend('formItem')">提交</el-button>
+      <el-button @click="cancel('formItem')">{{ $t('el.messagebox.cancel') }}</el-button>
+      <el-button type="primary" @click="putSend('formItem')">{{ $t('common.submit') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -102,13 +102,13 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           intervalOrderSendApi(this.formItem).then((async) => {
-            this.$message.success('发货成功');
+            this.$message.success(this.$t('marketing.shipSuccess'));
             this.modals = false;
             this.$emit('submitFail');
             this.$refs[name].resetFields();
           });
         } else {
-          this.$message.error('请填写信息');
+          this.$message.error(this.$t('marketing.pleaseFillInfo'));
         }
       });
     }),

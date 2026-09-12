@@ -3,11 +3,11 @@
     <div class="header clearfix">
       <div class="container">
         <el-form inline>
-          <el-form-item label="商品搜索：">
+          <el-form-item :label="translateText('商品搜索：')">
             <el-input
               v-model.trim="tableFrom.keywords"
               @input="onInput($event)"
-              placeholder="请输入商品名称，关键字，产品编号"
+              :placeholder="translateText('请输入商品名称，关键字，产品编号')"
               class="selWidth"
             >
               <el-button slot="append" icon="el-icon-search" @click="getList(1)" />
@@ -36,14 +36,14 @@
         </template>
       </el-table-column>
       <el-table-column prop="id" label="ID" min-width="50" />
-      <el-table-column label="商品图" min-width="80">
+      <el-table-column :label="translateText('商品图')" min-width="80">
         <template slot-scope="scope">
           <div class="demo-image__preview line-heightOne">
             <el-image :src="scope.row.image" :preview-src-list="[scope.row.image]" />
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="storeName" label="商品名称" min-width="180" />
+      <el-table-column prop="storeName" :label="translateText('商品名称')" min-width="180" />
     </el-table>
     <div class="block mb20">
       <el-pagination
@@ -57,7 +57,7 @@
       />
     </div>
     <div v-if="handleNum === 'many'" class="right-align">
-      <el-button size="small" type="primary" @click="ok">确定</el-button>
+      <el-button size="small" type="primary" @click="ok">{{ translateText('确定') }}</el-button>
     </div>
   </div>
 </template>

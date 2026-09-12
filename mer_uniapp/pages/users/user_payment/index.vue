@@ -2,9 +2,9 @@
 	<view :data-theme="theme" class="user_payment">
 		<form @submit="submitSub" report-submit='true'>
 			<view class="payment-top acea-row row-column row-center-wrapper">
-				<span class="name1">我的余额</span>
+				<span class="name1">{{$t('我的余额')}}</span>
 				<view class="pic">
-					￥<span class="pic-font">{{ nowMoney || 0 }}</span>
+					฿<span class="pic-font">{{ nowMoney || 0 }}</span>
 				</view>
 			</view>
 			<view class="payment">
@@ -13,20 +13,20 @@
 						:class="activePic === index ? 'pic-box-color-active' : ''" v-for="(item, index) in packageList"
 						:key="index" @click="picCharge(index, item)">
 						<view class="pic-number-pic">
-							{{ item.price }}<span class="pic-number"> 元</span>
+							{{ item.price }}<span class="pic-number"> {{$t('元')}}</span>
 						</view>
-						<view class="pic-number">赠送：{{ item.giveMoney }} 元</view>
+						<view class="pic-number">{{$t('赠送')}}：{{ item.giveMoney }} {{$t('元')}}</view>
 					</view>
 					<view class="pic-box pic-box-color acea-row row-center-wrapper"
 						:class="parseFloat(activePic)===parseFloat(packageList.length)?'pic-box-color-active':''"
 						@click="picCharge(packageList.length)">
-						<input type="digit" placeholder="其他" v-model="money" @input="onInput($event)" maxlength="5"
+						<input type="digit" :placeholder="$t('其他')" v-model="money" @input="onInput($event)" maxlength="5"
 							class="pic-box-money pic-number-pic uni-input" :placeholder-class="parseFloat(activePic) === parseFloat(packageList.length) ? 'placeColor':''"
 							:class="parseFloat(activePic) === parseFloat(packageList.length) ? 'pic-box-color-active' : ''"
 							@blur="addMoney()" />
 					</view>
 					<view class="tips-box">
-						<view class="tips mt-30">注意事项：</view>
+						<view class="tips mt-30">{{$t('注意事项：')}}</view>
 						<view class="tips-samll" v-for="item in noticeList" :key="item">
 							{{ item }}
 						</view>
@@ -35,7 +35,7 @@
 				<!-- #ifndef  MP-->
 				<view class='wrapper borRadius14  px-30' v-if='!active'>
 					<view class='item'>
-						<view>支付方式</view>
+						<view>{{$t('支付方式')}}</view>
 						<view class='list'>
 							<view class='payItem acea-row row-middle' :class='curActive==index ?"on":""'
 								@tap='payItem(index)' v-for="(item,index) in cartArr" :key='index'
@@ -44,15 +44,15 @@
 									<view class='iconfont animated'
 										:class='(item.icon) + " " + (animated==true&&active==index ?"bounceIn":"")'>
 									</view>
-									{{item.name}}
+									{{$t(item.name)}}
 								</view>
-								<view class='tip'>{{item.title}}</view>
+								<view class='tip'>{{$t(item.title)}}</view>
 							</view>
 						</view>
 					</view>
 				</view>
 				<!-- #endif -->
-				<button class='but' formType="submit"> {{active ? '立即转入': '立即充值' }}</button>
+				<button class='but' formType="submit"> {{active ? $t('立即转入') : $t('立即充值') }}</button>
 				<view class="alipaysubmit" v-html="formContent"></view>
 			</view>
 		</form>
@@ -226,12 +226,12 @@
 				if (that.active) {
 					if (parseFloat(value) < 0 || parseFloat(value) == NaN || value == undefined || value == "") {
 						return that.$util.Tips({
-							title: '请输入金额'
+							title: this.$t('请输入金额')
 						});
 					}
 					uni.showModal({
-						title: '转入余额',
-						content: '转入余额后无法再次转出，确认是否转入余额',
+						title: this.$t('转入余额'),
+						content: this.$t('转入余额后无法再次转出，确认是否转入余额'),
 						success(res) {
 							if (res.confirm) {
 								transferIn({
@@ -243,7 +243,7 @@
 											.brokeragePrice, parseFloat(value))
 									});
 									return that.$util.Tips({
-										title: '转入成功',
+										title: this.$t('转入成功'),
 										icon: 'success'
 									}, {
 										tab: 5,
@@ -256,33 +256,33 @@
 								})
 							} else if (res.cancel) {
 								return that.$util.Tips({
-									title: '已取消'
+									title: this.$t('已取消')
 								});
 							}
 						},
 					})
 				} else {
 					if (!this.payType) return this.$util.Tips({
-						title: '请选择支付方式'
+						title: this.$t('请选择支付方式')
 					});
 					uni.showLoading({
-						title: '正在支付',
+						title: this.$t('正在支付'),
 					})
 					let money = parseFloat(that.money);
 					if (that.rechar_id == 0) {
 						if (Number.isNaN(money)) {
 							return that.$util.Tips({
-								title: '充值金额必须为数字'
+								title: this.$t('充值金额必须为数字')
 							});
 						}
 						if (money <= 0) {
 							return that.$util.Tips({
-								title: '充值金额不能为0'
+								title: this.$t('充值金额不能为0')
 							});
 						}
 						if (money > 50000) {
 							return that.$util.Tips({
-								title: '充值金额最大值为50000'
+								title: this.$t('充值金额最大值为50000')
 							});
 						}
 					} else {
@@ -341,7 +341,7 @@
 							}, //微信、支付宝订单数据 【注意微信的订单信息，键值应该全部是小写，不能采用驼峰命名】
 							success: function(res) {
 								return that.$util.Tips({
-									title: '支付成功',
+									title: this.$t('支付成功'),
 									icon: 'success'
 								}, {
 									tab: 5,
@@ -350,12 +350,12 @@
 							},
 							fail: function(err) {
 								return that.$util.Tips({
-									title: '支付失败'
+									title: this.$t('支付失败')
 								});
 							},
 							complete: function(res) {
 								if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
-									title: '取消支付'
+									title: this.$t('取消支付')
 								});
 							}
 						})
@@ -371,7 +371,7 @@
 							paySign: jsConfig.paySign,
 							success: function(res) {
 								return that.$util.Tips({
-									title: '支付成功',
+									title: this.$t('支付成功'),
 									icon: 'success'
 								}, {
 									tab: 5,
@@ -380,12 +380,12 @@
 							},
 							fail: function(err) {
 								return that.$util.Tips({
-									title: '支付失败'
+									title: this.$t('支付失败')
 								});
 							},
 							complete: function(res) {
 								if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
-									title: '取消支付'
+									title: this.$t('取消支付')
 								});
 							}
 						})
@@ -403,7 +403,7 @@
 						if (that.payChannel == "h5") {
 							uni.hideLoading();
 							// that.$util.Tips({
-							// 	title: '支付成功'
+							// 	title: this.$t('支付成功')
 							// }, {
 							// 	tab: 5,
 							// 	url: '/pages/users/user_money/index'
@@ -415,7 +415,7 @@
 							that.$wechat.pay(data)
 								.finally(() => {
 									return that.$util.Tips({
-										title: '支付成功',
+										title: this.$t('支付成功'),
 										icon: 'success'
 									}, {
 										tab: 5,
@@ -424,7 +424,7 @@
 								})
 								.catch(function(err) {
 									return that.$util.Tips({
-										title: '支付失败'
+										title: this.$t('支付失败')
 									});
 								});
 						}
@@ -439,7 +439,7 @@
 							orderInfo: alipayRequest,
 							success: (e) => {
 								return that.$util.Tips({
-									title: '支付成功',
+									title: this.$t('支付成功'),
 									icon: 'success'
 								}, {
 									tab: 5,
@@ -448,7 +448,7 @@
 							},
 							fail: (e) => {
 								return that.$util.Tips({
-									title: '支付失败'
+									title: this.$t('支付失败')
 								});
 							},
 							complete: () => {

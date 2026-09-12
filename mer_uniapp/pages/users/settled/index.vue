@@ -5,43 +5,52 @@
         <view class='merchantsSettled'>
           <view class="merchantBg">
             <image class="bag" :src="merchantBg" alt="" srcset="" />
+            <!-- 中文用底图原样式；其它语言再盖住底图中文并显示翻译 -->
+            <template v-if="showI18nHeader">
+              <view class="merchantBg-mask"></view>
+              <view class="merchantBg-copy">
+                <view class="merchantBg-title">{{$t('商户入驻申请')}}</view>
+                <view class="merchantBg-line"></view>
+                <view class="merchantBg-join">{{$t('合作共赢 共享市场')}}</view>
+              </view>
+            </template>
           </view>
           <view v-if="!merchantData.name" class="application-record" @click="jumpToList">
-            申请记录
+            {{$t('申请记录')}}
             <text class="iconfont icon-xiangyou"></text>
           </view>
           <view class='list'>
             <view class="item">
               <view class="acea-row row-middle required">
-                <text class="item-name">商户名称</text>
+                <text class="item-name">{{$t('商户名称')}}</text>
                 <input :disabled="merchantData.auditStatus&&parseFloat(merchantData.auditStatus)<3"
-                       type="text" :maxlength="isCn ? '16' : '16'" placeholder="商户名称"
+                       type="text" :maxlength="isCn ? '16' : '16'" :placeholder="$t('商户名称')"
                        v-model="merchantData.name" @change="validateBtn" placeholder-class='placeholder' />
               </view>
             </view>
             <view class="item">
               <view class="acea-row row-middle required">
-                <text class="item-name">用户姓名</text>
+                <text class="item-name">{{$t('用户姓名')}}</text>
                 <input :disabled="merchantData.auditStatus&&parseFloat(merchantData.auditStatus)<3"
-                       type="text" placeholder="用户姓名" v-model="merchantData.realName" @change="validateBtn"
+                       type="text" :placeholder="$t('用户姓名')" v-model="merchantData.realName" @change="validateBtn"
                        placeholder-class='placeholder' />
               </view>
             </view>
             <view class="item">
               <view class="acea-row row-middle required">
-                <text class="item-name">联系电话</text>
+                <text class="item-name">{{$t('联系电话')}}</text>
                 <input :disabled="merchantData.auditStatus&&parseFloat(merchantData.auditStatus)<3"
-                       type="number" class="texts" v-model="merchantData.phone" placeholder="联系电话"
-                       style="margin:0;width: 252rpx;" />
+                       type="number" class="texts" v-model="merchantData.phone" :placeholder="$t('联系电话')"
+                       style="margin:0;flex:1;min-width:0;width:auto;" />
 
               </view>
             </view>
             <view class="item rel"
                   v-if="(isKey&&parseFloat(merchantData.auditStatus)>2) || (!isKey&&!merchantData.auditStatus)">
               <view class="acea-row row-middle required">
-                <text class="item-name">验证码</text>
+                <text class="item-name">{{$t('验证码')}}</text>
                 <input :disabled="merchantData.auditStatus&&parseFloat(merchantData.auditStatus)<3"
-                       type="text" placeholder="验证码" v-model="merchantData.captcha" @change="validateBtn"
+                       type="text" :placeholder="$t('验证码')" v-model="merchantData.captcha" @change="validateBtn"
                        class="codeIput" placeholder-class='placeholder' />
                 <button class="code" :disabled="disabled" :class="disabled === true ? 'on' : ''"
                         @click="code">
@@ -53,12 +62,12 @@
               <view class="uni-list">
                 <view class="uni-list-cell">
                   <view class="uni-list-cell-db acea-row row-middle required">
-                    <text class="item-name">商户分类</text>
+                    <text class="item-name">{{$t('商户分类')}}</text>
                     <picker
                         :disabled="merchantData.auditStatus&&parseFloat(merchantData.auditStatus)<3"
                         @change="bindPickerChange" :value="merchantCategoryIndex"
                         :range="merchantClassify" range-key="name">
-                      <input placeholder="商户分类" type="text" readonly disabled
+                      <input :placeholder="$t('商户分类')" type="text" readonly disabled
                              v-model="merchantCategoryName" @change="validateBtn">
                       <view class='iconfont icon-xiangyou'></view>
                     </picker>
@@ -70,12 +79,12 @@
               <view class="uni-list">
                 <view class="uni-list-cell">
                   <view class="uni-list-cell-db acea-row row-middle required">
-                    <text class="item-name">商户类型</text>
+                    <text class="item-name">{{$t('商户类型')}}</text>
                     <picker
                         :disabled="merchantData.auditStatus&&parseFloat(merchantData.auditStatus)<3"
                         @change="bindPickerChange1" :value="merchantTypeIndex" :range="merchantType"
                         range-key="name">
-                      <input placeholder="商户类型" type="text" readonly disabled
+                      <input :placeholder="$t('商户类型')" type="text" readonly disabled
                              v-model="merchantTypeName" @change="validateBtn">
                       <view class='iconfont icon-xiangyou'></view>
                     </picker>
@@ -85,16 +94,16 @@
             </view>
             <view class="item">
               <view class="acea-row row-middle">
-                <text class="item-name">关键字</text>
+                <text class="item-name">{{$t('关键字')}}</text>
                 <input :disabled="merchantData.auditStatus&&parseFloat(merchantData.auditStatus)<3"
-                       type="text" maxlength="30" placeholder="关键字" v-model="merchantData.keywords"
+                       type="text" maxlength="30" :placeholder="$t('关键字')" v-model="merchantData.keywords"
                        placeholder-class='placeholder' />
               </view>
             </view>
             <view class="item no-border">
-              <text class="acea-row row-middle required item-title">请上传营业执照及行业相关资质证明图片</text>
+              <text class="acea-row row-middle required item-title">{{$t('请上传营业执照及行业相关资质证明图片')}}</text>
               <text v-if="merchantTypeInfo" class="item-title">( {{merchantTypeInfo}} )</text>
-              <text class="item-desc">(图片最多可上传5张，格式支持JPG、PNG、JPEG)</text>
+              <text class="item-desc">{{$t('(图片最多可上传5张，格式支持JPG、PNG、JPEG)')}}</text>
               <view class="upload">
                 <view class='pictrue' v-for="(item,index) in pics" :key="index" :data-index="index"
                       @click="getPhotoClickIdx">
@@ -106,7 +115,7 @@
                 <view class='pictrue acea-row row-center-wrapper row-column' @click='uploadpic'
                       v-if="pics.length < 5 && ((isKey&&parseFloat(merchantData.auditStatus)>2) || (!isKey&&!merchantData.auditStatus))">
                   <text class='iconfont icon-icon25201'></text>
-                  <view>上传凭证</view>
+                  <view>{{$t('上传凭证')}}</view>
                 </view>
               </view>
             </view>
@@ -115,21 +124,21 @@
                 class="item no-border acea-row row-center row-middle">
               <checkbox-group @change='ChangeIsAgree' class="acea-row row-middle">
                 <checkbox class="checkbox" :checked="isAgree ? true : false" />
-                <span class="ml-4">已阅读并同意</span>
+                <span class="ml-4">{{$t('已阅读并同意')}}</span>
               </checkbox-group>
-              <button class="settleAgree" @click="showProtocol = true">《入驻协议》</button>
+              <button class="settleAgree" @click="showProtocol = true">{{$t('《入驻协议》')}}</button>
             </view>
             <button
                 v-if="(isKey&&parseFloat(merchantData.auditStatus)>2) || (!isKey&&!merchantData.auditStatus)"
                 :disabled="merchantData.auditStatus&&parseFloat(merchantData.auditStatus)<3"
-                class='submitBtn' :class="successful === true ? 'on':''" @click="formSubmit">提交申请</button>
+                class='submitBtn' :class="successful === true ? 'on':''" @click="formSubmit">{{$t('提交申请')}}</button>
           </view>
         </view>
       </form>
       <view class="settlementAgreement" v-if="showProtocol">
         <view class="setAgCount">
           <i class="icon iconfont icon-guanbi" @click="showProtocol = false"></i>
-          <div class="title">商户入驻协议</div>
+          <div class="title">{{$t('商户入驻协议')}}</div>
           <view class="content">
             <jyf-parser :html="protocol" ref="article" :tag-style="tagStyle"></jyf-parser>
           </view>
@@ -143,14 +152,14 @@
 		<view class="settledSuccessMain" v-else>
 			<view class="settledSuccessful">
 				<image class="image" src="../static/images/settledSuccessful.svg" alt="" />
-				<view class="title">恭喜，您的资料提交成功！</view>
-				<view class="info">预计15个工作日内审核完毕，平台客服会及时与您联系！</view>
+				<view class="title">{{$t('恭喜，您的资料提交成功！')}}</view>
+				<view class="info">{{$t('预计15个工作日内审核完毕，平台客服会及时与您联系！')}}</view>
 				<view class="goHome" hover-class="none" @click="goHome">
-					返回首页
+					{{$t('返回首页')}}
 				</view>
 			</view>
 		</view>
-		<Verify @success="handlerOnVerSuccess" :captchaType="'clickWord'" :imgSize="{ width: '330px', height: '155px' }"
+		<Verify @success="handlerOnVerSuccess" :captchaType="'blockPuzzle'" :imgSize="{ width: '330px', height: '155px' }"
 			ref="verify"></Verify>
 	</view>
 </template>
@@ -205,7 +214,7 @@
 			return {
 				windowHeight: app.globalData.windowHeight,
 				isCn: true,
-				text: '获取验证码',
+				text: '',
 				disabled: false,
 				isAgree: false,
 				showProtocol: false,
@@ -248,7 +257,13 @@
 		beforeDestroy() {
 			clearTimeout(this.timer)
 		},
-		computed: mapGetters(['globalData','isLogin', 'merchantClassify', 'merchantType', 'merSttledData']),
+		computed: {
+			...mapGetters(['globalData','isLogin', 'merchantClassify', 'merchantType', 'merSttledData']),
+			showI18nHeader() {
+				const loc = (this.i18nLocale || 'zh-cn').toLowerCase();
+				return loc !== 'zh-cn' && loc !== 'zh';
+			}
+		},
 		mounted() {
 			this.$store.dispatch('MerCategoryList');
 			this.$store.dispatch('MerTypeList');
@@ -408,7 +423,7 @@
 			code: Debounce(function() {
 				if (this.disabled) return;
 				if (!this.merchantData.phone) return this.$util.Tips({
-					title: '请填写手机号'
+					title: this.$t('请填写手机号')
 				});
 				this.$refs.verify.show();
 			}),
@@ -423,7 +438,7 @@
 			formSubmit: Debounce(function(e) {
 				if (this.validateForm() && this.validate) {
 					if (this.pics.length == 0) return this.$util.Tips({
-						title: "请上传资质图片"
+						title: this.$t('请上传资质图片')
 					});
 					if (this.pics) {
 						this.merchantData.qualificationPicture = JSON.stringify(this.pics)
@@ -462,19 +477,19 @@
 					value = that.merchantData;
 
 				if (!value.name) return that.$util.Tips({
-					title: '请输入商户名称'
+					title: this.$t('请输入商户名称')
 				});
 				if (!value.realName) return that.$util.Tips({
-					title: '请输入姓名'
+					title: this.$t('请输入姓名')
 				});
 				if (!value.captcha) return that.$util.Tips({
-					title: '请填写验证码'
+					title: this.$t('请填写验证码')
 				});
 				if (!value.categoryId) return that.$util.Tips({
-					title: '请选择商户分类'
+					title: this.$t('请选择商户分类')
 				});
 				if (!that.isAgree) return that.$util.Tips({
-					title: '请勾选并同意入驻协议'
+					title: this.$t('请勾选并同意入驻协议')
 				});
 				that.validate = true;
 				return true;
@@ -490,7 +505,7 @@
 </script>
 
 <style scoped lang="scss">
-	/deep/.uni-scroll-view{
+	::v-deep .uni-scroll-view{
 		overflow: hidden auto !important;
 	}
 	.select_code {
@@ -511,7 +526,16 @@
 	}
 
 	.item-name {
-		width: 160rpx;
+		flex-shrink: 0;
+		min-width: 176rpx;
+		max-width: 44%;
+		width: auto;
+		font-size: 30rpx;
+		color: #333333;
+		font-weight: 500;
+		line-height: 1.4;
+		padding-right: 16rpx;
+		box-sizing: border-box;
 	}
 
 	.uni-list-cell {
@@ -538,24 +562,63 @@
 	.merchantsSettled .merchantBg {
 		width: 100%;
 		height: 900rpx;
+		position: relative;
 
 		.bag {
 			width: 100%;
 			height: 100%;
 		}
 
-		.merchantBg-title {
+		.merchantBg-mask {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			height: 448rpx;
+			z-index: 1;
+			pointer-events: none;
+			@include main_bg_color(theme);
+		}
+
+		.merchantBg-copy {
+			position: absolute;
+			left: 48rpx;
+			right: 48rpx;
+			top: 72rpx;
+			z-index: 2;
+			padding: 0;
+			background: transparent;
+			box-sizing: border-box;
 			text-align: center;
+		}
+
+		.merchantBg-title {
 			color: #fff;
-			font-size: 60rpx;
-			font-weight: 600;
+			font-size: 68rpx;
+			font-weight: 700;
+			line-height: 1.28;
+			letter-spacing: 0.04em;
 			margin-bottom: 20rpx;
+			word-break: break-word;
+			text-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.18);
+		}
+
+		.merchantBg-line {
+			width: 72rpx;
+			height: 6rpx;
+			border-radius: 6rpx;
+			background: #ffe9a0;
+			margin: 0 auto 22rpx;
 		}
 
 		.merchantBg-join {
-			text-align: center;
-			color: #fff;
+			color: #ffe9a0;
 			font-size: 36rpx;
+			font-weight: 500;
+			line-height: 1.45;
+			letter-spacing: 0.08em;
+			word-break: break-word;
+			text-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.16);
 		}
 	}
 
@@ -564,25 +627,28 @@
 		border-radius: 12px;
 		margin: 0 24rpx;
 		position: absolute;
-		top: 417rpx;
+		top: 440rpx;
 		width: calc(100% - 24px);
+		padding-bottom: 40rpx;
+		box-sizing: border-box;
 	}
 
 	.application-record {
 		position: absolute;
 		display: flex;
 		align-items: center;
-		top: 318rpx;
+		top: 300rpx;
 		right: 0;
+		z-index: 3;
 		color: #fff;
-		font-size: 22rpx;
-		background-color: rgba(0, 0, 0, 0.3);
-		padding: 8rpx 18rpx;
+		font-size: 24rpx;
+		background-color: rgba(0, 0, 0, 0.28);
+		padding: 12rpx 22rpx 12rpx 24rpx;
 		border-radius: 20px 0px 0px 20px;
 	}
 
 	.merchantsSettled .list .item {
-		padding: 40rpx 0 12px;
+		padding: 36rpx 0 28rpx;
 		border-bottom: 1rpx solid #eee;
 		position: relative;
 		margin: 0 20rpx;
@@ -594,17 +660,19 @@
 		}
 
 		.item-title {
-			color: #666666;
-			font-size: 28rpx;
+			color: #333333;
+			font-size: 30rpx;
+			font-weight: 500;
 			display: block;
+			line-height: 1.4;
 		}
 
 		.item-desc {
-			color: #B2B2B2;
-			font-size: 22rpx;
+			color: #888888;
+			font-size: 26rpx;
 			display: block;
-			margin-top: 9rpx;
-			line-height: 36rpx;
+			margin-top: 10rpx;
+			line-height: 1.45;
 		}
 	}
 
@@ -703,8 +771,11 @@
 	}
 
 	.merchantsSettled .list .item input {
-		width: 470rpx;
+		flex: 1;
+		min-width: 0;
+		width: auto;
 		font-size: 30rpx;
+		color: #333;
 	}
 
 	.merchantsSettled .list .item .placeholder {
@@ -750,15 +821,18 @@
 
 	.merchantsSettled .list .item .code {
 		position: absolute;
-		width: 93px;
-		line-height: 27px;
 		@include coupons_border_color(theme);
-		border-radius: 15px;
+		border-radius: 28rpx;
 		@include main_color(theme);
 		text-align: center;
-		bottom: 8px;
+		bottom: 16rpx;
 		right: 0;
-		font-size: 12px;
+		font-size: 26rpx;
+		line-height: 52rpx;
+		height: 52rpx;
+		width: 176rpx;
+		padding: 0 8rpx;
+		box-sizing: border-box;
 	}
 
 	.merchantsSettled .list .item .code.on {
@@ -770,11 +844,12 @@
 	.merchantsSettled .submitBtn {
 		width: 588rpx;
 		margin: 25px auto 25px auto;
-		height: 86rpx;
-		border-radius: 25px;
+		height: 88rpx;
+		border-radius: 44rpx;
 		text-align: center;
-		line-height: 86rpx;
-		font-size: 15px;
+		line-height: 88rpx;
+		font-size: 32rpx;
+		font-weight: 600;
 		color: #fff;
 		@include main_bg_color(theme);
 	}
@@ -786,14 +861,14 @@
 	uni-checkbox-group,
 	.settleAgree {
 		display: inline-block;
-		font-size: 24rpx;
+		font-size: 28rpx;
 	}
 
 	uni-checkbox-group {
 		color: #b2b2b2 !important;
 	}
 
-	checkbox /deep/.uni-checkbox-input.uni-checkbox-input-checked {
+	checkbox ::v-deep .uni-checkbox-input.uni-checkbox-input-checked {
 		@include coupons_border_color(theme);
 		@include main_color(theme);
 	}
@@ -838,12 +913,12 @@
 			height: 740rpx !important;
 			overflow-y: scroll;
 
-			/deep/ p {
+			::v-deep  p {
 				font-size: 13px;
 				line-height: 22px;
 			}
 
-			/deep/ img {
+			::v-deep  img {
 				max-width: 100%;
 			}
 		}
@@ -920,14 +995,14 @@
 		border-radius: 60px;
 	}
 
-	/deep/ uni-checkbox .uni-checkbox-input {
+	::v-deep  uni-checkbox .uni-checkbox-input {
 		width: 15px;
 		height: 15px;
 		margin-right: 10rpx;
 		position: relative;
 	}
 
-	/deep/ uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked:before {
+	::v-deep  uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked:before {
 		font-size: 14px;
 	}
 
@@ -950,13 +1025,13 @@
 
 	// #endif
 	.setAgCount {
-		/deep/ table {
+		::v-deep  table {
 			border: 1rpx solid #DDD;
 			border-bottom: none;
 			border-right: none;
 		}
 
-		/deep/ td,
+		::v-deep  td,
 		th {
 			padding: 5rpx 10rpx;
 			border-bottom: 1rpx solid #DDD;
@@ -970,7 +1045,7 @@
 		margin-right: 4rpx;
 	}
 
-	/deep/.uni-input-input {
+	::v-deep .uni-input-input {
 		width: 85%;
 		overflow: hidden;
 		text-overflow: ellipsis;

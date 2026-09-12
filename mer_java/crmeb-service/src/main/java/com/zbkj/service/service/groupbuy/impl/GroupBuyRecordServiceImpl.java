@@ -946,7 +946,7 @@ public class GroupBuyRecordServiceImpl extends ServiceImpl<GroupBuyRecordDao, Gr
             merchantOrderVo.setIsSelf(false);
         } else {
             merchantOrderVo.setMerId(merchant.getId());
-            merchantOrderVo.setMerName(merchant.getName());
+            merchantOrderVo.setMerName(I18nJsonUtil.resolveMerchantName(merchant));
             merchantOrderVo.setTakeTheirSwitch(merchant.getIsTakeTheir());
             merchantOrderVo.setIsSelf(merchant.getIsSelf());
         }

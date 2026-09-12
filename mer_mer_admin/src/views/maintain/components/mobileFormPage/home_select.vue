@@ -2,7 +2,7 @@
   <div class="text-box acea-row row-between-wrapper">
     <span class="title">{{ titleTxt }}</span>
     <div class="textVal">
-      <span class="place">请选择</span>
+      <span class="place">{{ $t('common.pleaseSelect') }}</span>
       <span class="iconfont icon-xuanze"></span>
     </div>
   </div>
@@ -20,7 +20,7 @@
 import { mapState } from 'vuex';
 export default {
   name: 'home_select',
-  cname: '下拉框',
+  cname: 'maintain.dropdown',
   icon: 'icon-biaodanzujian-xialakuang',
   configName: 'c_home_select',
   type: 0, // 0 基础组件 1 营销组件 2工具组件
@@ -64,19 +64,19 @@ export default {
         name: 'selects',
         timestamp: this.num,
         titleConfig: {
-          title: '标题',
-          val: '下拉框',
-          place: '请输入标题',
+          title: this.$t('formGenerator.title'),
+          val: this.$t('maintain.dropdown'),
+          place: this.$t('formGenerator.pleaseEnterTitle'),
           max: 10,
           type: 'form',
           isShow: 1,
         },
         wordsConfig: {
-          title: '选项',
-          list: [{ val: '选项一' }, { val: '选项二' }],
+          title: this.$t('formGenerator.options'),
+          list: [{ val: this.$t('formGenerator.optionOne') }, { val: this.$t('formGenerator.optionTwo') }],
         },
         titleShow: {
-          title: '是否必填',
+          title: this.$t('formGenerator.required'),
           val: true,
           type: 'form',
         },

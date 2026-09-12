@@ -1,0 +1,84 @@
+REUSE common.operate | 操作
+REUSE common.query | 查询
+REUSE common.close | 关闭
+REUSE common.open | 开启
+REUSE user.clearSuccess | 清除成功
+REUSE finance.pleaseEnterOrderNo | 请输入订单号
+REUSE el.select.placeholder | 请选择
+REUSE el.table.clearFilter | 全部
+REUSE product.timeSelectLabel | 时间选择：
+REUSE common.submit | 提交
+REUSE user.submitSuccess | 提交成功
+REUSE user.avatar | 头像
+REUSE finance.none | 无
+REUSE product.userSearchLabel | 用户搜索：
+REUSE order.userInfo | 用户信息
+REUSE el.table.resetFilter | 重置
+REUSE product.customTime | 自定义时间
+NEW  | 】的上级推广人吗
+NEW  | // +---------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +---------------------------------------------------------------------
+// | Copyright (c) 2016~2025 https://www.crmeb.com All rights reserved.
+// +---------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +---------------------------------------------------------------------
+// | Author: CRMEB Team
+NEW  | 成为推广员时间
+NEW  | 从哪个状态开始计算冻结时间
+NEW  | 订单交易成功后给上级返佣的比例,例:5 = 返订单金额的5%，返佣比例之和不能大于项目文件配置的佣金返佣比例和上限
+NEW  | 订单交易成功后给上级返佣的比例0 - 100,例:5 = 返订单金额的5%
+NEW  | 订单收货后
+NEW  | 订单数
+NEW  | 订单完成后
+NEW  | 订单支付后
+NEW  | 订单ID
+NEW  | 冻结多久进行解冻
+NEW  | 冻结时长：
+NEW  | 冻结中佣金
+NEW  | 二级返佣比例：
+NEW  | 二级推广人
+NEW  | 返佣比例相加不能超过100%
+NEW  | 返佣金额
+NEW  | 分销关系绑定：
+NEW  | 分销启用：
+NEW  | 关键字：
+NEW  | 和
+NEW  | 解除【
+NEW  | 开始冻结规则：
+NEW  | 列表
+NEW  | 满额分销满足金额开通分销权限
+NEW  | 满额分销最低金额：
+NEW  | 清除上级
+NEW  | 请输入冻结时间
+NEW  | 请输入二级返佣比例
+NEW  | 请输入姓名、电话、用户ID
+NEW  | 请输入一级返佣比例
+NEW  | 请选择是否启用分销
+NEW  | 商城分销功能开启关闭
+NEW  | 上级推广人
+NEW  | 时间
+NEW  | 是否推广员
+NEW  | 所有用户
+NEW  | 所有用户”指所有没有上级推广人的用户，“新用户”指新注册的用户
+NEW  | 提现银行卡，每个银行换行
+NEW  | 提现银行卡：
+NEW  | 提现最低金额：
+NEW  | 推广订单
+NEW  | 推广订单金额
+NEW  | 推广订单数量
+NEW  | 推广人
+NEW  | 推广人数
+NEW  | 推广用户(一级)数量
+NEW  | 未提现金额
+NEW  | 新用户
+NEW  | 一级返佣比例：
+NEW  | 一级推广人
+NEW  | 已提现次数
+NEW  | 已提现金额
+NEW  | 佣金冻结时间(天)
+NEW  | 佣金总金额
+NEW  | 用户类型：
+NEW  | 用户提现最低金额
+
+TOTAL unique: 75, NEW: 58

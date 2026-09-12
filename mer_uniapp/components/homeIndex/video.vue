@@ -25,6 +25,7 @@
 	// +----------------------------------------------------------------------
 	// | Author: CRMEB Team <admin@crmeb.com>
 	// +----------------------------------------------------------------------
+	import { getLocalizedText } from '@/utils/localizedName';
 	export default {
 		name: 'pictureCube',
 		props: {
@@ -48,16 +49,17 @@
 		computed: {
 			//视频封面
 			cover() {
-				return this.dataConfig.cover.url
+				const cover = this.dataConfig.cover || {};
+				return getLocalizedText(cover.url, cover.urlJson);
 			},
 			//视频地址
 			link() {
 				if (this.dataConfig.tabConfig.tabVal === 0) {
-					return this.dataConfig.uploadVideo.url
-				} else {
-					return this.dataConfig.link.val
+					const video = this.dataConfig.uploadVideo || {};
+					return getLocalizedText(video.url, video.urlJson);
 				}
-
+				const link = this.dataConfig.link || {};
+				return getLocalizedText(link.value || link.val, link.valueJson || link.valJson);
 			},
 			//最外层盒子的样式
 			boxStyle() {

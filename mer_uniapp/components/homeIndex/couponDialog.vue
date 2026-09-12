@@ -4,22 +4,22 @@
 		<view class="mask"></view>
 		<view class="_container"
 			:style="{'background-image': `url(${urlDomain}crmebimage/presets/coupon_modal_bg.png)`}">
-			<view class="_tit">新人专属大礼包</view>
-			<view class="_look">优惠券将发放至个人账户，可在“我的优惠券”查看</view>
+			<view class="_tit">{{$t('新人专属大礼包')}}</view>
+			<view class="_look">{{$t('优惠券将发放至个人账户，可在“我的优惠券”查看')}}</view>
 			<scroll-view :scroll-top="0" scroll-y="true" class="_box">
 				<view class="_item acea-row row-middle" v-for="item in couponList" :key="item.id"
 					:style="{'background-image': `url(${urlDomain}crmebimage/presets/coupon_item_bg.png)`}">
 					<view class="_price_box">
-						<view class="_price">¥{{item.money}}</view>
-						<view class="_man">满{{item.minPrice}}可用</view>
+						<view class="_price">฿{{item.money}}</view>
+						<view class="_man">{{$t('满')}}{{item.minPrice}}{{$t('可用')}}</view>
 					</view>
 					<view class="flex-1 _desc">
-						<view v-if="item.category === 3" class="_text line1">全平台通用</view>
-						<view v-else class="_text line1">仅限指定{{item.category | couponTypeFilter}}可用</view>
+						<view v-if="item.category === 3" class="_text line1">{{$t('全平台通用')}}</view>
+						<view v-else class="_text line1">{{$t('仅限指定')}}{{item.category | couponTypeFilter}}{{$t('可用')}}</view>
 						<view v-if="item.isFixedTime" class="_end line1">
-							{{ $util.getTime(item.useStartTime) + ' ~ ' + $util.getTime(item.useEndTime) + '可用' }}
+							{{ $util.getTime(item.useStartTime) + ' ~ ' + $util.getTime(item.useEndTime) + $t('可用') }}
 						</view>
-						<view v-else class="_end line1">{{ '领取后' + item.day + '天内可用' }}</view>
+						<view v-else class="_end line1">{{$t('领取后{n}天内可用', { n: item.day })}}</view>
 					</view>
 				</view>
 			</scroll-view>

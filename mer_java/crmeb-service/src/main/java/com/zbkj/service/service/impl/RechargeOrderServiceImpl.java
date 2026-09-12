@@ -146,6 +146,8 @@ public class RechargeOrderServiceImpl extends ServiceImpl<RechargeOrderDao, Rech
         RechargePackageResponse userRechargeResponse = new RechargePackageResponse();
         userRechargeResponse.setPackageList(systemGroupDataService.getListByGid(GroupDataConstants.GROUP_DATA_ID_RECHARGE_PACKAGE, UserRechargeItemResponse.class));
         String rechargeAttention = systemConfigService.getValueByKey(SysConfigConstants.CONFIG_RECHARGE_ATTENTION);
+        String rechargeAttentionJson = systemConfigService.getValueByKey(SysConfigConstants.CONFIG_RECHARGE_ATTENTION_JSON);
+        rechargeAttention = I18nJsonUtil.resolveByRequest(rechargeAttention, rechargeAttentionJson);
         List<String> rechargeAttentionList = new ArrayList<>();
         if (StrUtil.isNotBlank(rechargeAttention)) {
             rechargeAttentionList = CrmebUtil.stringToArrayStrRegex(rechargeAttention, "\n");

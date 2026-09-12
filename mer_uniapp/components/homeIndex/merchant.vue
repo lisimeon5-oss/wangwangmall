@@ -5,10 +5,10 @@
 			<view class='title acea-row row-between-wrapper'>
 				<view class='text line1 tui-skeleton-rect acea-row'>
 					<image :src="logoUrl"></image>
-					<text class='label' :style="[titleColor]">{{dataConfig.titleConfig.val}}</text>
+					<text class='label' :style="[titleColor]">{{displayTitle}}</text>
 				</view>
 				<view class='more tui-skeleton-rect fs-12' :style="[moreColor]" hover-class="none" @click="more()">
-          更多
+          {{$t('更多')}}
 					<text class="iconfont icon-jiantou fs-12"></text>
 				</view>
 			</view>
@@ -56,6 +56,7 @@
 	} from '@/api/merchant.js';
 	import merCard from '@/components/merchantList/index.vue'
 	import easyLoadimage from '@/components/base/easy-loadimage.vue';
+	import { getLocalizedDiyVal, getLocalizedDiyUrl } from '@/utils/localizedName';
 	let app = getApp()
 	export default {
 		name: 'merchantList',
@@ -134,17 +135,20 @@
 			  // 价格颜色
 			priceColor(){
 				return {
-				  'color': this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.priceColor.color[0].item:this.themeColor
+				  'color': this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.priceColor.color[0].item:this.themeColor
 				}
 			},
 			//标题图片
 			logoUrl() {
-				return this.dataConfig.logoConfig.url
+				return getLocalizedDiyUrl(this.dataConfig.logoConfig) || (this.dataConfig.logoConfig && this.dataConfig.logoConfig.url);
+			},
+			displayTitle() {
+				return getLocalizedDiyVal(this.dataConfig.titleConfig);
 			},
 			//标签
 			labelColor() {
 				return {
-					'backgroundColor': this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.labelColor.color[0].item:this.themeColor,
+					'backgroundColor': this.dataConfig.themeStyleConfig && this.dataConfig.themeStyleConfig.tabVal?this.dataConfig.labelColor.color[0].item:this.themeColor,
 					'color': this.dataConfig.labelFontColor.color[0].item
 				}
 			},

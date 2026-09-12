@@ -29,10 +29,11 @@
 import toolCom from '../mobileConfigRight/index.js';
 import rightBtn from '../rightBtn/index.vue';
 import { mapMutations } from 'vuex';
+import { diyCname } from '@/utils/diyCname';
 export default {
   name: 'c_wechat_live',
   componentsName: 'wechat_live',
-  cname: '小程序直播',
+  ...diyCname('pagediy.wechatLive'),
   props: {
     activeIndex: {
       type: null,

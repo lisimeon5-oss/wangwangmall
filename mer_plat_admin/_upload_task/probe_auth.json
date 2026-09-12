@@ -1,0 +1,27 @@
+{
+  "code": 200,
+  "message": null,
+  "data": {
+    "id": 8,
+    "account": "13555555555",
+    "realName": "两只羊百货",
+    "roles": "2",
+    "roleNames": null,
+    "lastIp": "110.169.128.226",
+    "lastTime": null,
+    "addTime": null,
+    "loginCount": 139,
+    "level": 1,
+    "status": true,
+    "phone": "13555555555",
+    "isSms": false,
+    "permissionsList": [
+      "*:*:*"
+    ],
+    "merStarLevel": 4,
+    "merReceiptPrintingSwitch": 0,
+    "electrPrintingSwitch": 1,
+    "merId": 5,
+    "token": null
+  }
+}

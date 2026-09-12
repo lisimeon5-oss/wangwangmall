@@ -1,6 +1,7 @@
 package com.zbkj.common.request;
 
 import com.zbkj.common.annotation.StringContains;
+import com.zbkj.common.validation.I18nJsonNotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -35,10 +36,13 @@ public class SystemMenuRequest implements Serializable {
     @ApiModelProperty(value = "父级ID")
     private Integer pid;
 
-    @NotEmpty(message = "菜单名称不能为空")
     @ApiModelProperty(value = "名称")
     @Length(max = 100, message = "菜单名称不能超过100个字符")
     private String name;
+
+    @ApiModelProperty(value = "多语言菜单名称(JSON)", required = true)
+    @I18nJsonNotEmpty(message = "多语言菜单名称不能为空")
+    private String nameJson;
 
     @ApiModelProperty(value = "icon")
     private String icon;
